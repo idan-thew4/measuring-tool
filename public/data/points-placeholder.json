@@ -1,0 +1,72 @@
+{
+  "data": [
+    {
+      "step-number": 1,
+      "step-data": [
+        {
+          "sub-step-number": 1,
+          "sub-step-data": [
+            {
+              "id": 1,
+              "choice": 2
+            },
+            {
+              "id": 2,
+              "choice": 5
+            },
+            {
+              "id": 3,
+              "choice": 0
+            },
+            {
+              "id": 4,
+              "choice": 3
+            }
+          ]
+        },
+        {
+          "sub-step-number": 2,
+          "sub-step-data": [
+            {
+              "id": 1,
+              "choice": 5
+            },
+            {
+              "id": 2,
+              "choice": 7
+            },
+            {
+              "id": 3,
+              "choice": 4
+            },
+            {
+              "id": 4,
+              "choice": 0
+            }
+          ]
+        },
+        {
+          "sub-step-number": 2,
+          "sub-step-data": [
+            {
+              "id": 1,
+              "choice": 5
+            },
+            {
+              "id": 2,
+              "choice": 7
+            },
+            {
+              "id": 3,
+              "choice": 4
+            },
+            {
+              "id": 4,
+              "choice": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
