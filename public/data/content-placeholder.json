@@ -1,0 +1,18 @@
+{
+  "content": [
+    {
+      "step-number": 1,
+      "step-content": [
+        {
+          "sub-step-number": 1,
+          "sub-step-data": [
+            { "id": 1, "choice": 2 },
+            { "id": 2, "choice": 5 },
+            { "id": 3, "choice": 0 },
+            { "id": 4, "choice": 3 }
+          ]
+        }
+      ]
+    }
+  ]
+}

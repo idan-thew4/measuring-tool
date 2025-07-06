@@ -1,3 +1,5 @@
+import header from "./header.module.scss";
+
 export function Header() {
-  return <header>Header</header>;
+  return <header className={header.headerContainer}>Header</header>;
 }
