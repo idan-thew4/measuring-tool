@@ -6,15 +6,15 @@ import copy from "../../../../public/data/content-placeholder.json";
 
 export default function StepPage() {
   const params = useParams();
-  // params?.params is an array: ["2"], ["2", "1"], ["2", "1", "1"], etc.
 
-  // You can destructure for clarity:
-  const [step, substep, option] = params?.params || [];
+  const [step, subStep, subStepChoice] = params?.params || [];
 
-  // Use these to control which dropdowns/menus are open
   return (
-    <div>
-      <SideMenu content={copy.content} />
-    </div>
+    <>
+      <SideMenu
+        content={copy.content}
+        currentStep={[step, subStep, subStepChoice]}
+      />
+    </>
   );
 }

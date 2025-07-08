@@ -1,3 +1,9 @@
-.sideMenu {
-  display: subgrid;
+.side-menu {
+  grid-column: 1/4;
+}
+
+.active {
+  > a {
+    background-color: red;
+  }
 }

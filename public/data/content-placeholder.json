@@ -2,7 +2,9 @@
   "content": [
     {
       "step-number": 1,
-      "step-title": "כותרת לדוגמה 1",
+      "step-title": "הכנות וטרום תכנון",
+      "step-slug": "preparation-and-pre-planning",
+
       "step-content": [
         {
           "sub-step-title": "כותרת משנה 1",
@@ -17,6 +19,8 @@
     {
       "step-number": 2,
       "step-title": "עיצוב ותכנון",
+      "step-slug": "design-and-planning",
+
       "step-content": [
         {
           "sub-step-title": "מים",
@@ -57,7 +61,9 @@
     },
     {
       "step-number": 3,
-      "step-title": "כותרת לדוגמה 3",
+      "step-title": "קרקע וצמחיה",
+      "step-slug": "soil-and-vegetation",
+
       "step-content": [
         {
           "sub-step-title": "כותרת משנה 3",
@@ -71,7 +77,9 @@
     },
     {
       "step-number": 4,
-      "step-title": "כותרת לדוגמה 4",
+      "step-title": "משאבים וחומרים",
+      "step-slug": "resources-and-materials",
+
       "step-content": [
         {
           "sub-step-title": "כותרת משנה 4",
@@ -85,7 +93,9 @@
     },
     {
       "step-number": 5,
-      "step-title": "כותרת לדוגמה 5",
+      "step-title": "חברה וקהילה",
+      "step-slug": "community-and-society",
+
       "step-content": [
         {
           "sub-step-title": "כותרת משנה 5",

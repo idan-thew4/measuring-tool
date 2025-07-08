@@ -25,11 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="heb" dir="rtl">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <div className={styles.layoutContainer}>
           <Header />
-          <main>{children}</main>
+          <main className={styles.main}>{children}</main>
         </div>
       </body>
     </html>
