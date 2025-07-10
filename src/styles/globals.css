@@ -1,0 +1,79 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+h1 {
+  margin: 0;
+}
+
+h2 {
+  margin: 0;
+}
+
+h3 {
+  margin: 0;
+}
+
+h4 {
+  margin: 0;
+}
+
+h5 {
+  margin: 0;
+}
+
+body {
+  font-family: "SimplerPro", sans-serif;
+  font-weight: 400;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-side-text__step {
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 189.474%;
+}
+.nav-side-text__sub-step {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 200%;
+}
+.nav-side-text__sub-step-choice {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 160%;
+}
+
+html {
+  font-size: 8px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 1.6rem;
+  line-height: 1.5;
+}/*# sourceMappingURL=globals.css.map */

@@ -1,9 +1,48 @@
+@use "../../../styles/variables" as *;
+
 .side-menu {
   grid-column: 1/4;
-}
+  padding: 5rem;
 
-.active {
-  > a {
-    background-color: red;
+  ul.nav-side-menu {
+    * {
+      color: $basic-grey;
+    }
+    .active {
+      > * {
+        color: $lime-green;
+      }
+    }
+
+    .step {
+      border-bottom: 0.1rem solid $basic-grey;
+      height: 6.1rem;
+      overflow: hidden;
+
+      &:first-child {
+        border-top: 0.1rem solid $basic-grey;
+      }
+
+      .step-text {
+        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 6.1rem;
+
+        p {
+          font-size: 1.8rem;
+        }
+      }
+
+      .sub-step-choices {
+        height: 0;
+        overflow: hidden;
+      }
+
+      &.active {
+        height: auto;
+      }
+    }
   }
 }

@@ -1,0 +1,53 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.side-menu {
+  grid-column: 1/4;
+  padding: 5rem;
+}
+.side-menu ul.nav-side-menu * {
+  color: #979797;
+}
+.side-menu ul.nav-side-menu .active > * {
+  color: #7ab51d;
+}
+.side-menu ul.nav-side-menu .step {
+  border-bottom: 0.1rem solid #979797;
+  height: 6.1rem;
+  overflow: hidden;
+}
+.side-menu ul.nav-side-menu .step:first-child {
+  border-top: 0.1rem solid #979797;
+}
+.side-menu ul.nav-side-menu .step .step-text {
+  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 6.1rem;
+}
+.side-menu ul.nav-side-menu .step .step-text p {
+  font-size: 1.8rem;
+}
+.side-menu ul.nav-side-menu .step .sub-step-choices {
+  height: 0;
+  overflow: hidden;
+}
+.side-menu ul.nav-side-menu .step.active {
+  height: auto;
+}/*# sourceMappingURL=sideMenu.module.css.map */

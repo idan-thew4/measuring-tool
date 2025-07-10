@@ -1,0 +1,42 @@
+@use "./variables" as *;
+
+@for $i from 1 through 5 {
+  h#{$i} {
+    margin: 0;
+  }
+}
+
+body {
+  font-family: $font-main;
+  font-weight: 400;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-side-text {
+  &__step {
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 189.474%;
+  }
+
+  &__sub-step {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 200%;
+  }
+
+  &__sub-step-choice {
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 160%;
+  }
+}

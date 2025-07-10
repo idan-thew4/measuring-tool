@@ -1,0 +1,38 @@
+// colors//
+$basic-grey: #979797;
+
+$lime-green: #7ab51d;
+
+// typography//
+
+@mixin font-face($family, $src, $weight, $style) {
+  @font-face {
+    font-family: $family;
+    src: url($src);
+    font-weight: $weight;
+    font-style: $style;
+  }
+}
+
+@include font-face(
+  "SimplerPro",
+  "../../public/fonts/SimplerPro-Regular.woff",
+  400,
+  normal
+);
+
+@include font-face(
+  "SimplerPro",
+  "../../public/fonts/SimplerPro-Bold.woff",
+  700,
+  normal
+);
+
+@include font-face(
+  "SimplerPro",
+  "../../public/fonts/SimplerPro-Black.woff",
+  800,
+  normal
+);
+
+$font-main: "SimplerPro", sans-serif;
