@@ -1,14 +1,11 @@
 import styles from "./sideMenu.module.scss";
 import Link from "next/link";
 import clsx from "clsx";
+import { ProgressBar } from "./progress-bar/progress-bar";
 
 type SideMenuProps = {
   content: Step[];
   currentStep: string[];
-};
-
-type ContentData = {
-  content: Step[];
 };
 
 type Step = {
@@ -24,9 +21,9 @@ type SubStep = {
 };
 
 export function SideMenu({ content, currentStep }: SideMenuProps) {
-  console.log(content);
   return (
     <aside className={styles["side-menu"]}>
+      <ProgressBar />
       <ul className={styles["nav-side-menu"]}>
         {content.map((step, stepIndex) => (
           <li

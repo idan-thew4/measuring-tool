@@ -6,37 +6,37 @@
         {
           "sub-step-number": 1,
           "sub-step-data": [
-            { "id": 1, "choice": 2 },
-            { "id": 2, "choice": 5 },
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
             { "id": 3, "choice": 0 },
-            { "id": 4, "choice": 3 }
+            { "id": 4, "choice": 0 }
           ]
         },
         {
           "sub-step-number": 2,
           "sub-step-data": [
-            { "id": 1, "choice": 5 },
-            { "id": 2, "choice": 7 },
-            { "id": 3, "choice": 4 },
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 },
             { "id": 4, "choice": 0 }
           ]
         },
         {
           "sub-step-number": 3,
           "sub-step-data": [
-            { "id": 1, "choice": 3 },
-            { "id": 2, "choice": 1 },
-            { "id": 3, "choice": 4 },
-            { "id": 4, "choice": 3 }
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 },
+            { "id": 4, "choice": 0 }
           ]
         },
         {
           "sub-step-number": 4,
           "sub-step-data": [
-            { "id": 1, "choice": 5 },
+            { "id": 1, "choice": 0 },
             { "id": 2, "choice": 0 },
-            { "id": 3, "choice": 2 },
-            { "id": 4, "choice": 4 }
+            { "id": 3, "choice": 0 },
+            { "id": 4, "choice": 0 }
           ]
         }
       ]
@@ -47,33 +47,33 @@
         {
           "sub-step-number": 1,
           "sub-step-data": [
-            { "id": 1, "choice": 1 },
-            { "id": 2, "choice": 4 },
-            { "id": 3, "choice": 2 }
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 }
           ]
         },
         {
           "sub-step-number": 2,
           "sub-step-data": [
             { "id": 1, "choice": 0 },
-            { "id": 2, "choice": 3 },
-            { "id": 3, "choice": 5 }
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 }
           ]
         },
         {
           "sub-step-number": 3,
           "sub-step-data": [
-            { "id": 1, "choice": 2 },
-            { "id": 2, "choice": 1 },
-            { "id": 3, "choice": 4 }
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 }
           ]
         },
         {
           "sub-step-number": 4,
           "sub-step-data": [
-            { "id": 1, "choice": 5 },
-            { "id": 2, "choice": 2 },
-            { "id": 3, "choice": 3 }
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 }
           ]
         }
       ]
@@ -84,31 +84,31 @@
         {
           "sub-step-number": 1,
           "sub-step-data": [
-            { "id": 1, "choice": 3 },
-            { "id": 2, "choice": 2 },
-            { "id": 3, "choice": 1 },
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 },
             { "id": 4, "choice": 0 },
-            { "id": 5, "choice": 4 }
+            { "id": 5, "choice": 0 }
           ]
         },
         {
           "sub-step-number": 2,
           "sub-step-data": [
-            { "id": 1, "choice": 2 },
-            { "id": 2, "choice": 5 },
-            { "id": 3, "choice": 3 },
-            { "id": 4, "choice": 1 },
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 },
+            { "id": 4, "choice": 0 },
             { "id": 5, "choice": 0 }
           ]
         },
         {
           "sub-step-number": 3,
           "sub-step-data": [
-            { "id": 1, "choice": 4 },
-            { "id": 2, "choice": 2 },
-            { "id": 3, "choice": 5 },
-            { "id": 4, "choice": 3 },
-            { "id": 5, "choice": 1 }
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 },
+            { "id": 4, "choice": 0 },
+            { "id": 5, "choice": 0 }
           ]
         }
       ]
@@ -120,45 +120,45 @@
           "sub-step-number": 1,
           "sub-step-data": [
             { "id": 1, "choice": 0 },
-            { "id": 2, "choice": 2 },
-            { "id": 3, "choice": 1 },
-            { "id": 4, "choice": 3 }
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 },
+            { "id": 4, "choice": 0 }
           ]
         },
         {
           "sub-step-number": 2,
           "sub-step-data": [
-            { "id": 1, "choice": 5 },
-            { "id": 2, "choice": 4 },
-            { "id": 3, "choice": 2 },
-            { "id": 4, "choice": 1 }
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 },
+            { "id": 4, "choice": 0 }
           ]
         },
         {
           "sub-step-number": 3,
           "sub-step-data": [
-            { "id": 1, "choice": 3 },
+            { "id": 1, "choice": 0 },
             { "id": 2, "choice": 0 },
-            { "id": 3, "choice": 5 },
-            { "id": 4, "choice": 2 }
+            { "id": 3, "choice": 0 },
+            { "id": 4, "choice": 0 }
           ]
         },
         {
           "sub-step-number": 4,
           "sub-step-data": [
-            { "id": 1, "choice": 1 },
-            { "id": 2, "choice": 2 },
-            { "id": 3, "choice": 4 },
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 },
             { "id": 4, "choice": 0 }
           ]
         },
         {
           "sub-step-number": 5,
           "sub-step-data": [
-            { "id": 1, "choice": 2 },
-            { "id": 2, "choice": 3 },
-            { "id": 3, "choice": 5 },
-            { "id": 4, "choice": 1 }
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 },
+            { "id": 4, "choice": 0 }
           ]
         }
       ]
@@ -169,37 +169,37 @@
         {
           "sub-step-number": 1,
           "sub-step-data": [
-            { "id": 1, "choice": 4 },
-            { "id": 2, "choice": 2 },
-            { "id": 3, "choice": 1 },
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 },
             { "id": 4, "choice": 0 },
-            { "id": 5, "choice": 3 },
-            { "id": 6, "choice": 5 },
-            { "id": 7, "choice": 2 }
+            { "id": 5, "choice": 0 },
+            { "id": 6, "choice": 0 },
+            { "id": 7, "choice": 0 }
           ]
         },
         {
           "sub-step-number": 2,
           "sub-step-data": [
-            { "id": 1, "choice": 3 },
-            { "id": 2, "choice": 1 },
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
             { "id": 3, "choice": 0 },
-            { "id": 4, "choice": 4 },
-            { "id": 5, "choice": 2 },
-            { "id": 6, "choice": 5 },
-            { "id": 7, "choice": 1 }
+            { "id": 4, "choice": 0 },
+            { "id": 5, "choice": 0 },
+            { "id": 6, "choice": 0 },
+            { "id": 7, "choice": 0 }
           ]
         },
         {
           "sub-step-number": 3,
           "sub-step-data": [
-            { "id": 1, "choice": 2 },
-            { "id": 2, "choice": 5 },
-            { "id": 3, "choice": 3 },
-            { "id": 4, "choice": 1 },
+            { "id": 1, "choice": 0 },
+            { "id": 2, "choice": 0 },
+            { "id": 3, "choice": 0 },
+            { "id": 4, "choice": 0 },
             { "id": 5, "choice": 0 },
-            { "id": 6, "choice": 4 },
-            { "id": 7, "choice": 2 }
+            { "id": 6, "choice": 0 },
+            { "id": 7, "choice": 0 }
           ]
         }
       ]

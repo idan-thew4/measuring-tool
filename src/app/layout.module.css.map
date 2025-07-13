@@ -1,1 +1,0 @@
-{"version":3,"sourceRoot":"","sources":["layout.module.scss"],"names":[],"mappings":"AAAA;EACE;EACA;;AAEA;EACE;EACA;EACA","sourcesContent":[".layoutContainer {\r\n  display: grid;\r\n  grid-template-columns: repeat(12, 1fr);\r\n\r\n  .main {\r\n    display: grid;\r\n    grid-template-columns: subgrid;\r\n    grid-column: 1/13;\r\n  }\r\n}\r\n"]}
