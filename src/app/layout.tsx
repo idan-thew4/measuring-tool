@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Header } from "@/components/header/header";
 import styles from "./layout.module.scss";
 import "../styles/globals.scss";
+import { Store } from "../contexts/Store";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -30,8 +31,10 @@ export default function RootLayout({
       // className={`${geistSans.variable} ${geistMono.variable}`}
       >
         <div className={styles.layoutContainer}>
-          <Header />
-          <main className={styles.main}>{children}</main>
+          <Store>
+            <Header />
+            <main className={styles.main}>{children}</main>
+          </Store>
         </div>
       </body>
     </html>
