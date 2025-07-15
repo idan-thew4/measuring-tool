@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { SideMenu } from "../side-menu/side-menu";
-import copy from "../../../../public/data/content-placeholder.json";
+import structure from "../../../../public/data/content-placeholder.json";
 
 export default function StepPage() {
   const params = useParams();
@@ -12,7 +12,7 @@ export default function StepPage() {
   return (
     <>
       <SideMenu
-        content={copy.content}
+        content={structure.content}
         currentStep={[step, subStep, subStepChoice]}
       />
     </>

@@ -1,10 +1,14 @@
 import styles from "./progressBar.module.scss";
-import { useStore } from "../../../../contexts/Store";
+import { useStore, ScoreType } from "../../../../contexts/Store";
+import { useEffect, useState } from "react";
 
 export function ProgressBar() {
-  const { score } = useStore();
+  const { scoreObject, calculateProgress } = useStore();
+  const [progress, setProgress] = useState({});
 
-  console.log(score);
+  useEffect(() => {
+    setProgress(calculateProgress(scoreObject));
+  }, []);
 
-  return <div>Progress baR</div>;
+  return <div></div>;
 }

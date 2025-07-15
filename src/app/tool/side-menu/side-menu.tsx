@@ -2,25 +2,17 @@ import styles from "./sideMenu.module.scss";
 import Link from "next/link";
 import clsx from "clsx";
 import { ProgressBar } from "./progress-bar/progress-bar";
+import { Step } from "@/contexts/Store";
+import { useStore } from "../../../contexts/Store";
 
-type SideMenuProps = {
+type structureAndStepsProps = {
   content: Step[];
   currentStep: string[];
 };
 
-type Step = {
-  "step-number": number;
-  "step-title": string;
-  "step-slug": string;
-  "step-content": SubStep[];
-};
+export function SideMenu({ content, currentStep }: structureAndStepsProps) {
+  const { scoreObject } = useStore();
 
-type SubStep = {
-  "sub-step-title": string;
-  "sub-step-choices": string[];
-};
-
-export function SideMenu({ content, currentStep }: SideMenuProps) {
   return (
     <aside className={styles["side-menu"]}>
       <ProgressBar />
@@ -31,7 +23,8 @@ export function SideMenu({ content, currentStep }: SideMenuProps) {
               styles["step"],
               step["step-slug"] === currentStep[0] ? styles["active"] : ""
             )}
-            key={stepIndex}>
+            key={stepIndex}
+          >
             <div className={clsx("nav-side-text__step", styles["step-text"])}>
               <Link href={`/tool/${step["step-slug"]}/1/1`}>
                 {`${stepIndex + 1}. ${step["step-title"]}`}
@@ -48,10 +41,12 @@ export function SideMenu({ content, currentStep }: SideMenuProps) {
                     subIndex + 1 === parseInt(currentStep[1])
                       ? styles["active"]
                       : ""
-                  }>
+                  }
+                >
                   <Link
                     className="nav-side-text__sub-step"
-                    href={`/tool/${step["step-slug"]}/${subIndex + 1}/1`}>
+                    href={`/tool/${step["step-slug"]}/${subIndex + 1}/1`}
+                  >
                     {`${stepIndex + 1}.${subIndex + 1} ${
                       subStep["sub-step-title"]
                     }`}
@@ -67,13 +62,15 @@ export function SideMenu({ content, currentStep }: SideMenuProps) {
                             subChoicesIndex + 1 === parseInt(currentStep[2])
                               ? styles["active"]
                               : ""
-                          }>
+                          }
+                        >
                           {/* <p>{subChoices}</p> */}
                           <Link
                             className="nav-side-text__sub-step-choice"
                             href={`/tool/${step["step-slug"]}/${subIndex + 1}/${
                               subChoicesIndex + 1
-                            }`}>
+                            }`}
+                          >
                             {`${subChoicesIndex + 1}. ${subChoices}`}
                           </Link>
                         </li>
