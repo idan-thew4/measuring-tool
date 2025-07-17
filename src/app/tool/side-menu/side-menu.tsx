@@ -4,6 +4,8 @@ import clsx from "clsx";
 import { ProgressBar } from "./progress-bar/progress-bar";
 import { Step } from "@/contexts/Store";
 import { useStore } from "../../../contexts/Store";
+import { collectSegmentData } from "next/dist/server/app-render/collect-segment-data";
+import { use, useEffect, useState } from "react";
 
 type structureAndStepsProps = {
   content: Step[];
@@ -11,7 +13,7 @@ type structureAndStepsProps = {
 };
 
 export function SideMenu({ content, currentStep }: structureAndStepsProps) {
-  const { scoreObject } = useStore();
+  const { completedSteps } = useStore();
 
   return (
     <aside className={styles["side-menu"]}>
@@ -27,9 +29,11 @@ export function SideMenu({ content, currentStep }: structureAndStepsProps) {
           >
             <div className={clsx("nav-side-text__step", styles["step-text"])}>
               <Link href={`/tool/${step["step-slug"]}/1/1`}>
-                {`${stepIndex + 1}. ${step["step-title"]}`}
+                {`${stepIndex}. ${step["step-title"]}`}
               </Link>
-              <p>{`x/${step["step-content"].length}`}</p>
+              <p>{`${completedSteps[stepIndex]?.completedSteps ?? 0}/${
+                completedSteps[stepIndex]?.totalSteps ?? 0
+              }`}</p>
             </div>
 
             <ul className={styles["step-content"]}>

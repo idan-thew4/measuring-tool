@@ -6,6 +6,7 @@ import React, {
   PropsWithChildren,
   useState,
   useEffect,
+  use,
 } from "react";
 import structure from "../../public/data/content-placeholder.json";
 import { get } from "http";
@@ -88,12 +89,15 @@ type SubStep = {
   "sub-step-choices": string[];
 };
 
+type totalCompletedSteps = {
+  totalSteps: number;
+  completedSteps: number;
+}[];
+
 type ApiContextType = {
   scoreObject: ScoreType;
   setScoreObject: React.Dispatch<React.SetStateAction<ScoreType>>;
-  calculateProgress: (
-    currentScore: ScoreType
-  ) => { totalChoices: number; filledChoices: number }[];
+  completedSteps: totalCompletedSteps;
 };
 
 function Store({ children }: PropsWithChildren<{}>) {
@@ -104,6 +108,7 @@ function Store({ children }: PropsWithChildren<{}>) {
     },
     data: [],
   });
+  const [completedSteps, setCompletedSteps] = useState<totalCompletedSteps>([]);
 
   function createScoreObject(structureObject: structureProps) {
     let scoreObjectTemp: ScoreType;
@@ -130,24 +135,31 @@ function Store({ children }: PropsWithChildren<{}>) {
     }
 
     setScoreObject(scoreObjectTemp);
+    getCompletedSteps(scoreObjectTemp);
   }
 
-  function calculateProgress(currentScore: ScoreType) {
-    if (!currentScore.data) return [];
-    return currentScore.data.map((step) => {
-      let totalChoices = 0;
-      let filledChoices = 0;
-      step["step-data"].forEach((subStep) => {
-        totalChoices += subStep["sub-step-data"].length;
-        filledChoices += subStep["sub-step-data"].filter(
-          (choiceObj) => choiceObj.choice !== 0
-        ).length;
+  function getCompletedSteps(scoreObject: ScoreType) {
+    let totalCompletedSteps: totalCompletedSteps = [];
+    if (scoreObject.data) {
+      scoreObject.data.forEach((stepData, index) => {
+        let completedSteps = 0;
+        stepData["step-data"].forEach((subStep) => {
+          const allFilled = subStep["sub-step-data"].every(
+            (choiceObj) => choiceObj.choice !== 0
+          );
+          if (allFilled) {
+            completedSteps++;
+          }
+        });
+
+        totalCompletedSteps.push({
+          totalSteps: stepData["step-data"].length,
+          completedSteps: completedSteps,
+        });
       });
-      return {
-        totalChoices,
-        filledChoices,
-      };
-    });
+
+      return totalCompletedSteps;
+    }
   }
 
   useEffect(() => {
@@ -155,17 +167,15 @@ function Store({ children }: PropsWithChildren<{}>) {
   }, []);
 
   useEffect(() => {
+    const steps = getCompletedSteps(scoreObject) ?? [];
+    setCompletedSteps(steps);
     const jsonCookie = JSON.stringify(scoreObject);
     setCookie(`${scoreObject["personal-details"].email}`, jsonCookie, 0.15);
   }, [scoreObject]);
 
-  useEffect(() => {
-    console.log("Score Object Updated:", scoreObject);
-  }, [scoreObject]);
-
   return (
     <ApiContext.Provider
-      value={{ scoreObject, setScoreObject, calculateProgress }}
+      value={{ scoreObject, setScoreObject, completedSteps }}
     >
       {children}
     </ApiContext.Provider>
