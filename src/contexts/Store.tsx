@@ -74,7 +74,17 @@ type PersonalDetails = {
 //Structure types//
 
 type structureProps = {
+  sidebar: sideBar;
   content: Step[];
+};
+
+type sideBar = {
+  "progress-bar-headline": string;
+  "bottom-options": string[];
+};
+
+type contentPlaceholder = {
+  "progress-bar-headline": string;
 };
 
 export type Step = {
@@ -98,17 +108,34 @@ type ApiContextType = {
   scoreObject: ScoreType;
   setScoreObject: React.Dispatch<React.SetStateAction<ScoreType>>;
   completedSteps: totalCompletedSteps;
+  structure: structureProps | undefined;
 };
 
 function Store({ children }: PropsWithChildren<{}>) {
+  const [structure, setStructure] = useState<structureProps>();
   const [scoreObject, setScoreObject] = useState<ScoreType>({
     "personal-details": {
       name: "",
-      email: "mail@idanportal.com",
+      email: "",
     },
     data: [],
   });
   const [completedSteps, setCompletedSteps] = useState<totalCompletedSteps>([]);
+
+  async function getContent() {
+    try {
+      const response = await fetch("http://localhost:3000/api/temp");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+
+      setStructure(data);
+      createScoreObject(data);
+    } catch (error) {
+      console.error("Failed to fetch content:", error);
+    }
+  }
 
   function createScoreObject(structureObject: structureProps) {
     let scoreObjectTemp: ScoreType;
@@ -163,7 +190,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   }
 
   useEffect(() => {
-    createScoreObject(structure);
+    getContent();
   }, []);
 
   useEffect(() => {
@@ -175,8 +202,7 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   return (
     <ApiContext.Provider
-      value={{ scoreObject, setScoreObject, completedSteps }}
-    >
+      value={{ scoreObject, setScoreObject, completedSteps, structure }}>
       {children}
     </ApiContext.Provider>
   );

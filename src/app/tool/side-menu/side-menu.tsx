@@ -25,8 +25,7 @@ export function SideMenu({ content, currentStep }: structureAndStepsProps) {
               styles["step"],
               step["step-slug"] === currentStep[0] ? styles["active"] : ""
             )}
-            key={stepIndex}
-          >
+            key={stepIndex}>
             <div className={clsx("nav-side-text__step", styles["step-text"])}>
               <Link href={`/tool/${step["step-slug"]}/1/1`}>
                 {`${stepIndex}. ${step["step-title"]}`}
@@ -45,12 +44,10 @@ export function SideMenu({ content, currentStep }: structureAndStepsProps) {
                     subIndex + 1 === parseInt(currentStep[1])
                       ? styles["active"]
                       : ""
-                  }
-                >
+                  }>
                   <Link
                     className="nav-side-text__sub-step"
-                    href={`/tool/${step["step-slug"]}/${subIndex + 1}/1`}
-                  >
+                    href={`/tool/${step["step-slug"]}/${subIndex + 1}/1`}>
                     {`${stepIndex + 1}.${subIndex + 1} ${
                       subStep["sub-step-title"]
                     }`}
@@ -66,15 +63,13 @@ export function SideMenu({ content, currentStep }: structureAndStepsProps) {
                             subChoicesIndex + 1 === parseInt(currentStep[2])
                               ? styles["active"]
                               : ""
-                          }
-                        >
+                          }>
                           {/* <p>{subChoices}</p> */}
                           <Link
                             className="nav-side-text__sub-step-choice"
                             href={`/tool/${step["step-slug"]}/${subIndex + 1}/${
                               subChoicesIndex + 1
-                            }`}
-                          >
+                            }`}>
                             {`${subChoicesIndex + 1}. ${subChoices}`}
                           </Link>
                         </li>
@@ -87,6 +82,8 @@ export function SideMenu({ content, currentStep }: structureAndStepsProps) {
           </li>
         ))}
       </ul>
+      <ul></ul>
     </aside>
   );
 }
+``;
