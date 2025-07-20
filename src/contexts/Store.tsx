@@ -111,6 +111,8 @@ type ApiContextType = {
   structure: structureProps | undefined;
 };
 
+const url = "http://localhost:3000/";
+
 function Store({ children }: PropsWithChildren<{}>) {
   const [structure, setStructure] = useState<structureProps>();
   const [scoreObject, setScoreObject] = useState<ScoreType>({
@@ -124,7 +126,7 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   async function getContent() {
     try {
-      const response = await fetch("http://localhost:3000/api/temp");
+      const response = await fetch(`${url}/api/temp`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
