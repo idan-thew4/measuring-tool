@@ -67,6 +67,21 @@ ul {
   line-height: 160%;
 }
 
+.bold {
+  font-weight: 700 !important;
+}
+
+.paragraph_18 {
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 200%;
+}
+.paragraph_20 {
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 120%;
+}
+
 html {
   font-size: 8px;
 }

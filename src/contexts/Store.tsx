@@ -6,10 +6,7 @@ import React, {
   PropsWithChildren,
   useState,
   useEffect,
-  use,
 } from "react";
-import structure from "../../public/data/content-placeholder.json";
-import { get } from "http";
 
 const ApiContext = createContext<ApiContextType | undefined>(undefined);
 
@@ -73,7 +70,7 @@ type PersonalDetails = {
 
 //Structure types//
 
-type structureProps = {
+export type structureProps = {
   sidebar: sideBar;
   content: Step[];
 };
@@ -81,6 +78,7 @@ type structureProps = {
 type sideBar = {
   "progress-bar-headline": string;
   "bottom-options": string[];
+  more: string[];
 };
 
 type contentPlaceholder = {
@@ -99,15 +97,15 @@ type SubStep = {
   "sub-step-choices": string[];
 };
 
-type totalCompletedSteps = {
-  totalSteps: number;
-  completedSteps: number;
+export type totalCompleted = {
+  total: number;
+  completed: number;
 }[];
 
 type ApiContextType = {
   scoreObject: ScoreType;
   setScoreObject: React.Dispatch<React.SetStateAction<ScoreType>>;
-  completedSteps: totalCompletedSteps;
+  completedSteps: totalCompleted;
   structure: structureProps | undefined;
 };
 
@@ -122,7 +120,7 @@ function Store({ children }: PropsWithChildren<{}>) {
     },
     data: [],
   });
-  const [completedSteps, setCompletedSteps] = useState<totalCompletedSteps>([]);
+  const [completedSteps, setCompletedSteps] = useState<totalCompleted>([]);
 
   async function getContent() {
     try {
@@ -141,13 +139,17 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   function createScoreObject(structureObject: structureProps) {
     let scoreObjectTemp: ScoreType;
-    const cookies = getCookie(`${scoreObject["personal-details"].email}`);
+    // const cookies = getCookie(`${scoreObject["personal-details"].email}`);
+    const cookies = getCookie(`mail@idanportal.com`);
 
     if (cookies) {
       scoreObjectTemp = JSON.parse(cookies);
     } else {
       scoreObjectTemp = {
-        "personal-details": scoreObject["personal-details"],
+        "personal-details": {
+          name: "Idan Portal",
+          email: "mail@idanportal.com",
+        },
         data: structureObject.content.map((step) => ({
           "step-number": step["step-number"],
           "step-data": step["step-content"].map((subStep, subIndex) => ({
@@ -168,7 +170,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   }
 
   function getCompletedSteps(scoreObject: ScoreType) {
-    let totalCompletedSteps: totalCompletedSteps = [];
+    let totalCompletedSteps: totalCompleted = [];
     if (scoreObject.data) {
       scoreObject.data.forEach((stepData, index) => {
         let completedSteps = 0;
@@ -182,8 +184,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         });
 
         totalCompletedSteps.push({
-          totalSteps: stepData["step-data"].length,
-          completedSteps: completedSteps,
+          total: stepData["step-data"].length,
+          completed: completedSteps,
         });
       });
 
@@ -198,8 +200,14 @@ function Store({ children }: PropsWithChildren<{}>) {
   useEffect(() => {
     const steps = getCompletedSteps(scoreObject) ?? [];
     setCompletedSteps(steps);
-    const jsonCookie = JSON.stringify(scoreObject);
-    setCookie(`${scoreObject["personal-details"].email}`, jsonCookie, 0.15);
+    if (
+      scoreObject["personal-details"].email &&
+      scoreObject.data &&
+      scoreObject.data.length > 0
+    ) {
+      const jsonCookie = JSON.stringify(scoreObject);
+      setCookie(`${scoreObject["personal-details"].email}`, jsonCookie, 0.15);
+    }
   }, [scoreObject]);
 
   return (

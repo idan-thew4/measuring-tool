@@ -2,17 +2,31 @@
 
 import { useParams } from "next/navigation";
 import { SideMenu } from "../side-menu/side-menu";
-import structure from "../../../../public/data/content-placeholder.json";
+import { useStore, structureProps } from "../../../contexts/Store";
+import { Questionnaire } from "../questionnaire/questionnaire";
+
+export type structureAndStepsProps = {
+  structure: structureProps | undefined;
+  currentStep: string[];
+};
 
 export default function StepPage() {
   const params = useParams();
-
   const [step, subStep, subStepChoice] = params?.params || [];
+  const { structure } = useStore();
+
+  if (!structure || !structure.content) {
+    <div>Loading</div>;
+  }
 
   return (
     <>
       <SideMenu
-        content={structure.content}
+        structure={structure}
+        currentStep={[step, subStep, subStepChoice]}
+      />
+      <Questionnaire
+        structure={structure}
         currentStep={[step, subStep, subStepChoice]}
       />
     </>

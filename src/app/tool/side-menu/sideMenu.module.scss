@@ -3,65 +3,100 @@
 .side-menu {
   grid-column: 1/4;
   padding: 5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
-  ul.nav-side-menu {
-    * {
-      color: $basic-grey;
-    }
-    .active {
-      > * {
-        color: $lime-green;
+  a {
+    color: $basic-grey;
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    ul.nav-side-menu {
+      * {
+        color: $basic-grey;
       }
-    }
-
-    .step {
-      border-bottom: 0.1rem solid $basic-grey;
-      height: 6.1rem;
-      overflow: hidden;
-
-      &:first-child {
-        border-top: 0.1rem solid $basic-grey;
-      }
-
-      .step-text {
-        display: block;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 2.1rem;
-        padding-top: 2rem;
-        p {
-          font-size: 1.8rem;
+      .active {
+        > * {
+          color: $lime-green;
         }
       }
 
-      .step-content {
-        opacity: 0;
-        visibility: hidden;
-        > li.active {
-          padding-bottom: 1rem;
+      .step {
+        border-bottom: 0.1rem solid $basic-grey;
+        height: 6.1rem;
+        overflow: hidden;
+
+        &:first-child {
+          border-top: 0.1rem solid $basic-grey;
         }
 
-        &:has(.active) {
-          padding-bottom: 1rem;
-          opacity: 1;
-          visibility: visible;
-        }
-        .sub-step-choices {
-          height: 0;
-          overflow: hidden;
-          padding-right: 4rem;
-        }
-
-        li.active {
-          .sub-step-choices {
-            height: auto;
+        .step-text {
+          display: block;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 2.1rem;
+          padding-top: 2rem;
+          p {
+            font-size: 1.8rem;
           }
         }
+
+        .step-content {
+          opacity: 0;
+          visibility: hidden;
+          > li.active {
+            padding-bottom: 1rem;
+          }
+
+          &:has(.active) {
+            padding-bottom: 1rem;
+            opacity: 1;
+            visibility: visible;
+          }
+          .sub-step-choices {
+            height: 0;
+            overflow: hidden;
+            padding-right: 4rem;
+          }
+
+          li.active {
+            .sub-step-choices {
+              height: auto;
+            }
+          }
+        }
+
+        &.active {
+          height: auto;
+        }
+      }
+    }
+
+    ul.bottom-links {
+    }
+  }
+
+  .more {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+
+    li {
+      &:after {
+        content: "|";
+        color: $basic-grey;
+        padding-right: 0.5rem;
       }
 
-      &.active {
-        height: auto;
+      &:last-child {
+        &:after {
+          content: "";
+        }
       }
     }
   }

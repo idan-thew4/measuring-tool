@@ -1,6 +1,8 @@
 .layoutContainer {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 10rem 1fr;
+  height: 100vh;
 
   .main {
     display: grid;
