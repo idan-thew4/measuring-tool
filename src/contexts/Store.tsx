@@ -172,19 +172,27 @@ function Store({ children }: PropsWithChildren<{}>) {
   function getCompletedSteps(scoreObject: ScoreType) {
     let totalCompletedSteps: totalCompleted = [];
     if (scoreObject.data) {
+      let total = 0;
+
       scoreObject.data.forEach((stepData, index) => {
         let completedSteps = 0;
         stepData["step-data"].forEach((subStep) => {
-          const allFilled = subStep["sub-step-data"].every(
-            (choiceObj) => choiceObj.choice !== 0
-          );
-          if (allFilled) {
-            completedSteps++;
-          }
+          subStep["sub-step-data"].forEach((subStepChoice) => {
+            total++;
+            if (subStepChoice.choice !== 0) {
+              completedSteps++;
+            }
+          });
+          // const allFilled = subStep["sub-step-data"].every(
+          //   (choiceObj) => choiceObj.choice !== 0
+          // );
+          // if (allFilled) {
+          //   completedSteps++;
+          // }
         });
 
         totalCompletedSteps.push({
-          total: stepData["step-data"].length,
+          total: total,
           completed: completedSteps,
         });
       });

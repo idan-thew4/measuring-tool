@@ -20,7 +20,9 @@ export function ProgressBar({ completed, structure }: ProgressBarProps) {
           <li className={styles["progress-bar-item"]} key={index}>
             <div
               className={styles["progress-bar-item-indicator"]}
-              style={{ width: `${(step.completed / 4) * 100}%` }}></div>
+              style={{
+                width: `${(step.completed / step.total) * 100}%`,
+              }}></div>
           </li>
         ))}
       </ul>

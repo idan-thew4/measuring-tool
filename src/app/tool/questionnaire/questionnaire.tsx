@@ -22,19 +22,16 @@ export function Questionnaire({
     let stepProgressTemp: totalCompleted = [];
     const choices =
       scoreObject?.["data"]?.[currentStep["step-number"] - 1]?.["step-data"];
-    console.log("choices", choices);
     choices?.map((choice) => {
-      const filledChoices = choice["sub-step-data"].filter(
-        (choiceObj) => choiceObj.choice !== 0
-      ).length;
-      stepProgressTemp.push({
-        completed: filledChoices,
-        total: choices.length,
+      choice["sub-step-data"].map((subStepChoice) => {
+        stepProgressTemp.push({
+          completed: subStepChoice.choice,
+          total: 1,
+        });
       });
     });
 
     setStepProgress(stepProgressTemp);
-    console.log(stepProgressTemp);
   }
 
   const getCurrentStep = structure?.content.find(
