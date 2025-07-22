@@ -18,18 +18,26 @@ export function Questionnaire({
   const { scoreObject } = useStore();
   const [stepProgress, setStepProgress] = useState<totalCompleted>();
 
-  function getChoicesProgress(scoreObject: ScoreType, currentStep: Step) {
+  function getChoicesProgress(
+    scoreObject: ScoreType,
+    currentStep: Step,
+    currentSelection: string[]
+  ) {
     let stepProgressTemp: totalCompleted = [];
+
     const choices =
       scoreObject?.["data"]?.[currentStep["step-number"] - 1]?.["step-data"];
-    choices?.map((choice) => {
-      choice["sub-step-data"].map((subStepChoice) => {
-        stepProgressTemp.push({
-          completed: subStepChoice.choice,
-          total: 1,
-        });
+
+    const selectedChoice = choices?.[Number(currentSelection[1]) - 1];
+
+    selectedChoice?.["sub-step-data"]?.forEach((choice) => {
+      stepProgressTemp.push({
+        completed: choice.choice,
+        total: 1,
       });
     });
+
+    console.log("stepProgressTemp", stepProgressTemp);
 
     setStepProgress(stepProgressTemp);
   }
@@ -40,7 +48,7 @@ export function Questionnaire({
 
   useEffect(() => {
     if (getCurrentStep) {
-      getChoicesProgress(scoreObject, getCurrentStep as Step);
+      getChoicesProgress(scoreObject, getCurrentStep as Step, currentStep);
     }
   }, [scoreObject, getCurrentStep]);
 
@@ -55,12 +63,14 @@ export function Questionnaire({
           {`${getCurrentStep?.["step-number"]}. ${getCurrentStep?.["step-title"]}`}
         </p>
         <h2
-          className={clsx("headline_medium-big bold", styles["step-subtitle"])}>
+          className={clsx("headline_medium-big bold", styles["step-subtitle"])}
+        >
           <span
             className={clsx(
               "number headline_medium-small bold",
               styles["number"]
-            )}>
+            )}
+          >
             {`${getCurrentStep?.["step-number"]}.${currentStep[1]}`}
           </span>
           {`${
