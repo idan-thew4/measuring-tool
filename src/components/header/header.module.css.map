@@ -1,1 +1,0 @@
-{"version":3,"sourceRoot":"","sources":["header.module.scss"],"names":[],"mappings":"AAAA;EACE;EACA;EACA","sourcesContent":[".headerContainer {\r\n  grid-column: 1 / 13;\r\n  height: 10rem;\r\n  background-color: grey;\r\n}\r\n"]}

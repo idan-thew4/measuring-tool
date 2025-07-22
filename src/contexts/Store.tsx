@@ -88,18 +88,22 @@ type contentPlaceholder = {
 export type Step = {
   "step-number": number;
   "step-title": string;
+  "step-description": string;
   "step-slug": string;
   "step-content": SubStep[];
 };
 
 type SubStep = {
   "sub-step-title": string;
+  "sub-step-description": string;
   "sub-step-choices": string[];
 };
 
 export type totalCompleted = {
   total: number;
   completed: number;
+  completedSteps?: number;
+  totalSteps?: number;
 }[];
 
 type ApiContextType = {
@@ -173,27 +177,30 @@ function Store({ children }: PropsWithChildren<{}>) {
     let totalCompletedSteps: totalCompleted = [];
     if (scoreObject.data) {
       let total = 0;
+      let completedSteps = 0;
 
       scoreObject.data.forEach((stepData, index) => {
-        let completedSteps = 0;
+        let completed = 0;
         stepData["step-data"].forEach((subStep) => {
           subStep["sub-step-data"].forEach((subStepChoice) => {
             total++;
             if (subStepChoice.choice !== 0) {
+              completed++;
+            }
+            const allFilled = subStep["sub-step-data"].every(
+              (choiceObj) => choiceObj.choice !== 0
+            );
+            if (allFilled) {
               completedSteps++;
             }
           });
-          // const allFilled = subStep["sub-step-data"].every(
-          //   (choiceObj) => choiceObj.choice !== 0
-          // );
-          // if (allFilled) {
-          //   completedSteps++;
-          // }
         });
 
         totalCompletedSteps.push({
           total: total,
-          completed: completedSteps,
+          completed: completed,
+          completedSteps: completedSteps,
+          totalSteps: stepData["step-data"].length,
         });
       });
 
@@ -220,7 +227,8 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   return (
     <ApiContext.Provider
-      value={{ scoreObject, setScoreObject, completedSteps, structure }}>
+      value={{ scoreObject, setScoreObject, completedSteps, structure }}
+    >
       {children}
     </ApiContext.Provider>
   );

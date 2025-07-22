@@ -10,9 +10,15 @@ type ProgressBarProps = {
 export function ProgressBar({ completed, structure }: ProgressBarProps) {
   return (
     <div className={styles["progress-bar-container"]}>
-      {structure && (
+      {structure ? (
         <p className={clsx(styles["progress-headline"], "paragraph_18")}>
           {structure?.sidebar?.["progress-bar-headline"]}
+        </p>
+      ) : (
+        <p className={clsx(styles["progress-count"], "paragraph_18")}>
+          {`${
+            completed.filter((step) => step.completed === step.total).length
+          }/${completed.length}`}
         </p>
       )}
       <ul className={styles["progress-bar-steps"]}>
@@ -22,7 +28,8 @@ export function ProgressBar({ completed, structure }: ProgressBarProps) {
               className={styles["progress-bar-item-indicator"]}
               style={{
                 width: `${(step.completed / step.total) * 100}%`,
-              }}></div>
+              }}
+            ></div>
           </li>
         ))}
       </ul>

@@ -1,9 +1,10 @@
 "use client";
 
+import clsx from "clsx";
+import { structureProps, useStore } from "../../../contexts/Store";
+import styles from "./steps.module.scss";
 import { useParams } from "next/navigation";
-import { SideMenu } from "../side-menu/side-menu";
-import { useStore, structureProps } from "../../../contexts/Store";
-import { Questionnaire } from "../questionnaire/questionnaire";
+import { useMemo } from "react";
 
 export type structureAndStepsProps = {
   structure: structureProps | undefined;
@@ -15,20 +16,19 @@ export default function StepPage() {
   const [step, subStep, subStepChoice] = params?.params || [];
   const { structure } = useStore();
 
-  if (!structure || !structure.content) {
-    <div>Loading</div>;
-  }
+  const getCurrentStep = useMemo(() => {
+    return structure?.content.find(
+      (step) => step["step-slug"] === params.params?.[0]
+    );
+  }, [structure, params.params]);
+
+  console.log("getCurrentStep", getCurrentStep);
 
   return (
-    <>
-      <SideMenu
-        structure={structure}
-        currentStep={[step, subStep, subStepChoice]}
-      />
-      <Questionnaire
-        structure={structure}
-        currentStep={[step, subStep, subStepChoice]}
-      />
-    </>
+    <div className={styles["steps-slider-container"]}>
+      <div className={styles["step-box"]}>
+        <h2 className={clsx("headline_small bold")}></h2>
+      </div>
+    </div>
   );
 }
