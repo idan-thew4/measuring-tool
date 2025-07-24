@@ -80,7 +80,14 @@ export function Questionnaire({
             {`${getCurrentStep?.["step-number"]}. ${getCurrentStep?.["step-title"]}`}
           </p>
           <button
-            className={styles["description-state"]}
+            className={clsx(
+              styles["description-state"],
+              dropdownState.find(
+                (item) => item.dropdown === "description-step-title"
+              )?.state
+                ? ""
+                : styles["open"]
+            )}
             onClick={() =>
               setDropdownState((prev) =>
                 prev.map((item) =>
@@ -122,7 +129,14 @@ export function Questionnaire({
             } `}
           </h1>
           <button
-            className={styles["description-state"]}
+            className={clsx(
+              styles["description-state"],
+              dropdownState.find(
+                (item) => item.dropdown === "description-step-subtitle"
+              )?.state
+                ? ""
+                : styles["open"]
+            )}
             onClick={() =>
               setDropdownState((prev) =>
                 prev.map((item) =>
@@ -138,10 +152,10 @@ export function Questionnaire({
         <p
           className={clsx(styles["description"], "paragraph_19")}
           style={{
-            height: dropdownState.find(
+            maxHeight: dropdownState.find(
               (item) => item.dropdown === "description-step-subtitle"
             )?.state
-              ? "auto"
+              ? "500rem"
               : "0",
           }}
         >

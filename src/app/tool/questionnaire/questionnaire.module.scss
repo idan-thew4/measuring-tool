@@ -50,6 +50,11 @@
         center;
       rotate: 0deg;
       cursor: pointer;
+      transition: 0.3s all;
+
+      &.open {
+        rotate: 180deg;
+      }
     }
   }
 }
