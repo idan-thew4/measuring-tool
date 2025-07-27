@@ -1,5 +1,6 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import React, {
   createContext,
   useContext,
@@ -111,6 +112,7 @@ type ApiContextType = {
   setScoreObject: React.Dispatch<React.SetStateAction<ScoreType>>;
   completedSteps: totalCompleted;
   structure: structureProps | undefined;
+  previousStep?: string[];
 };
 
 const url = "http://localhost:3000/";
@@ -125,6 +127,14 @@ function Store({ children }: PropsWithChildren<{}>) {
     data: [],
   });
   const [completedSteps, setCompletedSteps] = useState<totalCompleted>([]);
+  const [previousStepRef, setPreviousStepRef] = useState<string[]>([]);
+  const params = useParams();
+  const [step, subStep, subStepChoice] = params?.params || [];
+  const [previousStep, setPreviousStep] = useState<string[] | undefined>();
+
+  useEffect(() => {
+    setPreviousStep([step, subStep, subStepChoice]);
+  }, [step, subStep, subStepChoice]);
 
   async function getContent() {
     try {
@@ -227,8 +237,13 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   return (
     <ApiContext.Provider
-      value={{ scoreObject, setScoreObject, completedSteps, structure }}
-    >
+      value={{
+        scoreObject,
+        setScoreObject,
+        completedSteps,
+        structure,
+        previousStep,
+      }}>
       {children}
     </ApiContext.Provider>
   );

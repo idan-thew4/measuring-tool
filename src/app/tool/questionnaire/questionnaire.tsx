@@ -72,33 +72,33 @@ export function Questionnaire({
     return null;
   }
 
+  console.log(dropdownState);
+
   return (
     <div className={styles["questionnaire-container"]}>
       <div className={styles["questionnaire-header"]}>
-        <div className={styles["step-title"]}>
+        <button
+          className={clsx(
+            styles["step-title"],
+            dropdownState.find(
+              (item) => item.dropdown === "description-step-title"
+            )?.state
+              ? styles["open"]
+              : ""
+          )}
+          onClick={() =>
+            setDropdownState((prev) =>
+              prev.map((item) =>
+                item.dropdown === "description-step-title"
+                  ? { ...item, state: !item.state }
+                  : item
+              )
+            )
+          }>
           <p className="paragraph_20">
             {`${getCurrentStep?.["step-number"]}. ${getCurrentStep?.["step-title"]}`}
           </p>
-          <button
-            className={clsx(
-              styles["description-state"],
-              dropdownState.find(
-                (item) => item.dropdown === "description-step-title"
-              )?.state
-                ? ""
-                : styles["open"]
-            )}
-            onClick={() =>
-              setDropdownState((prev) =>
-                prev.map((item) =>
-                  item.dropdown === "description-step-title"
-                    ? { ...item, state: !item.state }
-                    : item
-                )
-              )
-            }
-          ></button>
-        </div>
+        </button>
         <p
           className={clsx(styles["description"], "paragraph_19")}
           style={{
@@ -107,19 +107,34 @@ export function Questionnaire({
             )?.state
               ? "auto"
               : "0",
-          }}
-        >
+          }}>
           {`${getCurrentStep?.["step-description"]}`}
         </p>
 
-        <div className={styles["step-subtitle"]}>
+        <button
+          className={clsx(
+            styles["step-subtitle"],
+            dropdownState.find(
+              (item) => item.dropdown === "description-step-subtitle"
+            )?.state
+              ? styles["open"]
+              : ""
+          )}
+          onClick={() =>
+            setDropdownState((prev) =>
+              prev.map((item) =>
+                item.dropdown === "description-step-subtitle"
+                  ? { ...item, state: !item.state }
+                  : item
+              )
+            )
+          }>
           <h1 className="headline_medium-big bold">
             <span
               className={clsx(
                 "number headline_medium-small bold",
                 styles["number"]
-              )}
-            >
+              )}>
               {`${getCurrentStep?.["step-number"]}.${currentStep[1]}`}
             </span>
             {`${
@@ -128,7 +143,7 @@ export function Questionnaire({
               ]
             } `}
           </h1>
-          <button
+          {/* <button
             className={clsx(
               styles["description-state"],
               dropdownState.find(
@@ -145,10 +160,8 @@ export function Questionnaire({
                     : item
                 )
               )
-            }
-          ></button>
-        </div>
-
+            }></button> */}
+        </button>
         <p
           className={clsx(styles["description"], "paragraph_19")}
           style={{
@@ -157,8 +170,7 @@ export function Questionnaire({
             )?.state
               ? "500rem"
               : "0",
-          }}
-        >
+          }}>
           {`${
             getCurrentStep?.["step-content"][Number(currentStep[1]) - 1][
               "sub-step-description"

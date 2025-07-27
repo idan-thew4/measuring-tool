@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { structureProps, useStore } from "../../../contexts/Store";
 import styles from "./steps.module.scss";
 import { useParams } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 
 export type structureAndStepsProps = {
   structure: structureProps | undefined;
@@ -15,6 +15,8 @@ export default function StepPage() {
   const params = useParams();
   const [step, subStep, subStepChoice] = params?.params || [];
   const { structure } = useStore();
+  const [animationClass, setAnimationClass] = useState("slide-in");
+  const { previousStep } = useStore();
 
   const getCurrentStep = useMemo(() => {
     return structure?.content.find(
@@ -22,11 +24,14 @@ export default function StepPage() {
     );
   }, [structure, params.params]);
 
-  console.log("getCurrentStep", getCurrentStep);
+  // useEffect(() => {
+  //   console.log("Previous Params:", previousStep);
+  //   console.log("Current Params:", [step, subStep, subStepChoice]);
+  // }, [step, subStep, subStepChoice]);
 
   return (
     <div className={styles["steps-slider-container"]}>
-      <div className={styles["step-box"]}>
+      <div className={clsx(styles["step-box"], styles[animationClass])}>
         <h2 className={clsx("headline_small bold")}></h2>
       </div>
     </div>

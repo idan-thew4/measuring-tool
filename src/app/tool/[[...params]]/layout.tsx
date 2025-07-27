@@ -29,8 +29,7 @@ export default function StepLayout({
       />
       <Questionnaire
         structure={structure}
-        currentStep={[step, subStep, subStepChoice]}
-      >
+        currentStep={[step, subStep, subStepChoice]}>
         {children}
       </Questionnaire>
     </>
