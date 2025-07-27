@@ -49,6 +49,7 @@
         .step-content {
           opacity: 0;
           visibility: hidden;
+          padding-right: 3rem;
           > li.active {
             padding-bottom: 1rem;
           }
@@ -58,14 +59,14 @@
             opacity: 1;
             visibility: visible;
           }
-          .sub-step-choices {
+          .sub-steps {
             height: 0;
             overflow: hidden;
             padding-right: 4rem;
           }
 
           li.active {
-            .sub-step-choices {
+            .sub-steps {
               height: auto;
             }
           }

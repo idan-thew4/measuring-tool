@@ -12,6 +12,8 @@ export function SideMenu({ structure, currentStep }: structureAndStepsProps) {
     return null;
   }
 
+  console.log("completedSteps", completedSteps);
+
   return (
     <aside className={styles["side-menu"]}>
       <div className={styles["menu"]}>
@@ -50,8 +52,8 @@ export function SideMenu({ structure, currentStep }: structureAndStepsProps) {
                         subStep["sub-step-title"]
                       }`}
                     </Link>
-                    <ul className={styles["sub-step-choices"]}>
-                      {subStep["sub-step-choices"].map(
+                    <ul className={styles["sub-steps"]}>
+                      {subStep["sub-steps"].map(
                         (subChoices, subChoicesIndex) => (
                           <li
                             key={subChoicesIndex}
@@ -68,7 +70,7 @@ export function SideMenu({ structure, currentStep }: structureAndStepsProps) {
                               href={`/tool/${step["step-slug"]}/${
                                 subIndex + 1
                               }/${subChoicesIndex + 1}`}>
-                              {`${subChoicesIndex + 1}. ${subChoices}`}
+                              {`${subChoicesIndex + 1}. ${subChoices.title}`}
                             </Link>
                           </li>
                         )

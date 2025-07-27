@@ -97,7 +97,12 @@ export type Step = {
 type SubStep = {
   "sub-step-title": string;
   "sub-step-description": string;
-  "sub-step-choices": string[];
+  "sub-steps": Choice[];
+};
+
+type Choice = {
+  title: string;
+  choices: string[];
 };
 
 export type totalCompleted = {
@@ -168,16 +173,16 @@ function Store({ children }: PropsWithChildren<{}>) {
           "step-number": step["step-number"],
           "step-data": step["step-content"].map((subStep, subIndex) => ({
             "sub-step-number": subIndex + 1,
-            "sub-step-data": subStep["sub-step-choices"].map(
-              (choice, choiceIndex) => ({
-                id: choiceIndex + 1,
-                choice: 0,
-              })
-            ),
+            "sub-step-data": subStep["sub-steps"].map((sub, subIndex) => ({
+              id: subIndex + 1,
+              choice: 0,
+            })),
           })),
         })),
       };
     }
+
+    console.log("Score Object:", scoreObjectTemp);
 
     setScoreObject(scoreObjectTemp);
     getCompletedSteps(scoreObjectTemp);
@@ -212,7 +217,11 @@ function Store({ children }: PropsWithChildren<{}>) {
           completedSteps: completedSteps,
           totalSteps: stepData["step-data"].length,
         });
+
+        total = 0;
       });
+
+      console.log("Total Completed Steps:", totalCompletedSteps);
 
       return totalCompletedSteps;
     }

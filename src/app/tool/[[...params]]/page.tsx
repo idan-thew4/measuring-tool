@@ -16,7 +16,6 @@ export default function StepPage() {
   const [step, subStep, subStepChoice] = params?.params || [];
   const { structure } = useStore();
   const [animationClass, setAnimationClass] = useState("slide-in");
-  const { previousStep } = useStore();
 
   const getCurrentStep = useMemo(() => {
     return structure?.content.find(
@@ -24,10 +23,7 @@ export default function StepPage() {
     );
   }, [structure, params.params]);
 
-  // useEffect(() => {
-  //   console.log("Previous Params:", previousStep);
-  //   console.log("Current Params:", [step, subStep, subStepChoice]);
-  // }, [step, subStep, subStepChoice]);
+  console.log(getCurrentStep);
 
   return (
     <div className={styles["steps-slider-container"]}>

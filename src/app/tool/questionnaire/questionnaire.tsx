@@ -72,8 +72,6 @@ export function Questionnaire({
     return null;
   }
 
-  console.log(dropdownState);
-
   return (
     <div className={styles["questionnaire-container"]}>
       <div className={styles["questionnaire-header"]}>
