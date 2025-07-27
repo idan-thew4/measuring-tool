@@ -182,8 +182,6 @@ function Store({ children }: PropsWithChildren<{}>) {
       };
     }
 
-    console.log("Score Object:", scoreObjectTemp);
-
     setScoreObject(scoreObjectTemp);
     getCompletedSteps(scoreObjectTemp);
   }
@@ -220,8 +218,6 @@ function Store({ children }: PropsWithChildren<{}>) {
 
         total = 0;
       });
-
-      console.log("Total Completed Steps:", totalCompletedSteps);
 
       return totalCompletedSteps;
     }

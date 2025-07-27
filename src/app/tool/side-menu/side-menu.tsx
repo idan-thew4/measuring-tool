@@ -12,8 +12,6 @@ export function SideMenu({ structure, currentStep }: structureAndStepsProps) {
     return null;
   }
 
-  console.log("completedSteps", completedSteps);
-
   return (
     <aside className={styles["side-menu"]}>
       <div className={styles["menu"]}>
