@@ -15,12 +15,14 @@ export default function StepLayout({
   children: React.ReactNode;
 }) {
   const params = useParams();
-  const [step, subStep, subStepChoice] = params?.params || [];
+  const [step, subStep, subStepChoice, scoreObject, completedSteps] =
+    params?.params || [];
   const { structure } = useStore();
 
-  if (!structure || !structure.content) {
-    <div>Loading</div>;
+  if (!structure && !scoreObject && !completedSteps) {
+    return <div>Loading...</div>;
   }
+
   return (
     <>
       <SideMenu
@@ -29,7 +31,8 @@ export default function StepLayout({
       />
       <Questionnaire
         structure={structure}
-        currentStep={[step, subStep, subStepChoice]}>
+        currentStep={[step, subStep, subStepChoice]}
+      >
         {children}
       </Questionnaire>
     </>

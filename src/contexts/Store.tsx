@@ -7,6 +7,7 @@ import React, {
   PropsWithChildren,
   useState,
   useEffect,
+  useMemo,
 } from "react";
 
 const ApiContext = createContext<ApiContextType | undefined>(undefined);
@@ -103,6 +104,7 @@ type SubStep = {
 type Choice = {
   title: string;
   choices: string[];
+  comment?: string;
 };
 
 export type totalCompleted = {
@@ -118,6 +120,7 @@ type ApiContextType = {
   completedSteps: totalCompleted;
   structure: structureProps | undefined;
   previousStep?: string[];
+  getCurrentStep: (stepSlug: string) => Step;
 };
 
 const url = "http://localhost:3000/";
@@ -240,6 +243,12 @@ function Store({ children }: PropsWithChildren<{}>) {
     }
   }, [scoreObject]);
 
+  const getCurrentStep = (stepSlug: string) => {
+    return structure?.content.find(
+      (structureStep) => structureStep["step-slug"] === stepSlug
+    );
+  };
+
   return (
     <ApiContext.Provider
       value={{
@@ -248,7 +257,9 @@ function Store({ children }: PropsWithChildren<{}>) {
         completedSteps,
         structure,
         previousStep,
-      }}>
+        getCurrentStep,
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );

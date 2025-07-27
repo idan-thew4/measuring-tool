@@ -8,22 +8,19 @@ import { structureAndStepsProps } from "../[[...params]]/page";
 export function SideMenu({ structure, currentStep }: structureAndStepsProps) {
   const { completedSteps } = useStore();
 
-  if (!structure || !structure.content || !completedSteps) {
-    return null;
-  }
-
   return (
     <aside className={styles["side-menu"]}>
       <div className={styles["menu"]}>
         <ProgressBar completed={completedSteps} structure={structure} />
         <ul className={styles["nav-side-menu"]}>
-          {structure.content.map((step, stepIndex) => (
+          {structure?.content.map((step, stepIndex) => (
             <li
               className={clsx(
                 styles["step"],
                 step["step-slug"] === currentStep[0] ? styles["active"] : ""
               )}
-              key={stepIndex}>
+              key={stepIndex}
+            >
               <div className={clsx("nav-side-text__step", styles["step-text"])}>
                 <Link href={`/tool/${step["step-slug"]}/1/1`}>
                   {`${stepIndex + 1}. ${step["step-title"]}`}
@@ -42,10 +39,12 @@ export function SideMenu({ structure, currentStep }: structureAndStepsProps) {
                       subIndex + 1 === parseInt(currentStep[1])
                         ? styles["active"]
                         : ""
-                    }>
+                    }
+                  >
                     <Link
                       className="nav-side-text__sub-step"
-                      href={`/tool/${step["step-slug"]}/${subIndex + 1}/1`}>
+                      href={`/tool/${step["step-slug"]}/${subIndex + 1}/1`}
+                    >
                       {`${stepIndex + 1}.${subIndex + 1} ${
                         subStep["sub-step-title"]
                       }`}
@@ -61,13 +60,15 @@ export function SideMenu({ structure, currentStep }: structureAndStepsProps) {
                               subChoicesIndex + 1 === parseInt(currentStep[2])
                                 ? styles["active"]
                                 : ""
-                            }>
+                            }
+                          >
                             {/* <p>{subChoices}</p> */}
                             <Link
                               className="nav-side-text__sub-step-choice"
                               href={`/tool/${step["step-slug"]}/${
                                 subIndex + 1
-                              }/${subChoicesIndex + 1}`}>
+                              }/${subChoicesIndex + 1}`}
+                            >
                               {`${subChoicesIndex + 1}. ${subChoices.title}`}
                             </Link>
                           </li>
@@ -81,7 +82,7 @@ export function SideMenu({ structure, currentStep }: structureAndStepsProps) {
           ))}
         </ul>
         <ul className={styles["bottom-links"]}>
-          {structure.sidebar["bottom-options"].map((option, index) => (
+          {structure?.sidebar["bottom-options"].map((option, index) => (
             <li key={index}>
               <Link className="paragraph_18 bold" href={""}>
                 {option}
@@ -91,7 +92,7 @@ export function SideMenu({ structure, currentStep }: structureAndStepsProps) {
         </ul>
       </div>
       <ul className={styles["more"]}>
-        {structure.sidebar["more"].map((option, index) => (
+        {structure?.sidebar["more"].map((option, index) => (
           <li key={index}>
             <Link className="paragraph_18" href={""}>
               {option}

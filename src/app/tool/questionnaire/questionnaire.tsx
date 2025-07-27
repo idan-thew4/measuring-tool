@@ -11,12 +11,20 @@ import { structureAndStepsProps } from "../[[...params]]/page";
 import { useEffect, useMemo, useState } from "react";
 import { ProgressBar } from "../[[...params]]/progress-bar/progress-bar";
 
+type CurrentStepHeaders = {
+  title: string;
+  titleDescription: string;
+  subtitle: string;
+  subtitleNumber: string;
+  subtitleDescription: string;
+};
+
 export function Questionnaire({
   structure,
   currentStep,
   children,
 }: structureAndStepsProps & { children?: React.ReactNode }) {
-  const { scoreObject } = useStore();
+  const { scoreObject, getCurrentStep } = useStore();
   const [stepProgress, setStepProgress] = useState<totalCompleted>();
   const [dropdownState, setDropdownState] = useState<
     {
@@ -33,6 +41,8 @@ export function Questionnaire({
       state: false,
     },
   ]);
+  const [currentStepHeaders, setCurrentStepHeaders] =
+    useState<CurrentStepHeaders | null>(null);
 
   function getChoicesProgress(
     scoreObject: ScoreType,
@@ -56,21 +66,28 @@ export function Questionnaire({
     setStepProgress(stepProgressTemp);
   }
 
-  const getCurrentStep = useMemo(() => {
-    return structure?.content.find(
-      (step) => step["step-slug"] === currentStep[0]
-    );
-  }, [structure, currentStep]);
-
   useEffect(() => {
-    if (getCurrentStep) {
-      getChoicesProgress(scoreObject, getCurrentStep as Step, currentStep);
-    }
-  }, [scoreObject, getCurrentStep]);
+    const step = getCurrentStep(currentStep[0]);
+    if (step) {
+      getChoicesProgress(scoreObject, step, currentStep);
+      const stepNumber = step["step-number"];
+      const stepTitle = step["step-title"];
+      const stepDescription = step["step-description"];
+      const stepContent = step["step-content"];
+      const subStepIndex = Number(currentStep[1]) - 1;
+      const subStep = stepContent?.[subStepIndex];
+      const subStepTitle = subStep?.["sub-step-title"];
+      const subStepDescription = subStep?.["sub-step-description"];
 
-  if (!structure) {
-    return null;
-  }
+      setCurrentStepHeaders({
+        title: `${stepNumber}. ${stepTitle}`,
+        titleDescription: `${stepDescription}`,
+        subtitle: `${subStepTitle}`,
+        subtitleNumber: `${stepNumber}.${currentStep[1]}`,
+        subtitleDescription: `${subStepDescription}`,
+      });
+    }
+  }, [scoreObject, getCurrentStep, currentStep]);
 
   return (
     <div className={styles["questionnaire-container"]}>
@@ -92,10 +109,9 @@ export function Questionnaire({
                   : item
               )
             )
-          }>
-          <p className="paragraph_20">
-            {`${getCurrentStep?.["step-number"]}. ${getCurrentStep?.["step-title"]}`}
-          </p>
+          }
+        >
+          <p className="paragraph_20">{currentStepHeaders?.title}</p>
         </button>
         <p
           className={clsx(styles["description"], "paragraph_19")}
@@ -105,8 +121,9 @@ export function Questionnaire({
             )?.state
               ? "auto"
               : "0",
-          }}>
-          {`${getCurrentStep?.["step-description"]}`}
+          }}
+        >
+          {currentStepHeaders?.titleDescription}
         </p>
 
         <button
@@ -126,39 +143,23 @@ export function Questionnaire({
                   : item
               )
             )
-          }>
+          }
+        >
           <h1 className="headline_medium-big bold">
             <span
               className={clsx(
                 "number headline_medium-small bold",
                 styles["number"]
-              )}>
-              {`${getCurrentStep?.["step-number"]}.${currentStep[1]}`}
+              )}
+            >
+              {currentStepHeaders?.subtitleNumber}
             </span>
             {`${
-              getCurrentStep?.["step-content"][Number(currentStep[1]) - 1][
-                "sub-step-title"
-              ]
+              getCurrentStep(currentStep[0])?.["step-content"][
+                Number(currentStep[1]) - 1
+              ]["sub-step-title"]
             } `}
           </h1>
-          {/* <button
-            className={clsx(
-              styles["description-state"],
-              dropdownState.find(
-                (item) => item.dropdown === "description-step-subtitle"
-              )?.state
-                ? ""
-                : styles["open"]
-            )}
-            onClick={() =>
-              setDropdownState((prev) =>
-                prev.map((item) =>
-                  item.dropdown === "description-step-subtitle"
-                    ? { ...item, state: !item.state }
-                    : item
-                )
-              )
-            }></button> */}
         </button>
         <p
           className={clsx(styles["description"], "paragraph_19")}
@@ -168,12 +169,9 @@ export function Questionnaire({
             )?.state
               ? "500rem"
               : "0",
-          }}>
-          {`${
-            getCurrentStep?.["step-content"][Number(currentStep[1]) - 1][
-              "sub-step-description"
-            ]
-          } `}
+          }}
+        >
+          {currentStepHeaders?.subtitleDescription}
         </p>
 
         {stepProgress && <ProgressBar completed={stepProgress} />}
