@@ -8,11 +8,12 @@
     {
       "step-number": 1,
       "step-title": "הכנות וטרום תכנון",
+      "step-description": "תיאור שלב 1",
       "step-slug": "preparation-and-pre-planning",
-
       "step-content": [
         {
           "sub-step-title": "כותרת משנה 1",
+          "sub-step-description": "תיאור שלב 1",
           "sub-step-choices": [
             "בחירה לדוגמה 1",
             "בחירה לדוגמה 2",
@@ -24,11 +25,12 @@
     {
       "step-number": 2,
       "step-title": "עיצוב ותכנון",
+      "step-description": "שלבי התכנון והעיצוב הם ליבו של העיצוב הבר־קיימה המציע פתרונות הוליסטיים למטרות המיזם. סדרת תתי הפרקים הבאה פורטת את הקריטריונים שמביאים לעיצוב מורכב יותר ומעצימים את הסביבה הטבעית והחברתית ואת ניהול כלל המשאבים הקשורים במיזם.",
       "step-slug": "design-and-planning",
-
       "step-content": [
         {
           "sub-step-title": "מים",
+          "sub-step-description": "למערכות טבעיות יש ערך חיוני (קריטי) בשל יכולתן לאגור ולטהר מים, להחדיר מים לאקוויפר ולהזרימם לסביבתם. תת־פרק זה מעודד מיזמים לחיסכון במים, לניצול מיטבי של משקעים ולשמירה על איכות המים. מיזם בר־קיימה ישמר ויעצים מערכות מים טבעיות קיימות דוגמת נחלים, מלחות (estuaries) ואזורים ובתי גידול ימיים. הוא יעודד קציר נגר על פני השקיה במים מתוקים, ויציב מטרה לעצב מערכות טכנו־נופיות דוגמת סהרונים (bioswales), אזורי השהיה, חלחול והחדרה וגני גשם (rain gardens) המחקים פעולת מערכות טבעיות, לצורך השהיה וטיהור המים. ",
           "sub-step-choices": [
             "ניהול משאבי המים הטבעיים והמושבים במיזם.",
             " העצמת תועלות ויסות נגר בעזרת פתרונות מבוססי טבע",
@@ -37,9 +39,9 @@
             "הטמעה של אלמנטים מעוצבים לניהול הנגר"
           ]
         },
-
         {
           "sub-step-title": "קרקע וצמחיה",
+          "sub-step-description": "תיאור שלב 2",
           "sub-step-choices": [
             "בחירה לדוגמה 1",
             "בחירה לדוגמה 2",
@@ -48,6 +50,7 @@
         },
         {
           "sub-step-title": "משאבים וחומרים",
+          "sub-step-description": "תיאור שלב 2",
           "sub-step-choices": [
             "בחירה לדוגמה 1",
             "בחירה לדוגמה 2",
@@ -56,6 +59,7 @@
         },
         {
           "sub-step-title": "חברה וקהילה",
+          "sub-step-description": "תיאור שלב 2",
           "sub-step-choices": [
             "בחירה לדוגמה 1",
             "בחירה לדוגמה 2",
@@ -67,11 +71,12 @@
     {
       "step-number": 3,
       "step-title": "קרקע וצמחיה",
+      "step-description": "תיאור שלב 3",
       "step-slug": "soil-and-vegetation",
-
       "step-content": [
         {
           "sub-step-title": "כותרת משנה 3",
+          "sub-step-description": "תיאור שלב 3",
           "sub-step-choices": [
             "בחירה לדוגמה 1",
             "בחירה לדוגמה 2",
@@ -83,11 +88,12 @@
     {
       "step-number": 4,
       "step-title": "משאבים וחומרים",
+      "step-description": "תיאור שלב 4",
       "step-slug": "resources-and-materials",
-
       "step-content": [
         {
           "sub-step-title": "כותרת משנה 4",
+          "sub-step-description": "תיאור שלב 4",
           "sub-step-choices": [
             "בחירה לדוגמה 1",
             "בחירה לדוגמה 2",
@@ -99,11 +105,12 @@
     {
       "step-number": 5,
       "step-title": "חברה וקהילה",
+      "step-description": "תיאור שלב 5",
       "step-slug": "community-and-society",
-
       "step-content": [
         {
           "sub-step-title": "כותרת משנה 5",
+          "sub-step-description": "תיאור שלב 5",
           "sub-step-choices": [
             "בחירה לדוגמה 1",
             "בחירה לדוגמה 2",

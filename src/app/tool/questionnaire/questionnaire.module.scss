@@ -2,6 +2,7 @@
 
 .questionnaire-container {
   grid-column: 4/13;
+  grid-template-rows: 1fr 2fr;
   display: grid;
   grid-template-columns: subgrid;
   background-color: $lime-light;
@@ -15,11 +16,44 @@
     }
 
     .step-subtitle {
-      margin: 4rem 0;
+      margin: 4rem 0 2rem 0;
 
       .number {
         padding-left: 1rem;
         display: inline-block;
+      }
+
+      + .description {
+        margin-bottom: 4rem;
+      }
+    }
+
+    .step-subtitle,
+    .step-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .description {
+      overflow: hidden;
+      transition: 0.3s all;
+    }
+
+    .description-state {
+      background: transparent;
+      border: none;
+      width: 1.5rem;
+      height: 1.5rem;
+      background-size: 1.5rem;
+      background: url("../../../../public/icons/arrow-down.svg") no-repeat
+        center;
+      rotate: 0deg;
+      cursor: pointer;
+      transition: 0.3s all;
+
+      &.open {
+        rotate: 180deg;
       }
     }
   }

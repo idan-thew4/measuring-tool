@@ -5,6 +5,11 @@
     color: $dark-grey;
   }
 
+  .progress-count {
+    text-align: end;
+    margin: 0 0 1rem 0;
+  }
+
   ul.progress-bar-steps {
     display: flex;
     justify-content: space-between;
