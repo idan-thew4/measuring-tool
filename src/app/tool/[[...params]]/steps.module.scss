@@ -7,23 +7,75 @@
 
   .step-box {
     background-color: white;
-    height: 100%;
+    height: fit-content;
     grid-column: 3 / 8;
     transition: transform 0.5s, opacity 0.5s;
     will-change: transform, opacity;
     opacity: 1;
     transform: translateX(0);
-  }
+    padding: 3rem 3.2rem;
+    border-radius: 4rem;
 
-  .step-box.slide-out {
-    opacity: 0;
-    transform: translateX(-100%);
-  }
+    .step-headline-container {
+      color: $dark-green;
+      .headline {
+        display: flex;
+        justify-content: space-between;
 
-  .step-box.slide-in {
-    opacity: 1;
-    transform: translateX(100%);
-    animation: slideIn 0.5s forwards;
+        .toggle-container {
+          color: $basic-grey;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+
+          .toggle {
+            width: 3.6rem;
+            height: 2rem;
+            background-color: $light-grey;
+            border-radius: 1.2rem;
+            position: relative;
+            transition: all 0.3s;
+
+            &:after {
+              position: absolute;
+              background-color: white;
+              filter: drop-shadow(0 1px 2px rgba(16, 24, 40, 0.06))
+                drop-shadow(0 1px 3px rgba(16, 24, 40, 0.1));
+              width: 1.5rem;
+              height: 1.5rem;
+              content: "";
+              display: block;
+              border-radius: 100%;
+              top: 0;
+              bottom: 0;
+              margin: auto;
+              left: 0.3rem;
+              transition: all 0.3s ease-in-out;
+            }
+
+            &.active {
+              background-color: $dark-grey;
+              &:after {
+                left: 1.8rem;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .slide {
+      &-out {
+        opacity: 0;
+        transform: translateX(-100%);
+      }
+
+      &-in {
+        opacity: 1;
+        transform: translateX(100%);
+        animation: slideIn 0.5s forwards;
+      }
+    }
   }
 
   @keyframes slideIn {

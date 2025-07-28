@@ -22,5 +22,30 @@
   grid-template-columns: subgrid;
 }
 .steps-slider-container .step-box {
-  color: white;
+  background-color: white;
+  height: auto;
+  grid-column: 3/8;
+  transition: transform 0.5s, opacity 0.5s;
+  will-change: transform, opacity;
+  opacity: 1;
+  transform: translateX(0);
+}
+.steps-slider-container .step-box.slide-out {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+.steps-slider-container .step-box.slide-in {
+  opacity: 1;
+  transform: translateX(100%);
+  animation: slideIn 0.5s forwards;
+}
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }/*# sourceMappingURL=steps.module.css.map */

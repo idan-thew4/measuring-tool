@@ -58,10 +58,12 @@ export function Questionnaire({
 
     selectedChoice?.["sub-step-data"]?.forEach((choice) => {
       stepProgressTemp.push({
-        completed: choice.choice,
+        completed: choice.choice === -1 ? 1 : choice.choice,
         total: 1,
       });
     });
+
+    console.log("Step progress:", stepProgressTemp);
 
     setStepProgress(stepProgressTemp);
   }
@@ -109,8 +111,7 @@ export function Questionnaire({
                   : item
               )
             )
-          }
-        >
+          }>
           <p className="paragraph_20">{currentStepHeaders?.title}</p>
         </button>
         <p
@@ -121,8 +122,7 @@ export function Questionnaire({
             )?.state
               ? "auto"
               : "0",
-          }}
-        >
+          }}>
           {currentStepHeaders?.titleDescription}
         </p>
 
@@ -143,15 +143,13 @@ export function Questionnaire({
                   : item
               )
             )
-          }
-        >
+          }>
           <h1 className="headline_medium-big bold">
             <span
               className={clsx(
                 "number headline_medium-small bold",
                 styles["number"]
-              )}
-            >
+              )}>
               {currentStepHeaders?.subtitleNumber}
             </span>
             {`${
@@ -169,8 +167,7 @@ export function Questionnaire({
             )?.state
               ? "500rem"
               : "0",
-          }}
-        >
+          }}>
           {currentStepHeaders?.subtitleDescription}
         </p>
 

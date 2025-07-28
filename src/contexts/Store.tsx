@@ -75,16 +75,13 @@ type PersonalDetails = {
 export type structureProps = {
   sidebar: sideBar;
   content: Step[];
+  options: string[];
 };
 
 type sideBar = {
   "progress-bar-headline": string;
   "bottom-options": string[];
   more: string[];
-};
-
-type contentPlaceholder = {
-  "progress-bar-headline": string;
 };
 
 export type Step = {
@@ -103,7 +100,8 @@ type SubStep = {
 
 type Choice = {
   title: string;
-  choices: string[];
+  description: string;
+  choices: { title: string; text: string }[];
   comment?: string;
 };
 
@@ -120,7 +118,7 @@ type ApiContextType = {
   completedSteps: totalCompleted;
   structure: structureProps | undefined;
   previousStep?: string[];
-  getCurrentStep: (stepSlug: string) => Step;
+  getCurrentStep: (stepSlug: string) => Step | undefined;
 };
 
 const url = "http://localhost:3000/";
@@ -198,18 +196,18 @@ function Store({ children }: PropsWithChildren<{}>) {
       scoreObject.data.forEach((stepData, index) => {
         let completed = 0;
         stepData["step-data"].forEach((subStep) => {
+          const allFilled = subStep["sub-step-data"].every(
+            (choiceObj) => choiceObj.choice !== 0
+          );
           subStep["sub-step-data"].forEach((subStepChoice) => {
             total++;
             if (subStepChoice.choice !== 0) {
               completed++;
             }
-            const allFilled = subStep["sub-step-data"].every(
-              (choiceObj) => choiceObj.choice !== 0
-            );
-            if (allFilled) {
-              completedSteps++;
-            }
           });
+          if (allFilled) {
+            completedSteps++;
+          }
         });
 
         totalCompletedSteps.push({
@@ -220,7 +218,10 @@ function Store({ children }: PropsWithChildren<{}>) {
         });
 
         total = 0;
+        completedSteps = 0;
       });
+
+      console.log(totalCompletedSteps);
 
       return totalCompletedSteps;
     }
@@ -258,8 +259,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         structure,
         previousStep,
         getCurrentStep,
-      }}
-    >
+      }}>
       {children}
     </ApiContext.Provider>
   );

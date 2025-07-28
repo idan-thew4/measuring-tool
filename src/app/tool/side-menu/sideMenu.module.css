@@ -1,0 +1,95 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.side-menu {
+  grid-column: 1/4;
+  padding: 5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.side-menu a {
+  color: #979797;
+}
+.side-menu .menu {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+.side-menu .menu ul.nav-side-menu * {
+  color: #979797;
+}
+.side-menu .menu ul.nav-side-menu .active > * {
+  color: #7ab51d;
+}
+.side-menu .menu ul.nav-side-menu .step {
+  border-bottom: 0.1rem solid #979797;
+  height: 6.1rem;
+  overflow: hidden;
+}
+.side-menu .menu ul.nav-side-menu .step:first-child {
+  border-top: 0.1rem solid #979797;
+}
+.side-menu .menu ul.nav-side-menu .step .step-text {
+  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 2.1rem;
+  padding-top: 2rem;
+}
+.side-menu .menu ul.nav-side-menu .step .step-text p {
+  font-size: 1.8rem;
+}
+.side-menu .menu ul.nav-side-menu .step .step-content {
+  opacity: 0;
+  visibility: hidden;
+  padding-right: 3rem;
+}
+.side-menu .menu ul.nav-side-menu .step .step-content > li.active {
+  padding-bottom: 1rem;
+}
+.side-menu .menu ul.nav-side-menu .step .step-content:has(.active) {
+  padding-bottom: 1rem;
+  opacity: 1;
+  visibility: visible;
+}
+.side-menu .menu ul.nav-side-menu .step .step-content .sub-steps {
+  height: 0;
+  overflow: hidden;
+  padding-right: 4rem;
+}
+.side-menu .menu ul.nav-side-menu .step .step-content li.active .sub-steps {
+  height: auto;
+}
+.side-menu .menu ul.nav-side-menu .step.active {
+  height: auto;
+}
+.side-menu .more {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+.side-menu .more li:after {
+  content: "|";
+  color: #979797;
+  padding-right: 0.5rem;
+}
+.side-menu .more li:last-child:after {
+  content: "";
+}/*# sourceMappingURL=sideMenu.module.css.map */

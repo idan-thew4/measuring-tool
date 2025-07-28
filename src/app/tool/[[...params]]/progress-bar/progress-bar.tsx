@@ -28,8 +28,7 @@ export function ProgressBar({ completed, structure }: ProgressBarProps) {
               className={styles["progress-bar-item-indicator"]}
               style={{
                 width: `${(step.completed / step.total) * 100}%`,
-              }}
-            ></div>
+              }}></div>
           </li>
         ))}
       </ul>

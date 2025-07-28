@@ -1,7 +1,8 @@
 @use "./variables" as *;
 
 @for $i from 1 through 5 {
-  h#{$i} {
+  h#{$i},
+  p {
     margin: 0;
   }
 }
