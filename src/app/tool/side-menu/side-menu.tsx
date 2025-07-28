@@ -31,52 +31,54 @@ export function SideMenu({ structure, currentStep }: structureAndStepsProps) {
               </div>
 
               <ul className={styles["step-content"]}>
-                {step["step-content"].map((subStep, subIndex) => (
-                  <li
-                    key={subIndex}
-                    className={
-                      step["step-slug"] === currentStep[0] &&
-                      subIndex + 1 === parseInt(currentStep[1])
-                        ? styles["active"]
-                        : ""
-                    }
-                  >
-                    <Link
-                      className="nav-side-text__sub-step"
-                      href={`/tool/${step["step-slug"]}/${subIndex + 1}/1`}
+                {step["step-content"].map((subStep, subIndex) => {
+                  const isActiveSubStep =
+                    step["step-slug"] === currentStep[0] &&
+                    subIndex + 1 === parseInt(currentStep[1]);
+                  return (
+                    <li
+                      key={subIndex}
+                      className={clsx(isActiveSubStep && styles["active"])}
                     >
-                      {`${stepIndex + 1}.${subIndex + 1} ${
-                        subStep["sub-step-title"]
-                      }`}
-                    </Link>
-                    <ul className={styles["sub-steps"]}>
-                      {subStep["sub-steps"].map(
-                        (subChoices, subChoicesIndex) => (
-                          <li
-                            key={subChoicesIndex}
-                            className={
-                              step["step-slug"] === currentStep[0] &&
-                              subIndex + 1 === parseInt(currentStep[1]) &&
-                              subChoicesIndex + 1 === parseInt(currentStep[2])
-                                ? styles["active"]
-                                : ""
-                            }
-                          >
-                            {/* <p>{subChoices}</p> */}
-                            <Link
-                              className="nav-side-text__sub-step-choice"
-                              href={`/tool/${step["step-slug"]}/${
-                                subIndex + 1
-                              }/${subChoicesIndex + 1}`}
-                            >
-                              {`${subChoicesIndex + 1}. ${subChoices.title}`}
-                            </Link>
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  </li>
-                ))}
+                      <Link
+                        className="nav-side-text__sub-step"
+                        href={`/tool/${step["step-slug"]}/${subIndex + 1}/1`}
+                      >
+                        {`${stepIndex + 1}.${subIndex + 1} ${
+                          subStep["sub-step-title"]
+                        }`}
+                      </Link>
+                      <ul className={styles["sub-steps"]}>
+                        {subStep["sub-steps"].map(
+                          (subChoices, subChoicesIndex) => {
+                            const isActiveChoice =
+                              isActiveSubStep &&
+                              subChoicesIndex + 1 === parseInt(currentStep[2]);
+                            return (
+                              <li
+                                key={subChoicesIndex}
+                                className={clsx(
+                                  isActiveChoice && styles["active"]
+                                )}
+                              >
+                                <Link
+                                  className="nav-side-text__sub-step-choice"
+                                  href={`/tool/${step["step-slug"]}/${
+                                    subIndex + 1
+                                  }/${subChoicesIndex + 1}`}
+                                >
+                                  {`${subChoicesIndex + 1}. ${
+                                    subChoices.title
+                                  }`}
+                                </Link>
+                              </li>
+                            );
+                          }
+                        )}
+                      </ul>
+                    </li>
+                  );
+                })}
               </ul>
             </li>
           ))}
