@@ -55,10 +55,6 @@ export function NavButtons({ currentStep }: { currentStep: string[] }) {
     setNavButton({ previous, next });
   }, [getCurrentStep, currentStep, structure]);
 
-  useEffect(() => {
-    console.log(navButton);
-  }, [navButton]);
-
   if (!navButton) return null;
 
   return (
