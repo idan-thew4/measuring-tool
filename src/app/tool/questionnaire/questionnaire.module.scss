@@ -2,7 +2,7 @@
 
 .questionnaire-container {
   grid-column: 4/13;
-  grid-template-rows: auto auto 20rem;
+  grid-template-rows: repeat(3, min-content);
   display: grid;
   grid-template-columns: subgrid;
   background-color: $lime-light;

@@ -1,16 +1,18 @@
 @use "../../../styles/variables" as *;
 .nav-buttons {
   grid-column: 4/7;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 14rem);
   justify-content: center;
   height: 4.2rem;
   margin: auto;
-  gap: 4rem;
-  max-width: 70%;
+  gap: 2rem;
+  justify-items: center;
+  padding: 5rem 0 7rem 0;
 
   .nav-button {
     display: flex;
-    width: 15rem;
+    width: 100%;
     justify-content: center;
     align-items: center;
     gap: 1.2rem;
@@ -22,6 +24,7 @@
     line-height: 0.5rem;
     cursor: pointer;
     transition: 0.3s all;
+    box-sizing: border-box;
 
     &:after,
     &:before {
@@ -36,6 +39,7 @@
 
     &.previous {
       padding: 1rem 1rem 1rem 2rem;
+      grid-column: 1/2;
 
       &:before {
         content: "";
@@ -45,6 +49,7 @@
 
     &.next {
       padding: 1rem 2rem 1rem 1rem;
+      grid-column: 2/3;
 
       &:after {
         content: "";
