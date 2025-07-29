@@ -6,7 +6,8 @@
   display: grid;
   grid-template-columns: subgrid;
   background-color: $lime-light;
-  overflow-x: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
 
   @include scroll-bar;
