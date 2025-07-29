@@ -18,15 +18,19 @@
 
     .step-headline-container {
       color: $dark-green;
+      transition: 0.3s all;
+
       .headline {
         display: flex;
         justify-content: space-between;
+        margin-bottom: 3rem;
 
         .toggle-container {
           color: $basic-grey;
           display: flex;
           align-items: center;
           gap: 1rem;
+          cursor: pointer;
 
           .toggle {
             width: 3.6rem;
@@ -62,6 +66,10 @@
           }
         }
       }
+
+      .description {
+        margin-bottom: 2rem;
+      }
     }
 
     .slide {
@@ -74,6 +82,174 @@
         opacity: 1;
         transform: translateX(100%);
         animation: slideIn 0.5s forwards;
+      }
+    }
+
+    ul.step-options {
+      li.option {
+        color: $basic-grey;
+        border-bottom: 0.1rem solid $light-grey;
+        margin: -0.1rem;
+        padding: 1.5rem 0;
+        transition: 0.3s all;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .option-selection {
+          display: grid;
+          grid-template-columns: 30% 70%;
+
+          button {
+            text-align: right;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: 0.3s all;
+
+            &:after {
+              content: "";
+              background: transparent;
+              border: none;
+              width: 1.5rem;
+              height: 1.5rem;
+              background-size: 1.5rem !important;
+              background: url("../../../../public/icons/arrow-down_grey.svg")
+                no-repeat center;
+              rotate: 180deg;
+              cursor: pointer;
+              transition: 0.3s all;
+            }
+
+            &.open {
+              &:after {
+                rotate: 0deg;
+              }
+            }
+          }
+          .choice-text {
+            grid-column: 2/3;
+          }
+        }
+
+        &:first-child {
+          border-top: none;
+        }
+
+        button {
+          color: $basic-grey;
+        }
+
+        label {
+          display: flex;
+          gap: 1rem;
+          cursor: pointer;
+          transition: 0.3s all;
+
+          &::before {
+            content: "●";
+            text-align: center;
+            font-size: 2.5rem;
+            line-height: 2.3rem;
+            color: white;
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            border: 0.1rem solid $basic-grey;
+            border-radius: 50%;
+            vertical-align: middle;
+            transition: all 0.3s;
+          }
+        }
+
+        input {
+          &[type="radio"] {
+            display: none;
+            &:checked + label::before {
+              background-color: $dark-green;
+              border-color: $dark-green;
+            }
+          }
+        }
+
+        .choice-text {
+          overflow: hidden;
+          padding-left: 5rem;
+          transition: 0.3s all;
+        }
+
+        &:hover * {
+          color: $dark-grey;
+
+          label {
+            &::before {
+              border: 0.1rem solid $dark-grey;
+            }
+          }
+        }
+
+        &:has(+ li.selected) {
+          border-bottom: none;
+        }
+
+        &.selected,
+        &.selected:hover {
+          color: $dark-green;
+
+          &:first-child {
+            border-bottom: none;
+          }
+
+          &:not(:first-child) {
+            border-top: 0.1rem solid $dark-green;
+            border-bottom: none;
+          }
+
+          + li {
+            border-top: 0.1rem solid $dark-green;
+          }
+
+          // &:not(:last-child) {
+          //   border-bottom: 0.1rem solid $dark-green;
+          // }
+
+          button {
+            &:after {
+              background: url("../../../../public/icons/arrow-down_green.svg")
+                no-repeat center;
+            }
+          }
+
+          button {
+            color: $dark-green;
+          }
+        }
+
+        &.selected {
+          label {
+            pointer-events: none;
+          }
+        }
+      }
+    }
+
+    &.skip {
+      .step-headline-container {
+        color: $basic-grey;
+        .headline {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 3rem;
+        }
+      }
+
+      ul.step-options {
+        li.option {
+          label {
+            pointer-events: none;
+          }
+        }
       }
     }
   }

@@ -1,5 +1,4 @@
 import styles from "./questionnaire.module.scss";
-import Link from "next/link";
 import clsx from "clsx";
 import {
   useStore,
@@ -10,6 +9,7 @@ import {
 import { structureAndStepsProps } from "../[[...params]]/page";
 import { useEffect, useMemo, useState } from "react";
 import { ProgressBar } from "../[[...params]]/progress-bar/progress-bar";
+import { NavButtons } from "./navButtons";
 
 type CurrentStepHeaders = {
   title: string;
@@ -20,7 +20,6 @@ type CurrentStepHeaders = {
 };
 
 export function Questionnaire({
-  structure,
   currentStep,
   children,
 }: structureAndStepsProps & { children?: React.ReactNode }) {
@@ -62,8 +61,6 @@ export function Questionnaire({
         total: 1,
       });
     });
-
-    console.log("Step progress:", stepProgressTemp);
 
     setStepProgress(stepProgressTemp);
   }
@@ -111,7 +108,8 @@ export function Questionnaire({
                   : item
               )
             )
-          }>
+          }
+        >
           <p className="paragraph_20">{currentStepHeaders?.title}</p>
         </button>
         <p
@@ -122,7 +120,8 @@ export function Questionnaire({
             )?.state
               ? "auto"
               : "0",
-          }}>
+          }}
+        >
           {currentStepHeaders?.titleDescription}
         </p>
 
@@ -143,13 +142,15 @@ export function Questionnaire({
                   : item
               )
             )
-          }>
+          }
+        >
           <h1 className="headline_medium-big bold">
             <span
               className={clsx(
                 "number headline_medium-small bold",
                 styles["number"]
-              )}>
+              )}
+            >
               {currentStepHeaders?.subtitleNumber}
             </span>
             {`${
@@ -167,13 +168,20 @@ export function Questionnaire({
             )?.state
               ? "500rem"
               : "0",
-          }}>
+            marginBottom: dropdownState.find(
+              (item) => item.dropdown === "description-step-subtitle"
+            )?.state
+              ? "4rem"
+              : "0",
+          }}
+        >
           {currentStepHeaders?.subtitleDescription}
         </p>
 
         {stepProgress && <ProgressBar completed={stepProgress} />}
       </div>
       {children}
+      <NavButtons currentStep={currentStep} />
     </div>
   );
 }

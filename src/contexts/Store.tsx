@@ -76,6 +76,7 @@ export type structureProps = {
   sidebar: sideBar;
   content: Step[];
   options: string[];
+  buttons?: string[];
 };
 
 type sideBar = {
@@ -221,8 +222,6 @@ function Store({ children }: PropsWithChildren<{}>) {
         completedSteps = 0;
       });
 
-      console.log(totalCompletedSteps);
-
       return totalCompletedSteps;
     }
   }
@@ -259,7 +258,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         structure,
         previousStep,
         getCurrentStep,
-      }}>
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );

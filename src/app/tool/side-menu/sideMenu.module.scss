@@ -2,26 +2,43 @@
 
 .side-menu {
   grid-column: 1/4;
-  padding: 5rem;
+  padding: 0 5rem 5rem 5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  // gap: 10rem;
+  overflow-y: auto;
+  height: 86vh;
+  position: relative;
+
+  @include scroll-bar;
 
   a {
     color: $basic-grey;
+    transition: 0.3s all;
   }
 
   .menu {
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    // gap: 3rem;
     ul.nav-side-menu {
       * {
         color: $basic-grey;
+
+        &:hover {
+          color: $lime-green;
+        }
       }
       .active {
         > * {
           color: $lime-green;
+        }
+      }
+
+      .completed {
+        a {
+          color: $lime-green !important;
         }
       }
 
@@ -30,10 +47,6 @@
         height: 6.1rem;
         overflow: hidden;
 
-        &:first-child {
-          border-top: 0.1rem solid $basic-grey;
-        }
-
         .step-text {
           display: block;
           display: flex;
@@ -41,6 +54,7 @@
           justify-content: space-between;
           height: 2.1rem;
           padding-top: 2rem;
+
           p {
             font-size: 1.8rem;
           }
@@ -79,6 +93,7 @@
     }
 
     ul.bottom-links {
+      padding-top: 3rem;
     }
   }
 
@@ -86,6 +101,7 @@
     display: flex;
     gap: 0.5rem;
     justify-content: center;
+    padding-top: 10rem;
 
     li {
       &:after {

@@ -39,3 +39,13 @@ $lime-light: #f3f9ed;
 );
 
 $font-main: "SimplerPro", sans-serif;
+
+@mixin scroll-bar {
+  &::-webkit-scrollbar {
+    width: 0.8rem;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $light-grey;
+    border-radius: 10rem;
+  }
+}

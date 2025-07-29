@@ -1,6 +1,23 @@
 @use "../../../../styles/variables" as *;
 
 .progress-bar-container {
+  position: sticky;
+
+  &.side-menu {
+    background-color: white;
+    border-bottom: 0.1rem solid $basic-grey;
+    top: -2rem;
+    padding: 5rem 0 3rem 0;
+  }
+
+  &.questionnaire {
+    .progress-count {
+      background-color: $lime-light;
+      width: fit-content;
+      margin-right: auto;
+    }
+  }
+
   .progress-headline {
     color: $dark-grey;
   }
