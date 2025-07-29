@@ -28,7 +28,7 @@
 
     .step-subtitle {
       margin: 4rem 0 2rem 0;
-      top: 1rem;
+      top: 2rem;
       position: sticky;
 
       .number {
@@ -72,21 +72,8 @@
     .description {
       overflow: hidden;
       transition: 0.3s all;
-
-      &:first-of-type {
-        position: sticky;
-        top: 10rem;
-      }
-
-      &:last-of-type {
-        position: sticky;
-        top: 10rem;
-      }
-
-      // &:first-of-type {
-      //   position: sticky;
-      //   top: -10rem -70px;
-      // }
+      position: sticky;
+      top: 10rem;
     }
   }
 }
