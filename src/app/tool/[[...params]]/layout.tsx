@@ -5,7 +5,7 @@ import { useStore, structureProps } from "../../../contexts/Store";
 import { Questionnaire } from "../questionnaire/questionnaire";
 
 export type structureAndStepsProps = {
-  structure: structureProps | undefined;
+  structure: structureProps;
   currentStep: string[];
 };
 

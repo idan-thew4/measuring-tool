@@ -16,6 +16,20 @@
   font-weight: 800;
   font-style: normal;
 }
+.progress-bar-container {
+  position: sticky;
+}
+.progress-bar-container.side-menu {
+  background-color: white;
+  border-bottom: 0.1rem solid #979797;
+  top: -2rem;
+  padding: 5rem 0 3rem 0;
+}
+.progress-bar-container.questionnaire .progress-count {
+  background-color: #f3f9ed;
+  width: fit-content;
+  margin-right: auto;
+}
 .progress-bar-container .progress-headline {
   color: #4d4d4d;
 }

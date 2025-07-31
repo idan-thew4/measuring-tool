@@ -1,4 +1,9 @@
 {
+  "header": {
+    "about-section": ["מידע על הפרויקט"],
+    "actions": ["צור חלופה", "הורדת מידע"],
+    "graph": "ציון"
+  },
   "sidebar": {
     "progress-bar-headline": "סרגל התקדמות",
     "bottom-options": ["סיכום", "דוח מסכם", "מילון מונחים"],

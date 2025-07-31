@@ -73,8 +73,15 @@ type PersonalDetails = {
 //Structure types//
 
 export type structureProps = {
+  header: header;
   sidebar: sideBar;
   questionnaire: questionnaire;
+};
+
+type header = {
+  "about-section": string[];
+  actions: string[];
+  graphs: string;
 };
 
 type questionnaire = {
