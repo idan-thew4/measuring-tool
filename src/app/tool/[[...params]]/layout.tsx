@@ -13,7 +13,6 @@ export default function StepLayout({
   const { structure } = useStore();
 
   if (!structure) {
-  if (!structure) {
     return <div>Loading...</div>;
   }
 
