@@ -134,13 +134,14 @@ export default function StepPage() {
         className={clsx(
           styles["step-box"],
           currentStep.score === -1 && styles["skip"]
-        )}
-      >
+        )}>
         <div className={styles["step-headline-container"]}>
           <div className={styles["headline"]}>
             <h2 className="headline_small bold">{currentStep.title}</h2>
             <div className={styles["toggle-container"]}>
-              <p className="paragraph_17">{structure?.buttons?.[0]}</p>
+              <p className="paragraph_17">
+                {structure?.questionnaire.buttons?.[0]}
+              </p>
               <button
                 className={clsx(
                   styles["toggle"],
@@ -158,8 +159,7 @@ export default function StepPage() {
                       toggle ? 0 : -1
                     )
                   );
-                }}
-              ></button>
+                }}></button>
             </div>
           </div>
           <p className={clsx("paragraph_19", styles["description"])}>
@@ -167,14 +167,13 @@ export default function StepPage() {
           </p>
         </div>
         <ul className={styles["step-options"]}>
-          {structure?.options.map((option, index) => (
+          {structure?.questionnaire.options.map((option, index) => (
             <li
               key={option}
               className={clsx(
                 styles["option"],
                 currentStep.score === index + 1 ? styles["selected"] : ""
-              )}
-            >
+              )}>
               <div className={clsx(styles["option-selection"], "paragraph_19")}>
                 <input
                   type="radio"
@@ -192,12 +191,10 @@ export default function StepPage() {
                         index + 1
                       )
                     )
-                  }
-                ></input>
+                  }></input>
                 <label
                   className="paragraph_19 bold"
-                  htmlFor={`option-${index + 1}`}
-                >
+                  htmlFor={`option-${index + 1}`}>
                   {option}
                 </label>
 
@@ -217,8 +214,7 @@ export default function StepPage() {
                             : item
                         )
                       )
-                    }
-                  >
+                    }>
                     {currentStep.choices[index]?.title && (
                       <>{currentStep.choices[index].title}</>
                     )}
@@ -238,8 +234,7 @@ export default function StepPage() {
                     )?.state
                       ? "1.5rem"
                       : "0",
-                  }}
-                >
+                  }}>
                   {currentStep.choices[index]?.text && (
                     <>{currentStep.choices[index].text}</>
                   )}

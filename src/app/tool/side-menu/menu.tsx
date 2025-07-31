@@ -47,7 +47,7 @@ export function Menu({ structure, currentStep }: structureAndStepsProps) {
     <div className={styles["menu"]}>
       <ProgressBar completed={completedSteps} structure={structure} />
       <ul className={styles["nav-side-menu"]}>
-        {structure?.content.map((step, stepIndex) => (
+        {structure?.questionnaire.content.map((step, stepIndex) => (
           <li
             className={clsx(
               styles["step"],
@@ -60,8 +60,7 @@ export function Menu({ structure, currentStep }: structureAndStepsProps) {
                 ? styles["completed"]
                 : ""
             )}
-            key={stepIndex}
-          >
+            key={stepIndex}>
             <div className={clsx("nav-side-text__step", styles["step-text"])}>
               <Link href={`/tool/${step["step-slug"]}/1/1`}>
                 {`${stepIndex + 1}. ${step["step-title"]}`}
@@ -88,12 +87,10 @@ export function Menu({ structure, currentStep }: structureAndStepsProps) {
                     className={clsx(
                       isActiveSubStep && styles["active"],
                       subStepCompleted && styles["completed"]
-                    )}
-                  >
+                    )}>
                     <Link
                       className="nav-side-text__sub-step"
-                      href={`/tool/${step["step-slug"]}/${subIndex + 1}/1`}
-                    >
+                      href={`/tool/${step["step-slug"]}/${subIndex + 1}/1`}>
                       {`${stepIndex + 1}.${subIndex + 1} ${
                         subStep["sub-step-title"]
                       }`}
@@ -116,14 +113,12 @@ export function Menu({ structure, currentStep }: structureAndStepsProps) {
                               className={clsx(
                                 isActiveChoice && styles["active"],
                                 choiceCompleted && styles["completed"]
-                              )}
-                            >
+                              )}>
                               <Link
                                 className="nav-side-text__sub-step-choice"
                                 href={`/tool/${step["step-slug"]}/${
                                   subIndex + 1
-                                }/${subChoicesIndex + 1}`}
-                              >
+                                }/${subChoicesIndex + 1}`}>
                                 {`${subChoicesIndex + 1}. ${subChoices.title}`}
                               </Link>
                             </li>

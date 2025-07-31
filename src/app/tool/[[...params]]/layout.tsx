@@ -19,7 +19,7 @@ export default function StepLayout({
     params?.params || [];
   const { structure } = useStore();
 
-  if (!structure && !scoreObject && !completedSteps) {
+  if (!structure) {
     return <div>Loading...</div>;
   }
 
@@ -31,8 +31,7 @@ export default function StepLayout({
       />
       <Questionnaire
         structure={structure}
-        currentStep={[step, subStep, subStepChoice]}
-      >
+        currentStep={[step, subStep, subStepChoice]}>
         {children}
       </Questionnaire>
     </>
