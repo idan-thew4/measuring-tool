@@ -17,8 +17,8 @@ export function Header() {
         className="logo"
       />
       <nav>
-        {structure?.header["about-section"].map((link) => (
-          <div>{link}</div>
+        {structure?.header["about-section"].map((link, index) => (
+          <div key={index}>{link}</div>
         ))}
       </nav>
     </header>
