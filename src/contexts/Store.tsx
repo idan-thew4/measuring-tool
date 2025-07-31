@@ -74,9 +74,13 @@ type PersonalDetails = {
 
 export type structureProps = {
   sidebar: sideBar;
-  content: Step[];
+  questionnaire: questionnaire;
+};
+
+type questionnaire = {
   options: string[];
   buttons?: string[];
+  content: Step[];
 };
 
 type sideBar = {
@@ -171,7 +175,7 @@ function Store({ children }: PropsWithChildren<{}>) {
           name: "Idan Portal",
           email: "mail@idanportal.com",
         },
-        data: structureObject.content.map((step) => ({
+        data: structureObject.questionnaire.content.map((step) => ({
           "step-number": step["step-number"],
           "step-data": step["step-content"].map((subStep, subIndex) => ({
             "sub-step-number": subIndex + 1,
@@ -244,7 +248,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   }, [scoreObject]);
 
   const getCurrentStep = (stepSlug: string) => {
-    return structure?.content.find(
+    return structure?.questionnaire.content.find(
       (structureStep) => structureStep["step-slug"] === stepSlug
     );
   };
@@ -258,8 +262,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         structure,
         previousStep,
         getCurrentStep,
-      }}
-    >
+      }}>
       {children}
     </ApiContext.Provider>
   );
