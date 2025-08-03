@@ -76,6 +76,30 @@ type PersonalDetails = {
 export type structureProps = {
   sidebar: sideBar;
   questionnaire: questionnaire;
+  registration: Registration;
+};
+
+type Registration = {
+  title: string;
+  "validation-general-copy": string;
+  "nav-buttons": string[];
+  steps: RegistrationStep[];
+};
+
+type RegistrationStep = {
+  title: string;
+  description: string;
+  "input-fields": RegistrationInputField[];
+};
+
+type RegistrationInputField = {
+  label: string;
+  mandatory: boolean;
+  "validation-error": string;
+  placeholder: string;
+  name: string;
+  "dropdown-options"?: string[];
+  type?: string; // e.g., "checkbox"
 };
 
 type questionnaire = {
