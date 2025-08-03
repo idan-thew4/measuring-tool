@@ -7,6 +7,7 @@
   "questionnaire": {
     "options": ["ללא השיג", "משופר", "שיפור ניכר", "בר קיימה", "מרפא"],
     "buttons": ["דלג", "למדד הקודם", "למדד הבא"],
+    "text-area-placeholder": "הסבר מילולי",
     "content": [
       {
         "step-number": 1,

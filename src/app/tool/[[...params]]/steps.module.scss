@@ -253,6 +253,29 @@
         }
       }
     }
+
+    textarea {
+      width: -webkit-fill-available;
+      margin: 2rem 0;
+      resize: none;
+      height: 8.4rem;
+      font-family: $font-main;
+      border-radius: 1rem;
+      border: 0.1rem solid $light-grey;
+      padding: 1rem 1.5rem;
+      transition: 0.3s all;
+      color: $dark-grey;
+
+      &:focus {
+        border: 0.1rem solid $dark-grey;
+        outline: none;
+        color: $dark-grey;
+      }
+
+      &::placeholder {
+        color: $light-grey;
+      }
+    }
   }
 
   @keyframes slideIn {

@@ -66,6 +66,12 @@ ul {
 }
 
 .paragraph {
+  &_16 {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2.2rem;
+    letter-spacing: -0.032rem;
+  }
   &_18 {
     font-size: 1.8rem;
     font-weight: 400;

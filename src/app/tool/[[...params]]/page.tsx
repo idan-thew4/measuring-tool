@@ -11,7 +11,6 @@ type CurrentStepType = {
   title: string;
   description: string;
   choices: { title: string; text: string }[];
-  comment: string;
 };
 
 // type ScoreChoice = { id: number; choice: number };
@@ -49,6 +48,7 @@ export default function StepPage() {
       state: false,
     },
   ]);
+  const [comment, setComment] = useState("");
 
   const [animationClass, setAnimationClass] = useState("slide-in");
 
@@ -75,12 +75,18 @@ export default function StepPage() {
           getCurrentStep(step)?.["step-content"]?.[Number(subStep) - 1]?.[
             "sub-steps"
           ]?.[Number(subStepChoice) - 1]?.choices || [],
-        comment:
-          getCurrentStep(step)?.["step-content"]?.[Number(subStep) - 1]?.[
-            "sub-steps"
-          ]?.[Number(subStepChoice) - 1]?.comment || "",
       });
     }
+
+    setComment(
+      scoreObject.data?.[
+        getCurrentStep(step)?.["step-number"] ?? 1
+          ? (getCurrentStep(step)?.["step-number"] ?? 1) - 1
+          : 0
+      ]?.["step-data"]?.[Number(subStep) - 1]?.["sub-step-data"]?.[
+        Number(subStepChoice) - 1
+      ]?.comment ?? ""
+    );
   }, [subStep, subStepChoice, scoreObject]);
 
   function updateScoreObject(
@@ -89,7 +95,8 @@ export default function StepPage() {
     subStep: string,
     subStepChoice: string,
     getCurrentStep: (step: string) => any,
-    newScore: number
+    newScore?: number,
+    comment?: string
   ) {
     const stepIdx =
       getCurrentStep(step)?.["step-number"] ?? 1
@@ -97,8 +104,9 @@ export default function StepPage() {
         : 0;
     const subStepIdx = Number(subStep) - 1;
     const choiceIdx = Number(subStepChoice) - 1;
+    let newData;
 
-    const newData = prev.data?.map((stepData, sIdx) =>
+    newData = prev.data?.map((stepData, sIdx) =>
       sIdx === stepIdx
         ? {
             ...stepData,
@@ -109,7 +117,13 @@ export default function StepPage() {
                     "sub-step-data": subStepData["sub-step-data"].map(
                       (choiceObj, cIdx) =>
                         cIdx === choiceIdx
-                          ? { ...choiceObj, choice: newScore }
+                          ? {
+                              ...choiceObj,
+                              ...(newScore !== undefined
+                                ? { choice: newScore }
+                                : {}),
+                              ...(comment !== undefined ? { comment } : {}),
+                            }
                           : choiceObj
                     ),
                   }
@@ -200,12 +214,13 @@ export default function StepPage() {
 
                 {currentStep.choices[index]?.title && (
                   <button
-                    className={
+                    className={clsx(
                       dropdownState.find((item) => item.dropdown === index + 1)
                         ?.state
                         ? styles["open"]
-                        : ""
-                    }
+                        : "",
+                      "paragraph_19"
+                    )}
                     onClick={() =>
                       setDropdownState((prev) =>
                         prev.map((item) =>
@@ -243,6 +258,25 @@ export default function StepPage() {
             </li>
           ))}
         </ul>
+        <textarea
+          className="paragraph_16"
+          value={comment}
+          placeholder={structure?.questionnaire["text-area-placeholder"]}
+          onChange={(e) => {
+            setScoreObject((prev) =>
+              updateScoreObject(
+                prev,
+                step,
+                subStep,
+                subStepChoice,
+                getCurrentStep,
+                undefined,
+                e.target.value
+              )
+            );
+            setComment(e.target.value);
+          }}
+        />
       </div>
     </div>
   );

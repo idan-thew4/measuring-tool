@@ -1,0 +1,88 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.questionnaire-container {
+  grid-column: 4/13;
+  grid-template-rows: repeat(3, min-content);
+  display: grid;
+  grid-template-columns: subgrid;
+  background-color: #f3f9ed;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+.questionnaire-container::-webkit-scrollbar {
+  width: 0.8rem;
+}
+.questionnaire-container::-webkit-scrollbar-thumb {
+  background-color: #d9d9d9;
+  border-radius: 10rem;
+}
+.questionnaire-container .questionnaire-header {
+  grid-column: 3/8;
+  padding: 7.6rem 0 0rem 0;
+  position: sticky;
+  top: -20rem;
+  margin-bottom: 3rem;
+  background-color: #f3f9ed;
+  z-index: 1;
+}
+.questionnaire-container .questionnaire-header .step-title {
+  border-bottom: 0.1rem solid black;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+.questionnaire-container .questionnaire-header .step-subtitle {
+  margin: 4rem 0 2rem 0;
+  top: 2rem;
+  position: sticky;
+}
+.questionnaire-container .questionnaire-header .step-subtitle .number {
+  padding-left: 1rem;
+  display: inline-block;
+}
+.questionnaire-container .questionnaire-header .step-subtitle,
+.questionnaire-container .questionnaire-header .step-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.questionnaire-container .questionnaire-header .step-subtitle:after,
+.questionnaire-container .questionnaire-header .step-title:after {
+  content: "";
+  background: transparent;
+  border: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-size: 1.5rem !important;
+  background: url("../../../../../public/icons/arrow-down.svg") no-repeat center;
+  rotate: 0deg;
+  cursor: pointer;
+  transition: 0.3s all;
+}
+.questionnaire-container .questionnaire-header .step-subtitle.open:after,
+.questionnaire-container .questionnaire-header .step-title.open:after {
+  rotate: 180deg;
+}
+.questionnaire-container .questionnaire-header .description {
+  overflow: hidden;
+  transition: 0.3s all;
+  position: sticky;
+  top: 10rem;
+}/*# sourceMappingURL=questionnaire.module.css.map */

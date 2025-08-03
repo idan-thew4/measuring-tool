@@ -63,6 +63,7 @@ type SubStepPoints = {
 type ChoicePoints = {
   id: number;
   choice: number;
+  comment?: string;
 };
 
 type PersonalDetails = {
@@ -80,6 +81,7 @@ export type structureProps = {
 type questionnaire = {
   options: string[];
   buttons?: string[];
+  "text-area-placeholder"?: string;
   content: Step[];
 };
 
