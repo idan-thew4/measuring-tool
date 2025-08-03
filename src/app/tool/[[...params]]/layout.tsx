@@ -1,7 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useStore } from "../../../contexts/Store";
-import { Questionnaire } from "../questionnaire/questionnaire";
+import { Questionnaire } from "./questionnaire/questionnaire";
 
 export default function StepLayout({
   children,

@@ -69,6 +69,7 @@
 }
 .side-menu .menu ul.nav-side-menu .step .step-text p {
   font-size: 1.8rem;
+  transition: 0.3s all;
 }
 .side-menu .menu ul.nav-side-menu .step .step-content {
   opacity: 0;

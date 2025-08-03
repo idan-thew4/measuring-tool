@@ -1,15 +1,15 @@
-import styles from "./questionnaire.module.scss";
 import clsx from "clsx";
 import {
   useStore,
   ScoreType,
   Step,
   totalCompleted,
-} from "../../../contexts/Store";
-import { structureAndStepsProps } from "../[[...params]]/page";
-import { useEffect, useMemo, useState } from "react";
-import { ProgressBar } from "../[[...params]]/progress-bar/progress-bar";
+} from "../../../../contexts/Store";
+import { structureAndStepsProps } from "../../components/side-menu/menu";
+import { useEffect, useState } from "react";
+import { ProgressBar } from "../../components/progress-bar/progress-bar";
 import { NavButtons } from "./navButtons";
+import styles from "./questionnaire.module.scss";
 
 type CurrentStepHeaders = {
   title: string;
@@ -108,8 +108,7 @@ export function Questionnaire({
                   : item
               )
             )
-          }
-        >
+          }>
           <p className="paragraph_20">{currentStepHeaders?.title}</p>
         </button>
         <p
@@ -120,8 +119,7 @@ export function Questionnaire({
             )?.state
               ? "auto"
               : "0",
-          }}
-        >
+          }}>
           {currentStepHeaders?.titleDescription}
         </p>
 
@@ -142,15 +140,13 @@ export function Questionnaire({
                   : item
               )
             )
-          }
-        >
+          }>
           <h1 className="headline_medium-big bold">
             <span
               className={clsx(
                 "number headline_medium-small bold",
                 styles["number"]
-              )}
-            >
+              )}>
               {currentStepHeaders?.subtitleNumber}
             </span>
             {`${
@@ -173,8 +169,7 @@ export function Questionnaire({
             )?.state
               ? "4rem"
               : "0",
-          }}
-        >
+          }}>
           {currentStepHeaders?.subtitleDescription}
         </p>
 

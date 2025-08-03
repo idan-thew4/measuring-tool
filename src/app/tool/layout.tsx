@@ -1,5 +1,5 @@
 "use client";
-import { SideMenu } from "./side-menu/side-menu";
+import { SideMenu } from "./components/side-menu/side-menu";
 import { useStore } from "../../contexts/Store";
 import { useParams } from "next/navigation";
 
