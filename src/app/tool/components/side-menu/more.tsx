@@ -1,6 +1,6 @@
 import styles from "./sideMenu.module.scss";
 import Link from "next/link";
-import { structureProps } from "../../../contexts/Store";
+import { structureProps } from "../../../../contexts/Store";
 
 export function More({ structure }: { structure: structureProps }) {
   return (

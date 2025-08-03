@@ -1,10 +1,14 @@
 import styles from "./sideMenu.module.scss";
 import Link from "next/link";
 import clsx from "clsx";
-import { ProgressBar } from "../[[...params]]/progress-bar/progress-bar";
-import { useStore, ScoreType, structureProps } from "../../../contexts/Store";
+import { ProgressBar } from "../progress-bar/progress-bar";
+import {
+  useStore,
+  ScoreType,
+  structureProps,
+} from "../../../../contexts/Store";
 
-type structureAndStepsProps = {
+export type structureAndStepsProps = {
   structure: structureProps | undefined;
   currentStep: string[];
 };

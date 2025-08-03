@@ -1,10 +1,10 @@
 "use client";
 
 import clsx from "clsx";
-import { structureProps, useStore, ScoreType } from "../../../contexts/Store";
+import { useStore, ScoreType } from "../../../contexts/Store";
 import styles from "./steps.module.scss";
 import { useParams } from "next/navigation";
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
 type CurrentStepType = {
   score: number;
@@ -14,7 +14,7 @@ type CurrentStepType = {
   comment: string;
 };
 
-type ScoreChoice = { id: number; choice: number };
+// type ScoreChoice = { id: number; choice: number };
 
 export default function StepPage() {
   const params = useParams();
