@@ -99,7 +99,8 @@ type RegistrationInputField = {
   placeholder: string;
   name: string;
   "dropdown-options"?: string[];
-  type?: string; // e.g., "checkbox"
+  type?: string;
+  row?: number;
 };
 
 type questionnaire = {

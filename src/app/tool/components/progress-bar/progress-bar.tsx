@@ -13,8 +13,6 @@ export function ProgressBar({
   structure,
   indicator,
 }: ProgressBarProps) {
-  console.log(completed);
-
   return (
     <div
       className={clsx(
