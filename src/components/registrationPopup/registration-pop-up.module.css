@@ -1,0 +1,38 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.registration-pop-up {
+  width: 61rem;
+  height: 81.3rem;
+  background-color: white;
+  border-radius: 4rem;
+  padding: 3.5rem 4.1rem;
+  box-sizing: border-box;
+}
+.registration-pop-up-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(77, 77, 77, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9;
+}/*# sourceMappingURL=registration-pop-up.module.css.map */

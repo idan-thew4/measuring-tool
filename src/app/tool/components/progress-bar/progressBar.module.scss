@@ -18,6 +18,13 @@
     }
   }
 
+  &:has(.progress-indicator) {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 1rem;
+    margin: 4rem 0;
+  }
+
   .progress-headline {
     color: $dark-grey;
   }

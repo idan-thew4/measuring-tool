@@ -79,7 +79,7 @@ export type structureProps = {
   registration: Registration;
 };
 
-type Registration = {
+export type Registration = {
   title: string;
   "validation-general-copy": string;
   "nav-buttons": string[];

@@ -1,0 +1,5 @@
+.headerContainer {
+  grid-column: 1/13;
+  height: 10rem;
+  background-color: grey;
+}/*# sourceMappingURL=header.module.css.map */

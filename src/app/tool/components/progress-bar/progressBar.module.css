@@ -30,6 +30,12 @@
   width: fit-content;
   margin-right: auto;
 }
+.progress-bar-container:has(.progress-indicator) {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 1rem;
+  margin: 4rem 0;
+}
 .progress-bar-container .progress-headline {
   color: #4d4d4d;
 }
