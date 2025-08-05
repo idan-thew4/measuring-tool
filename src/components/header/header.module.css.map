@@ -1,1 +1,1 @@
-{"version":3,"sourceRoot":"","sources":["header.module.scss"],"names":[],"mappings":"AAAA;EACE;EACA;EACA","sourcesContent":[".headerContainer {\r\n  grid-column: 1 / 13;\r\n  height: 10rem;\r\n  background-color: grey;\r\n}\r\n"]}
+{"version":3,"sourceRoot":"","sources":["header.module.scss"],"names":[],"mappings":"AAAA;EACE;EACA;EACA","sourcesContent":[".headerContainer {\n  grid-column: 1 / 13;\n  height: 10rem;\n  background-color: grey;\n}\n"]}

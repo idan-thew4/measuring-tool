@@ -7,7 +7,7 @@
   "registration": {
     "title": "פתיחת פרויקט",
     "validation-general-copy": "* שדות המסומנים בכוכבית הינם חובה",
-    "nav-buttons": ["המשך", "החל במדידה "],
+    "nav-buttons": ["המשך", "המשך", "החל במדידה "],
     "steps": [
       {
         "title": "מידע כללי על הפרויקט",
@@ -22,6 +22,7 @@
             "placeholder": "שם המיזם",
             "name": "projectName"
           },
+
           {
             "label": "רשות מקומית",
             "mandatory": false,
@@ -31,10 +32,10 @@
             "placeholder": "רשות מקומית",
             "name": "localAuthority",
             "dropdown-options": [
-              "רשות מקומית 1",
-              "רשות מקומית 2",
-              "רשות מקומית 3",
-              "רשות מקומית 4"
+              { "value": "localAuthority-1", "label": "רשות מקומית 1" },
+              { "value": "localAuthority-2", "label": "רשות מקומית 2" },
+              { "value": "localAuthority-3", "label": "רשות מקומית 3" },
+              { "value": "localAuthority-4", "label": "רשות מקומית 4" }
             ]
           },
           {
@@ -45,7 +46,12 @@
             "validation-error": "יש להזין סוג המיזם",
             "placeholder": "סוג המיזם",
             "name": "projectType",
-            "dropdown-options": ["סוג 1", "סוג 2", "סוג 3", "סוג 4"]
+            "dropdown-options": [
+              { "value": "projectType-1", "label": "סוג 1" },
+              { "value": "projectType-2", "label": "סוג 2" },
+              { "value": "projectType-3", "label": "סוג 3" },
+              { "value": "projectType-4", "label": "סוג 4" }
+            ]
           },
           {
             "label": "תת סוג המיזם",
@@ -70,7 +76,12 @@
             "validation-error": "יש להזין שלב / סטטוס הפרויקט",
             "placeholder": "שלב / סטטוס הפרויקט",
             "name": "projectStatus",
-            "dropdown-options": ["שלב 1", "שלב 2", "שלב 3", "שלב 4"]
+            "dropdown-options": [
+              { "value": "projectStatus-1", "label": "שלב 1" },
+              { "value": "projectStatus-2", "label": "שלב 2" },
+              { "value": "projectStatus-3", "label": "שלב 3" },
+              { "value": "projectStatus-4", "label": "שלב 4" }
+            ]
           },
           {
             "label": "שנת תחילת תכנון",
@@ -79,7 +90,12 @@
             "validation-error": "יש להזין שנת תחילת תכנון",
             "placeholder": "שנת תחילת תכנון",
             "name": "projectStartYear",
-            "dropdown-options": ["2021", "2022", "2023", "2024"]
+            "dropdown-options": [
+              { "value": "projectStartYear-2021", "label": "2021" },
+              { "value": "projectStartYear-2022", "label": "2022" },
+              { "value": "projectStartYear-2023", "label": "2023" },
+              { "value": "projectStartYear-2024", "label": "2024" }
+            ]
           },
           {
             "label": "שנת סיום שלב",
@@ -88,7 +104,12 @@
             "validation-error": "יש להזין שנת סיום שלב",
             "placeholder": "שנת סיום שלב",
             "name": "projectEndYear",
-            "dropdown-options": ["2021", "2022", "2023", "2024"]
+            "dropdown-options": [
+              { "value": "projectEndYear-2021", "label": "2021" },
+              { "value": "projectEndYear-2022", "label": "2022" },
+              { "value": "projectEndYear-2023", "label": "2023" },
+              { "value": "projectEndYear-2024", "label": "2024" }
+            ]
           }
         ]
       },
@@ -104,10 +125,10 @@
             "placeholder": "הכשרה מקצועית",
             "name": "professionalTraining",
             "dropdown-options": [
-              "הכשרה מקצועית 1",
-              "הכשרה מקצועית 2",
-              "הכשרה מקצועית 3",
-              "הכשרה מקצועית 4"
+              { "value": "professionalTraining-1", "label": "הכשרה מקצועית 1" },
+              { "value": "professionalTraining-2", "label": "הכשרה מקצועית 2" },
+              { "value": "professionalTraining-3", "label": "הכשרה מקצועית 3" },
+              { "value": "professionalTraining-4", "label": "הכשרה מקצועית 4" }
             ]
           },
           {
@@ -133,7 +154,12 @@
             "validation-error": "יש להזין השכלה",
             "placeholder": "השכלה",
             "name": "education",
-            "dropdown-options": ["השכלה 1", "השכלה 2", "השכלה 3", "השכלה 4"]
+            "dropdown-options": [
+              { "value": "education-1", "label": "השכלה 1" },
+              { "value": "education-2", "label": "השכלה 2" },
+              { "value": "education-3", "label": "השכלה 3" },
+              { "value": "education-4", "label": "השכלה 4" }
+            ]
           },
           {
             "label": "מגדר",
@@ -142,7 +168,11 @@
             "validation-error": "יש להזין מגדר",
             "placeholder": "מגדר",
             "name": "gender",
-            "dropdown-options": ["זכר", "נקבה", "אחר"]
+            "dropdown-options": [
+              { "value": "gender-male", "label": "זכר" },
+              { "value": "gender-female", "label": "נקבה" },
+              { "value": "gender-other", "label": "אחר" }
+            ]
           }
         ]
       },
@@ -192,10 +222,10 @@
             "placeholder": "מבצע ההערכה",
             "name": "evaluationExecutor",
             "dropdown-options": [
-              "מבצע ההערכה 1",
-              "מבצע ההערכה 2",
-              "מבצע ההערכה 3",
-              "מבצע ההערכה 4"
+              { "value": "evaluationExecutor-1", "label": "מבצע ההערכה 1" },
+              { "value": "evaluationExecutor-2", "label": "מבצע ההערכה 2" },
+              { "value": "evaluationExecutor-3", "label": "מבצע ההערכה 3" },
+              { "value": "evaluationExecutor-4", "label": "מבצע ההערכה 4" }
             ]
           },
           {

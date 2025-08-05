@@ -67,8 +67,25 @@ type ChoicePoints = {
 };
 
 type PersonalDetails = {
-  name: string;
-  email: string;
+  projectName: string;
+  localAuthority: string;
+  projectType: string;
+  projectSubType: string;
+  projectArea: string;
+  projectStatus: string;
+  projectStartYear: string;
+  projectEndYear: string;
+  professionalTraining: string;
+  planningTeamRole: string;
+  yearsOfExperience: string;
+  education: string;
+  gender: string;
+  contactPerson: string;
+  contactEmail: string;
+  contactPhone: string;
+  planningOffice: string;
+  evaluationExecutor: string;
+  "data-agreement": string;
 };
 
 //Structure types//
@@ -159,8 +176,25 @@ function Store({ children }: PropsWithChildren<{}>) {
   const [structure, setStructure] = useState<structureProps>();
   const [scoreObject, setScoreObject] = useState<ScoreType>({
     "personal-details": {
-      name: "",
-      email: "",
+      projectName: "",
+      localAuthority: "",
+      projectType: "",
+      projectSubType: "",
+      projectArea: "",
+      projectStatus: "",
+      projectStartYear: "",
+      projectEndYear: "",
+      professionalTraining: "",
+      planningTeamRole: "",
+      yearsOfExperience: "",
+      education: "",
+      gender: "",
+      contactPerson: "",
+      contactEmail: "",
+      contactPhone: "",
+      planningOffice: "",
+      evaluationExecutor: "",
+      "data-agreement": "",
     },
     data: [],
   });
@@ -199,8 +233,25 @@ function Store({ children }: PropsWithChildren<{}>) {
     } else {
       scoreObjectTemp = {
         "personal-details": {
-          name: "Idan Portal",
-          email: "mail@idanportal.com",
+          projectName: "",
+          localAuthority: "",
+          projectType: "",
+          projectSubType: "",
+          projectArea: "",
+          projectStatus: "",
+          projectStartYear: "",
+          projectEndYear: "",
+          professionalTraining: "",
+          planningTeamRole: "",
+          yearsOfExperience: "",
+          education: "",
+          gender: "",
+          contactPerson: "",
+          contactEmail: "",
+          contactPhone: "",
+          planningOffice: "",
+          evaluationExecutor: "",
+          "data-agreement": "",
         },
         data: structureObject.questionnaire.content.map((step) => ({
           "step-number": step["step-number"],
@@ -265,12 +316,16 @@ function Store({ children }: PropsWithChildren<{}>) {
     const steps = getCompletedSteps(scoreObject) ?? [];
     setCompletedSteps(steps);
     if (
-      scoreObject["personal-details"].email &&
+      scoreObject["personal-details"].projectName &&
       scoreObject.data &&
       scoreObject.data.length > 0
     ) {
       const jsonCookie = JSON.stringify(scoreObject);
-      setCookie(`${scoreObject["personal-details"].email}`, jsonCookie, 0.15);
+      setCookie(
+        `${scoreObject["personal-details"].projectName}`,
+        jsonCookie,
+        0.15
+      );
     }
   }, [scoreObject]);
 
@@ -289,7 +344,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         structure,
         previousStep,
         getCurrentStep,
-      }}>
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );

@@ -18,7 +18,8 @@ export function ProgressBar({
       className={clsx(
         styles["progress-bar-container"],
         structure ? styles["side-menu"] : styles["questionnaire"]
-      )}>
+      )}
+    >
       {structure ? (
         <p className={clsx(styles["progress-headline"], "paragraph_18")}>
           {structure?.sidebar?.["progress-bar-headline"]}
@@ -44,7 +45,8 @@ export function ProgressBar({
               className={styles["progress-bar-item-indicator"]}
               style={{
                 width: `${(step.completed / step.total) * 100}%`,
-              }}></div>
+              }}
+            ></div>
           </li>
         ))}
       </ul>
