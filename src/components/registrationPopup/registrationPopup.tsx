@@ -25,6 +25,8 @@ export function RegistrationPopup() {
     formState: { errors },
   } = useForm<Inputs>();
 
+  const step = structure?.registration.steps[currentStep];
+
   useEffect(() => {
     if (structure) {
       const steps = structure.registration.steps.map((step, index) => ({
@@ -34,6 +36,22 @@ export function RegistrationPopup() {
       setCompletedSteps(steps);
     }
   }, [structure]);
+
+  useEffect(() => {
+    if (step) {
+      step["input-fields"].forEach((field, index) => {
+        if (
+          scoreObject["personal-details"] &&
+          field.name in scoreObject["personal-details"]
+        ) {
+          setValue(
+            field.name,
+            (scoreObject["personal-details"] as Inputs)[field.name]
+          );
+        }
+      });
+    }
+  }, [scoreObject, step]);
 
   const onSubmit = (stepData: Inputs, index: number) => {
     const updatedPersonalDetails = {
@@ -53,30 +71,13 @@ export function RegistrationPopup() {
         return newSteps;
       });
     } else {
+      console.log(updatedPersonalDetails);
       setScoreObject((prev) => ({
         ...prev,
         "personal-details": updatedPersonalDetails,
       }));
     }
   };
-
-  const step = structure?.registration.steps[currentStep];
-
-  useEffect(() => {
-    if (step) {
-      step["input-fields"].forEach((field, index) => {
-        if (
-          scoreObject["personal-details"] &&
-          field.name in scoreObject["personal-details"]
-        ) {
-          setValue(
-            field.name,
-            (scoreObject["personal-details"] as Record<string, any>)[field.name]
-          );
-        }
-      });
-    }
-  }, [scoreObject, step]);
 
   if (!structure || !step) return <div>Loading...</div>;
 
@@ -90,10 +91,8 @@ export function RegistrationPopup() {
         <div className={styles["form-container"]}>
           <div>
             <h3
-              className={clsx(
-                "headline_medium-small bold",
-                styles["headline"]
-              )}>
+              className={clsx("headline_medium-small bold", styles["headline"])}
+            >
               {step.title}
             </h3>
             <p className="paragraph_16">{step.description}</p>
@@ -109,7 +108,8 @@ export function RegistrationPopup() {
                   styles["row"],
                   styles[`row-${field.row}`]
                 )}
-                key={index}>
+                key={index}
+              >
                 {field["dropdown-options"] ? (
                   <Controller
                     name={field.name}
@@ -127,6 +127,7 @@ export function RegistrationPopup() {
                           field.mandatory ? " *" : ""
                         }`}
                         isClearable={true}
+                        value={controllerField.value}
                         isSearchable={true}
                         // menuIsOpen={true}
                         options={field["dropdown-options"]}
@@ -197,7 +198,8 @@ export function RegistrationPopup() {
             <button
               className={styles["submit-button"]}
               type="submit"
-              disabled={Object.keys(errors).length > 0}>
+              disabled={Object.keys(errors).length > 0}
+            >
               {structure.registration["nav-buttons"][currentStep]}
             </button>
           </form>

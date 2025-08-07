@@ -70,9 +70,9 @@
   display: flex;
   align-items: center;
 }
-.registration-pop-up .form-container form .row:has(.error-message) input,
+.registration-pop-up .form-container form .row:has(.error-message) > input,
 .registration-pop-up .form-container form .row:has(.error-message) :global(.dropdown__control) {
-  border-bottom: 0.1rem solid #ff001d;
+  border-bottom: 0.1rem solid #ff001d !important;
 }
 .registration-pop-up .form-container form input:not(input[type=checkbox]), .registration-pop-up .form-container form input:not(input[type=checkbox]):focus,
 .registration-pop-up .form-container form :global(.dropdown__control),
@@ -164,14 +164,19 @@
   rotate: 0deg;
   transition: 0.3s all;
 }
+.registration-pop-up .form-container form :global(.dropdown__control--menu-is-open) :global(.dropdown__indicator):after {
+  rotate: 180deg;
+}
 .registration-pop-up .form-container form :global(.dropdown) {
   height: 100%;
 }
 .registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) {
   box-shadow: 0 0 20px 0px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
+  z-index: 2;
+  top: 3.7rem;
 }
 .registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__menu-list) {
-  max-height: 18rem;
+  max-height: 14rem;
 }
 .registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__menu-list)::-webkit-scrollbar {
   width: 0.8rem;
@@ -190,15 +195,6 @@
 .registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option--is-selected) {
   background-color: transparent;
   color: #7ab51d;
-}
-.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__control--menu-is-open) :global(.dropdown__indicator):after {
-  content: "";
-  width: 1.5rem;
-  height: 1.5rem;
-  background-size: 1.5rem !important;
-  content: "";
-  background: url("../../../public/icons/arrow-down.svg") no-repeat center;
-  rotate: 180deg;
 }
 .registration-pop-up .form-container form .error-message {
   margin-top: 1rem;

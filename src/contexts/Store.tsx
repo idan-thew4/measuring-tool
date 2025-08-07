@@ -316,13 +316,13 @@ function Store({ children }: PropsWithChildren<{}>) {
     const steps = getCompletedSteps(scoreObject) ?? [];
     setCompletedSteps(steps);
     if (
-      scoreObject["personal-details"].projectName &&
+      scoreObject["personal-details"].contactEmail &&
       scoreObject.data &&
       scoreObject.data.length > 0
     ) {
       const jsonCookie = JSON.stringify(scoreObject);
       setCookie(
-        `${scoreObject["personal-details"].projectName}`,
+        `${scoreObject["personal-details"].contactEmail}`,
         jsonCookie,
         0.15
       );

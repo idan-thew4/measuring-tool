@@ -60,9 +60,9 @@
         }
 
         &:has(.error-message) {
-          input,
+          > input,
           :global(.dropdown__control) {
-            border-bottom: 0.1rem solid $validation-red;
+            border-bottom: 0.1rem solid $validation-red !important;
           }
         }
       }
@@ -176,15 +176,25 @@
         }
       }
 
+      :global(.dropdown__control--menu-is-open) {
+        :global(.dropdown__indicator) {
+          &:after {
+            rotate: 180deg;
+          }
+        }
+      }
+
       :global(.dropdown) {
         height: 100%;
         :global(.dropdown__menu) {
           box-shadow: 0 0 20px 0px hsla(0, 0%, 0%, 0.1),
             0 4px 11px hsla(0, 0%, 0%, 0.1);
+          z-index: 2;
+          top: 3.7rem;
 
           :global(.dropdown__menu-list) {
             @include scroll-bar;
-            max-height: 18rem;
+            max-height: 14rem;
           }
 
           :global(.dropdown__option) {
@@ -198,20 +208,6 @@
           :global(.dropdown__option--is-selected) {
             background-color: transparent;
             color: $lime-green;
-          }
-          :global(.dropdown__control--menu-is-open) {
-            :global(.dropdown__indicator) {
-              &:after {
-                content: "";
-                width: 1.5rem;
-                height: 1.5rem;
-                background-size: 1.5rem !important;
-                content: "";
-                background: url("../../../public/icons/arrow-down.svg")
-                  no-repeat center;
-                rotate: 180deg;
-              }
-            }
           }
         }
       }
