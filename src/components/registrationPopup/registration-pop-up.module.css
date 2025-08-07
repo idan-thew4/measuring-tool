@@ -164,31 +164,34 @@
   rotate: 0deg;
   transition: 0.3s all;
 }
-.registration-pop-up .form-container form :global(.dropdown__menu) {
+.registration-pop-up .form-container form :global(.dropdown) {
+  height: 100%;
+}
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) {
   box-shadow: 0 0 20px 0px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
 }
-.registration-pop-up .form-container form :global(.dropdown__menu) :global(.dropdown__menu-list) {
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__menu-list) {
   max-height: 18rem;
 }
-.registration-pop-up .form-container form :global(.dropdown__menu) :global(.dropdown__menu-list)::-webkit-scrollbar {
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__menu-list)::-webkit-scrollbar {
   width: 0.8rem;
 }
-.registration-pop-up .form-container form :global(.dropdown__menu) :global(.dropdown__menu-list)::-webkit-scrollbar-thumb {
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__menu-list)::-webkit-scrollbar-thumb {
   background-color: #d9d9d9;
   border-radius: 10rem;
 }
-.registration-pop-up .form-container form :global(.dropdown__menu) :global(.dropdown__option) {
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option) {
   transition: 0.3s all;
   padding-top: 1rem;
   padding-bottom: 1rem;
   color: #0e2517;
 }
-.registration-pop-up .form-container form :global(.dropdown__menu) :global(.dropdown__option--is-focused),
-.registration-pop-up .form-container form :global(.dropdown__menu) :global(.dropdown__option--is-selected) {
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option--is-focused),
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option--is-selected) {
   background-color: transparent;
   color: #7ab51d;
 }
-.registration-pop-up .form-container form :global(.dropdown__menu) :global(.dropdown__control--menu-is-open) :global(.dropdown__indicator):after {
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__control--menu-is-open) :global(.dropdown__indicator):after {
   content: "";
   width: 1.5rem;
   height: 1.5rem;

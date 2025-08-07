@@ -4,24 +4,23 @@ import { useStore, totalCompleted } from "../../contexts/Store";
 import { useEffect, useState } from "react";
 import { ProgressBar } from "@/app/tool/components/progress-bar/progress-bar";
 import clsx from "clsx";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, set } from "react-hook-form";
 import Select from "react-select";
 
 type Inputs = {
-  [key: string]: any;
+  [key: string]: string | { value: string; label: string } | boolean;
 };
 
 export function RegistrationPopup() {
   const { structure, scoreObject, setScoreObject } = useStore();
   const [completedSteps, setCompletedSteps] = useState<totalCompleted>();
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [data, setData] = useState<Inputs>({});
 
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
-    clearErrors,
     control,
     formState: { errors },
   } = useForm<Inputs>();
@@ -36,7 +35,12 @@ export function RegistrationPopup() {
     }
   }, [structure]);
 
-  const onSubmit = (data: Inputs, index: number) => {
+  const onSubmit = (stepData: Inputs, index: number) => {
+    const updatedPersonalDetails = {
+      ...scoreObject["personal-details"],
+      ...stepData,
+    };
+    setData(updatedPersonalDetails);
     if (completedSteps && index !== completedSteps.length - 1) {
       setCurrentStep(index + 1);
       setCompletedSteps((prev) => {
@@ -48,14 +52,7 @@ export function RegistrationPopup() {
         };
         return newSteps;
       });
-
-      const updatedPersonalDetails = { ...scoreObject["personal-details"] };
-      Object.keys(data).forEach((key) => {
-        if (key in updatedPersonalDetails) {
-          updatedPersonalDetails[key as keyof typeof updatedPersonalDetails] =
-            data[key];
-        }
-      });
+    } else {
       setScoreObject((prev) => ({
         ...prev,
         "personal-details": updatedPersonalDetails,
@@ -63,13 +60,25 @@ export function RegistrationPopup() {
     }
   };
 
+  const step = structure?.registration.steps[currentStep];
+
   useEffect(() => {
-    console.log(completedSteps);
-  }, [completedSteps]);
+    if (step) {
+      step["input-fields"].forEach((field, index) => {
+        if (
+          scoreObject["personal-details"] &&
+          field.name in scoreObject["personal-details"]
+        ) {
+          setValue(
+            field.name,
+            (scoreObject["personal-details"] as Record<string, any>)[field.name]
+          );
+        }
+      });
+    }
+  }, [scoreObject, step]);
 
-  if (!structure || !scoreObject) return <div>Loading...</div>;
-
-  const step = structure.registration.steps[currentStep];
+  if (!structure || !step) return <div>Loading...</div>;
 
   return (
     <div className={styles["registration-pop-up-container"]}>
@@ -81,8 +90,10 @@ export function RegistrationPopup() {
         <div className={styles["form-container"]}>
           <div>
             <h3
-              className={clsx("headline_medium-small bold", styles["headline"])}
-            >
+              className={clsx(
+                "headline_medium-small bold",
+                styles["headline"]
+              )}>
               {step.title}
             </h3>
             <p className="paragraph_16">{step.description}</p>
@@ -98,8 +109,7 @@ export function RegistrationPopup() {
                   styles["row"],
                   styles[`row-${field.row}`]
                 )}
-                key={index}
-              >
+                key={index}>
                 {field["dropdown-options"] ? (
                   <Controller
                     name={field.name}
@@ -111,7 +121,7 @@ export function RegistrationPopup() {
                     }}
                     render={({ field: controllerField }) => (
                       <Select
-                        className="paragraph_18"
+                        className="dropdown paragraph_18"
                         classNamePrefix={"dropdown"}
                         placeholder={`${field.label}${
                           field.mandatory ? " *" : ""
@@ -187,8 +197,7 @@ export function RegistrationPopup() {
             <button
               className={styles["submit-button"]}
               type="submit"
-              disabled={Object.keys(errors).length > 0}
-            >
+              disabled={Object.keys(errors).length > 0}>
               {structure.registration["nav-buttons"][currentStep]}
             </button>
           </form>
