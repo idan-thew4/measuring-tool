@@ -12,10 +12,18 @@ type Inputs = {
 };
 
 export function RegistrationPopup() {
-  const { structure, scoreObject, setScoreObject } = useStore();
+  const {
+    structure,
+    scoreObject,
+    setScoreObject,
+    registrationStatus,
+    setRegistrationStatus,
+  } = useStore();
   const [completedSteps, setCompletedSteps] = useState<totalCompleted>();
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [data, setData] = useState<Inputs>({});
+  const [showRegistrationPopup, setShowRegistrationPopup] =
+    useState<boolean>(false);
 
   const {
     register,
@@ -71,14 +79,14 @@ export function RegistrationPopup() {
         return newSteps;
       });
     } else {
-      console.log(updatedPersonalDetails);
+      setRegistrationStatus(false);
       setScoreObject((prev) => ({
         ...prev,
         "personal-details": updatedPersonalDetails,
       }));
     }
   };
-
+  if (!registrationStatus) return null;
   if (!structure || !step) return <div>Loading...</div>;
 
   return (
@@ -91,8 +99,10 @@ export function RegistrationPopup() {
         <div className={styles["form-container"]}>
           <div>
             <h3
-              className={clsx("headline_medium-small bold", styles["headline"])}
-            >
+              className={clsx(
+                "headline_medium-small bold",
+                styles["headline"]
+              )}>
               {step.title}
             </h3>
             <p className="paragraph_16">{step.description}</p>
@@ -108,8 +118,7 @@ export function RegistrationPopup() {
                   styles["row"],
                   styles[`row-${field.row}`]
                 )}
-                key={index}
-              >
+                key={index}>
                 {field["dropdown-options"] ? (
                   <Controller
                     name={field.name}
@@ -198,8 +207,7 @@ export function RegistrationPopup() {
             <button
               className={styles["submit-button"]}
               type="submit"
-              disabled={Object.keys(errors).length > 0}
-            >
+              disabled={Object.keys(errors).length > 0}>
               {structure.registration["nav-buttons"][currentStep]}
             </button>
           </form>

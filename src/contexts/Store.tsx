@@ -7,7 +7,6 @@ import React, {
   PropsWithChildren,
   useState,
   useEffect,
-  useMemo,
 } from "react";
 
 const ApiContext = createContext<ApiContextType | undefined>(undefined);
@@ -168,6 +167,8 @@ type ApiContextType = {
   structure: structureProps | undefined;
   previousChapter?: string[];
   getCurrentChapter: (chapterSlug: string) => Chapter | undefined;
+  setRegistrationStatus: React.Dispatch<React.SetStateAction<boolean>>;
+  registrationStatus: boolean;
 };
 
 const url = "http://localhost:3000/";
@@ -206,6 +207,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   const [previousChapter, setPreviousChapter] = useState<
     string[] | undefined
   >();
+  const [registrationStatus, setRegistrationStatus] = useState<boolean>(false);
 
   useEffect(() => {
     setPreviousChapter([chapter, subChapter, principle]);
@@ -320,7 +322,6 @@ function Store({ children }: PropsWithChildren<{}>) {
   }, []);
 
   useEffect(() => {
-    console.log("scoreObject", scoreObject);
     const chapters = getCompletedChapters(scoreObject) ?? [];
     setCompletedChapters(chapters);
     if (
@@ -328,6 +329,7 @@ function Store({ children }: PropsWithChildren<{}>) {
       scoreObject.data &&
       scoreObject.data.length > 0
     ) {
+      setRegistrationStatus(false);
       const jsonCookie = JSON.stringify(scoreObject);
       setCookie(
         `${scoreObject["personal-details"].contactEmail}`,
@@ -343,6 +345,14 @@ function Store({ children }: PropsWithChildren<{}>) {
     );
   };
 
+  useEffect(() => {
+    console.log("Registration status changed:", registrationStatus);
+  }, [registrationStatus]);
+
+  useEffect(() => {
+    console.log("scoreObject:", scoreObject);
+  }, [scoreObject]);
+
   return (
     <ApiContext.Provider
       value={{
@@ -352,6 +362,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         structure,
         previousChapter,
         getCurrentChapter,
+        setRegistrationStatus,
+        registrationStatus,
       }}>
       {children}
     </ApiContext.Provider>

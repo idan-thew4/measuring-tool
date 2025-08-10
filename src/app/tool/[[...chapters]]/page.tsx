@@ -5,6 +5,7 @@ import { useStore, ScoreType } from "../../../contexts/Store";
 import styles from "./chapters.module.scss";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { set } from "react-hook-form";
 
 type currentChapterType = {
   score: number;
@@ -18,8 +19,14 @@ type currentChapterType = {
 export default function ChapterPage() {
   const params = useParams();
   const [chapter, subChapter, principle] = params?.chapters || [];
-  const { structure, scoreObject, getCurrentChapter, setScoreObject } =
-    useStore();
+  const {
+    structure,
+    scoreObject,
+    getCurrentChapter,
+    setScoreObject,
+    registrationStatus,
+    setRegistrationStatus,
+  } = useStore();
   const [currentChapter, setCurrentChapter] =
     useState<currentChapterType | null>(null);
   const [toggle, setToggle] = useState(false);
@@ -100,14 +107,6 @@ export default function ChapterPage() {
     newScore?: number,
     comment?: string
   ) {
-    console.log("Updating score object:", {
-      chapter,
-      subChapter,
-      principle,
-      newScore,
-      comment,
-    });
-
     const chapterIdx =
       getCurrentChapter(chapter)?.["chapter-number"] ?? 1
         ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1) - 1
@@ -207,16 +206,20 @@ export default function ChapterPage() {
                   value={option}
                   checked={currentChapter.score === index + 1}
                   onChange={() => {
-                    setScoreObject((prev) =>
-                      updateScoreObject(
-                        prev,
-                        chapter,
-                        subChapter,
-                        principle,
-                        getCurrentChapter,
-                        index + 1
-                      )
-                    );
+                    if (scoreObject["personal-details"].contactEmail) {
+                      setScoreObject((prev) =>
+                        updateScoreObject(
+                          prev,
+                          chapter,
+                          subChapter,
+                          principle,
+                          getCurrentChapter,
+                          index + 1
+                        )
+                      );
+                    } else {
+                      setRegistrationStatus(true);
+                    }
                   }}></input>
                 <label
                   className="paragraph_19 bold"
