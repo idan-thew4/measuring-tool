@@ -5,14 +5,14 @@ import { More } from "./more";
 
 export function SideMenu({
   structure,
-  currentStep,
+  currentChapter,
 }: {
   structure: structureProps;
-  currentStep: string[];
+  currentChapter: string[];
 }) {
   return (
     <aside className={styles["side-menu"]}>
-      <Menu structure={structure} currentStep={currentStep} />
+      <Menu structure={structure} currentChapter={currentChapter} />
       <More structure={structure} />
     </aside>
   );

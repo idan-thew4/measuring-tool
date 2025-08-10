@@ -3,13 +3,13 @@ import { useParams } from "next/navigation";
 import { useStore } from "../../../contexts/Store";
 import { Questionnaire } from "./questionnaire/questionnaire";
 
-export default function StepLayout({
+export default function ChapterLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const params = useParams();
-  const [step, subStep, subStepChoice] = params?.params || [];
+  const [chapter, subChapter, principle] = params?.chapters || [];
   const { structure } = useStore();
 
   if (!structure) {
@@ -19,7 +19,7 @@ export default function StepLayout({
   return (
     <Questionnaire
       structure={structure}
-      currentStep={[step, subStep, subStepChoice]}>
+      currentChapter={[chapter, subChapter, principle]}>
       {children}
     </Questionnaire>
   );

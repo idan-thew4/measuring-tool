@@ -2,11 +2,11 @@
 
 import clsx from "clsx";
 import { useStore, ScoreType } from "../../../contexts/Store";
-import styles from "./steps.module.scss";
+import styles from "./chapters.module.scss";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-type CurrentStepType = {
+type currentChapterType = {
   score: number;
   title: string;
   description: string;
@@ -15,11 +15,13 @@ type CurrentStepType = {
 
 // type ScoreChoice = { id: number; choice: number };
 
-export default function StepPage() {
+export default function ChapterPage() {
   const params = useParams();
-  const [step, subStep, subStepChoice] = params?.params || [];
-  const { structure, scoreObject, getCurrentStep, setScoreObject } = useStore();
-  const [currentStep, setCurrentStep] = useState<CurrentStepType | null>(null);
+  const [chapter, subChapter, principle] = params?.chapters || [];
+  const { structure, scoreObject, getCurrentChapter, setScoreObject } =
+    useStore();
+  const [currentChapter, setCurrentChapter] =
+    useState<currentChapterType | null>(null);
   const [toggle, setToggle] = useState(false);
   const [dropdownState, setDropdownState] = useState<
     {
@@ -54,68 +56,78 @@ export default function StepPage() {
 
   useEffect(() => {
     if (scoreObject.data) {
-      setCurrentStep({
+      setCurrentChapter({
         score:
           scoreObject.data?.[
-            getCurrentStep(step)?.["step-number"] ?? 1
-              ? (getCurrentStep(step)?.["step-number"] ?? 1) - 1
+            getCurrentChapter(chapter)?.["chapter-number"] ?? 1
+              ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1) - 1
               : 0
-          ]?.["step-data"]?.[Number(subStep) - 1]?.["sub-step-data"]?.[
-            Number(subStepChoice) - 1
+          ]?.["chapter-data"]?.[Number(subChapter) - 1]?.["sub-chapter-data"]?.[
+            Number(principle) - 1
           ]?.choice ?? 0,
         title:
-          getCurrentStep(step)?.["step-content"]?.[Number(subStep) - 1]?.[
-            "sub-steps"
-          ]?.[Number(subStepChoice) - 1]?.title || "",
+          getCurrentChapter(chapter)?.["chapter-content"]?.[
+            Number(subChapter) - 1
+          ]?.["principles"]?.[Number(principle) - 1]?.title || "",
         description:
-          getCurrentStep(step)?.["step-content"]?.[Number(subStep) - 1]?.[
-            "sub-steps"
-          ]?.[Number(subStepChoice) - 1]?.description || "",
+          getCurrentChapter(chapter)?.["chapter-content"]?.[
+            Number(subChapter) - 1
+          ]?.["principles"]?.[Number(principle) - 1]?.description || "",
         choices:
-          getCurrentStep(step)?.["step-content"]?.[Number(subStep) - 1]?.[
-            "sub-steps"
-          ]?.[Number(subStepChoice) - 1]?.choices || [],
+          getCurrentChapter(chapter)?.["chapter-content"]?.[
+            Number(subChapter) - 1
+          ]?.["principles"]?.[Number(principle) - 1]?.choices || [],
       });
     }
 
     setComment(
       scoreObject.data?.[
-        getCurrentStep(step)?.["step-number"] ?? 1
-          ? (getCurrentStep(step)?.["step-number"] ?? 1) - 1
+        getCurrentChapter(chapter)?.["chapter-number"] ?? 1
+          ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1) - 1
           : 0
-      ]?.["step-data"]?.[Number(subStep) - 1]?.["sub-step-data"]?.[
-        Number(subStepChoice) - 1
+      ]?.["chapter-data"]?.[Number(subChapter) - 1]?.["sub-chapter-data"]?.[
+        Number(principle) - 1
       ]?.comment ?? ""
     );
-  }, [subStep, subStepChoice, scoreObject]);
+  }, [subChapter, principle, scoreObject]);
 
   function updateScoreObject(
     prev: ScoreType,
-    step: string,
-    subStep: string,
-    subStepChoice: string,
-    getCurrentStep: (step: string) => any,
+    chapter: string,
+    subChapter: string,
+    principle: string,
+    getCurrentChapter: (chapter: string) => any,
     newScore?: number,
     comment?: string
   ) {
-    const stepIdx =
-      getCurrentStep(step)?.["step-number"] ?? 1
-        ? (getCurrentStep(step)?.["step-number"] ?? 1) - 1
+    console.log("Updating score object:", {
+      chapter,
+      subChapter,
+      principle,
+      newScore,
+      comment,
+    });
+
+    const chapterIdx =
+      getCurrentChapter(chapter)?.["chapter-number"] ?? 1
+        ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1) - 1
         : 0;
-    const subStepIdx = Number(subStep) - 1;
-    const choiceIdx = Number(subStepChoice) - 1;
+    const subChapterIdx = Number(subChapter) - 1;
+    const choiceIdx = Number(principle) - 1;
     let newData;
 
-    newData = prev.data?.map((stepData, sIdx) =>
-      sIdx === stepIdx
+    newData = prev.data?.map((chapterData, sIdx) =>
+      sIdx === chapterIdx
         ? {
-            ...stepData,
-            "step-data": stepData["step-data"].map((subStepData, ssIdx) =>
-              ssIdx === subStepIdx
-                ? {
-                    ...subStepData,
-                    "sub-step-data": subStepData["sub-step-data"].map(
-                      (choiceObj, cIdx) =>
+            ...chapterData,
+            "chapter-data": chapterData["chapter-data"].map(
+              (subChapterData, ssIdx) =>
+                ssIdx === subChapterIdx
+                  ? {
+                      ...subChapterData,
+                      "sub-chapter-data": subChapterData[
+                        "sub-chapter-data"
+                      ].map((choiceObj, cIdx) =>
                         cIdx === choiceIdx
                           ? {
                               ...choiceObj,
@@ -125,12 +137,12 @@ export default function StepPage() {
                               ...(comment !== undefined ? { comment } : {}),
                             }
                           : choiceObj
-                    ),
-                  }
-                : subStepData
+                      ),
+                    }
+                  : subChapterData
             ),
           }
-        : stepData
+        : chapterData
     );
 
     return {
@@ -138,20 +150,20 @@ export default function StepPage() {
       data: newData,
     };
   }
-  if (currentStep === null) {
+  if (currentChapter === null) {
     return <div>Loading</div>;
   }
 
   return (
-    <div className={styles["steps-slider-container"]}>
+    <div className={styles["chapters-slider-container"]}>
       <div
         className={clsx(
-          styles["step-box"],
-          currentStep.score === -1 && styles["skip"]
+          styles["chapter-box"],
+          currentChapter.score === -1 && styles["skip"]
         )}>
-        <div className={styles["step-headline-container"]}>
+        <div className={styles["chapter-headline-container"]}>
           <div className={styles["headline"]}>
-            <h2 className="headline_small bold">{currentStep.title}</h2>
+            <h2 className="headline_small bold">{currentChapter.title}</h2>
             <div className={styles["toggle-container"]}>
               <p className="paragraph_17">
                 {structure?.questionnaire.buttons?.[0]}
@@ -159,17 +171,17 @@ export default function StepPage() {
               <button
                 className={clsx(
                   styles["toggle"],
-                  currentStep.score === -1 || toggle ? styles["active"] : ""
+                  currentChapter.score === -1 || toggle ? styles["active"] : ""
                 )}
                 onClick={() => {
                   setToggle(!toggle);
                   setScoreObject((prev) =>
                     updateScoreObject(
                       prev,
-                      step,
-                      subStep,
-                      subStepChoice,
-                      getCurrentStep,
+                      chapter,
+                      subChapter,
+                      principle,
+                      getCurrentChapter,
                       toggle ? 0 : -1
                     )
                   );
@@ -177,42 +189,42 @@ export default function StepPage() {
             </div>
           </div>
           <p className={clsx("paragraph_19", styles["description"])}>
-            {currentStep.description}
+            {currentChapter.description}
           </p>
         </div>
-        <ul className={styles["step-options"]}>
+        <ul className={styles["chapter-options"]}>
           {structure?.questionnaire.options.map((option, index) => (
             <li
               key={option}
               className={clsx(
                 styles["option"],
-                currentStep.score === index + 1 ? styles["selected"] : ""
+                currentChapter.score === index + 1 ? styles["selected"] : ""
               )}>
               <div className={clsx(styles["option-selection"], "paragraph_19")}>
                 <input
                   type="radio"
                   id={`option-${index + 1}`}
                   value={option}
-                  checked={currentStep.score === index + 1}
-                  onChange={() =>
+                  checked={currentChapter.score === index + 1}
+                  onChange={() => {
                     setScoreObject((prev) =>
                       updateScoreObject(
                         prev,
-                        step,
-                        subStep,
-                        subStepChoice,
-                        getCurrentStep,
+                        chapter,
+                        subChapter,
+                        principle,
+                        getCurrentChapter,
                         index + 1
                       )
-                    )
-                  }></input>
+                    );
+                  }}></input>
                 <label
                   className="paragraph_19 bold"
                   htmlFor={`option-${index + 1}`}>
                   {option}
                 </label>
 
-                {currentStep.choices[index]?.title && (
+                {currentChapter.choices[index]?.title && (
                   <button
                     className={clsx(
                       dropdownState.find((item) => item.dropdown === index + 1)
@@ -230,8 +242,8 @@ export default function StepPage() {
                         )
                       )
                     }>
-                    {currentStep.choices[index]?.title && (
-                      <>{currentStep.choices[index].title}</>
+                    {currentChapter.choices[index]?.title && (
+                      <>{currentChapter.choices[index].title}</>
                     )}
                   </button>
                 )}
@@ -250,8 +262,8 @@ export default function StepPage() {
                       ? "1.5rem"
                       : "0",
                   }}>
-                  {currentStep.choices[index]?.text && (
-                    <>{currentStep.choices[index].text}</>
+                  {currentChapter.choices[index]?.text && (
+                    <>{currentChapter.choices[index].text}</>
                   )}
                 </p>
               </div>
@@ -266,10 +278,10 @@ export default function StepPage() {
             setScoreObject((prev) =>
               updateScoreObject(
                 prev,
-                step,
-                subStep,
-                subStepChoice,
-                getCurrentStep,
+                chapter,
+                subChapter,
+                principle,
+                getCurrentChapter,
                 undefined,
                 e.target.value
               )

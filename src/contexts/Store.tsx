@@ -46,18 +46,18 @@ function useStore() {
 //Score Object types//
 
 export type ScoreType = {
-  data?: StepPoints[];
+  data?: ChapterPoints[];
   "personal-details": PersonalDetails;
 };
 
-type StepPoints = {
-  "step-number": number;
-  "step-data": SubStepPoints[];
+type ChapterPoints = {
+  "chapter-number": number;
+  "chapter-data": SubChapterPoints[];
 };
 
-type SubStepPoints = {
-  "sub-step-number": number;
-  "sub-step-data": ChoicePoints[];
+type SubChapterPoints = {
+  "sub-chapter-number": number;
+  "sub-chapter-data": ChoicePoints[];
 };
 
 type ChoicePoints = {
@@ -124,7 +124,7 @@ type questionnaire = {
   options: string[];
   buttons?: string[];
   "text-area-placeholder"?: string;
-  content: Step[];
+  content: Chapter[];
 };
 
 type sideBar = {
@@ -133,18 +133,18 @@ type sideBar = {
   more: string[];
 };
 
-export type Step = {
-  "step-number": number;
-  "step-title": string;
-  "step-description": string;
-  "step-slug": string;
-  "step-content": SubStep[];
+export type Chapter = {
+  "chapter-number": number;
+  "chapter-title": string;
+  "chapter-description": string;
+  "chapter-slug": string;
+  "chapter-content": SubChapter[];
 };
 
-type SubStep = {
-  "sub-step-title": string;
-  "sub-step-description": string;
-  "sub-steps": Choice[];
+type SubChapter = {
+  "sub-chapter-title": string;
+  "sub-chapter-description": string;
+  principles: Choice[];
 };
 
 type Choice = {
@@ -157,17 +157,17 @@ type Choice = {
 export type totalCompleted = {
   total: number;
   completed: number;
-  completedSteps?: number;
-  totalSteps?: number;
+  completedChapters?: number;
+  totalChapters?: number;
 }[];
 
 type ApiContextType = {
   scoreObject: ScoreType;
   setScoreObject: React.Dispatch<React.SetStateAction<ScoreType>>;
-  completedSteps: totalCompleted;
+  completedChapters: totalCompleted;
   structure: structureProps | undefined;
-  previousStep?: string[];
-  getCurrentStep: (stepSlug: string) => Step | undefined;
+  previousChapter?: string[];
+  getCurrentChapter: (chapterSlug: string) => Chapter | undefined;
 };
 
 const url = "http://localhost:3000/";
@@ -198,15 +198,18 @@ function Store({ children }: PropsWithChildren<{}>) {
     },
     data: [],
   });
-  const [completedSteps, setCompletedSteps] = useState<totalCompleted>([]);
-  const [previousStepRef, setPreviousStepRef] = useState<string[]>([]);
+  const [completedChapters, setCompletedChapters] = useState<totalCompleted>(
+    []
+  );
   const params = useParams();
-  const [step, subStep, subStepChoice] = params?.params || [];
-  const [previousStep, setPreviousStep] = useState<string[] | undefined>();
+  const [chapter, subChapter, principle] = params?.chapters || [];
+  const [previousChapter, setPreviousChapter] = useState<
+    string[] | undefined
+  >();
 
   useEffect(() => {
-    setPreviousStep([step, subStep, subStepChoice]);
-  }, [step, subStep, subStepChoice]);
+    setPreviousChapter([chapter, subChapter, principle]);
+  }, [chapter, subChapter, principle]);
 
   async function getContent() {
     try {
@@ -253,58 +256,62 @@ function Store({ children }: PropsWithChildren<{}>) {
           evaluationExecutor: "",
           "data-agreement": "",
         },
-        data: structureObject.questionnaire.content.map((step) => ({
-          "step-number": step["step-number"],
-          "step-data": step["step-content"].map((subStep, subIndex) => ({
-            "sub-step-number": subIndex + 1,
-            "sub-step-data": subStep["sub-steps"].map((sub, subIndex) => ({
-              id: subIndex + 1,
-              choice: 0,
-            })),
-          })),
+        data: structureObject.questionnaire.content.map((chapter) => ({
+          "chapter-number": chapter["chapter-number"],
+          "chapter-data": chapter["chapter-content"].map(
+            (subChapter, subIndex) => ({
+              "sub-chapter-number": subIndex + 1,
+              "sub-chapter-data": subChapter["principles"].map(
+                (sub, subIndex) => ({
+                  id: subIndex + 1,
+                  choice: 0,
+                })
+              ),
+            })
+          ),
         })),
       };
     }
 
     setScoreObject(scoreObjectTemp);
-    getCompletedSteps(scoreObjectTemp);
+    getCompletedChapters(scoreObjectTemp);
   }
 
-  function getCompletedSteps(scoreObject: ScoreType) {
-    let totalCompletedSteps: totalCompleted = [];
+  function getCompletedChapters(scoreObject: ScoreType) {
+    let totalCompletedChapters: totalCompleted = [];
     if (scoreObject.data) {
       let total = 0;
-      let completedSteps = 0;
+      let completedChapters = 0;
 
-      scoreObject.data.forEach((stepData, index) => {
+      scoreObject.data.forEach((chapterData, index) => {
         let completed = 0;
-        stepData["step-data"].forEach((subStep) => {
-          const allFilled = subStep["sub-step-data"].every(
+        chapterData["chapter-data"].forEach((subChapter) => {
+          const allFilled = subChapter["sub-chapter-data"].every(
             (choiceObj) => choiceObj.choice !== 0
           );
-          subStep["sub-step-data"].forEach((subStepChoice) => {
+          subChapter["sub-chapter-data"].forEach((subChapterChoice) => {
             total++;
-            if (subStepChoice.choice !== 0) {
+            if (subChapterChoice.choice !== 0) {
               completed++;
             }
           });
           if (allFilled) {
-            completedSteps++;
+            completedChapters++;
           }
         });
 
-        totalCompletedSteps.push({
+        totalCompletedChapters.push({
           total: total,
           completed: completed,
-          completedSteps: completedSteps,
-          totalSteps: stepData["step-data"].length,
+          completedChapters: completedChapters,
+          totalChapters: chapterData["chapter-data"].length,
         });
 
         total = 0;
-        completedSteps = 0;
+        completedChapters = 0;
       });
 
-      return totalCompletedSteps;
+      return totalCompletedChapters;
     }
   }
 
@@ -313,8 +320,9 @@ function Store({ children }: PropsWithChildren<{}>) {
   }, []);
 
   useEffect(() => {
-    const steps = getCompletedSteps(scoreObject) ?? [];
-    setCompletedSteps(steps);
+    console.log("scoreObject", scoreObject);
+    const chapters = getCompletedChapters(scoreObject) ?? [];
+    setCompletedChapters(chapters);
     if (
       scoreObject["personal-details"].contactEmail &&
       scoreObject.data &&
@@ -329,9 +337,9 @@ function Store({ children }: PropsWithChildren<{}>) {
     }
   }, [scoreObject]);
 
-  const getCurrentStep = (stepSlug: string) => {
+  const getCurrentChapter = (chapterSlug: string) => {
     return structure?.questionnaire.content.find(
-      (structureStep) => structureStep["step-slug"] === stepSlug
+      (structureChapter) => structureChapter["chapter-slug"] === chapterSlug
     );
   };
 
@@ -340,12 +348,11 @@ function Store({ children }: PropsWithChildren<{}>) {
       value={{
         scoreObject,
         setScoreObject,
-        completedSteps,
+        completedChapters,
         structure,
-        previousStep,
-        getCurrentStep,
-      }}
-    >
+        previousChapter,
+        getCurrentChapter,
+      }}>
       {children}
     </ApiContext.Provider>
   );

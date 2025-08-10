@@ -1,11 +1,11 @@
 @use "../../../styles/variables" as *;
 
-.steps-slider-container {
+.chapters-slider-container {
   grid-column: 1 / 10;
   display: grid;
   grid-template-columns: subgrid;
 
-  .step-box {
+  .chapter-box {
     background-color: white;
     height: fit-content;
     grid-column: 3 / 8;
@@ -16,7 +16,7 @@
     padding: 3rem 3.2rem 1rem 3.2rem;
     border-radius: 4rem;
 
-    .step-headline-container {
+    .chapter-headline-container {
       color: $dark-green;
       transition: 0.3s all;
 
@@ -85,7 +85,7 @@
       }
     }
 
-    ul.step-options {
+    ul.chapter-options {
       li.option {
         color: $basic-grey;
         border-bottom: 0.1rem solid $light-grey;
@@ -236,7 +236,7 @@
     }
 
     &.skip {
-      .step-headline-container {
+      .chapter-headline-container {
         color: $basic-grey;
         .headline {
           display: flex;
@@ -245,7 +245,7 @@
         }
       }
 
-      ul.step-options {
+      ul.chapter-options {
         li.option {
           label {
             pointer-events: none;

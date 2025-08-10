@@ -21,13 +21,13 @@
     background-color: $lime-light;
     z-index: 1;
 
-    .step-title {
+    .chapter-title {
       border-bottom: 0.1rem solid black;
       padding-bottom: 1rem;
       margin-bottom: 1rem;
     }
 
-    .step-subtitle {
+    .chapter-subtitle {
       margin: 4rem 0 2rem 0;
       top: 2rem;
       position: sticky;
@@ -42,8 +42,8 @@
       }
     }
 
-    .step-subtitle,
-    .step-title {
+    .chapter-subtitle,
+    .chapter-title {
       display: flex;
       align-items: center;
       justify-content: space-between;

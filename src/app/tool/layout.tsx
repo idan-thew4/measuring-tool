@@ -9,7 +9,7 @@ export default function ToolLayout({
   children: React.ReactNode;
 }) {
   const params = useParams();
-  const [step, subStep, subStepChoice] = params?.params || [];
+  const [chapter, subChapter, principle] = params?.chapters || [];
   const { structure } = useStore();
 
   if (!structure) return <div>Loading...</div>;
@@ -18,7 +18,7 @@ export default function ToolLayout({
     <>
       <SideMenu
         structure={structure}
-        currentStep={[step, subStep, subStepChoice]}
+        currentChapter={[chapter, subChapter, principle]}
       />
       {children}
     </>

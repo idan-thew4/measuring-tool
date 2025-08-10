@@ -42,12 +42,12 @@
         }
       }
 
-      .step {
+      .chapter {
         border-bottom: 0.1rem solid $basic-grey;
         height: 6.1rem;
         overflow: hidden;
 
-        .step-text {
+        .chapter-text {
           display: block;
           display: flex;
           align-items: center;
@@ -61,7 +61,7 @@
           }
         }
 
-        .step-content {
+        .chapter-content {
           opacity: 0;
           visibility: hidden;
           padding-right: 3rem;
@@ -74,14 +74,14 @@
             opacity: 1;
             visibility: visible;
           }
-          .sub-steps {
+          .principles {
             height: 0;
             overflow: hidden;
             padding-right: 4rem;
           }
 
           li.active {
-            .sub-steps {
+            .principles {
               height: auto;
             }
           }

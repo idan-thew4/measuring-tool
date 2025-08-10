@@ -245,15 +245,15 @@
     "text-area-placeholder": "הסבר מילולי",
     "content": [
       {
-        "step-number": 1,
-        "step-title": "הכנות וטרום תכנון",
-        "step-description": "תיאור שלב 1",
-        "step-slug": "preparation-and-pre-planning",
-        "step-content": [
+        "chapter-number": 1,
+        "chapter-title": "הכנות וטרום תכנון",
+        "chapter-description": "תיאור שלב 1",
+        "chapter-slug": "preparation-and-pre-planning",
+        "chapter-content": [
           {
-            "sub-step-title": "כותרת משנה 1",
-            "sub-step-description": "תיאור שלב 1",
-            "sub-steps": [
+            "sub-chapter-title": "כותרת משנה 1",
+            "sub-chapter-description": "תיאור שלב 1",
+            "principles": [
               {
                 "title": "תת כותרת משנה 2",
                 "description": "תיאור תת כותרת משנה 2",
@@ -281,15 +281,15 @@
         ]
       },
       {
-        "step-number": 2,
-        "step-title": "עיצוב ותכנון",
-        "step-description": "שלבי התכנון והעיצוב הם ליבו של העיצוב הבר־קיימה המציע פתרונות הוליסטיים למטרות המיזם. סדרת תתי הפרקים הבאה פורטת את הקריטריונים שמביאים לעיצוב מורכב יותר ומעצימים את הסביבה הטבעית והחברתית ואת ניהול כלל המשאבים הקשורים במיזם.",
-        "step-slug": "design-and-planning",
-        "step-content": [
+        "chapter-number": 2,
+        "chapter-title": "עיצוב ותכנון",
+        "chapter-description": "שלבי התכנון והעיצוב הם ליבו של העיצוב הבר־קיימה המציע פתרונות הוליסטיים למטרות המיזם. סדרת תתי הפרקים הבאה פורטת את הקריטריונים שמביאים לעיצוב מורכב יותר ומעצימים את הסביבה הטבעית והחברתית ואת ניהול כלל המשאבים הקשורים במיזם.",
+        "chapter-slug": "design-and-planning",
+        "chapter-content": [
           {
-            "sub-step-title": "מים",
-            "sub-step-description": "למערכות טבעיות יש ערך חיוני (קריטי) בשל יכולתן לאגור ולטהר מים, להחדיר מים לאקוויפר ולהזרימם לסביבתם. תת־פרק זה מעודד מיזמים לחיסכון במים, לניצול מיטבי של משקעים ולשמירה על איכות המים. מיזם בר־קיימה ישמר ויעצים מערכות מים טבעיות קיימות דוגמת נחלים, מלחות (estuaries) ואזורים ובתי גידול ימיים. הוא יעודד קציר נגר על פני השקיה במים מתוקים, ויציב מטרה לעצב מערכות טכנו־נופיות דוגמת סהרונים (bioswales), אזורי השהיה, חלחול והחדרה וגני גשם (rain gardens) המחקים פעולת מערכות טבעיות, לצורך השהיה וטיהור המים. ",
-            "sub-steps": [
+            "sub-chapter-title": "מים",
+            "sub-chapter-description": "למערכות טבעיות יש ערך חיוני (קריטי) בשל יכולתן לאגור ולטהר מים, להחדיר מים לאקוויפר ולהזרימם לסביבתם. תת־פרק זה מעודד מיזמים לחיסכון במים, לניצול מיטבי של משקעים ולשמירה על איכות המים. מיזם בר־קיימה ישמר ויעצים מערכות מים טבעיות קיימות דוגמת נחלים, מלחות (estuaries) ואזורים ובתי גידול ימיים. הוא יעודד קציר נגר על פני השקיה במים מתוקים, ויציב מטרה לעצב מערכות טכנו־נופיות דוגמת סהרונים (bioswales), אזורי השהיה, חלחול והחדרה וגני גשם (rain gardens) המחקים פעולת מערכות טבעיות, לצורך השהיה וטיהור המים. ",
+            "principles": [
               {
                 "title": "ניהול משאבי המים",
                 "description": "ניצול מיטבי של משאבי המים  הטבעיים והמושבים במיזם תוך התייחסות לכלל המקורות התורמים, סוגי המים ואיכותם כדוגמת מים ממערכות טבעיות, מי שיטפונות, ומים מטוהרים, כולל הערכת ההשפעה על מקורות המים הטבעיים במרחב. מטרת העיקרון חיסכון במשאב המים  וקידום פתרונות להשארת המים בתחום המיזם.בנוסף, לפי גודל והיקף המיזם:הבנה והטמעת תהליכים הידרולוגיים טבעיים כבסיס לתכנון כגון: ניתוח אגני פשטי הצפה, תהלכי זרימה על קרקעית ותת-קרקעית, תופעות עונתיות כגון בריכות חורף ושטחי ביצה.",
@@ -342,9 +342,9 @@
             ]
           },
           {
-            "sub-step-title": "קרקע וצמחיה",
-            "sub-step-description": "תיאור שלב 2",
-            "sub-steps": [
+            "sub-chapter-title": "קרקע וצמחיה",
+            "sub-chapter-description": "תיאור שלב 2",
+            "principles": [
               {
                 "title": "תת כותרת משנה 6",
                 "description": "תיאור תת כותרת משנה 6",
@@ -359,9 +359,9 @@
             ]
           },
           {
-            "sub-step-title": "משאבים וחומרים",
-            "sub-step-description": "תיאור שלב 2",
-            "sub-steps": [
+            "sub-chapter-title": "משאבים וחומרים",
+            "sub-chapter-description": "תיאור שלב 2",
+            "principles": [
               {
                 "title": "תת כותרת משנה 7",
                 "description": "תיאור תת כותרת משנה 7",
@@ -376,9 +376,9 @@
             ]
           },
           {
-            "sub-step-title": "חברה וקהילה",
-            "sub-step-description": "תיאור שלב 2",
-            "sub-steps": [
+            "sub-chapter-title": "חברה וקהילה",
+            "sub-chapter-description": "תיאור שלב 2",
+            "principles": [
               {
                 "title": "תת כותרת משנה 8",
                 "description": "תיאור תת כותרת משנה 8",
@@ -395,15 +395,15 @@
         ]
       },
       {
-        "step-number": 3,
-        "step-title": "קרקע וצמחיה",
-        "step-description": "תיאור שלב 3",
-        "step-slug": "soil-and-vegetation",
-        "step-content": [
+        "chapter-number": 3,
+        "chapter-title": "קרקע וצמחיה",
+        "chapter-description": "תיאור שלב 3",
+        "chapter-slug": "soil-and-vegetation",
+        "chapter-content": [
           {
-            "sub-step-title": "כותרת משנה 3",
-            "sub-step-description": "תיאור שלב 3",
-            "sub-steps": [
+            "sub-chapter-title": "כותרת משנה 3",
+            "sub-chapter-description": "תיאור שלב 3",
+            "principles": [
               {
                 "title": "תת כותרת משנה 9",
                 "description": "תיאור תת כותרת משנה 9",
@@ -420,15 +420,15 @@
         ]
       },
       {
-        "step-number": 4,
-        "step-title": "משאבים וחומרים",
-        "step-description": "תיאור שלב 4",
-        "step-slug": "resources-and-materials",
-        "step-content": [
+        "chapter-number": 4,
+        "chapter-title": "משאבים וחומרים",
+        "chapter-description": "תיאור שלב 4",
+        "chapter-slug": "resources-and-materials",
+        "chapter-content": [
           {
-            "sub-step-title": "כותרת משנה 4",
-            "sub-step-description": "תיאור שלב 4",
-            "sub-steps": [
+            "sub-chapter-title": "כותרת משנה 4",
+            "sub-chapter-description": "תיאור שלב 4",
+            "principles": [
               {
                 "title": "תת כותרת משנה 10",
                 "description": "תיאור תת כותרת משנה 10",
@@ -445,15 +445,15 @@
         ]
       },
       {
-        "step-number": 5,
-        "step-title": "חברה וקהילה",
-        "step-description": "תיאור שלב 5",
-        "step-slug": "community-and-society",
-        "step-content": [
+        "chapter-number": 5,
+        "chapter-title": "חברה וקהילה",
+        "chapter-description": "תיאור שלב 5",
+        "chapter-slug": "community-and-society",
+        "chapter-content": [
           {
-            "sub-step-title": "כותרת משנה 11",
-            "sub-step-description": "תיאור שלב 5",
-            "sub-steps": [
+            "sub-chapter-title": "כותרת משנה 11",
+            "sub-chapter-description": "תיאור שלב 5",
+            "principles": [
               {
                 "title": "תת כותרת משנה 11",
                 "description": "תיאור תת כותרת משנה 11",
