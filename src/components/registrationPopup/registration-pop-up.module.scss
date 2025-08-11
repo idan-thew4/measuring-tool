@@ -1,8 +1,8 @@
 @use "../../styles/variables" as *;
 
 .registration-pop-up {
-  width: 65vh;
-  height: 88vh;
+  width: 54vh;
+  height: 71vh;
   background-color: white;
   border-radius: 4rem;
   padding: 3.5rem 4.1rem;
@@ -108,7 +108,6 @@
 
       label:has(input[type="checkbox"]) {
         display: flex;
-        align-items: baseline;
         gap: 0.5rem;
         cursor: pointer;
       }
@@ -130,8 +129,11 @@
 
         &:checked {
           &:before {
-            background-color: $dark-green;
+            background-color: $dark-green !important;
             border-color: $dark-green;
+            background: url("../../../public//icons//checkmark_white.svg")
+              no-repeat center;
+            background-size: 1rem !important;
           }
 
           &:after {

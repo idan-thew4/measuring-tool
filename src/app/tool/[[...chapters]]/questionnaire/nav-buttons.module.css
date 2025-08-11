@@ -1,0 +1,76 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.nav-buttons {
+  grid-column: 4/7;
+  display: grid;
+  grid-template-columns: repeat(2, 14rem);
+  justify-content: center;
+  height: 4.2rem;
+  margin: auto;
+  gap: 2rem;
+  justify-items: center;
+  padding: 5rem 0 7rem 0;
+}
+.nav-buttons .nav-button {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  color: #0c5a37;
+  font-size: 1.6rem;
+  background-color: white;
+  border-radius: 0.6rem;
+  border: 0.1rem solid #0c5a37;
+  line-height: 0.5rem;
+  cursor: pointer;
+  transition: 0.3s all;
+  box-sizing: border-box;
+}
+.nav-buttons .nav-button:after, .nav-buttons .nav-button:before {
+  width: 1.5rem;
+  height: 1.5rem;
+  background-size: 1.5rem !important;
+  background: url("../../../../../public/icons/arrow-down_green.svg") no-repeat center;
+  transition: 0.3s all;
+}
+.nav-buttons .nav-button.previous {
+  padding: 1rem 1rem 1rem 2rem;
+  grid-column: 1/2;
+}
+.nav-buttons .nav-button.previous:before {
+  content: "";
+  rotate: 90deg;
+}
+.nav-buttons .nav-button.next {
+  padding: 1rem 2rem 1rem 1rem;
+  grid-column: 2/3;
+}
+.nav-buttons .nav-button.next:after {
+  content: "";
+  rotate: -90deg;
+}
+.nav-buttons .nav-button:hover {
+  background-color: #0c5a37;
+  color: white;
+}
+.nav-buttons .nav-button:hover:after, .nav-buttons .nav-button:hover:before {
+  background-size: 1.5rem !important;
+  background: url("../../../../../public/icons/arrow-down_white.svg") no-repeat center;
+}/*# sourceMappingURL=nav-buttons.module.css.map */

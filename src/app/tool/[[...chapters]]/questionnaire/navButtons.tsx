@@ -2,7 +2,8 @@ import styles from "./nav-buttons.module.scss";
 import Link from "next/link";
 import clsx from "clsx";
 import { useStore } from "@/contexts/Store";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import contentPlaceHolder from "../../../../../public/data/content-placeholder.json";
 
 export function NavButtons({ currentChapter }: { currentChapter: string[] }) {
   const { structure, getCurrentChapter } = useStore();
@@ -15,14 +16,31 @@ export function NavButtons({ currentChapter }: { currentChapter: string[] }) {
   });
 
   useEffect(() => {
+    console.log("chapter-slug");
+    structure.questionnaire.content.forEach((chapter: any, idx: number) => {
+      console.log(`Chapter ${idx}:`, chapter["chapter-slug"]);
+    });
     if (!structure) return;
     const chapterIdx = structure.questionnaire.content.findIndex(
       (s) => s["chapter-slug"] === currentChapter[0]
     );
 
+    console.log(chapterIdx);
+
     const principleIdx = Number(currentChapter[1]) - 1;
     const subChoiceIdx = Number(currentChapter[2]) - 1;
-    const chapter = structure.questionnaire.content[chapterIdx];
+    let chapter = structure.questionnaire.content[chapterIdx];
+
+    console.log(contentPlaceHolder.questionnaire.content[chapterIdx]);
+
+    if (
+      !chapter ||
+      !Array.isArray(chapter["chapter-content"]) ||
+      chapter["chapter-content"].length === 0
+    ) {
+      chapter = contentPlaceHolder.questionnaire.content[chapterIdx];
+    }
+
     const subchapters = chapter["chapter-content"];
     const subchapter = subchapters[principleIdx];
     const choices = subchapter["principles"];
