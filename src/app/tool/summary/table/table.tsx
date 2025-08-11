@@ -1,0 +1,57 @@
+import { SubChapter, useStore } from "@/contexts/Store";
+import styles from "./table.module.scss";
+import React from "react";
+import clsx from "clsx";
+
+interface TableProps {
+  chapterNumber: number;
+  title: string;
+  content: SubChapter[];
+}
+
+export function Table({ chapterNumber, title, content }: TableProps) {
+  const { structure, scoreObject } = useStore();
+
+  return (
+    <>
+      <h2
+        className={clsx(
+          styles["table-title"],
+          "headline_small bold"
+        )}>{`${chapterNumber}. ${title}`}</h2>
+
+      <div key={chapterNumber} className={styles["table-container"]}>
+        {content.map((subChapter: SubChapter, subChapterIndex) => (
+          <React.Fragment
+            key={subChapter["sub-chapter-title"] ?? subChapterIndex}>
+            <h3
+              className={clsx(
+                styles["row"],
+                styles["row-title"],
+                "paragraph_15 bold"
+              )}>{`${chapterNumber}.${subChapterIndex + 1}.${
+              subChapter["sub-chapter-title"]
+            }`}</h3>
+            {subChapter.principles.map((principle, principleIndex) => (
+              <div key={principleIndex} className={styles["row"]}>
+                <h4 className="paragraph_15">{`${chapterNumber}.${
+                  subChapterIndex + 1
+                }.${principleIndex + 1}.${principle["title"]}`}</h4>
+                <p className="paragraph_15">
+                  {scoreObject.data?.[chapterNumber - 1]?.["chapter-data"]?.[
+                    subChapterIndex
+                  ]?.["principles"]?.[principleIndex]?.choice ?? ""}
+                </p>
+                <p className="paragraph_15">
+                  {scoreObject.data?.[chapterNumber - 1]?.["chapter-data"]?.[
+                    subChapterIndex
+                  ]?.["principles"]?.[principleIndex]?.comment ?? ""}
+                </p>
+              </div>
+            ))}
+          </React.Fragment>
+        ))}
+      </div>
+    </>
+  );
+}

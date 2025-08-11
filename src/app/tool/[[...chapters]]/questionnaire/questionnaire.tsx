@@ -57,7 +57,7 @@ export function Questionnaire({
 
     const selectedChoice = choices?.[Number(currentSelection[1]) - 1];
 
-    selectedChoice?.["sub-chapter-data"]?.forEach((choice) => {
+    selectedChoice?.["principles"]?.forEach((choice) => {
       chapterProgressTemp.push({
         completed: choice.choice === -1 ? 1 : choice.choice,
         total: 1,
@@ -91,7 +91,7 @@ export function Questionnaire({
   }, [scoreObject, getCurrentChapter, currentChapter]);
 
   return (
-    <div className={styles["questionnaire-container"]}>
+    <div className={clsx(styles["questionnaire-container"], "main-container")}>
       <div className={styles["questionnaire-header"]}>
         <button
           className={clsx(

@@ -1,0 +1,11 @@
+@use "../../../../styles/variables" as *;
+@use "sass:color";
+
+.table-container {
+  background-color: white;
+  border-radius: 2rem;
+  border: 0.1rem solid color.adjust($lime-green, $lightness: 50%);
+  .row {
+    height: 6.7rem;
+  }
+}

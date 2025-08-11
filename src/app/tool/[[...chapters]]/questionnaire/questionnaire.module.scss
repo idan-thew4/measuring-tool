@@ -1,14 +1,8 @@
 @use "../../../../styles/variables" as *;
 
 .questionnaire-container {
-  grid-column: 4/13;
-  grid-template-rows: repeat(3, min-content);
-  display: grid;
-  grid-template-columns: subgrid;
-  background-color: $lime-light;
-  overflow-y: auto;
-  overflow-x: hidden;
   position: relative;
+  grid-template-rows: repeat(3, min-content);
 
   @include scroll-bar;
 

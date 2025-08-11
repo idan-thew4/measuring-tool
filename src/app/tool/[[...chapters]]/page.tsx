@@ -69,7 +69,7 @@ export default function ChapterPage() {
             getCurrentChapter(chapter)?.["chapter-number"] ?? 1
               ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1) - 1
               : 0
-          ]?.["chapter-data"]?.[Number(subChapter) - 1]?.["sub-chapter-data"]?.[
+          ]?.["chapter-data"]?.[Number(subChapter) - 1]?.["principles"]?.[
             Number(principle) - 1
           ]?.choice ?? 0,
         title:
@@ -92,7 +92,7 @@ export default function ChapterPage() {
         getCurrentChapter(chapter)?.["chapter-number"] ?? 1
           ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1) - 1
           : 0
-      ]?.["chapter-data"]?.[Number(subChapter) - 1]?.["sub-chapter-data"]?.[
+      ]?.["chapter-data"]?.[Number(subChapter) - 1]?.["principles"]?.[
         Number(principle) - 1
       ]?.comment ?? ""
     );
@@ -124,18 +124,17 @@ export default function ChapterPage() {
                 ssIdx === subChapterIdx
                   ? {
                       ...subChapterData,
-                      "sub-chapter-data": subChapterData[
-                        "sub-chapter-data"
-                      ].map((choiceObj, cIdx) =>
-                        cIdx === choiceIdx
-                          ? {
-                              ...choiceObj,
-                              ...(newScore !== undefined
-                                ? { choice: newScore }
-                                : {}),
-                              ...(comment !== undefined ? { comment } : {}),
-                            }
-                          : choiceObj
+                      principles: subChapterData["principles"].map(
+                        (choiceObj, cIdx) =>
+                          cIdx === choiceIdx
+                            ? {
+                                ...choiceObj,
+                                ...(newScore !== undefined
+                                  ? { choice: newScore }
+                                  : {}),
+                                ...(comment !== undefined ? { comment } : {}),
+                              }
+                            : choiceObj
                       ),
                     }
                   : subChapterData

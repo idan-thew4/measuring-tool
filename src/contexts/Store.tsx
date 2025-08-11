@@ -56,7 +56,7 @@ type ChapterPoints = {
 
 type SubChapterPoints = {
   "sub-chapter-number": number;
-  "sub-chapter-data": ChoicePoints[];
+  principles: ChoicePoints[];
 };
 
 type ChoicePoints = {
@@ -140,7 +140,7 @@ export type Chapter = {
   "chapter-content": SubChapter[];
 };
 
-type SubChapter = {
+export type SubChapter = {
   "sub-chapter-title": string;
   "sub-chapter-description": string;
   principles: Choice[];
@@ -263,12 +263,10 @@ function Store({ children }: PropsWithChildren<{}>) {
           "chapter-data": chapter["chapter-content"].map(
             (subChapter, subIndex) => ({
               "sub-chapter-number": subIndex + 1,
-              "sub-chapter-data": subChapter["principles"].map(
-                (sub, subIndex) => ({
-                  id: subIndex + 1,
-                  choice: 0,
-                })
-              ),
+              principles: subChapter["principles"].map((sub, subIndex) => ({
+                id: subIndex + 1,
+                choice: 0,
+              })),
             })
           ),
         })),
@@ -288,10 +286,10 @@ function Store({ children }: PropsWithChildren<{}>) {
       scoreObject.data.forEach((chapterData, index) => {
         let completed = 0;
         chapterData["chapter-data"].forEach((subChapter) => {
-          const allFilled = subChapter["sub-chapter-data"].every(
+          const allFilled = subChapter["principles"].every(
             (choiceObj) => choiceObj.choice !== 0
           );
-          subChapter["sub-chapter-data"].forEach((subChapterChoice) => {
+          subChapter["principles"].forEach((subChapterChoice) => {
             total++;
             if (subChapterChoice.choice !== 0) {
               completed++;
