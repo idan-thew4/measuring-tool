@@ -61,7 +61,7 @@ type SubChapterPoints = {
 
 type ChoicePoints = {
   id: number;
-  choice: number;
+  choice: number | undefined;
   comment?: string;
 };
 
@@ -265,7 +265,7 @@ function Store({ children }: PropsWithChildren<{}>) {
               "sub-chapter-number": subIndex + 1,
               principles: subChapter["principles"].map((sub, subIndex) => ({
                 id: subIndex + 1,
-                choice: 0,
+                choice: undefined,
               })),
             })
           ),
@@ -287,11 +287,11 @@ function Store({ children }: PropsWithChildren<{}>) {
         let completed = 0;
         chapterData["chapter-data"].forEach((subChapter) => {
           const allFilled = subChapter["principles"].every(
-            (choiceObj) => choiceObj.choice !== 0
+            (choiceObj) => choiceObj.choice !== undefined
           );
           subChapter["principles"].forEach((subChapterChoice) => {
             total++;
-            if (subChapterChoice.choice !== 0) {
+            if (subChapterChoice.choice !== undefined) {
               completed++;
             }
           });

@@ -20,6 +20,11 @@ function isSubChapterCompleted(
   subChapterIdx: number,
   numChoices: number
 ) {
+  console.log("Checking sub-chapter completion:", {
+    chapterIdx,
+    subChapterIdx,
+    numChoices,
+  });
   for (let i = 0; i < numChoices; i++) {
     if (!isChoiceCompleted(scoreObject, chapterIdx, subChapterIdx, i))
       return false;
@@ -35,8 +40,8 @@ function isChoiceCompleted(
 ) {
   return (
     scoreObject?.data?.[chapterIdx]?.["chapter-data"]?.[subChapterIdx]?.[
-      "principle-data"
-    ]?.[choiceIdx]?.choice !== 0
+      "principles"
+    ]?.[choiceIdx]?.choice !== undefined
   );
 }
 
@@ -67,12 +72,11 @@ export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
                 ? styles["completed"]
                 : ""
             )}
-            key={chapterIndex}>
+            key={chapterIndex}
+          >
             <div
-              className={clsx(
-                "nav-side-text__chapter",
-                styles["chapter-text"]
-              )}>
+              className={clsx("nav-side-text__chapter", styles["chapter-text"])}
+            >
               <Link href={`/tool/${chapter["chapter-slug"]}/1/1`}>
                 {`${chapterIndex + 1}. ${chapter["chapter-title"]}`}
               </Link>
@@ -98,12 +102,14 @@ export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
                     className={clsx(
                       isActiveSubChapter && styles["active"],
                       subChapterCompleted && styles["completed"]
-                    )}>
+                    )}
+                  >
                     <Link
                       className="nav-side-text__sub-chapter"
                       href={`/tool/${chapter["chapter-slug"]}/${
                         subIndex + 1
-                      }/1`}>
+                      }/1`}
+                    >
                       {`${chapterIndex + 1}.${subIndex + 1} ${
                         subChapter["sub-chapter-title"]
                       }`}
@@ -126,12 +132,14 @@ export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
                               className={clsx(
                                 isActiveChoice && styles["active"],
                                 choiceCompleted && styles["completed"]
-                              )}>
+                              )}
+                            >
                               <Link
                                 className="nav-side-text__sub-chapter-choice"
                                 href={`/tool/${chapter["chapter-slug"]}/${
                                   subIndex + 1
-                                }/${subChoicesIndex + 1}`}>
+                                }/${subChoicesIndex + 1}`}
+                              >
                                 {`${subChoicesIndex + 1}. ${subChoices.title}`}
                               </Link>
                             </li>
