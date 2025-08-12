@@ -1,0 +1,42 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.table-container {
+  background-color: white;
+  border-radius: 2rem;
+  border: 0.1rem solid rgb(214.7714285714, 241.7428571429, 172.2571428571);
+  overflow: hidden;
+}
+.table-container .row {
+  height: 6.7rem;
+  padding: 0 2.4rem;
+  display: grid;
+  grid-template-columns: 4% 35% 4% 10% 1fr;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  border-bottom: 0.1rem solid red;
+}
+.table-container .row-title {
+  background-color: #7ab51d;
+  box-shadow: 4px 2px 6px 2px rgba(0, 0, 0, 0.14);
+  border-bottom: none;
+}
+.table-container .row:not(.row-title):has(+ .row-title), .table-container .row:last-child {
+  border-bottom: none;
+}/*# sourceMappingURL=table.module.css.map */

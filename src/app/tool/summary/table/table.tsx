@@ -15,32 +15,41 @@ export function Table({ chapterNumber, title, content }: TableProps) {
   return (
     <>
       <h2
-        className={clsx(
-          styles["table-title"],
-          "headline_small bold"
-        )}>{`${chapterNumber}. ${title}`}</h2>
+        className={clsx(styles["table-title"], "headline_small bold")}
+      >{`${chapterNumber}. ${title}`}</h2>
 
       <div key={chapterNumber} className={styles["table-container"]}>
         {content.map((subChapter: SubChapter, subChapterIndex) => (
           <React.Fragment
-            key={subChapter["sub-chapter-title"] ?? subChapterIndex}>
-            <h3
+            key={subChapter["sub-chapter-title"] ?? subChapterIndex}
+          >
+            <div
               className={clsx(
                 styles["row"],
                 styles["row-title"],
                 "paragraph_15 bold"
-              )}>{`${chapterNumber}.${subChapterIndex + 1}.${
-              subChapter["sub-chapter-title"]
-            }`}</h3>
+              )}
+            >
+              <p>{`${chapterNumber}.${subChapterIndex + 1}.`}</p>
+              <h3>{`${subChapter["sub-chapter-title"]}`}</h3>
+            </div>
             {subChapter.principles.map((principle, principleIndex) => (
               <div key={principleIndex} className={styles["row"]}>
-                <h4 className="paragraph_15">{`${chapterNumber}.${
+                <p className="paragraph_15">{`${chapterNumber}.${
                   subChapterIndex + 1
-                }.${principleIndex + 1}.${principle["title"]}`}</h4>
+                }.${principleIndex + 1}.`}</p>
+                <h4 className="paragraph_15">{`${principle["title"]}`}</h4>
                 <p className="paragraph_15">
                   {scoreObject.data?.[chapterNumber - 1]?.["chapter-data"]?.[
                     subChapterIndex
                   ]?.["principles"]?.[principleIndex]?.choice ?? ""}
+                </p>
+                <p className="paragraph_15">
+                  {structure?.questionnaire?.options?.[
+                    scoreObject.data?.[chapterNumber - 1]?.["chapter-data"]?.[
+                      subChapterIndex
+                    ]?.["principles"]?.[principleIndex]?.choice ?? 0
+                  ] ?? ""}
                 </p>
                 <p className="paragraph_15">
                   {scoreObject.data?.[chapterNumber - 1]?.["chapter-data"]?.[

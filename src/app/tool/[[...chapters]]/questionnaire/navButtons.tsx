@@ -16,22 +16,15 @@ export function NavButtons({ currentChapter }: { currentChapter: string[] }) {
   });
 
   useEffect(() => {
-    console.log("chapter-slug");
-    structure.questionnaire.content.forEach((chapter: any, idx: number) => {
-      console.log(`Chapter ${idx}:`, chapter["chapter-slug"]);
-    });
     if (!structure) return;
+    structure.questionnaire.content.forEach((chapter: any, idx: number) => {});
     const chapterIdx = structure.questionnaire.content.findIndex(
       (s) => s["chapter-slug"] === currentChapter[0]
     );
 
-    console.log(chapterIdx);
-
     const principleIdx = Number(currentChapter[1]) - 1;
     const subChoiceIdx = Number(currentChapter[2]) - 1;
     let chapter = structure.questionnaire.content[chapterIdx];
-
-    console.log(contentPlaceHolder.questionnaire.content[chapterIdx]);
 
     if (
       !chapter ||
@@ -87,14 +80,16 @@ export function NavButtons({ currentChapter }: { currentChapter: string[] }) {
       {navButton.previous && (
         <Link
           href={navButton.previous}
-          className={clsx(styles["nav-button"], styles["previous"])}>
+          className={clsx(styles["nav-button"], styles["previous"])}
+        >
           {structure?.questionnaire.buttons?.[1]}
         </Link>
       )}
       {navButton.next && (
         <Link
           href={navButton.next}
-          className={clsx(styles["nav-button"], styles["next"])}>
+          className={clsx(styles["nav-button"], styles["next"])}
+        >
           {structure?.questionnaire.buttons?.[2]}
         </Link>
       )}

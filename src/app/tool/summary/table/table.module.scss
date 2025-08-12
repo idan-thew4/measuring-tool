@@ -4,8 +4,28 @@
 .table-container {
   background-color: white;
   border-radius: 2rem;
-  border: 0.1rem solid color.adjust($lime-green, $lightness: 50%);
+  border: 0.1rem solid color.adjust($lime-green, $lightness: 40%);
+  overflow: hidden;
+
   .row {
     height: 6.7rem;
+    padding: 0 2.4rem;
+    display: grid;
+    grid-template-columns: 4% 35% 4% 10% 1fr;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    border-bottom: 0.1rem solid red;
+
+    &-title {
+      background-color: $lime-green;
+      box-shadow: 4px 2px 6px 2px rgba(0, 0, 0, 0.14);
+      border-bottom: none;
+    }
+
+    &:not(.row-title):has(+ .row-title),
+    &:last-child {
+      border-bottom: none;
+    }
   }
 }

@@ -343,14 +343,6 @@ function Store({ children }: PropsWithChildren<{}>) {
     );
   };
 
-  useEffect(() => {
-    console.log("Registration status changed:", registrationStatus);
-  }, [registrationStatus]);
-
-  useEffect(() => {
-    console.log("scoreObject:", scoreObject);
-  }, [scoreObject]);
-
   return (
     <ApiContext.Provider
       value={{
@@ -362,7 +354,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         getCurrentChapter,
         setRegistrationStatus,
         registrationStatus,
-      }}>
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );
