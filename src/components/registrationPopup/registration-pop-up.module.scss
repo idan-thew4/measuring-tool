@@ -224,20 +224,7 @@
       .submit-button {
         width: 100%;
         grid-column: 1/3;
-        background-color: $dark-green;
-        border-radius: 0.6rem;
-        color: white;
         margin-top: 0.5rem;
-        transition: 0.3s all;
-
-        &:hover {
-          background-color: color.adjust($dark-green, $lightness: -10%);
-        }
-
-        &:disabled {
-          background-color: $light-grey;
-          cursor: not-allowed;
-        }
       }
     }
   }

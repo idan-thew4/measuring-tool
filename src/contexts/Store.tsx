@@ -66,6 +66,7 @@ type ChoicePoints = {
 };
 
 type PersonalDetails = {
+  date: number;
   projectName: string;
   localAuthority: string;
   projectType: string;
@@ -93,6 +94,19 @@ export type structureProps = {
   sidebar: sideBar;
   questionnaire: questionnaire;
   registration: Registration;
+  summary: Summary;
+};
+
+type Summary = {
+  header: {
+    title: string;
+    "summary-details": string[];
+    "buttons-copy": string[];
+  };
+  table: {
+    columns: string[];
+    "buttons-copy": string[];
+  };
 };
 
 export type Registration = {
@@ -149,7 +163,7 @@ export type SubChapter = {
 type Choice = {
   title: string;
   description: string;
-  choices: { title: string; text: string }[];
+  choices: { title: string; text: string; score: number }[];
   comment?: string;
 };
 
@@ -177,6 +191,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   const [structure, setStructure] = useState<structureProps>();
   const [scoreObject, setScoreObject] = useState<ScoreType>({
     "personal-details": {
+      date: Date.now(),
       projectName: "",
       localAuthority: "",
       projectType: "",
@@ -238,6 +253,7 @@ function Store({ children }: PropsWithChildren<{}>) {
     } else {
       scoreObjectTemp = {
         "personal-details": {
+          date: Date.now(),
           projectName: "",
           localAuthority: "",
           projectType: "",
@@ -354,8 +370,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         getCurrentChapter,
         setRegistrationStatus,
         registrationStatus,
-      }}
-    >
+      }}>
       {children}
     </ApiContext.Provider>
   );

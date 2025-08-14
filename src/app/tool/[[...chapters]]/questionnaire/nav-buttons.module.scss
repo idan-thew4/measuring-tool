@@ -11,21 +11,7 @@
   padding: 5rem 0 7rem 0;
 
   .nav-button {
-    display: flex;
     width: 100%;
-    justify-content: center;
-    align-items: center;
-    gap: 1.2rem;
-    color: $dark-green;
-    font-size: 1.6rem;
-    background-color: white;
-    border-radius: 0.6rem;
-    border: 0.1rem solid $dark-green;
-    line-height: 0.5rem;
-    cursor: pointer;
-    transition: 0.3s all;
-    box-sizing: border-box;
-
     &:after,
     &:before {
       //   content: "";
@@ -34,7 +20,6 @@
       background-size: 1.5rem !important;
       background: url("../../../../../public/icons/arrow-down_green.svg")
         no-repeat center;
-      transition: 0.3s all;
     }
 
     &.previous {

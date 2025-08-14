@@ -8,7 +8,7 @@ import { useForm, Controller, set } from "react-hook-form";
 import Select from "react-select";
 
 type Inputs = {
-  [key: string]: string | { value: string; label: string } | boolean;
+  [key: string]: string | { value: string; label: string } | boolean | number;
 };
 
 type TownRecord = {
@@ -254,7 +254,7 @@ export function RegistrationPopup() {
               </div>
             ))}
             <button
-              className={styles["submit-button"]}
+              className={clsx(styles["submit-button"], "basic-button solid")}
               type="submit"
               disabled={Object.keys(errors).length > 0}>
               {structure.registration["nav-buttons"][currentStep]}

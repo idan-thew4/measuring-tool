@@ -80,16 +80,22 @@ export function NavButtons({ currentChapter }: { currentChapter: string[] }) {
       {navButton.previous && (
         <Link
           href={navButton.previous}
-          className={clsx(styles["nav-button"], styles["previous"])}
-        >
+          className={clsx(
+            styles["nav-button"],
+            styles["previous"],
+            "basic-button outline with-icon"
+          )}>
           {structure?.questionnaire.buttons?.[1]}
         </Link>
       )}
       {navButton.next && (
         <Link
           href={navButton.next}
-          className={clsx(styles["nav-button"], styles["next"])}
-        >
+          className={clsx(
+            styles["nav-button"],
+            styles["next"],
+            "basic-button outline with-icon"
+          )}>
           {structure?.questionnaire.buttons?.[2]}
         </Link>
       )}

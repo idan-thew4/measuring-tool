@@ -1,0 +1,62 @@
+@use "../../../../styles/variables" as *;
+
+.summary {
+  &-header {
+    grid-column: 3 / 8;
+  }
+
+  &-main {
+    margin-top: 1rem;
+    padding: 4rem 0;
+    border-top: 0.1rem solid black;
+    border-bottom: 0.1rem solid black;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &-buttons {
+    display: flex;
+    gap: 2.9rem;
+
+    button {
+      &:after {
+        content: "";
+        width: 1.5rem;
+        height: 1.5rem;
+        background-size: 1.5rem !important;
+      }
+
+      &.download {
+        &:after {
+          background: url("../../../../../public/icons/download_icon.svg")
+            no-repeat center;
+        }
+        &:hover {
+          &:after {
+            background: url("../../../../../public/icons/download_icon_white.svg")
+              no-repeat center;
+          }
+        }
+      }
+
+      &.print {
+        &:after {
+          background: url("../../../../../public/icons/print_icon.svg")
+            no-repeat center;
+        }
+        &:hover {
+          &:after {
+            background: url("../../../../../public/icons/print_icon_white.svg")
+              no-repeat center;
+          }
+        }
+      }
+    }
+  }
+
+  &-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
