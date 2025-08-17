@@ -10,6 +10,8 @@
   overflow-x: hidden;
   padding-top: 7.6rem;
   padding-bottom: 7.6rem 0 0rem 0;
+
+  @include scroll-bar;
 }
 
 .basic-button {

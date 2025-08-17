@@ -1,0 +1,209 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.registration-pop-up {
+  width: 54vh;
+  height: 71vh;
+  background-color: white;
+  border-radius: 4rem;
+  padding: 3.5rem 4.1rem;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: repeat(2, min-content);
+}
+.registration-pop-up-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(77, 77, 77, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9;
+}
+.registration-pop-up .form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.registration-pop-up .form-container .headline {
+  margin-bottom: 1rem;
+}
+.registration-pop-up .form-container .validation,
+.registration-pop-up .form-container .error-message {
+  color: #ff001d;
+}
+.registration-pop-up .form-container form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 2.1rem;
+  grid-auto-rows: 5rem;
+  align-content: space-between;
+  height: 100%;
+}
+.registration-pop-up .form-container form .row {
+  position: relative;
+  margin-bottom: -0.3rem;
+}
+.registration-pop-up .form-container form .row-1 {
+  grid-column: 1/3;
+}
+.registration-pop-up .form-container form .row:has(input[type=checkbox]) {
+  grid-column: 1/3;
+  display: flex;
+  align-items: center;
+}
+.registration-pop-up .form-container form .row:has(.error-message) > input,
+.registration-pop-up .form-container form .row:has(.error-message) :global(.dropdown__control) {
+  border-bottom: 0.1rem solid #ff001d !important;
+}
+.registration-pop-up .form-container form input:not(input[type=checkbox]), .registration-pop-up .form-container form input:not(input[type=checkbox]):focus,
+.registration-pop-up .form-container form :global(.dropdown__control),
+.registration-pop-up .form-container form :global(.dropdown__control):focus {
+  width: 100%;
+  border: none;
+  border-bottom: 0.1rem solid #979797;
+  outline: none;
+  font-family: "SimplerPro", sans-serif;
+  padding: 0;
+  height: 100%;
+  transition: 0.3s all;
+  border-radius: 0;
+  box-shadow: none;
+  direction: rtl;
+}
+.registration-pop-up .form-container form input:not(input[type=checkbox]) *, .registration-pop-up .form-container form input:not(input[type=checkbox]):focus *,
+.registration-pop-up .form-container form :global(.dropdown__control) *,
+.registration-pop-up .form-container form :global(.dropdown__control):focus * {
+  padding: 0;
+  color: #0e2517;
+}
+.registration-pop-up .form-container form input:not(input[type=checkbox])::placeholder, .registration-pop-up .form-container form input:not(input[type=checkbox]):focus::placeholder,
+.registration-pop-up .form-container form :global(.dropdown__control)::placeholder,
+.registration-pop-up .form-container form :global(.dropdown__control):focus::placeholder {
+  color: #0e2517;
+}
+.registration-pop-up .form-container form input:not(input[type=checkbox]):-webkit-autofill, .registration-pop-up .form-container form input:not(input[type=checkbox]):-webkit-autofill:focus, .registration-pop-up .form-container form input:not(input[type=checkbox]):-webkit-autofill:hover, .registration-pop-up .form-container form input:not(input[type=checkbox]):-webkit-autofill:active,
+.registration-pop-up .form-container form :global(.dropdown__control):-webkit-autofill,
+.registration-pop-up .form-container form :global(.dropdown__control):-webkit-autofill:focus,
+.registration-pop-up .form-container form :global(.dropdown__control):-webkit-autofill:hover,
+.registration-pop-up .form-container form :global(.dropdown__control):-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+  box-shadow: 0 0 0 1000px #fff inset !important;
+  -webkit-text-fill-color: #000 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+.registration-pop-up .form-container form label:has(input[type=checkbox]) {
+  display: flex;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+.registration-pop-up .form-container form input[type=checkbox] {
+  appearance: none;
+  margin: 0;
+}
+.registration-pop-up .form-container form input[type=checkbox]:before {
+  content: "";
+  width: 1.6rem;
+  height: 1.6rem;
+  display: block;
+  border: 0.1rem solid #4d4d4d;
+  border-radius: 0.4rem;
+  background-color: white;
+  transition: 0.3s all;
+}
+.registration-pop-up .form-container form input[type=checkbox]:checked:before {
+  background-color: #0c5a37 !important;
+  border-color: #0c5a37;
+  background: url("../../../public//icons//checkmark_white.svg") no-repeat center;
+  background-size: 1rem !important;
+}
+.registration-pop-up .form-container form input[type=checkbox]:checked:after {
+  content: "";
+  position: absolute;
+  top: 0.2rem;
+  left: 0.4rem;
+  width: 0.5rem;
+  height: 0.8rem;
+  border: solid white;
+  border-width: 0 0.2rem 0.2rem 0;
+  transform: rotate(45deg);
+}
+.registration-pop-up .form-container form :global(.dropdown__indicator-separator) {
+  display: none;
+}
+.registration-pop-up .form-container form :global(.dropdown__clear-indicator) {
+  display: none;
+}
+.registration-pop-up .form-container form :global(.dropdown__indicator) svg {
+  display: none;
+}
+.registration-pop-up .form-container form :global(.dropdown__indicator):after {
+  content: "";
+  width: 1.5rem;
+  height: 1.5rem;
+  background-size: 1.5rem !important;
+  content: "";
+  background: url("../../../public/icons/arrow-down.svg") no-repeat center;
+  rotate: 0deg;
+  transition: 0.3s all;
+}
+.registration-pop-up .form-container form :global(.dropdown__control--menu-is-open) :global(.dropdown__indicator):after {
+  rotate: 180deg;
+}
+.registration-pop-up .form-container form :global(.dropdown) {
+  height: 100%;
+}
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) {
+  box-shadow: 0 0 20px 0px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
+  z-index: 2;
+  top: 3.7rem;
+}
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__menu-list) {
+  max-height: 14rem;
+}
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__menu-list)::-webkit-scrollbar {
+  width: 0.8rem;
+}
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__menu-list)::-webkit-scrollbar-thumb {
+  background-color: #d9d9d9;
+  border-radius: 10rem;
+}
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option) {
+  transition: 0.3s all;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  color: #0e2517;
+}
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option--is-focused),
+.registration-pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option--is-selected) {
+  background-color: transparent;
+  color: #7ab51d;
+}
+.registration-pop-up .form-container form .error-message {
+  margin-top: 1rem;
+  position: relative;
+  z-index: 1;
+}
+.registration-pop-up .form-container form .submit-button {
+  width: 100%;
+  grid-column: 1/3;
+  margin-top: 0.5rem;
+}/*# sourceMappingURL=registration-pop-up.module.css.map */

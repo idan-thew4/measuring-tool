@@ -2,16 +2,27 @@
 
 .summary {
   &-header {
-    grid-column: 3 / 8;
+    grid-column: 2 / 9;
+    position: sticky;
+    top: -11rem;
+    background-color: $lime-light;
+    grid-template-columns: subgrid;
+    display: grid;
+
+    .title {
+      grid-column: 2 / 7;
+    }
   }
 
   &-main {
+    grid-column: 2 / 7;
     margin-top: 1rem;
     padding: 4rem 0;
     border-top: 0.1rem solid black;
     border-bottom: 0.1rem solid black;
     display: flex;
     justify-content: space-between;
+    grid-template-columns: subgrid;
   }
 
   &-buttons {

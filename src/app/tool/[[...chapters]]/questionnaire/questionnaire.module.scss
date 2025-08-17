@@ -4,8 +4,6 @@
   position: relative;
   grid-template-rows: repeat(3, min-content);
 
-  @include scroll-bar;
-
   .questionnaire-header {
     grid-column: 3 / 8;
     position: sticky;

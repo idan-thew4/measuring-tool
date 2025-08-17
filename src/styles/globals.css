@@ -1,0 +1,199 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.main-container {
+  grid-column: 4/13;
+  display: grid;
+  grid-template-columns: subgrid;
+  background-color: #f3f9ed;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-top: 7.6rem;
+  padding-bottom: 7.6rem 0 0rem 0;
+}
+.main-container::-webkit-scrollbar {
+  width: 0.8rem;
+}
+.main-container::-webkit-scrollbar-thumb {
+  background-color: #d9d9d9;
+  border-radius: 10rem;
+}
+
+.basic-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.6rem;
+  border-radius: 0.6rem;
+  line-height: 0.5rem;
+  cursor: pointer;
+  transition: 0.3s all;
+  box-sizing: border-box;
+  height: 4.2rem;
+  padding: 1rem 2rem;
+}
+.basic-button.outline {
+  background-color: white;
+  border: 0.1rem solid #0c5a37;
+  color: #0c5a37;
+}
+.basic-button.outline:hover {
+  background-color: #0c5a37;
+  color: white;
+}
+.basic-button.solid {
+  background-color: #0c5a37;
+  color: white;
+}
+.basic-button.solid:hover {
+  background-color: rgb(6, 45, 27.5);
+  color: white;
+}
+.basic-button.solid:disabled {
+  background-color: #d9d9d9;
+  cursor: not-allowed;
+}
+.basic-button.with-icon {
+  gap: 1.2rem;
+}
+
+h1,
+p {
+  margin: 0;
+}
+
+h2,
+p {
+  margin: 0;
+}
+
+h3,
+p {
+  margin: 0;
+}
+
+h4,
+p {
+  margin: 0;
+}
+
+h5,
+p {
+  margin: 0;
+}
+
+body {
+  font-family: "SimplerPro", sans-serif;
+  font-weight: 400;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-side-text__chapter {
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 189.474%;
+}
+.nav-side-text__sub-chapter {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 200%;
+}
+.nav-side-text__sub-chapter-choice {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 160%;
+}
+
+.bold {
+  font-weight: 700 !important;
+}
+
+.headline_small {
+  font-size: 2rem;
+  line-height: 120%;
+  font-weight: 400;
+}
+.headline_medium-small {
+  font-size: 2.6rem;
+  font-weight: 400;
+  line-height: 92.308%;
+}
+.headline_medium-big {
+  font-size: 3.4rem;
+  font-weight: 400;
+  line-height: 92.308%;
+}
+
+.paragraph_14 {
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 157.143%;
+}
+.paragraph_15 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 113.333%;
+}
+.paragraph_18 {
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 200%;
+}
+.paragraph_19 {
+  font-size: 1.9rem;
+  font-weight: 400;
+  line-height: 152%;
+}
+.paragraph_20 {
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 120%;
+}
+
+html {
+  font-size: 8px;
+}
+@media only screen and (max-width: 1440px) {
+  html {
+    font-size: 7px;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 1.6rem;
+  line-height: 1.5;
+}
+
+button {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  font-family: "SimplerPro", sans-serif;
+  padding: 0;
+}/*# sourceMappingURL=globals.css.map */
