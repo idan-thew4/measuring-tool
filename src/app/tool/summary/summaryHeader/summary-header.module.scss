@@ -18,7 +18,8 @@
     display: flex;
     gap: 2.9rem;
 
-    button {
+    button,
+    a {
       &:after {
         content: "";
         width: 1.5rem;
