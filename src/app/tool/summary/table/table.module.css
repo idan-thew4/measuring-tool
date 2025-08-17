@@ -1,0 +1,88 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.row {
+  height: 6.7rem;
+  padding: 0 2.4rem;
+  grid-template-columns: 4% 35% 10% 4% 1fr;
+  display: grid;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  grid-column-start: 4;
+}
+.row-titles p:first-child {
+  grid-column-start: 2;
+}
+
+.table {
+  background-color: white;
+  border-radius: 2rem;
+  border: 0.1rem solid rgb(214.7714285714, 241.7428571429, 172.2571428571);
+}
+.table-container {
+  margin-bottom: 8.1rem;
+}
+.table .row {
+  border-bottom: 0.1rem solid rgb(214.7714285714, 241.7428571429, 172.2571428571);
+}
+.table .row-title {
+  background-color: #7ab51d;
+  box-shadow: 4px 2px 6px 2px rgba(0, 0, 0, 0.14);
+  border-bottom: none;
+}
+.table .row-title:first-child {
+  border-radius: 2rem 2rem 0 0;
+}
+.table .row-title:first-child:last-child {
+  border-radius: 2rem;
+}
+.table .row:not(.row-title):has(+ .row-title), .table .row:last-child {
+  border-bottom: none;
+}
+
+.comment-container {
+  position: relative;
+}
+.comment-header {
+  display: flex;
+  gap: 1rem;
+}
+.comment-button {
+  font-weight: 700;
+  color: #0c5a37;
+  text-decoration: underline;
+}
+.comment-read-more {
+  position: absolute;
+  background-color: white;
+  opacity: 0;
+  visibility: hidden;
+  border: 0.1rem solid #d9d9d9;
+  padding: 2.1rem 2.5rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 12px 16px -4px rgba(16, 24, 40, 0.1), 0 4px 6px -2px rgba(16, 24, 40, 0.05);
+  transition: 0.3s all;
+  top: 0;
+  z-index: 9;
+}
+.comment-read-more.expanded {
+  visibility: visible;
+  opacity: 1;
+  top: 2rem;
+}/*# sourceMappingURL=table.module.css.map */
