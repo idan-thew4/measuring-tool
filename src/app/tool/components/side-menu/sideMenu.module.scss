@@ -44,8 +44,9 @@
 
       .chapter {
         border-bottom: 0.1rem solid $basic-grey;
-        height: 6.1rem;
+        // height: 6.1rem;
         overflow: hidden;
+        transition: 0.3s all;
 
         .chapter-text {
           display: block;
@@ -75,9 +76,10 @@
             visibility: visible;
           }
           .principles {
-            height: 0;
+            // height: 0;
             overflow: hidden;
             padding-right: 4rem;
+            transition: 0.3s all;
           }
 
           li.active {
@@ -89,6 +91,7 @@
 
         &.active {
           height: auto;
+          max-height: 1000px;
         }
       }
     }

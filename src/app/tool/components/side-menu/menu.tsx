@@ -7,6 +7,7 @@ import {
   ScoreType,
   structureProps,
 } from "../../../../contexts/Store";
+import { useEffect, useRef, useState } from "react";
 
 export type structureAndChaptersProps = {
   structure: structureProps | undefined;
@@ -47,6 +48,28 @@ function isChapterCompleted(completedChapters: number, totalChapters: number) {
 
 export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
   const { completedChapters, scoreObject } = useStore();
+  const principleRefs = useRef<{ [key: string]: HTMLUListElement | null }>({});
+  const chapterRefs = useRef<{ [key: string]: HTMLLIElement | null }>({});
+  const [menuUpdateKey, setMenuUpdateKey] = useState(0);
+  const [expandedChapterHeights, setExpandedChapterHeights] = useState<{
+    [key: string]: string;
+  }>({});
+
+  function getPrincipleHeight(
+    chapterIndex: number,
+    subIndex: number,
+    principleRefs: React.MutableRefObject<{
+      [key: string]: HTMLUListElement | null;
+    }>
+  ) {
+    const el = principleRefs.current[`${chapterIndex}-${subIndex}`];
+    if (!el) return undefined;
+    const rootFontSize = parseFloat(
+      getComputedStyle(document.documentElement).fontSize
+    );
+    const heightRem = el.scrollHeight / rootFontSize;
+    return `${heightRem}rem`;
+  }
 
   return (
     <div className={styles["menu"]}>
@@ -54,6 +77,23 @@ export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
       <ul className={styles["nav-side-menu"]}>
         {structure?.questionnaire.content.map((chapter, chapterIndex) => (
           <li
+            ref={(el) => {
+              chapterRefs.current[`chapter-${chapterIndex}`] = el;
+            }}
+            style={{
+              height:
+                chapter["chapter-slug"] === currentChapter[0]
+                  ? (() => {
+                      const el = chapterRefs.current[`chapter-${chapterIndex}`];
+                      if (!el) return undefined;
+                      const rootFontSize = parseFloat(
+                        getComputedStyle(document.documentElement).fontSize
+                      );
+                      const heightRem = el.scrollHeight / rootFontSize;
+                      return `${heightRem}rem`;
+                    })()
+                  : "6.1rem",
+            }}
             className={clsx(
               styles["chapter"],
               chapter["chapter-slug"] === currentChapter[0]
@@ -108,7 +148,29 @@ export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
                         subChapter["sub-chapter-title"]
                       }`}
                     </Link>
-                    <ul className={styles["principles"]}>
+                    <ul
+                      ref={(el) => {
+                        principleRefs.current[`${chapterIndex}-${subIndex}`] =
+                          el;
+                      }}
+                      style={{
+                        height: isActiveSubChapter
+                          ? getPrincipleHeight(
+                              chapterIndex,
+                              subIndex,
+                              principleRefs
+                            )
+                          : chapter["chapter-slug"] !== currentChapter[0]
+                          ? subIndex === 0
+                            ? getPrincipleHeight(
+                                chapterIndex,
+                                subIndex,
+                                principleRefs
+                              )
+                            : 0
+                          : 0,
+                      }}
+                      className={styles["principles"]}>
                       {subChapter["principles"].map(
                         (subChoices, subChoicesIndex) => {
                           const isActiveChoice =

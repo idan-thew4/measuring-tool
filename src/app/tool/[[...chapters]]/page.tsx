@@ -171,7 +171,7 @@ export default function ChapterPage() {
               <button
                 className={clsx(
                   styles["toggle"],
-                  currentChapter.score === -1 && toggle ? styles["active"] : ""
+                  currentChapter.score === -1 || toggle ? styles["active"] : ""
                 )}
                 onClick={() => {
                   setToggle(!toggle);
