@@ -9,39 +9,6 @@ import clsx from "clsx";
 export default function Summary() {
   const { structure, scoreObject } = useStore();
 
-  //     const rows = flattenTableData(
-  //       chapter["chapter-content"],
-  //       chapter["chapter-title"],
-  //       chapter["chapter-number"]
-  //     );
-  //     const columns = [
-  //       "פרק",
-  //       "תת-פרק",
-  //       "קרטריון",
-  //       "רמת ביצוע",
-  //       "ציון",
-  //       "הערות",
-  //     ];
-  //     const csv =
-  //       columns.join(",") +
-  //       "\n" +
-  //       rows
-  //         .map((row) =>
-  //           columns
-  //             .map((col) =>
-  //               String(row[col] ?? "")
-  //                 .replace(/"/g, '""')
-  //                 .replace(/\n/g, " ")
-  //             )
-  //             .map((cell) => `"${cell}"`)
-  //             .join(",")
-  //         )
-  //         .join("\n");
-  //   });
-  //         setCsvString(csv);
-
-  // }, [structure]);
-
   return (
     <div className={clsx(styles["summary"], "main-container")}>
       {structure && (
