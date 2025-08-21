@@ -92,9 +92,6 @@
 .side-menu .menu ul.nav-side-menu .chapter .chapter-content li.active .principles {
   height: auto;
 }
-.side-menu .menu ul.nav-side-menu .chapter.active {
-  max-height: auto;
-}
 .side-menu .menu ul.bottom-links {
   padding-top: 3rem;
 }

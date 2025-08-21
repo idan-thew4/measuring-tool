@@ -51,6 +51,11 @@ export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
   const { completedChapters, scoreObject } = useStore();
   const principleRefs = useRef<{ [key: string]: HTMLUListElement | null }>({});
   const chapterRefs = useRef<{ [key: string]: HTMLLIElement | null }>({});
+  const [transitionEnd, setTransitionEnd] = useState<boolean>();
+  const [chapterTransitionEnded, setChapterTransitionEnded] = useState<
+    number | null
+  >(null);
+  const [chapterHeightVersion, setChapterHeightVersion] = useState(0);
 
   function getChapterHeight(
     chapter: Chapter,
@@ -98,7 +103,12 @@ export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
               chapterRefs.current[`chapter-${chapterIndex}`] = el;
             }}
             style={{
-              height: getChapterHeight(chapter, chapterIndex, chapterRefs),
+              height:
+                chapter["chapter-slug"] === currentChapter[0]
+                  ? chapterTransitionEnded === chapterIndex
+                    ? "auto"
+                    : getChapterHeight(chapter, chapterIndex, chapterRefs)
+                  : "6.1rem",
             }}
             className={clsx(
               styles["chapter"],
@@ -113,7 +123,7 @@ export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
                 ? styles["completed"]
                 : ""
             )}
-            key={chapterIndex}>
+            key={`${chapterIndex}-${chapterHeightVersion}`}>
             <div
               className={clsx(
                 "nav-side-text__chapter",
@@ -175,6 +185,15 @@ export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
                               )
                             : 0
                           : 0,
+                      }}
+                      onTransitionEnd={(e) => {
+                        if (
+                          chapter["chapter-slug"] === currentChapter[0] &&
+                          e.propertyName === "height"
+                        ) {
+                          setChapterTransitionEnded(chapterIndex);
+                          setChapterHeightVersion((v) => v + 1);
+                        }
                       }}
                       className={styles["principles"]}>
                       {subChapter["principles"].map(
