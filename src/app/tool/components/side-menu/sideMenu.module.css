@@ -93,8 +93,7 @@
   height: auto;
 }
 .side-menu .menu ul.nav-side-menu .chapter.active {
-  height: auto;
-  max-height: 1000px;
+  max-height: auto;
 }
 .side-menu .menu ul.bottom-links {
   padding-top: 3rem;

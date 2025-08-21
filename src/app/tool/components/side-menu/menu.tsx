@@ -6,8 +6,9 @@ import {
   useStore,
   ScoreType,
   structureProps,
+  Chapter,
 } from "../../../../contexts/Store";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export type structureAndChaptersProps = {
   structure: structureProps | undefined;
@@ -50,10 +51,26 @@ export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
   const { completedChapters, scoreObject } = useStore();
   const principleRefs = useRef<{ [key: string]: HTMLUListElement | null }>({});
   const chapterRefs = useRef<{ [key: string]: HTMLLIElement | null }>({});
-  const [menuUpdateKey, setMenuUpdateKey] = useState(0);
-  const [expandedChapterHeights, setExpandedChapterHeights] = useState<{
-    [key: string]: string;
-  }>({});
+
+  function getChapterHeight(
+    chapter: Chapter,
+    chapterIndex: number,
+    chapterRefs: React.MutableRefObject<{
+      [key: string]: HTMLLIElement | null;
+    }>
+  ) {
+    if (chapter["chapter-slug"] === currentChapter[0]) {
+      const el = chapterRefs.current[`chapter-${chapterIndex}`];
+      if (!el) return undefined;
+      const rootFontSize = parseFloat(
+        getComputedStyle(document.documentElement).fontSize
+      );
+      const heightRem = el.scrollHeight / rootFontSize;
+      return `${heightRem}rem`;
+    } else {
+      return "6.1rem";
+    }
+  }
 
   function getPrincipleHeight(
     chapterIndex: number,
@@ -81,18 +98,7 @@ export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
               chapterRefs.current[`chapter-${chapterIndex}`] = el;
             }}
             style={{
-              height:
-                chapter["chapter-slug"] === currentChapter[0]
-                  ? (() => {
-                      const el = chapterRefs.current[`chapter-${chapterIndex}`];
-                      if (!el) return undefined;
-                      const rootFontSize = parseFloat(
-                        getComputedStyle(document.documentElement).fontSize
-                      );
-                      const heightRem = el.scrollHeight / rootFontSize;
-                      return `${heightRem}rem`;
-                    })()
-                  : "6.1rem",
+              height: getChapterHeight(chapter, chapterIndex, chapterRefs),
             }}
             className={clsx(
               styles["chapter"],
