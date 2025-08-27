@@ -4,7 +4,7 @@ import { useStore } from "@/contexts/Store";
 import { RadarGraph } from "./graphs/radar/radar";
 import { useEffect, useState } from "react";
 
-type ScoreData = {
+export type ScoreData = {
   subject: string;
   fullMark: number;
 } & {
@@ -86,25 +86,31 @@ export default function SummaryReport() {
 
     let chapterScoresTemp: ScoreData[] = [];
 
-    console.log(calcParameters);
-
     calcParameters.forEach((chapter, index) => {
       chapterScoresTemp.push({
         subject:
           structure?.questionnaire.content?.[index]?.["chapter-title"] ?? "",
-        A: (chapter["max-score"] / chapter["net-zero-impact"]) * 100,
-        B: (chapter["net-zero-impact"] / chapter["net-zero-impact"]) * 100,
-        C:
+        A: Math.round(
+          (chapter["max-score"] / chapter["net-zero-impact"]) * 100
+        ),
+        B: Math.round(
+          (chapter["net-zero-impact"] / chapter["net-zero-impact"]) * 100
+        ),
+        C: Math.round(
           (chapter["improved"][0] /
             chapter["improved"][1] /
             chapter["net-zero-impact"]) *
-          100,
-        D:
+            100
+        ),
+        D: Math.round(
           (chapter["significant-improvement"][0] /
             chapter["significant-improvement"][1] /
             chapter["net-zero-impact"]) *
-          100,
-        fullMark: (chapter["general-score"] / chapter["net-zero-impact"]) * 100,
+            100
+        ),
+        fullMark: Math.round(
+          (chapter["general-score"] / chapter["net-zero-impact"]) * 100
+        ),
       });
     });
     setScores({
@@ -113,13 +119,9 @@ export default function SummaryReport() {
     });
   }, [structure, scoreObject]);
 
-  useEffect(() => {
-    console.log(scores);
-  }, [scores]);
-
   return (
     <div>
-      <RadarGraph />
+      <RadarGraph parameters={scores.chapter} structure={structure} />
     </div>
   );
 }
