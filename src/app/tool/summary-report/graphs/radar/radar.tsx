@@ -9,8 +9,9 @@ import {
   RadarChart,
 } from "recharts";
 import styles from "./radar.module.scss";
+import { ScoreData } from "../../../summary-report/page";
 
-export function RadarGraph() {
+export function RadarGraph({ parameters }: { parameters: ScoreData[] }) {
   const data = [
     {
       subject: "Math",
