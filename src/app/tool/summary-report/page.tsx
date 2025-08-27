@@ -4,20 +4,11 @@ import { useStore } from "@/contexts/Store";
 import { RadarGraph } from "./graphs/radar/radar";
 import { useEffect, useState } from "react";
 
-export type ScoreData = {
+type ScoreData = {
   subject: string;
   fullMark: number;
 } & {
   [key: string]: number | string;
-};
-
-type calcParametersType = {
-  chapter: number;
-  "general-score": number;
-  "max-score": number;
-  "net-zero-impact": number;
-  improved: number[];
-  "significant-improvement": number[];
 };
 
 export default function SummaryReport() {
@@ -31,7 +22,14 @@ export default function SummaryReport() {
   });
 
   useEffect(() => {
-    let calcParameters: calcParametersType[] = [];
+    let calcParameters: {
+      chapter: number;
+      "general-score": number;
+      "max-score": number;
+      "net-zero-impact": number;
+      improved: number[];
+      "significant-improvement": number[];
+    }[] = [];
 
     scoreObject?.data?.forEach((chapter, chapterIndex) => {
       calcParameters.push({
@@ -88,43 +86,40 @@ export default function SummaryReport() {
 
     let chapterScoresTemp: ScoreData[] = [];
 
+    console.log(calcParameters);
+
     calcParameters.forEach((chapter, index) => {
       chapterScoresTemp.push({
         subject:
           structure?.questionnaire.content?.[index]?.["chapter-title"] ?? "",
-        A: Math.round(
-          (chapter["max-score"] / chapter["net-zero-impact"]) * 100
-        ),
-        B: Math.round(
-          (chapter["net-zero-impact"] / chapter["net-zero-impact"]) * 100
-        ),
-        C: Math.round(
+        A: (chapter["max-score"] / chapter["net-zero-impact"]) * 100,
+        B: (chapter["net-zero-impact"] / chapter["net-zero-impact"]) * 100,
+        C:
           (chapter["improved"][0] /
             chapter["improved"][1] /
             chapter["net-zero-impact"]) *
-            100
-        ),
-        D: Math.round(
+          100,
+        D:
           (chapter["significant-improvement"][0] /
             chapter["significant-improvement"][1] /
             chapter["net-zero-impact"]) *
-            100
-        ),
-        fullMark: Math.round(
-          (chapter["general-score"] / chapter["net-zero-impact"]) * 100
-        ),
+          100,
+        fullMark: (chapter["general-score"] / chapter["net-zero-impact"]) * 100,
       });
     });
-
     setScores({
       chapter: chapterScoresTemp,
       subChapters: [],
     });
   }, [structure, scoreObject]);
 
+  useEffect(() => {
+    console.log(scores);
+  }, [scores]);
+
   return (
     <div>
-      <RadarGraph parameters={scores.chapter} />
+      <RadarGraph />
     </div>
   );
 }
