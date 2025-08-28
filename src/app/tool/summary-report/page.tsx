@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 
 export type ScoreData = {
   subject: string;
-  fullMark: number;
 } & {
   [key: string]: number | string;
 };
@@ -14,11 +13,11 @@ export type ScoreData = {
 export default function SummaryReport() {
   const { structure, scoreObject } = useStore();
   const [scores, setScores] = useState<{
+    chapters: ScoreData[];
     chapter: ScoreData[];
-    subChapters: ScoreData[][];
   }>({
+    chapters: [],
     chapter: [],
-    subChapters: [],
   });
 
   useEffect(() => {
@@ -84,10 +83,10 @@ export default function SummaryReport() {
       });
     });
 
-    let chapterScoresTemp: ScoreData[] = [];
+    let chaptersScoresTemp: ScoreData[] = [];
 
     calcParameters.forEach((chapter, index) => {
-      chapterScoresTemp.push({
+      chaptersScoresTemp.push({
         subject:
           structure?.questionnaire.content?.[index]?.["chapter-title"] ?? "",
         A: Math.round(
@@ -108,20 +107,23 @@ export default function SummaryReport() {
             chapter["net-zero-impact"]) *
             100
         ),
-        fullMark: Math.round(
+        E: Math.round(
           (chapter["general-score"] / chapter["net-zero-impact"]) * 100
         ),
       });
     });
+
     setScores({
-      chapter: chapterScoresTemp,
-      subChapters: [],
+      chapters: chaptersScoresTemp,
+      chapter: [],
     });
   }, [structure, scoreObject]);
 
   return (
     <div>
-      <RadarGraph parameters={scores.chapter} structure={structure} />
+      {structure && (
+        <RadarGraph parameters={scores.chapters} structure={structure} />
+      )}
     </div>
   );
 }

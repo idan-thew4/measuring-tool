@@ -93,8 +93,8 @@ function downloadAllCSV(structure: structureProps, scoreObject: ScoreType) {
           .join(",")
       )
       .join("\n");
-
-  const blob = new Blob([csv], { type: "text/csv" });
+  const BOM = "\uFEFF";
+  const blob = new Blob([BOM + csv], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
 
   const a = document.createElement("a");

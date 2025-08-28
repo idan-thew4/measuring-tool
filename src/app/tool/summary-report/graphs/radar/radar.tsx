@@ -4,7 +4,7 @@ import {
   Legend,
   PolarAngleAxis,
   PolarGrid,
-  PolarRadiusAxis,
+  Tooltip,
   Radar,
   RadarChart,
 } from "recharts";
@@ -19,13 +19,10 @@ export function RadarGraph({
   parameters: ScoreData[];
   structure: structureProps;
 }) {
-  const colors = ["#00A9FF", "#0089CE", "#00679B", "#577686"];
+  const colors = ["#00A9FF", "#0089CE", "#00679B", "#577686", "black"];
 
-  const DataKeys = ["A", "B", "C", "D"];
+  const DataKeys = ["A", "B", "C", "D", "E"];
 
-  console.log(parameters);
-
-  // const data = [
   //   {
   //     subject: "Math",
   //     A: 120,
@@ -64,19 +61,13 @@ export function RadarGraph({
   //   },
   // ];
 
-  structure.questionnaire.options.forEach((option, index) => {
-    console.log(
-      index,
-      structure.questionnaire.options[parameters.length - (index + 1)]
-    );
-  });
   return (
     <div>
       <div className={styles["radar__frame"]}>
         <RadarChart
           outerRadius={200}
-          width={400}
-          height={400}
+          width={500}
+          height={500}
           data={parameters}
           className={styles["radar"]}>
           <PolarGrid />
@@ -96,9 +87,32 @@ export function RadarGraph({
               stroke={colors[index]}
               fill={colors[index]}
               fillOpacity={0.6}
+              label={({
+                value,
+                x,
+                y,
+              }: {
+                value: number | string;
+                x: number;
+                y: number;
+              }) => (
+                <g>
+                  <circle cx={x} cy={y} r={4} fill={colors[index]} />
+                  <text
+                    x={x}
+                    y={y - 10}
+                    fill={colors[index]}
+                    fontSize={14}
+                    textAnchor="middle"
+                    dominantBaseline="central">
+                    {value}
+                  </text>
+                </g>
+              )}
             />
           ))}
-          {/* <Legend /> */}
+          <Legend />
+          {/* <Tooltip /> */}
         </RadarChart>
       </div>
     </div>
