@@ -5,6 +5,7 @@ import {
   PolarAngleAxis,
   PolarGrid,
   Tooltip,
+  PolarRadiusAxis,
   Radar,
   RadarChart,
 } from "recharts";
@@ -72,7 +73,7 @@ export function RadarGraph({
           className={styles["radar"]}>
           <PolarGrid />
           <PolarAngleAxis dataKey="subject" axisLine={false} />
-          {/* <PolarRadiusAxis angle={30} domain={[0, 200]} /> */}
+          <PolarRadiusAxis angle={30} domain={[0, 200]} />
           {parameters.map((param, index) => (
             <Radar
               key={index}
