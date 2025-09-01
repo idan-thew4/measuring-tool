@@ -24,46 +24,64 @@ export function RadarGraph({
 
   const DataKeys = ["A", "B", "C", "D", "E"];
 
-  //   {
-  //     subject: "Math",
-  //     A: 120,
-  //     B: 110,
-  //     fullMark: 150,
-  //   },
-  //   {
-  //     subject: "Chinese",
-  //     A: 98,
-  //     B: 130,
-  //     fullMark: 150,
-  //   },
-  //   {
-  //     subject: "English",
-  //     A: 86,
-  //     B: 130,
-  //     fullMark: 150,
-  //   },
-  //   {
-  //     subject: "Geography",
-  //     A: 99,
-  //     B: 100,
-  //     fullMark: 150,
-  //   },
-  //   {
-  //     subject: "Physics",
-  //     A: 85,
-  //     B: 90,
-  //     fullMark: 150,
-  //   },
-  //   {
-  //     subject: "History",
-  //     A: 65,
-  //     B: 85,
-  //     fullMark: 150,
-  //   },
-  // ];
+  const DataNames = ["אחוז הצלחה", "הערכה אישית"];
+
+  console.log(parameters);
 
   return (
     <div>
+      <svg
+        width="500"
+        height="500"
+        viewBox="0 0 970 970"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <circle
+          cx="494.684"
+          cy="490.684"
+          r="324.5"
+          stroke="#0E2517"
+          stroke-opacity="0.2"
+        />
+        <defs>
+          <path
+            id="circlePath"
+            d="
+      M 494.684,146.184
+      a 344.5,344.5 0 1,1 0,689
+      a 344.5,344.5 0 1,1 0,-689
+    "
+          />
+        </defs>
+        <text fontSize="24" fill="red">
+          <textPath href="#circlePath" startOffset="10%">
+            תכנון וביצוע
+          </textPath>
+          <textPath href="#circlePath" startOffset="30%">
+            תכנון וביצוע
+          </textPath>
+          <textPath href="#circlePath" startOffset="60%">
+            תכנון וביצוע
+          </textPath>
+        </text>
+        <circle cx="484.773" cy="484.775" r="230.5" stroke="#393D3B" />
+        <circle
+          cx="484.773"
+          cy="484.775"
+          r="137.534"
+          stroke="#0E2517"
+          stroke-opacity="0.2"
+          stroke-width="0.932432"
+        />
+        <circle
+          cx="57"
+          cy="57"
+          r="56.5"
+          transform="matrix(1 0 0 -1 427.773 541.775)"
+          stroke="#0E2517"
+          stroke-opacity="0.2"
+        />
+      </svg>
       <div className={styles["radar__frame"]}>
         <RadarChart
           outerRadius={200}
@@ -74,16 +92,10 @@ export function RadarGraph({
           <PolarGrid />
           <PolarAngleAxis dataKey="subject" axisLine={false} />
           <PolarRadiusAxis angle={30} domain={[0, 200]} />
-          {parameters.map((param, index) => (
+          {DataKeys.map((param, index) => (
             <Radar
               key={index}
-              name={
-                parameters.length === index + 1
-                  ? "אחוז הצלחה"
-                  : structure.questionnaire.options[
-                      parameters.length - (index + 1)
-                    ]
-              }
+              name={DataNames[index]}
               dataKey={DataKeys[index]}
               stroke={colors[index]}
               fill={colors[index]}
@@ -112,8 +124,8 @@ export function RadarGraph({
               )}
             />
           ))}
-          <Legend />
-          {/* <Tooltip /> */}
+          {/* <Legend />
+          <Tooltip /> */}
         </RadarChart>
       </div>
     </div>
