@@ -12,6 +12,7 @@ import {
 import styles from "./radar.module.scss";
 import { ScoreData } from "../../page";
 import { structureProps } from "@/contexts/Store";
+import { useEffect, useState } from "react";
 
 export function RadarGraph({
   parameters,
@@ -20,17 +21,36 @@ export function RadarGraph({
   parameters: ScoreData[];
   structure: structureProps;
 }) {
-  const colors = ["#00A9FF", "#0089CE", "#00679B", "#577686", "black"];
+  const colors = ["#00A9FF", "grey", "black"];
+  const [dataKeys, setDataKeys] = useState<string[]>();
 
-  const DataKeys = ["A", "B", "C", "D", "E"];
+  useEffect(() => {
+    const tempDataKeys: string[] = [];
+    if (parameters.length > 0) {
+      parameters.forEach((parameter) => {
+        Object.keys(parameter).forEach((key) => {
+          if (
+            key !== "subject" &&
+            key !== "fullMark" &&
+            !tempDataKeys.includes(key)
+          ) {
+            tempDataKeys.push(key);
+          }
+        });
+      });
+    }
+    setDataKeys(tempDataKeys);
+  }, [parameters]);
+
+  useEffect(() => {
+    console.log("Data Keys:", dataKeys);
+  }, [dataKeys]);
 
   const DataNames = ["אחוז הצלחה", "הערכה אישית"];
 
-  console.log(parameters);
-
   return (
     <div>
-      <svg
+      {/* <svg
         width="500"
         height="500"
         viewBox="0 0 970 970"
@@ -81,7 +101,7 @@ export function RadarGraph({
           stroke="#0E2517"
           stroke-opacity="0.2"
         />
-      </svg>
+      </svg> */}
       <div className={styles["radar__frame"]}>
         <RadarChart
           outerRadius={200}
@@ -91,39 +111,42 @@ export function RadarGraph({
           className={styles["radar"]}>
           <PolarGrid />
           <PolarAngleAxis dataKey="subject" axisLine={false} />
-          <PolarRadiusAxis angle={30} domain={[0, 200]} />
-          {DataKeys.map((param, index) => (
-            <Radar
-              key={index}
-              name={DataNames[index]}
-              dataKey={DataKeys[index]}
-              stroke={colors[index]}
-              fill={colors[index]}
-              fillOpacity={0.6}
-              label={({
-                value,
-                x,
-                y,
-              }: {
-                value: number | string;
-                x: number;
-                y: number;
-              }) => (
-                <g>
-                  <circle cx={x} cy={y} r={4} fill={colors[index]} />
-                  <text
-                    x={x}
-                    y={y - 10}
-                    fill={colors[index]}
-                    fontSize={14}
-                    textAnchor="middle"
-                    dominantBaseline="central">
-                    {value}
-                  </text>
-                </g>
-              )}
-            />
-          ))}
+          <PolarRadiusAxis angle={30} domain={[0, 100]} />
+
+          {dataKeys &&
+            dataKeys.map((param, index) => (
+              <Radar
+                key={index}
+                name={DataNames[index]}
+                dataKey={dataKeys[index]}
+                stroke={colors[index]}
+                fill={colors[index]}
+                fillOpacity={0.6}
+                label={({
+                  value,
+                  x,
+                  y,
+                }: {
+                  value: number | string;
+                  x: number;
+                  y: number;
+                }) => (
+                  <g>
+                    <circle cx={x} cy={y} r={4} fill={colors[index]} />
+                    <text
+                      x={x}
+                      y={y - 10}
+                      fill={colors[index]}
+                      fontSize={14}
+                      textAnchor="middle"
+                      dominantBaseline="central">
+                      {value}
+                    </text>
+                  </g>
+                )}
+              />
+            ))}
+
           {/* <Legend />
           <Tooltip /> */}
         </RadarChart>

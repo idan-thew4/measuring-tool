@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { useStore, ScoreType } from "../../../contexts/Store";
+import { useStore, ScoreType, Chapter } from "../../../contexts/Store";
 import styles from "./chapters.module.scss";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -65,7 +65,7 @@ export default function ChapterPage() {
     if (scoreObject.data) {
       setCurrentChapter({
         score:
-          scoreObject.data?.[
+          scoreObject.data?.questionnaire?.[
             getCurrentChapter(chapter)?.["chapter-number"] ?? 1
               ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1) - 1
               : 0
@@ -88,7 +88,7 @@ export default function ChapterPage() {
     }
 
     setComment(
-      scoreObject.data?.[
+      scoreObject.data?.questionnaire?.[
         getCurrentChapter(chapter)?.["chapter-number"] ?? 1
           ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1) - 1
           : 0
@@ -103,8 +103,8 @@ export default function ChapterPage() {
     chapter: string,
     subChapter: string,
     principle: string,
-    getCurrentChapter: (chapter: string) => any,
-    newScore?: number,
+    getCurrentChapter: (chapter: string) => Chapter | undefined,
+    newScore?: number | null,
     comment?: string
   ) {
     const chapterIdx =
@@ -115,7 +115,7 @@ export default function ChapterPage() {
     const choiceIdx = Number(principle) - 1;
     let newData;
 
-    newData = prev.data?.map((chapterData, sIdx) =>
+    newData = prev.data?.questionnaire.map((chapterData, sIdx) =>
       sIdx === chapterIdx
         ? {
             ...chapterData,
@@ -147,7 +147,10 @@ export default function ChapterPage() {
 
     return {
       ...prev,
-      data: newData,
+      data: {
+        ...prev.data,
+        questionnaire: newData,
+      },
     };
   }
   if (currentChapter === null) {

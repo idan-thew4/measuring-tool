@@ -80,9 +80,9 @@ export function Table({ chapterNumber, title, content }: TableProps) {
             </div>
             {subChapter.principles.map((principle, principleIndex) => {
               const inputNumber =
-                scoreObject.data?.[chapterNumber - 1]?.["chapter-data"]?.[
-                  subChapterIndex
-                ]?.["principles"]?.[principleIndex]?.choice;
+                scoreObject.data?.questionnaire?.[chapterNumber - 1]?.[
+                  "chapter-data"
+                ]?.[subChapterIndex]?.["principles"]?.[principleIndex]?.choice;
 
               let score: number | undefined;
 
@@ -108,9 +108,10 @@ export function Table({ chapterNumber, title, content }: TableProps) {
                   </p>
                   <p className="paragraph_15">{score}</p>
                   {getComment(
-                    scoreObject.data?.[chapterNumber - 1]?.["chapter-data"]?.[
-                      subChapterIndex
-                    ]?.["principles"]?.[principleIndex]?.comment ?? "",
+                    scoreObject.data?.questionnaire?.[chapterNumber - 1]?.[
+                      "chapter-data"
+                    ]?.[subChapterIndex]?.["principles"]?.[principleIndex]
+                      ?.comment ?? "",
                     principleIndex
                   )}
                 </div>

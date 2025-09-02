@@ -1,6 +1,6 @@
 "use client";
 
-import { useStore } from "@/contexts/Store";
+import { useStore, ChapterPoints, ScoreVariations } from "@/contexts/Store";
 import { RadarGraph } from "./graphs/radar/radar";
 import { useEffect, useState } from "react";
 
@@ -23,28 +23,43 @@ export default function SummaryReport() {
     subChapters: [],
   });
 
-  useEffect(() => {
-    let calcParameters: {
-      chapter: number;
-      "sub-chapter"?: number;
-      "general-score": number;
-      "max-score"?: number;
-      "net-zero-impact": number;
-      improved: number[];
-      "significant-improvement": number[];
-    }[] = [];
+  type CalcParameters = {
+    chapter: number;
+    "sub-chapter"?: number;
+    "general-score": number;
+    "max-score": number;
+    "net-zero-impact": number;
+    type?: string;
+  };
 
-    scoreObject?.data?.forEach((chapter, chapterIndex) => {
-      calcParameters.push({
-        chapter: chapterIndex,
-        "general-score": 0,
-        "max-score": 0,
-        "net-zero-impact": 0,
-        improved: [0, 0],
-        "significant-improvement": [0, 0],
-      });
+  function calculateScores(data: ChapterPoints[], graph: string, type: string) {
+    let index = 0;
+    let calcParameters: CalcParameters[] = [];
+    let subChapterObj: CalcParameters;
 
+    data?.forEach((chapter, chapterIndex) => {
+      if (graph === "chapters") {
+        index = chapterIndex;
+        calcParameters.push({
+          chapter: chapterIndex,
+          "general-score": 0,
+          "net-zero-impact": 0,
+          type: type,
+        });
+      }
       chapter["chapter-data"].forEach((subChapterData, subChapterIndex) => {
+        if (graph === "subchapters") {
+          index = subChapterIndex;
+          subChapterObj = {
+            chapter: chapterIndex,
+            "sub-chapter": subChapterIndex,
+            "general-score": 0,
+            "max-score": 0,
+            "net-zero-impact": 0,
+            type: type,
+          };
+        }
+
         subChapterData.principles.forEach((principle, principleIndex) => {
           if (typeof principle.choice === "number" && principle.choice >= 0) {
             const structurePrinciple =
@@ -55,129 +70,96 @@ export default function SummaryReport() {
             const generalScore =
               structurePrinciple?.choices?.[principle.choice - 1];
             const netZeroImpactScore = structurePrinciple?.choices?.[3];
+            const maxScore = structurePrinciple?.choices?.[4];
 
             if (generalScore && typeof generalScore.score === "number") {
-              calcParameters[chapterIndex]["general-score"] +=
-                generalScore.score;
-              calcParameters[chapterIndex]["net-zero-impact"] +=
-                netZeroImpactScore?.score ?? 0;
+              if (graph === "chapters") {
+                calcParameters[index]["general-score"] += generalScore.score;
+                calcParameters[index]["net-zero-impact"] +=
+                  netZeroImpactScore?.score ?? 0;
+              } else if (graph === "subchapters" && subChapterObj) {
+                subChapterObj["general-score"] += generalScore.score;
+                subChapterObj["net-zero-impact"] +=
+                  netZeroImpactScore?.score ?? 0;
+                subChapterObj["max-score"] += maxScore?.score ?? 0;
+              }
             }
           }
         });
+        if (graph === "subchapters") {
+          calcParameters.push(subChapterObj);
+        }
       });
     });
 
-    let chaptersScoresTemp: ScoreData[] = [];
+    return calcParameters;
+  }
 
-    calcParameters.forEach((chapter, index) => {
-      chaptersScoresTemp.push({
-        subject:
-          structure?.questionnaire.content?.[index]?.["chapter-title"] ?? "",
-        A:
-          chapter["net-zero-impact"] && chapter["net-zero-impact"] !== 0
-            ? Math.round(
-                (chapter["general-score"] / chapter["net-zero-impact"]) * 100
-              )
-            : null,
-      });
-    });
+  useEffect(() => {
+    // chapters //
+    let calcParameters = [] as CalcParameters[];
 
-    ///////
+    const questionnaireParams = calculateScores(
+      scoreObject.data.questionnaire ?? [],
+      "chapters",
+      "questionnaire"
+    );
+    const assessmentParams = calculateScores(
+      scoreObject.data.assessment ?? [],
+      "chapters",
+      "assessment"
+    );
+
+    const chaptersScoresTemp: ScoreData[] = questionnaireParams.map(
+      (chapter, index) => {
+        const subject =
+          structure?.questionnaire.content?.[index]?.["chapter-title"] ?? "";
+        const questionnaire = Math.round(
+          (chapter["general-score"] / chapter["net-zero-impact"]) * 100
+        );
+        const assessment = Math.round(
+          (assessmentParams[index]["general-score"] /
+            assessmentParams[index]["net-zero-impact"]) *
+            100
+        );
+
+        return {
+          subject,
+          questionnaire,
+          assessment,
+        };
+      }
+    );
+
+    console.log("Calculated Parameters:", chaptersScoresTemp);
+
+    // sub-chapters //
 
     calcParameters = [];
-
-    scoreObject?.data?.forEach((chapter, chapterIndex) => {
-      chapter?.["chapter-data"]?.forEach((subChapterData, subChapterIndex) => {
-        const subChapterObj = {
-          chapter: chapterIndex,
-          "sub-chapter": subChapterIndex,
-          "general-score": 0,
-          "max-score": 0,
-          "net-zero-impact": 0,
-          improved: [0, 0],
-          "significant-improvement": [0, 0],
-        };
-
-        subChapterData.principles.forEach((principle, principleIndex) => {
-          console.log(subChapterIndex, principle);
-          if (typeof principle.choice === "number" && principle.choice >= 0) {
-            const structurePrinciple =
-              structure?.questionnaire.content?.[chapterIndex]?.[
-                "chapter-content"
-              ]?.[subChapterIndex]?.["principles"]?.[principleIndex];
-            const generalScore =
-              structurePrinciple?.choices?.[principle.choice - 1];
-            const maxScore = structurePrinciple?.choices?.[4];
-            const netZeroImpactScore = structurePrinciple?.choices?.[3];
-            const improvedScore = structurePrinciple?.choices?.[1];
-            const improvedScoreTotal = structurePrinciple?.choices?.[1]
-              ? +1
-              : +0;
-            const significantImprovementScore =
-              structurePrinciple?.choices?.[2];
-            const significantImprovementScoreTotal = structurePrinciple
-              ?.choices?.[2]
-              ? +1
-              : +0;
-
-            if (generalScore && typeof generalScore.score === "number") {
-              subChapterObj["general-score"] += generalScore.score;
-              subChapterObj["max-score"] += maxScore?.score ?? 0;
-              subChapterObj["net-zero-impact"] +=
-                netZeroImpactScore?.score ?? 0;
-              subChapterObj["improved"][0] += improvedScore?.score ?? 0;
-              subChapterObj["improved"][1] += improvedScoreTotal ?? 0;
-              subChapterObj["significant-improvement"][0] +=
-                significantImprovementScore?.score ?? 0;
-              subChapterObj["significant-improvement"][1] +=
-                significantImprovementScoreTotal ?? 0;
-            }
-          }
-        });
-        calcParameters.push(subChapterObj);
-      });
-    });
 
     let subChapterScoresTemp: ScoreData[] = [];
     let secondChapterTemp: ScoreData[] = [];
 
-    calcParameters.forEach((subChapter, index) => {
-      if (subChapter.chapter === 1) {
-        secondChapterTemp.push({
-          subject:
-            subChapter["sub-chapter"] !== undefined
-              ? structure?.questionnaire.content?.[subChapter.chapter]?.[
-                  "chapter-content"
-                ]?.[subChapter["sub-chapter"]]?.["sub-chapter-title"] ?? ""
-              : "",
-          // A: Math.round(
-          //   (subChapter["max-score"] / subChapter["net-zero-impact"]) * 100
-          // ),
-          // B: Math.round(
-          //   (subChapter["net-zero-impact"] / subChapter["net-zero-impact"]) *
-          //     100
-          // ),
-          // C: Math.round(
-          //   (subChapter["improved"][0] /
-          //     subChapter["improved"][1] /
-          //     subChapter["net-zero-impact"]) *
-          //     100
-          // ),
-          // D: Math.round(
-          //   (subChapter["significant-improvement"][0] /
-          //     subChapter["significant-improvement"][1] /
-          //     subChapter["net-zero-impact"]) *
-          //     100
-          // ),
-          E: subChapter["net-zero-impact"]
-            ? Math.round(
-                (subChapter["general-score"] / subChapter["net-zero-impact"]) *
-                  100
-              )
-            : null,
-        });
-      }
-    });
+    // calcParameters.forEach((subChapter, index) => {
+    //   if (subChapter.chapter === 1) {
+    //     secondChapterTemp.push({
+    //       subject:
+    //         subChapter["sub-chapter"] !== undefined
+    //           ? structure?.questionnaire.content?.[subChapter.chapter]?.[
+    //               "chapter-content"
+    //             ]?.[subChapter["sub-chapter"]]?.["sub-chapter-title"] ?? ""
+    //           : "",
+    //       A:
+    //         subChapter["net-zero-impact"] !== 0
+    //           ? Math.round(
+    //               (subChapter["general-score"] /
+    //                 subChapter["net-zero-impact"]) *
+    //                 100
+    //             )
+    //           : 0,
+    //     });
+    //   }
+    // });
 
     // calcParameters.forEach((subChapter, index) => {
     //   subChapterScoresTemp.push({
@@ -188,7 +170,9 @@ export default function SummaryReport() {
     //           ]?.[subChapter["sub-chapter"]]?.["sub-chapter-title"] ?? ""
     //         : "",
     //     ["ציון כללי"]: subChapter["net-zero-impact"],
-    //     ["ניקוד אפשרי"]: subChapter["max-score"] - subChapter["general-score"],
+    //     ["ניקוד אפשרי"]: subChapter["max-score"]
+    //       ? subChapter["max-score"] - subChapter["general-score"]
+    //       : 0,
     //   });
     // });
 

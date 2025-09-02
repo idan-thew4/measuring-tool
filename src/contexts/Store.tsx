@@ -45,11 +45,16 @@ function useStore() {
 //Score Object types//
 
 export type ScoreType = {
-  data?: ChapterPoints[];
+  data: ScoreVariations;
   "personal-details": PersonalDetails;
 };
 
-type ChapterPoints = {
+export type ScoreVariations = {
+  questionnaire: ChapterPoints[];
+  assessment: ChapterPoints[];
+};
+
+export type ChapterPoints = {
   "chapter-number": number;
   "chapter-data": SubChapterPoints[];
 };
@@ -212,7 +217,10 @@ function Store({ children }: PropsWithChildren<{}>) {
       evaluationExecutor: "",
       "data-agreement": "",
     },
-    data: [],
+    data: {
+      questionnaire: [],
+      assessment: [],
+    },
   });
   const [completedChapters, setCompletedChapters] = useState<totalCompleted>(
     []
@@ -274,18 +282,34 @@ function Store({ children }: PropsWithChildren<{}>) {
           evaluationExecutor: "",
           "data-agreement": "",
         },
-        data: structureObject.questionnaire.content.map((chapter) => ({
-          "chapter-number": chapter["chapter-number"],
-          "chapter-data": chapter["chapter-content"].map(
-            (subChapter, subIndex) => ({
-              "sub-chapter-number": subIndex + 1,
-              principles: subChapter["principles"].map((sub, subIndex) => ({
-                id: subIndex + 1,
-                choice: undefined,
-              })),
+        data: {
+          questionnaire: structureObject.questionnaire.content.map(
+            (chapter) => ({
+              "chapter-number": chapter["chapter-number"],
+              "chapter-data": chapter["chapter-content"].map(
+                (subChapter, subIndex) => ({
+                  "sub-chapter-number": subIndex + 1,
+                  principles: subChapter["principles"].map((sub, subIndex) => ({
+                    id: subIndex + 1,
+                    choice: undefined,
+                  })),
+                })
+              ),
             })
           ),
-        })),
+          assessment: structureObject.questionnaire.content.map((chapter) => ({
+            "chapter-number": chapter["chapter-number"],
+            "chapter-data": chapter["chapter-content"].map(
+              (subChapter, subIndex) => ({
+                "sub-chapter-number": subIndex + 1,
+                principles: subChapter["principles"].map((sub, subIndex) => ({
+                  id: subIndex + 1,
+                  choice: undefined,
+                })),
+              })
+            ),
+          })),
+        },
       };
     }
 
@@ -299,7 +323,7 @@ function Store({ children }: PropsWithChildren<{}>) {
       let total = 0;
       let completedChapters = 0;
 
-      scoreObject.data.forEach((chapterData, index) => {
+      scoreObject.data.questionnaire.forEach((chapterData, index) => {
         let completed = 0;
         chapterData["chapter-data"].forEach((subChapter) => {
           const allFilled = subChapter["principles"].every(
@@ -340,8 +364,8 @@ function Store({ children }: PropsWithChildren<{}>) {
     setCompletedChapters(chapters);
     if (
       scoreObject["personal-details"].contactEmail &&
-      scoreObject.data &&
-      scoreObject.data.length > 0
+      scoreObject.data.questionnaire &&
+      scoreObject.data.questionnaire.length > 0
     ) {
       setRegistrationStatus(false);
       const jsonCookie = JSON.stringify(scoreObject);

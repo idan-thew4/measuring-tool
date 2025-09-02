@@ -34,9 +34,9 @@ function isChoiceCompleted(
   choiceIdx: number
 ) {
   return (
-    scoreObject?.data?.[chapterIdx]?.["chapter-data"]?.[subChapterIdx]?.[
-      "principles"
-    ]?.[choiceIdx]?.choice !== undefined
+    scoreObject?.data?.questionnaire?.[chapterIdx]?.["chapter-data"]?.[
+      subChapterIdx
+    ]?.["principles"]?.[choiceIdx]?.choice !== undefined
   );
 }
 
