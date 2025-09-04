@@ -1,2 +1,99 @@
+@use "../../../../../styles/variables" as *;
+
 .radar {
+  &-container {
+    background-color: white;
+    padding: 4rem 5rem;
+    border-radius: 4rem;
+
+    .title {
+      margin-bottom: 5rem;
+    }
+
+    ul.filters {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .filter {
+        &-item {
+          &:has(input:checked) {
+            .filter-label {
+              &:before {
+                background: url("../../../../../../public/icons/check.svg")
+                  no-repeat center;
+                background-size: 1.1rem;
+              }
+            }
+          }
+        }
+        &-label {
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+          cursor: pointer;
+
+          &:before {
+            content: "";
+            width: 1.6rem;
+            height: 1.6rem;
+            border: 0.2rem solid $basic-grey;
+            display: block;
+            border-radius: 0.5rem;
+          }
+
+          input {
+            display: none;
+          }
+        }
+
+        &-color {
+          width: 1.6rem;
+          height: 1.6rem;
+          border-radius: 0.3rem;
+        }
+      }
+    }
+
+    ul.radar-legend {
+      display: flex;
+      gap: 3rem;
+      margin-top: 4rem;
+
+      .percentage {
+        color: white;
+        padding: 0.7rem 1rem 0.2rem 1rem;
+        border-radius: 2rem;
+      }
+    }
+  }
+
+  &-graph-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+  &-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+  }
+
+  .data-label {
+    background-color: red;
+  }
+
+  :global(.recharts-wrapper) {
+    width: 100% !important;
+    height: 100% !important;
+
+    :global(.recharts-polar-grid-concentric) {
+      display: none;
+    }
+  }
 }

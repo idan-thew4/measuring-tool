@@ -3,12 +3,23 @@
 import { useStore, ChapterPoints, ScoreVariations } from "@/contexts/Store";
 import { RadarGraph } from "./graphs/radar/radar";
 import { useEffect, useState } from "react";
+import styles from "./summary-report.module.scss";
+import clsx from "clsx";
 
 export type ScoreData = {
   subject?: string;
   name?: string;
 } & {
   [key: string]: number | string | null;
+};
+
+type CalcParameters = {
+  chapter: number;
+  "sub-chapter"?: number;
+  "general-score": number;
+  "max-score"?: number;
+  "net-zero-impact": number;
+  type?: string;
 };
 
 export default function SummaryReport() {
@@ -22,15 +33,6 @@ export default function SummaryReport() {
     secondChapter: [],
     subChapters: [],
   });
-
-  type CalcParameters = {
-    chapter: number;
-    "sub-chapter"?: number;
-    "general-score": number;
-    "max-score": number;
-    "net-zero-impact": number;
-    type?: string;
-  };
 
   function calculateScores(data: ChapterPoints[], graph: string, type: string) {
     let index = 0;
@@ -81,7 +83,6 @@ export default function SummaryReport() {
                 subChapterObj["general-score"] += generalScore.score;
                 subChapterObj["net-zero-impact"] +=
                   netZeroImpactScore?.score ?? 0;
-                subChapterObj["max-score"] += maxScore?.score ?? 0;
               }
             }
           }
@@ -125,13 +126,11 @@ export default function SummaryReport() {
 
         return {
           subject,
-          questionnaire,
           assessment,
+          questionnaire,
         };
       }
     );
-
-    console.log("Calculated Parameters:", chaptersScoresTemp);
 
     // sub-chapters //
 
@@ -184,13 +183,28 @@ export default function SummaryReport() {
   }, [structure, scoreObject]);
 
   return (
-    <div>
-      {structure && (
-        <>
-          <RadarGraph parameters={scores.chapters} structure={structure} />
-          <RadarGraph parameters={scores.secondChapter} structure={structure} />
-        </>
-      )}
+    <div className="main-container">
+      <div className={styles["graphs"]}>
+        {structure &&
+          structure["summary-report"].graphs.map((graph, index) => {
+            switch (graph.type) {
+              case "radar":
+                return (
+                  <RadarGraph
+                    parameters={
+                      graph.data === "chapters"
+                        ? scores.chapters
+                        : scores.secondChapter
+                    }
+                    key={index}
+                    headline={graph.title}
+                    filters={graph.filters}
+                    structure={structure}
+                  />
+                );
+            }
+          })}
+      </div>
     </div>
   );
 }

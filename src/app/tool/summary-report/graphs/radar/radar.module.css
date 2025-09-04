@@ -1,1 +1,92 @@
-/*# sourceMappingURL=radar.module.css.map */
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.radar-container {
+  background-color: white;
+  padding: 4rem 5rem;
+  border-radius: 4rem;
+}
+.radar-container .title {
+  margin-bottom: 5rem;
+}
+.radar-container ul.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.radar-container ul.filters .filter-item:has(input:checked) .filter-label:before {
+  background: url("../../../../../../public/icons/check.svg") no-repeat center;
+  background-size: 1.1rem;
+}
+.radar-container ul.filters .filter-label {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+}
+.radar-container ul.filters .filter-label:before {
+  content: "";
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 0.2rem solid #979797;
+  display: block;
+  border-radius: 0.5rem;
+}
+.radar-container ul.filters .filter-label input {
+  display: none;
+}
+.radar-container ul.filters .filter-color {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 0.3rem;
+}
+.radar-container ul.radar-legend {
+  display: flex;
+  gap: 3rem;
+  margin-top: 4rem;
+}
+.radar-container ul.radar-legend .percentage {
+  color: white;
+  padding: 0.7rem 1rem 0.2rem 1rem;
+  border-radius: 2rem;
+}
+.radar-graph-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.radar-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+}
+.radar .data-label {
+  background-color: red;
+}
+.radar :global(.recharts-wrapper) {
+  width: 100% !important;
+  height: 100% !important;
+}
+.radar :global(.recharts-wrapper) :global(.recharts-polar-grid-concentric) {
+  display: none;
+}/*# sourceMappingURL=radar.module.css.map */

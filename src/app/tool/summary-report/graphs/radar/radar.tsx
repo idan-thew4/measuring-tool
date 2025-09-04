@@ -1,156 +1,223 @@
 "use client";
 
-import {
-  Legend,
-  PolarAngleAxis,
-  PolarGrid,
-  Tooltip,
-  PolarRadiusAxis,
-  Radar,
-  RadarChart,
-} from "recharts";
+import { PolarGrid, PolarRadiusAxis, Radar, RadarChart } from "recharts";
 import styles from "./radar.module.scss";
 import { ScoreData } from "../../page";
 import { structureProps } from "@/contexts/Store";
 import { useEffect, useState } from "react";
+import React from "react";
+import Image from "next/image";
+import clsx from "clsx";
 
 export function RadarGraph({
   parameters,
+  headline,
+  filters,
   structure,
 }: {
   parameters: ScoreData[];
+  headline?: string;
+  filters?: string[];
   structure: structureProps;
 }) {
-  const colors = ["#00A9FF", "grey", "black"];
+  const colors = ["#979797", " #79C5D8"];
+  const legendColors = ["#00A9FF", "#0089CE", "#00679B", "#577686"];
   const [dataKeys, setDataKeys] = useState<string[]>();
+  const [filtersStatus, setFiltersStatus] = useState<{
+    [key: string]: boolean;
+  }>({
+    questionnaire: true,
+    assessment: false,
+  });
+  const [maxValue, setMaxValue] = useState<number>();
 
   useEffect(() => {
     const tempDataKeys: string[] = [];
     if (parameters.length > 0) {
       parameters.forEach((parameter) => {
         Object.keys(parameter).forEach((key) => {
-          if (
-            key !== "subject" &&
-            key !== "fullMark" &&
-            !tempDataKeys.includes(key)
-          ) {
+          if (key !== "subject" && !tempDataKeys.includes(key)) {
             tempDataKeys.push(key);
           }
         });
       });
     }
+
+    const maxValue = Math.max(
+      ...parameters.flatMap((param) =>
+        Object.entries(param)
+          .filter(
+            ([key, value]) => key !== "subject" && typeof value === "number"
+          )
+          .map(([key, value]) => value as number)
+      )
+    );
+
+    setMaxValue(maxValue);
+
     setDataKeys(tempDataKeys);
   }, [parameters]);
 
-  useEffect(() => {
-    console.log("Data Keys:", dataKeys);
-  }, [dataKeys]);
+  function getDataLabelColor(value: string | number, type: string) {
+    switch (type) {
+      case "assessment":
+        return "#979797";
+        break;
+      case "questionnaire":
+        if (Number(value) > 100) {
+          return legendColors[0];
+        } else if (Number(value) <= 100 && Number(value) >= 33) {
+          return legendColors[1];
+        } else if (Number(value) <= 34 && Number(value) >= 18) {
+          return legendColors[2];
+        } else {
+          return legendColors[3];
+        }
+    }
+  }
 
-  const DataNames = ["אחוז הצלחה", "הערכה אישית"];
+  function getPercentage(index: number) {
+    switch (index) {
+      case 1:
+        return "17%-0%";
+      case 2:
+        return "33%-18%";
+      case 3:
+        return "100%-34%";
+      case 4:
+        return ">100%";
+    }
+  }
 
   return (
-    <div>
-      {/* <svg
-        width="500"
-        height="500"
-        viewBox="0 0 970 970"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg">
-        <circle
-          cx="494.684"
-          cy="490.684"
-          r="324.5"
-          stroke="#0E2517"
-          stroke-opacity="0.2"
-        />
-        <defs>
-          <path
-            id="circlePath"
-            d="
-      M 494.684,146.184
-      a 344.5,344.5 0 1,1 0,689
-      a 344.5,344.5 0 1,1 0,-689
-    "
+    <div className={styles["radar-container"]}>
+      <h2 className={clsx("medium-small", styles["title"])}>{headline}</h2>
+      <ul className={styles["filters"]}>
+        {dataKeys
+          ?.slice()
+          .reverse()
+          .map((filter, index) => (
+            <li key={index} className={styles["filter-item"]}>
+              <label className={clsx("paragraph_14", styles["filter-label"])}>
+                <div
+                  className={styles["filter-color"]}
+                  style={{
+                    backgroundColor: colors[colors.length - 1 - index],
+                  }}></div>
+                <input
+                  type="checkbox"
+                  checked={filtersStatus[filter] || false}
+                  onChange={() => {
+                    setFiltersStatus((prev) => ({
+                      ...prev,
+                      [filter]: !prev[filter],
+                    }));
+                  }}
+                />
+                {(filters ?? [])[index]}
+              </label>
+            </li>
+          ))}
+      </ul>
+      <div className={styles["radar-graph-container"]}>
+        <div className={styles["radar"]}>
+          <Image
+            src="/pages/graphs/radar_grid.svg"
+            alt=""
+            width={590}
+            height={590}
+            className={styles["radar-grid"]}
           />
-        </defs>
-        <text fontSize="24" fill="red">
-          <textPath href="#circlePath" startOffset="10%">
-            תכנון וביצוע
-          </textPath>
-          <textPath href="#circlePath" startOffset="30%">
-            תכנון וביצוע
-          </textPath>
-          <textPath href="#circlePath" startOffset="60%">
-            תכנון וביצוע
-          </textPath>
-        </text>
-        <circle cx="484.773" cy="484.775" r="230.5" stroke="#393D3B" />
-        <circle
-          cx="484.773"
-          cy="484.775"
-          r="137.534"
-          stroke="#0E2517"
-          stroke-opacity="0.2"
-          stroke-width="0.932432"
-        />
-        <circle
-          cx="57"
-          cy="57"
-          r="56.5"
-          transform="matrix(1 0 0 -1 427.773 541.775)"
-          stroke="#0E2517"
-          stroke-opacity="0.2"
-        />
-      </svg> */}
-      <div className={styles["radar__frame"]}>
-        <RadarChart
-          outerRadius={200}
-          width={500}
-          height={500}
-          data={parameters}
-          className={styles["radar"]}>
-          <PolarGrid />
-          <PolarAngleAxis dataKey="subject" axisLine={false} />
-          <PolarRadiusAxis angle={30} domain={[0, 100]} />
+          <RadarChart
+            outerRadius={284}
+            width={600}
+            height={600}
+            data={parameters}
+            className={styles["radar"]}>
+            <PolarRadiusAxis
+              axisLine={false}
+              tick={false}
+              domain={typeof maxValue === "number" ? [0, maxValue] : undefined}
+            />
 
-          {dataKeys &&
-            dataKeys.map((param, index) => (
-              <Radar
-                key={index}
-                name={DataNames[index]}
-                dataKey={dataKeys[index]}
-                stroke={colors[index]}
-                fill={colors[index]}
-                fillOpacity={0.6}
-                label={({
-                  value,
-                  x,
-                  y,
-                }: {
-                  value: number | string;
-                  x: number;
-                  y: number;
-                }) => (
-                  <g>
-                    <circle cx={x} cy={y} r={4} fill={colors[index]} />
-                    <text
-                      x={x}
-                      y={y - 10}
+            <PolarGrid radialLines={true} />
+            {dataKeys &&
+              dataKeys.map((dataKey, index) => {
+                if (filtersStatus[dataKey]) {
+                  return (
+                    <Radar
+                      key={index}
+                      name={dataKeys[index]}
+                      dataKey={dataKeys[index]}
+                      stroke={colors[index]}
+                      strokeWidth={2}
                       fill={colors[index]}
-                      fontSize={14}
-                      textAnchor="middle"
-                      dominantBaseline="central">
-                      {value}
-                    </text>
-                  </g>
-                )}
-              />
-            ))}
-
-          {/* <Legend />
+                      fillOpacity={0.6}
+                      label={({
+                        value,
+                        x,
+                        y,
+                      }: {
+                        value: number | string;
+                        x: number;
+                        y: number;
+                      }) => (
+                        <g>
+                          <rect
+                            x={
+                              x -
+                              (Math.abs(Number(value)).toString().length > 2
+                                ? 22
+                                : 18)
+                            }
+                            y={y - 20}
+                            width={
+                              Math.abs(Number(value)).toString().length > 2
+                                ? "45"
+                                : "35"
+                            }
+                            height="17"
+                            fill={getDataLabelColor(value, dataKeys[index])}
+                            strokeWidth="2"
+                            rx="8"
+                          />
+                          <text
+                            x={x}
+                            y={y - 10}
+                            fill={"white"}
+                            fontSize={12}
+                            textAnchor="middle"
+                            dominantBaseline="central"
+                            className={styles["data-label"]}>
+                            {value}%
+                          </text>
+                        </g>
+                      )}
+                    />
+                  );
+                }
+              })}
+            {/* <Legend />
           <Tooltip /> */}
-        </RadarChart>
+          </RadarChart>
+        </div>
       </div>
+
+      <ul className={styles["radar-legend"]}>
+        {structure.questionnaire.options.map((option, index) => {
+          if (index === 0) return null;
+          return (
+            <li key={index} className={styles["legend-item"]}>
+              <p className={clsx("paragraph_14", styles["text"])}>{option}</p>
+              <p
+                style={{ backgroundColor: legendColors[index - 1] }}
+                className={clsx("paragraph_12", styles["percentage"])}>
+                {getPercentage(index)}
+              </p>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }

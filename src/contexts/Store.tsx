@@ -100,6 +100,18 @@ export type structureProps = {
   questionnaire: questionnaire;
   registration: Registration;
   summary: Summary;
+  "summary-report": SummaryReport;
+};
+
+type SummaryReport = {
+  graphs: Graph[];
+};
+
+type Graph = {
+  title: string;
+  type: string;
+  data: string;
+  filters?: string[];
 };
 
 type Summary = {
