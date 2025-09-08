@@ -124,9 +124,11 @@ export default function SummaryReport() {
       (chapter, index) => {
         const subject =
           structure?.questionnaire.content?.[index]?.["chapter-title"] ?? "";
+
         const questionnaire = Math.round(
           (chapter["general-score"] / chapter["net-zero-impact"]) * 100
         );
+
         const assessment = Math.round(
           (assessmentParams[index]["general-score"] /
             assessmentParams[index]["net-zero-impact"]) *
