@@ -31,6 +31,8 @@ export function RadarGraph({
   });
   const [maxValue, setMaxValue] = useState<number>();
 
+  console.log(parameters);
+
   useEffect(() => {
     const tempDataKeys: string[] = [];
     if (parameters.length > 0) {

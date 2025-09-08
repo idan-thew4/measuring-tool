@@ -100,16 +100,25 @@ export default function SummaryReport() {
     // chapters //
     let calcParameters = [] as CalcParameters[];
 
-    const questionnaireParams = calculateScores(
-      scoreObject.data.questionnaire ?? [],
-      "chapters",
-      "questionnaire"
-    );
-    const assessmentParams = calculateScores(
-      scoreObject.data.assessment ?? [],
-      "chapters",
-      "assessment"
-    );
+    let questionnaireParams = [] as CalcParameters[];
+
+    if (scoreObject.data.questionnaire.length > 0) {
+      questionnaireParams = calculateScores(
+        scoreObject.data.questionnaire ?? [],
+        "chapters",
+        "questionnaire"
+      );
+    }
+
+    let assessmentParams = [] as CalcParameters[];
+
+    if (scoreObject.data.assessment.length > 0) {
+      assessmentParams = calculateScores(
+        scoreObject.data.assessment ?? [],
+        "chapters",
+        "assessment"
+      );
+    }
 
     const chaptersScoresTemp: ScoreData[] = questionnaireParams.map(
       (chapter, index) => {
