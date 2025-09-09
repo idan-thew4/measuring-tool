@@ -98,17 +98,14 @@ export default function SummaryReport() {
 
   useEffect(() => {
     // chapters //
-    let calcParameters = [] as CalcParameters[];
 
     let questionnaireParams = [] as CalcParameters[];
 
-    if (scoreObject.data.questionnaire.length > 0) {
-      questionnaireParams = calculateScores(
-        scoreObject.data.questionnaire ?? [],
-        "chapters",
-        "questionnaire"
-      );
-    }
+    questionnaireParams = calculateScores(
+      scoreObject.data.questionnaire ?? [],
+      "chapters",
+      "questionnaire"
+    );
 
     let assessmentParams = [] as CalcParameters[];
 
@@ -129,62 +126,85 @@ export default function SummaryReport() {
           (chapter["general-score"] / chapter["net-zero-impact"]) * 100
         );
 
-        const assessment = Math.round(
-          (assessmentParams[index]["general-score"] /
-            assessmentParams[index]["net-zero-impact"]) *
-            100
-        );
+        const hasAssessment =
+          assessmentParams.length > 0 &&
+          assessmentParams[index] &&
+          typeof assessmentParams[index]["general-score"] === "number" &&
+          typeof assessmentParams[index]["net-zero-impact"] === "number" &&
+          assessmentParams[index]["net-zero-impact"] !== 0;
 
         return {
           subject,
-          assessment,
           questionnaire,
+          ...(hasAssessment
+            ? {
+                assessment: Math.round(
+                  (assessmentParams[index]["general-score"] /
+                    assessmentParams[index]["net-zero-impact"]) *
+                    100
+                ),
+              }
+            : {}),
         };
       }
     );
 
     // sub-chapters //
 
-    calcParameters = [];
+    questionnaireParams = [];
 
-    let subChapterScoresTemp: ScoreData[] = [];
+    questionnaireParams = calculateScores(
+      scoreObject.data.questionnaire ?? [],
+      "subchapters",
+      "questionnaire"
+    );
+
+    if (scoreObject.data.assessment.length > 0) {
+      assessmentParams = calculateScores(
+        scoreObject.data.assessment ?? [],
+        "subchapters",
+        "assessment"
+      );
+    }
+
+    const subChapterScoresTemp: ScoreData[] = questionnaireParams.map(
+      (subChapter, index) => {
+        // console.log("subChapter", subChapter);
+
+        const subject =
+          structure?.questionnaire.content?.[subChapter.chapter]?.[
+            "chapter-content"
+          ]?.[subChapter["sub-chapter"]]?.["sub-chapter-title"] ?? "";
+
+        const questionnaire = Math.round(
+          (subChapter["general-score"] / subChapter["net-zero-impact"]) * 100
+        );
+
+        const hasAssessment =
+          assessmentParams.length > 0 &&
+          assessmentParams[index] &&
+          typeof assessmentParams[index]["general-score"] === "number" &&
+          typeof assessmentParams[index]["net-zero-impact"] === "number" &&
+          assessmentParams[index]["net-zero-impact"] !== 0;
+
+        return {
+          subject,
+          questionnaire,
+          ...(hasAssessment
+            ? {
+                assessment: Math.round(
+                  (assessmentParams[index]["general-score"] /
+                    assessmentParams[index]["net-zero-impact"]) *
+                    100
+                ),
+              }
+            : {}),
+        };
+      }
+    );
+
+    console.log("subChapterScoresTemp", subChapterScoresTemp);
     let secondChapterTemp: ScoreData[] = [];
-
-    // calcParameters.forEach((subChapter, index) => {
-    //   if (subChapter.chapter === 1) {
-    //     secondChapterTemp.push({
-    //       subject:
-    //         subChapter["sub-chapter"] !== undefined
-    //           ? structure?.questionnaire.content?.[subChapter.chapter]?.[
-    //               "chapter-content"
-    //             ]?.[subChapter["sub-chapter"]]?.["sub-chapter-title"] ?? ""
-    //           : "",
-    //       A:
-    //         subChapter["net-zero-impact"] !== 0
-    //           ? Math.round(
-    //               (subChapter["general-score"] /
-    //                 subChapter["net-zero-impact"]) *
-    //                 100
-    //             )
-    //           : 0,
-    //     });
-    //   }
-    // });
-
-    // calcParameters.forEach((subChapter, index) => {
-    //   subChapterScoresTemp.push({
-    //     name:
-    //       subChapter["sub-chapter"] !== undefined
-    //         ? structure?.questionnaire.content?.[subChapter.chapter]?.[
-    //             "chapter-content"
-    //           ]?.[subChapter["sub-chapter"]]?.["sub-chapter-title"] ?? ""
-    //         : "",
-    //     ["ציון כללי"]: subChapter["net-zero-impact"],
-    //     ["ניקוד אפשרי"]: subChapter["max-score"]
-    //       ? subChapter["max-score"] - subChapter["general-score"]
-    //       : 0,
-    //   });
-    // });
 
     setScores({
       chapters: chaptersScoresTemp,
@@ -211,6 +231,7 @@ export default function SummaryReport() {
                     headline={graph.title}
                     filters={graph.filters}
                     structure={structure}
+                    imageGridURL={"/pages/graphs/radar_grid.svg"}
                   />
                 );
             }
