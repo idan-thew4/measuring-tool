@@ -1,6 +1,7 @@
 import clsx from "clsx";
-import styles from "./summary-header.module.scss";
+import styles from "../../components/summary-header/summary-header.module.scss";
 import { structureProps, ScoreType } from "@/contexts/Store";
+import { SummaryHeader } from "../../components/summary-header/summaryHeader";
 import {
   PDFDownloadLink,
   Page,
@@ -239,7 +240,7 @@ const MyDocument = ({
   );
 };
 
-export function SummaryHeader({
+export function SummaryTableHeader({
   structure,
   scoreObject,
 }: {
@@ -247,50 +248,22 @@ export function SummaryHeader({
   scoreObject: ScoreType;
 }) {
   return (
-    <div className={styles["summary-header"]}>
-      {/* <PDFViewer width="100%" height={600} style={{ border: "none" }}>
-        <MyDocument structure={structure} scoreObject={scoreObject} />
-      </PDFViewer> */}
-      <h1 className={clsx(styles["title"], "headline_small")}>
-        {structure?.summary.header.title}
-      </h1>
-      <div className={styles["summary-main"]}>
-        <div className={styles["summary-details"]}>
-          <p className="paragraph_15">
-            <span className="bold">
-              {`${structure?.summary.header["summary-details"][0]}: `}
-            </span>
-            {`${formatDate(scoreObject["personal-details"].date)}`}
-          </p>
-          <p className="paragraph_15">
-            <span className="bold">
-              {`${structure?.summary.header["summary-details"][1]}: `}
-            </span>
-            {scoreObject["personal-details"].projectName}
-          </p>
-        </div>
-
-        <div className={styles["summary-buttons"]}>
-          <button
-            className={clsx(
-              styles["download"],
-              "basic-button with-icon outline"
-            )}
-            onClick={() => downloadAllCSV(structure, scoreObject)}>
-            {structure?.summary.header["buttons-copy"][0]}
-          </button>
-          <PDFDownloadLink
-            document={
-              <MyDocument structure={structure} scoreObject={scoreObject} />
-            }
-            fileName={`${
-              scoreObject["personal-details"].projectName
-            }-${formatDate(Date.now())}.pdf`}
-            className={clsx(styles["print"], "basic-button with-icon outline")}>
-            {structure?.summary.header["buttons-copy"][1]}
-          </PDFDownloadLink>
-        </div>
-      </div>
-    </div>
+    <SummaryHeader structure={structure} scoreObject={scoreObject}>
+      <button
+        className={clsx(styles["download"], "basic-button with-icon outline")}
+        onClick={() => downloadAllCSV(structure, scoreObject)}>
+        {structure?.summary.header["buttons-copy"][0]}
+      </button>
+      <PDFDownloadLink
+        document={
+          <MyDocument structure={structure} scoreObject={scoreObject} />
+        }
+        fileName={`${scoreObject["personal-details"].projectName}-${formatDate(
+          Date.now()
+        )}.pdf`}
+        className={clsx(styles["print"], "basic-button with-icon outline")}>
+        {structure?.summary.header["buttons-copy"][1]}
+      </PDFDownloadLink>
+    </SummaryHeader>
   );
 }
