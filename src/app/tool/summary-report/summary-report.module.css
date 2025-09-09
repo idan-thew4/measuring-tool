@@ -18,4 +18,7 @@
 }
 .graphs {
   grid-column: 3/8;
+  display: flex;
+  flex-direction: column;
+  gap: 6rem;
 }/*# sourceMappingURL=summary-report.module.css.map */

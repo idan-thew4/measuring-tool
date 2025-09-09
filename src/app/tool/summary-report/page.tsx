@@ -149,7 +149,7 @@ export default function SummaryReport() {
       }
     );
 
-    // sub-chapters //
+    // second-chapters //
 
     questionnaireParams = [];
 
@@ -167,14 +167,20 @@ export default function SummaryReport() {
       );
     }
 
-    const subChapterScoresTemp: ScoreData[] = questionnaireParams.map(
-      (subChapter, index) => {
-        // console.log("subChapter", subChapter);
+    const filteredQuestionnaireParams = questionnaireParams.filter(
+      (chapter) => chapter["chapter"] === 1
+    );
 
+    const secondChapterTemp: ScoreData[] = filteredQuestionnaireParams.map(
+      (subChapter, index) => {
+        const subChapterIndex =
+          typeof subChapter["sub-chapter"] === "number"
+            ? subChapter["sub-chapter"]
+            : 0;
         const subject =
           structure?.questionnaire.content?.[subChapter.chapter]?.[
             "chapter-content"
-          ]?.[subChapter["sub-chapter"]]?.["sub-chapter-title"] ?? "";
+          ]?.[subChapterIndex]?.["sub-chapter-title"] ?? "";
 
         const questionnaire = Math.round(
           (subChapter["general-score"] / subChapter["net-zero-impact"]) * 100
@@ -203,13 +209,12 @@ export default function SummaryReport() {
       }
     );
 
-    console.log("subChapterScoresTemp", subChapterScoresTemp);
-    let secondChapterTemp: ScoreData[] = [];
+    console.log(secondChapterTemp);
 
     setScores({
       chapters: chaptersScoresTemp,
       secondChapter: secondChapterTemp,
-      subChapters: subChapterScoresTemp,
+      subChapters: [],
     });
   }, [structure, scoreObject]);
 
@@ -231,7 +236,7 @@ export default function SummaryReport() {
                     headline={graph.title}
                     filters={graph.filters}
                     structure={structure}
-                    imageGridURL={"/pages/graphs/radar_grid.svg"}
+                    imageGridURL={`/pages/graphs/radar_grid_${graph.data}.svg`}
                   />
                 );
             }

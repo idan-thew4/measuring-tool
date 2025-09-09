@@ -105,8 +105,7 @@ export function RadarGraph({
                   className={styles["filter-color"]}
                   style={{
                     backgroundColor: colors[index],
-                  }}
-                ></div>
+                  }}></div>
                 <input
                   type="checkbox"
                   checked={filtersStatus[filter] || false}
@@ -136,8 +135,7 @@ export function RadarGraph({
             width={600}
             height={600}
             data={parameters}
-            className={styles["radar"]}
-          >
+            className={styles["radar"]}>
             <PolarRadiusAxis
               axisLine={false}
               tick={false}
@@ -192,8 +190,7 @@ export function RadarGraph({
                             fontSize={12}
                             textAnchor="middle"
                             dominantBaseline="central"
-                            className={styles["data-label"]}
-                          >
+                            className={styles["data-label"]}>
                             {value}%
                           </text>
                         </g>
@@ -216,8 +213,7 @@ export function RadarGraph({
               <p className={clsx("paragraph_14", styles["text"])}>{option}</p>
               <p
                 style={{ backgroundColor: legendColors[index - 1] }}
-                className={clsx("paragraph_12", styles["percentage"])}
-              >
+                className={clsx("paragraph_12", styles["percentage"])}>
                 {getPercentage(index)}
               </p>
             </li>
