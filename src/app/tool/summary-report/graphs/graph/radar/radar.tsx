@@ -2,12 +2,13 @@
 
 import { PolarGrid, PolarRadiusAxis, Radar, RadarChart } from "recharts";
 import styles from "./radar.module.scss";
-import { ScoreData } from "../../page";
+import { ScoreData } from "../../../page";
 import { structureProps } from "@/contexts/Store";
 import { useEffect, useState } from "react";
 import React from "react";
 import Image from "next/image";
 import clsx from "clsx";
+import { Graph } from "../graph";
 
 export function RadarGraph({
   parameters,
@@ -78,22 +79,8 @@ export function RadarGraph({
     }
   }
 
-  function getPercentage(index: number) {
-    switch (index) {
-      case 1:
-        return "17%-0%";
-      case 2:
-        return "33%-18%";
-      case 3:
-        return "100%-34%";
-      case 4:
-        return ">100%";
-    }
-  }
-
   return (
-    <div className={styles["radar-container"]}>
-      <h2 className={clsx("medium-small", styles["title"])}>{headline}</h2>
+    <Graph headline={headline} structure={structure}>
       <ul className={styles["filters"]}>
         {dataKeys
           ?.slice()
@@ -142,7 +129,7 @@ export function RadarGraph({
               domain={typeof maxValue === "number" ? [0, maxValue] : undefined}
             />
 
-            {/* <PolarGrid radialLines={true} /> */}
+            <PolarGrid radialLines={true} />
             {dataKeys &&
               dataKeys.map((dataKey, index) => {
                 if (filtersStatus[dataKey]) {
@@ -204,22 +191,6 @@ export function RadarGraph({
           </RadarChart>
         </div>
       </div>
-
-      <ul className={styles["radar-legend"]}>
-        {structure.questionnaire.options.map((option, index) => {
-          if (index === 0) return null;
-          return (
-            <li key={index} className={styles["legend-item"]}>
-              <p className={clsx("paragraph_14", styles["text"])}>{option}</p>
-              <p
-                style={{ backgroundColor: legendColors[index - 1] }}
-                className={clsx("paragraph_12", styles["percentage"])}>
-                {getPercentage(index)}
-              </p>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    </Graph>
   );
 }

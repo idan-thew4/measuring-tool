@@ -1,0 +1,25 @@
+.responsive-container {
+  > div {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  :global(.recharts-surface) {
+    overflow: visible;
+
+    :global(.recharts-layer.recharts-cartesian-axis-tick) {
+      &:first-of-type {
+        display: none;
+      }
+
+      &:last-of-type {
+        $dataPoints: 110, 270, 450;
+        @for $i from 1 through length($dataPoints) {
+          :global(g):nth-of-type(#{$i}) {
+            transform: translate(nth($dataPoints, $i), 0) !important;
+          }
+        }
+      }
+    }
+  }
+}

@@ -8,6 +8,7 @@
     background-color: $lime-light;
     grid-template-columns: subgrid;
     display: grid;
+    z-index: 9;
 
     .title {
       grid-column: 2 / 7;

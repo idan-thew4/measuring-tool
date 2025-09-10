@@ -5,7 +5,7 @@ import { structureProps, ScoreType } from "@/contexts/Store";
 function formatDate(timestamp: number) {
   const date = new Date(timestamp);
   const day = date.getDate();
-  const month = date.getMonth() + 1; // Months are zero-based
+  const month = date.getMonth() + 1;
   const year = date.getFullYear();
   return `${day}.${month}.${year}`;
 }

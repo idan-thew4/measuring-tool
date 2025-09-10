@@ -633,6 +633,11 @@
         "type": "radar",
         "data": "second-chapter",
         "filters": ["תוצאות מדידה", "הערכה עצמית"]
+      },
+      {
+        "title": "סך הניקוד לתת-פרק ביחס לציון מירבי אפשרי",
+        "type": "barChart",
+        "data": "sub-chapter"
       }
     ]
   }

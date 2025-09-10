@@ -1,8 +1,11 @@
 @use "../../../styles/variables" as *;
-
-.graphs {
-  grid-column: 3 / 8;
-  display: flex;
-  flex-direction: column;
-  gap: 6rem;
+.main-container {
+  grid-template-rows: repeat(2, min-content);
+  row-gap: 4rem;
+  .graphs {
+    grid-column: 3 / 8;
+    display: flex;
+    flex-direction: column;
+    gap: 6rem;
+  }
 }

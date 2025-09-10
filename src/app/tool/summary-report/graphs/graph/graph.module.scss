@@ -1,0 +1,21 @@
+.container {
+  background-color: white;
+  padding: 4rem 5rem;
+  border-radius: 4rem;
+
+  .title {
+    margin-bottom: 5rem;
+  }
+}
+
+ul.radar-legend {
+  display: flex;
+  gap: 3rem;
+  margin-top: 4rem;
+
+  .percentage {
+    color: white;
+    padding: 0.7rem 1rem 0.2rem 1rem;
+    border-radius: 2rem;
+  }
+}

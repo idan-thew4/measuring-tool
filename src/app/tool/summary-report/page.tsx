@@ -1,9 +1,11 @@
 "use client";
 
-import { useStore, ChapterPoints, ScoreVariations } from "@/contexts/Store";
-import { RadarGraph } from "./graphs/radar/radar";
+import { useStore, ChapterPoints } from "@/contexts/Store";
+import { RadarGraph } from "./graphs/graph/radar/radar";
+import { StackedBar } from "./graphs/graph/stackedBar/stackedBar";
 import { useEffect, useState } from "react";
 import styles from "./summary-report.module.scss";
+import { SummaryHeader } from "../components/summary-header/summaryHeader";
 import clsx from "clsx";
 
 export type ScoreData = {
@@ -79,10 +81,15 @@ export default function SummaryReport() {
                 calcParameters[index]["general-score"] += generalScore.score;
                 calcParameters[index]["net-zero-impact"] +=
                   netZeroImpactScore?.score ?? 0;
-              } else if (graph === "subchapters" && subChapterObj) {
+              } else if (
+                graph === "subchapters" &&
+                subChapterObj &&
+                typeof subChapterObj["max-score"] === "number"
+              ) {
                 subChapterObj["general-score"] += generalScore.score;
                 subChapterObj["net-zero-impact"] +=
                   netZeroImpactScore?.score ?? 0;
+                subChapterObj["max-score"] += maxScore?.score ?? 0;
               }
             }
           }
@@ -209,39 +216,75 @@ export default function SummaryReport() {
       }
     );
 
-    console.log(secondChapterTemp);
+    // sub-chapters //
+
+    const subChaptersTemp: ScoreData[] = questionnaireParams.map(
+      (subChapter, index) => {
+        const subChapterIndex =
+          typeof subChapter["sub-chapter"] === "number"
+            ? subChapter["sub-chapter"]
+            : 0;
+        const subChapterNumber = `${subChapter.chapter + 1}.${
+          subChapterIndex + 1
+        }`;
+
+        const generalScore = subChapter["general-score"];
+        const possibleScore =
+          (subChapter["max-score"] ?? 0) - (subChapter["general-score"] ?? 0);
+
+        return {
+          subChapterNumber,
+          generalScore,
+          possibleScore,
+        };
+      }
+    );
 
     setScores({
       chapters: chaptersScoresTemp,
       secondChapter: secondChapterTemp,
-      subChapters: [],
+      subChapters: subChaptersTemp,
     });
   }, [structure, scoreObject]);
 
   return (
-    <div className="main-container">
-      <div className={styles["graphs"]}>
-        {structure &&
-          structure["summary-report"].graphs.map((graph, index) => {
-            switch (graph.type) {
-              case "radar":
-                return (
-                  <RadarGraph
-                    parameters={
-                      graph.data === "chapters"
-                        ? scores.chapters
-                        : scores.secondChapter
-                    }
-                    key={index}
-                    headline={graph.title}
-                    filters={graph.filters}
-                    structure={structure}
-                    imageGridURL={`/pages/graphs/radar_grid_${graph.data}.svg`}
-                  />
-                );
-            }
-          })}
-      </div>
+    <div className={clsx(styles["main-container"], "main-container")}>
+      {structure && (
+        <>
+          <SummaryHeader structure={structure} scoreObject={scoreObject} />
+          <div className={styles["graphs"]}>
+            {structure["summary-report"].graphs.map((graph, index) => {
+              switch (graph.type) {
+                case "radar":
+                  return (
+                    <RadarGraph
+                      parameters={
+                        graph.data === "chapters"
+                          ? scores.chapters
+                          : scores.secondChapter
+                      }
+                      key={index}
+                      headline={graph.title}
+                      filters={graph.filters}
+                      structure={structure}
+                      imageGridURL={`/pages/graphs/radar_grid_${graph.data}.svg`}
+                    />
+                  );
+                  break;
+                case "barChart":
+                  return (
+                    <StackedBar
+                      parameters={scores.subChapters}
+                      key={index}
+                      headline={graph.title}
+                      structure={structure}
+                    />
+                  );
+              }
+            })}
+          </div>
+        </>
+      )}
     </div>
   );
 }
