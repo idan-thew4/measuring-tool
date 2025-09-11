@@ -1,0 +1,75 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.summary-header {
+  grid-column: 2/9;
+  position: sticky;
+  top: -11rem;
+  background-color: #f3f9ed;
+  grid-template-columns: subgrid;
+  display: grid;
+  z-index: 9;
+}
+.summary-header .title {
+  grid-column: 2/7;
+}
+.summary-main {
+  grid-column: 2/7;
+  margin-top: 1rem;
+  padding: 4rem 0;
+  border-top: 0.1rem solid black;
+  border-bottom: 0.1rem solid black;
+  display: flex;
+  justify-content: space-between;
+  grid-template-columns: subgrid;
+}
+.summary-buttons {
+  display: flex;
+  gap: 2.9rem;
+}
+.summary-buttons button:after,
+.summary-buttons a:after {
+  content: "";
+  width: 1.5rem;
+  height: 1.5rem;
+  background-size: 1.5rem !important;
+}
+.summary-buttons button.download:after,
+.summary-buttons a.download:after {
+  background: url("../../../../../public/icons/download_icon.svg") no-repeat
+    center;
+}
+.summary-buttons button.download:hover:after,
+.summary-buttons a.download:hover:after {
+  background: url("../../../../../public/icons/download_icon_white.svg")
+    no-repeat center;
+}
+.summary-buttons button.print:after,
+.summary-buttons a.print:after {
+  background: url("../../../../../public/icons/print_icon.svg") no-repeat center;
+}
+.summary-buttons button.print:hover:after,
+.summary-buttons a.print:hover:after {
+  background: url("../../../../../public/icons/print_icon_white.svg") no-repeat
+    center;
+}
+.summary-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+} /*# sourceMappingURL=summary-header.module..map */

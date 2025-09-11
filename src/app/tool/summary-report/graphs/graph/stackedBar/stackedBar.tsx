@@ -1,18 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
-  Legend,
+  Cell,
   ResponsiveContainer,
 } from "recharts";
 import { ScoreData } from "../../../page";
 import { Graph } from "../graph";
 import { structureProps } from "@/contexts/Store";
 import styles from "./stackedBar.module.scss";
+import graphStyles from "../graph.module.scss";
+
+import clsx from "clsx";
+import { set } from "react-hook-form";
 
 interface CustomYAxisTickProps {
   y: number;
@@ -24,7 +27,9 @@ interface CustomYAxisTickProps {
 
 const CustomYAxisTick = (props: CustomYAxisTickProps) => {
   const { y, payload, width } = props;
-  const dataPoints = [110, 270, 450];
+  const remToPx = (rem: number) =>
+    rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+  const dataPoints = [11, 32, 52].map(remToPx); // 110px, 270px, 450px if 1rem = 16px
 
   return (
     <>
@@ -40,7 +45,8 @@ const CustomYAxisTick = (props: CustomYAxisTickProps) => {
                 ? "30"
                 : "20"
             }
-            height={10}></rect>
+            height={10}
+          ></rect>
           <text
             x={0}
             y={4}
@@ -48,7 +54,8 @@ const CustomYAxisTick = (props: CustomYAxisTickProps) => {
             textAnchor="middle"
             fill="#CFD3D1"
             fontWeight="bold"
-            fontSize={10}>
+            fontSize={10}
+          >
             {payload.value}
           </text>
         </g>
@@ -59,13 +66,13 @@ const CustomYAxisTick = (props: CustomYAxisTickProps) => {
 
 const CustomTopBar = (props: any) => {
   const { x, y, width, height, fill } = props;
-  if (!height || height <= 0) return null; // <-- Hide if no value
+  if (!height || height <= 0) return <g />;
 
   const radius = 10;
   const strokeColor = "#D3D4D4";
   const strokeWidth = 1;
-  const overlap = 6;
-  // Draw a rectangle with rounded top corners only
+  const { payload } = props;
+  const overlap = payload && payload.generalScore === 0 ? 0 : 8;
 
   const barPath = `
     M${x},${y + height + overlap}
@@ -103,17 +110,118 @@ export function StackedBar({
   parameters,
   headline,
   structure,
+  filters,
 }: {
   parameters: ScoreData[];
   headline?: string;
   structure: structureProps;
+  filters?: string[];
 }) {
+  const [filtersStatus, setFiltersStatus] = useState<boolean>(false);
+  const [maxValue, setMaxValue] = useState<number>();
+  const [legend, setLegend] = useState<string[]>([]);
+  const [barData, setBarData] =
+    useState<{ chapter: string; subChapters: number }[]>();
+  const [gridColumns, setGridColumns] = useState<{ gridColumn: string }[]>();
+
+  useEffect(() => {
+    const maxValue = Math.max(
+      ...parameters.map(
+        (item) =>
+          Number(item.generalScore ?? 0) + Number(item.possibleScore ?? 0)
+      )
+    );
+
+    setMaxValue(maxValue);
+  }, [parameters]);
+
+  useEffect(() => {
+    const content = structure.questionnaire.content;
+    const sums = Array(content.length).fill(0);
+    const counts = Array(content.length).fill(0);
+    const barDataTemp: { chapter: string; subChapters: number }[] = [];
+    let previousSubChapters = "";
+    content.forEach((chapter) =>
+      chapter["chapter-content"].forEach((sub) => {
+        if (previousSubChapters !== chapter["chapter-title"]) {
+          barDataTemp.push({
+            chapter: chapter["chapter-title"],
+            subChapters: chapter["chapter-content"].length,
+          });
+        }
+        previousSubChapters = chapter["chapter-title"];
+
+        sub.principles.forEach((principle) =>
+          principle.choices.forEach((choice, idx) => {
+            if (typeof choice.score === "number") {
+              sums[idx] += choice.score;
+              counts[idx]++;
+            }
+          })
+        );
+      })
+    );
+
+    const avgs = sums.map((sum, idx) => (counts[idx] ? sum / counts[idx] : 0));
+
+    let legendTemp: string[] = [];
+    let increase = 0;
+
+    avgs.forEach((avgScore, index) => {
+      if (increase > 1) {
+        increase = 1;
+      }
+      if (index === 0) return;
+      if (index === avgs.length - 1) {
+        legendTemp.push(`${avgs[index]}`);
+      } else {
+        legendTemp.push(`${avgs[index] + increase} - ${avgs[index + 1]}`);
+      }
+
+      increase++;
+    });
+
+    let start = 1;
+    const gridColumnsTemp = barDataTemp.map((bar) => {
+      const end = start + bar.subChapters;
+      const style = { gridColumn: `${start}/${end}` };
+      start = end;
+      return style;
+    });
+
+    setLegend(legendTemp);
+    setBarData(barDataTemp);
+    setGridColumns(gridColumnsTemp);
+  }, []);
+
+  function getBarColor(value: number) {
+    if (value >= 10) return "#00A9FF";
+    if (value >= 6) return "#0089CE";
+    if (value >= 2) return "#00679B";
+    return "#577686";
+  }
+
   return (
-    <Graph headline={headline} structure={structure}>
+    <Graph headline={headline} structure={structure} legend={legend}>
+      <ul className={graphStyles["filters"]}>
+        <li key={0} className={graphStyles["filter-item"]}>
+          <label className={clsx("paragraph_14", graphStyles["filter-label"])}>
+            <input
+              type="checkbox"
+              checked={filtersStatus || false}
+              onChange={() => {
+                setFiltersStatus((prev) => !prev);
+              }}
+            />
+            {(filters ?? [])[0]}
+          </label>
+        </li>
+      </ul>
       <ResponsiveContainer
         width="100%"
-        height={300}
-        className={styles["responsive-container"]}>
+        height={200}
+        className={styles["responsive-container"]}
+      >
         <BarChart
           className={styles["bar-chart"]}
           data={parameters}
@@ -122,22 +230,31 @@ export function StackedBar({
             right: 0,
             left: -60,
             bottom: 0,
-          }}>
+          }}
+        >
           <CartesianGrid vertical={false} />
-          <XAxis dataKey="subChapterNumber" />
+          <XAxis dataKey="subChapterNumber" axisLine={false} tickLine={false} />
           <YAxis
             axisLine={false}
             tick={(props: CustomYAxisTickProps) => (
               <CustomYAxisTick {...props} />
             )}
             tickLine={false}
+            domain={typeof maxValue === "number" ? [0, maxValue] : undefined}
           />
-          <Legend />
+
+          {filtersStatus && (
+            <Bar
+              dataKey="possibleScore"
+              stackId="a"
+              fill="rgba(123, 133, 139, 0.06)"
+              shape={CustomTopBar}
+            />
+          )}
           <Bar
             radius={[10, 10, 0, 0]}
             dataKey="generalScore"
             stackId="a"
-            fill="#8884d8"
             label={({
               x,
               y,
@@ -155,26 +272,41 @@ export function StackedBar({
                 textAnchor="middle"
                 fill="#black"
                 fontWeight="bold"
-                fontSize="1rem">
+                fontSize="1rem"
+              >
                 {value}
               </text>
             )}
-          />
-          {/* 
-          <Bar
-            radius={[10, 10, 0, 0]}
-            dataKey="possibleScore"
-            stackId="a"
-            fill="rgba(123, 133, 139, 0.06)" // 0.6 is 60% opacity
-          /> */}
-          <Bar
-            dataKey="generalScore"
-            stackId="a"
-            fill="rgba(123, 133, 139, 0.06)"
-            shape={CustomTopBar}
-          />
+          >
+            {parameters.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={getBarColor(Number(entry.generalScore))}
+              />
+            ))}
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
+
+      {barData && barData.length > 0 && (
+        <ul
+          className={styles["data-bar"]}
+          style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${parameters.length}, 1fr)`,
+          }}
+        >
+          {barData.map((bar, idx) => (
+            <li
+              className={clsx("paragraph_11", styles["data-bar-item"])}
+              key={bar.chapter}
+              style={gridColumns?.[idx] ?? {}}
+            >
+              {bar.chapter}
+            </li>
+          ))}
+        </ul>
+      )}
     </Graph>
   );
 }

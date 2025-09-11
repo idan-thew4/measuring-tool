@@ -637,7 +637,8 @@
       {
         "title": "סך הניקוד לתת-פרק ביחס לציון מירבי אפשרי",
         "type": "barChart",
-        "data": "sub-chapter"
+        "data": "sub-chapter",
+        "filters": ["ניקוד אפשרי"]
       }
     ]
   }

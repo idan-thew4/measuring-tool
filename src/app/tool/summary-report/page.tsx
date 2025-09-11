@@ -278,6 +278,7 @@ export default function SummaryReport() {
                       key={index}
                       headline={graph.title}
                       structure={structure}
+                      filters={graph.filters}
                     />
                   );
               }

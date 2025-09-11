@@ -57,7 +57,10 @@
   position: relative;
   overflow: hidden;
 }
-.progress-bar-container ul.progress-bar-chapters li.progress-bar-item .progress-bar-item-indicator {
+.progress-bar-container
+  ul.progress-bar-chapters
+  li.progress-bar-item
+  .progress-bar-item-indicator {
   position: absolute;
   width: 0;
   height: 100%;
@@ -66,4 +69,4 @@
   border-radius: 1rem;
   background-color: #7ab51d;
   transition: 0.3s all;
-}/*# sourceMappingURL=progressBar.module.css.map */
+} /*# sourceMappingURL=progressBar.module..map */

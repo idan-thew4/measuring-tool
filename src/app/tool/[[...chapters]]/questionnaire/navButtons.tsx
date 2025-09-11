@@ -84,7 +84,8 @@ export function NavButtons({ currentChapter }: { currentChapter: string[] }) {
             styles["nav-button"],
             styles["previous"],
             "basic-button outline with-icon"
-          )}>
+          )}
+        >
           {structure?.questionnaire.buttons?.[1]}
         </Link>
       )}
@@ -95,7 +96,8 @@ export function NavButtons({ currentChapter }: { currentChapter: string[] }) {
             styles["nav-button"],
             styles["next"],
             "basic-button outline with-icon"
-          )}>
+          )}
+        >
           {structure?.questionnaire.buttons?.[2]}
         </Link>
       )}

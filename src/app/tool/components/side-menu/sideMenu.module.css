@@ -89,7 +89,13 @@
   overflow: hidden;
   padding-right: 4rem;
 }
-.side-menu .menu ul.nav-side-menu .chapter .chapter-content li.active .principles {
+.side-menu
+  .menu
+  ul.nav-side-menu
+  .chapter
+  .chapter-content
+  li.active
+  .principles {
   height: auto;
 }
 .side-menu .menu ul.nav-side-menu .chapter.active {
@@ -111,4 +117,4 @@
 }
 .side-menu .more li:last-child:after {
   content: "";
-}/*# sourceMappingURL=sideMenu.module.css.map */
+} /*# sourceMappingURL=sideMenu.module..map */

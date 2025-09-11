@@ -2,6 +2,7 @@
 
 import { PolarGrid, PolarRadiusAxis, Radar, RadarChart } from "recharts";
 import styles from "./radar.module.scss";
+import graphStyles from "../graph.module.scss";
 import { ScoreData } from "../../../page";
 import { structureProps } from "@/contexts/Store";
 import { useEffect, useState } from "react";
@@ -80,19 +81,26 @@ export function RadarGraph({
   }
 
   return (
-    <Graph headline={headline} structure={structure}>
-      <ul className={styles["filters"]}>
+    <Graph
+      headline={headline}
+      structure={structure}
+      legend={["17%-0%", "33%-18%", "100%-34%", "100%<"]}
+    >
+      <ul className={graphStyles["filters"]}>
         {dataKeys
           ?.slice()
           .reverse()
           .map((filter, index) => (
-            <li key={index} className={styles["filter-item"]}>
-              <label className={clsx("paragraph_14", styles["filter-label"])}>
+            <li key={index} className={graphStyles["filter-item"]}>
+              <label
+                className={clsx("paragraph_14", graphStyles["filter-label"])}
+              >
                 <div
-                  className={styles["filter-color"]}
+                  className={graphStyles["filter-color"]}
                   style={{
                     backgroundColor: colors[index],
-                  }}></div>
+                  }}
+                ></div>
                 <input
                   type="checkbox"
                   checked={filtersStatus[filter] || false}
@@ -122,7 +130,8 @@ export function RadarGraph({
             width={600}
             height={600}
             data={parameters}
-            className={styles["radar"]}>
+            className={styles["radar"]}
+          >
             <PolarRadiusAxis
               axisLine={false}
               tick={false}
@@ -177,7 +186,8 @@ export function RadarGraph({
                             fontSize={12}
                             textAnchor="middle"
                             dominantBaseline="central"
-                            className={styles["data-label"]}>
+                            className={styles["data-label"]}
+                          >
                             {value}%
                           </text>
                         </g>

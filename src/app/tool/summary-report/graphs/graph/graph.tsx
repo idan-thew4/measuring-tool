@@ -9,31 +9,33 @@ export function Graph({
   headline,
   structure,
   children,
+  legend,
 }: {
   headline?: string;
   structure: structureProps;
   children: React.ReactNode;
+  legend: string[];
 }) {
-  const legendColors = ["#00A9FF", "#0089CE", "#00679B", "#577686"];
+  const legendColors = ["#577686", "#00679B", "#0089CE", "#00A9FF"];
 
-  function getPercentage(index: number) {
-    switch (index) {
-      case 1:
-        return "17%-0%";
-      case 2:
-        return "33%-18%";
-      case 3:
-        return "100%-34%";
-      case 4:
-        return ">100%";
-    }
-  }
+  // function getPercentage(index: number) {
+  //   switch (index) {
+  //     case 1:
+  //       return legend ? legend[index-1] : "";
+  //     case 2:
+  //       return legend[index];
+  //     case 3:
+  //       return legend[index];
+  //     case 4:
+  //       return legend[index];
+  //   }
+  // }
 
   return (
     <div className={styles["container"]}>
       <h2 className={clsx("medium-small", styles["title"])}>{headline}</h2>
       {children}
-      <ul className={styles["radar-legend"]}>
+      <ul className={styles["legend"]}>
         {structure.questionnaire.options.map((option, index) => {
           if (index === 0) return null;
           return (
@@ -41,8 +43,9 @@ export function Graph({
               <p className={clsx("paragraph_14", styles["text"])}>{option}</p>
               <p
                 style={{ backgroundColor: legendColors[index - 1] }}
-                className={clsx("paragraph_12", styles["percentage"])}>
-                {getPercentage(index)}
+                className={clsx("paragraph_12", styles["percentage"])}
+              >
+                {legend[index - 1]}
               </p>
             </li>
           );

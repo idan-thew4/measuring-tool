@@ -26,7 +26,8 @@ export function Table({ chapterNumber, title, content }: TableProps) {
             </p>
             <button
               className={styles["comment-button"]}
-              onClick={() => setExpandedKey(isExpanded ? null : String(key))}>
+              onClick={() => setExpandedKey(isExpanded ? null : String(key))}
+            >
               {isExpanded
                 ? structure?.summary.table["buttons-copy"][1]
                 : structure?.summary.table["buttons-copy"][0]}
@@ -36,7 +37,8 @@ export function Table({ chapterNumber, title, content }: TableProps) {
             className={clsx(
               isExpanded ? styles["expanded"] : "",
               styles["comment-read-more"]
-            )}>
+            )}
+          >
             {comment}
           </span>
         </div>
@@ -53,13 +55,12 @@ export function Table({ chapterNumber, title, content }: TableProps) {
   return (
     <div className={styles["table-container"]}>
       <h2
-        className={clsx(
-          styles["table-title"],
-          "headline_small bold"
-        )}>{`${chapterNumber}. ${title}`}</h2>
+        className={clsx(styles["table-title"], "headline_small bold")}
+      >{`${chapterNumber}. ${title}`}</h2>
 
       <div
-        className={clsx(styles["row"], "paragraph_15", styles["row-titles"])}>
+        className={clsx(styles["row"], "paragraph_15", styles["row-titles"])}
+      >
         {structure?.summary?.table?.columns.map((column, index) => (
           <p key={index}>{column}</p>
         ))}
@@ -68,13 +69,15 @@ export function Table({ chapterNumber, title, content }: TableProps) {
       <div key={chapterNumber} className={styles["table"]}>
         {content.map((subChapter: SubChapter, subChapterIndex) => (
           <React.Fragment
-            key={subChapter["sub-chapter-title"] ?? subChapterIndex}>
+            key={subChapter["sub-chapter-title"] ?? subChapterIndex}
+          >
             <div
               className={clsx(
                 styles["row"],
                 styles["row-title"],
                 "paragraph_15 bold"
-              )}>
+              )}
+            >
               <p>{`${chapterNumber}.${subChapterIndex + 1}.`}</p>
               <h3>{`${subChapter["sub-chapter-title"]}`}</h3>
             </div>
