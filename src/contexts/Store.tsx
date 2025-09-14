@@ -219,7 +219,8 @@ type ApiContextType = {
   calculateScores: (
     data: ChapterPoints[],
     graph: string,
-    type: string
+    type: string,
+    maxScoresOnly?: boolean
   ) => CalcParameters[];
 };
 
@@ -416,10 +417,16 @@ function Store({ children }: PropsWithChildren<{}>) {
     );
   };
 
-  function calculateScores(data: ChapterPoints[], graph: string, type: string) {
+  function calculateScores(
+    data: ChapterPoints[],
+    graph: string,
+    type: string,
+    maxScoresOnly = false
+  ) {
     let index = 0;
     let calcParameters: CalcParameters[] = [];
     let subChapterObj: CalcParameters;
+    maxScoresOnly: Boolean;
 
     data?.forEach((chapter, chapterIndex) => {
       if (graph === "chapters") {
@@ -446,23 +453,21 @@ function Store({ children }: PropsWithChildren<{}>) {
         }
 
         subChapterData.principles.forEach((principle, principleIndex) => {
-          if (typeof principle.choice === "number" && principle.choice >= 0) {
-            const structurePrinciple =
-              structure?.questionnaire.content?.[chapterIndex]?.[
-                "chapter-content"
-              ]?.[subChapterIndex]?.["principles"]?.[principleIndex];
+          const structurePrinciple =
+            structure?.questionnaire.content?.[chapterIndex]?.[
+              "chapter-content"
+            ]?.[subChapterIndex]?.["principles"]?.[principleIndex];
 
+          if (typeof principle.choice === "number" && principle.choice >= 0) {
             const generalScore =
               structurePrinciple?.choices?.[principle.choice - 1];
             const netZeroImpactScore = structurePrinciple?.choices?.[3];
-            const maxScore = structurePrinciple?.choices?.[4];
 
             if (generalScore && typeof generalScore.score === "number") {
               if (graph === "chapters") {
                 calcParameters[index]["general-score"] += generalScore.score;
                 calcParameters[index]["net-zero-impact"] +=
                   netZeroImpactScore?.score ?? 0;
-                calcParameters[index]["max-score"] += maxScore?.score ?? 0;
               } else if (
                 graph === "subchapters" &&
                 subChapterObj &&
@@ -471,8 +476,20 @@ function Store({ children }: PropsWithChildren<{}>) {
                 subChapterObj["general-score"] += generalScore.score;
                 subChapterObj["net-zero-impact"] +=
                   netZeroImpactScore?.score ?? 0;
-                subChapterObj["max-score"] += maxScore?.score ?? 0;
               }
+            }
+          } else {
+            const netZeroImpactScore = structurePrinciple?.choices?.[3];
+            const maxScore = structurePrinciple?.choices?.[4];
+
+            if (graph === "chapters") {
+              calcParameters[index]["max-score"] += maxScore?.score ?? 0;
+              calcParameters[index]["net-zero-impact"] +=
+                netZeroImpactScore?.score ?? 0;
+            } else if (graph === "subchapters") {
+              subChapterObj["max-score"] += maxScore?.score ?? 0;
+              subChapterObj["net-zero-impact"] +=
+                netZeroImpactScore?.score ?? 0;
             }
           }
         });
@@ -497,7 +514,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         setRegistrationStatus,
         registrationStatus,
         calculateScores,
-      }}>
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );

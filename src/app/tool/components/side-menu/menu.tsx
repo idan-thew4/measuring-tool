@@ -47,6 +47,7 @@ function isChoiceCompleted(
 function isChapterCompleted(completedChapters: number, totalChapters: number) {
   return completedChapters === totalChapters;
 }
+
 type RangeSliderProps = {
   id: string;
   name: string;
@@ -85,10 +86,13 @@ export function Menu({
       // chapters //
       let questionnaireParams = [] as CalcParameters[];
 
-      questionnaireParams = calculateScores(
-        scoreObject.data.questionnaire ?? [],
-        "chapters",
-        "questionnaire"
+      console.log(
+        (questionnaireParams = calculateScores(
+          scoreObject.data.questionnaire ?? [],
+          "chapters",
+          "questionnaire",
+          true
+        ))
       );
 
       const maxScoresChapterTemp: number[] = [];
@@ -110,7 +114,8 @@ export function Menu({
       questionnaireParams = calculateScores(
         scoreObject.data.questionnaire ?? [],
         "subchapters",
-        "questionnaire"
+        "questionnaire",
+        true
       );
 
       const filteredQuestionnaireParams = questionnaireParams.filter(
@@ -132,8 +137,12 @@ export function Menu({
     }
   }, [selfAssessment]);
 
+  useEffect(() => {
+    console.log("maxScores", maxScores);
+  }, [maxScores]);
+
   const handleRangeChange = (
-    value: number,
+    value: string,
     chapterIndex: number,
     type: string
   ) => {
@@ -145,7 +154,8 @@ export function Menu({
       className={clsx(
         styles["menu"],
         selfAssessment && styles["self-assessment"]
-      )}>
+      )}
+    >
       {!selfAssessment ? (
         <ProgressBar completed={completedChapters} structure={structure} />
       ) : (
@@ -154,7 +164,6 @@ export function Menu({
             {structure?.["self-assessment"].headline}
           </h1>
           <p className="paragraph_15">
-            {" "}
             {structure?.["self-assessment"]["sub-headline"]}
           </p>
         </div>
@@ -178,12 +187,11 @@ export function Menu({
                 ? styles["completed"]
                 : ""
             )}
-            key={chapterIndex}>
+            key={chapterIndex}
+          >
             <div
-              className={clsx(
-                "nav-side-text__chapter",
-                styles["chapter-text"]
-              )}>
+              className={clsx("nav-side-text__chapter", styles["chapter-text"])}
+            >
               <Link href={`/tool/${chapter["chapter-slug"]}/1/1`}>
                 {`${chapterIndex + 1}. ${chapter["chapter-title"]}`}
               </Link>
@@ -228,12 +236,14 @@ export function Menu({
                       !selfAssessment &&
                         subChapterCompleted &&
                         styles["completed"]
-                    )}>
+                    )}
+                  >
                     <Link
                       className="nav-side-text__sub-chapter"
                       href={`/tool/${chapter["chapter-slug"]}/${
                         subIndex + 1
-                      }/1`}>
+                      }/1`}
+                    >
                       {`${chapterIndex + 1}.${subIndex + 1} ${
                         subChapter["sub-chapter-title"]
                       }`}
@@ -259,12 +269,14 @@ export function Menu({
                                 className={clsx(
                                   isActiveChoice && styles["active"],
                                   choiceCompleted && styles["completed"]
-                                )}>
+                                )}
+                              >
                                 <Link
                                   className="nav-side-text__sub-chapter-choice"
                                   href={`/tool/${chapter["chapter-slug"]}/${
                                     subIndex + 1
-                                  }/${subChoicesIndex + 1}`}>
+                                  }/${subChoicesIndex + 1}`}
+                                >
                                   {`${subChoicesIndex + 1}. ${
                                     subChoices.title
                                   }`}
