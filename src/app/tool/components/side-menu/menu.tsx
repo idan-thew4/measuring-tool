@@ -57,17 +57,10 @@ type RangeSliderProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-function RangeSlider({ id, name, max, onChange }: RangeSliderProps) {
-  return (
-    <input
-      type="range"
-      id={id}
-      name={name}
-      min={0}
-      max={max}
-      onChange={onChange}
-    />
-  );
+function RangeSlider({ id, name, max, value }: RangeSliderProps) {
+  const percent = (value / max) * 100;
+
+  return <input type="range" id={id} name={name} min={0} max={max} />;
 }
 
 export function Menu({
@@ -80,6 +73,7 @@ export function Menu({
     chapters: number[];
     secondChapter: number[];
   }>({ chapters: [], secondChapter: [] });
+  const [sliderValue, setSliderValue] = useState(0);
 
   useEffect(() => {
     if (selfAssessment) {
@@ -199,13 +193,9 @@ export function Menu({
                 <RangeSlider
                   id={chapter["chapter-title"]}
                   name="chapter"
+                  value={sliderValue}
                   max={maxScores.chapters[chapterIndex] ?? 100}
-                  value={
-                    completedChapters[chapterIndex]?.completedChapters ?? 0
-                  }
-                  onChange={(e) =>
-                    handleRangeChange(e.target.value, chapterIndex, "chapter")
-                  }
+                  onChange={(e) => setSliderValue(Number(e.target.value))}
                 />
               )}
 
