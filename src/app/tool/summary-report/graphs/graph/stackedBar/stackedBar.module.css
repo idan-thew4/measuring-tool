@@ -23,41 +23,19 @@
 .responsive-container :global(.recharts-surface) {
   overflow: visible;
 }
-.responsive-container
-  :global(.recharts-surface)
-  :global(
-    .recharts-layer.recharts-yAxis .recharts-cartesian-axis-tick
-  ):first-of-type {
+.responsive-container :global(.recharts-surface) :global(.recharts-layer.recharts-yAxis .recharts-cartesian-axis-tick):first-of-type {
   display: none;
 }
-.responsive-container
-  :global(.recharts-surface)
-  :global(
-    .recharts-layer.recharts-yAxis .recharts-cartesian-axis-tick
-  ):last-of-type
-  :global(g):nth-of-type(1) {
-  transform: translate(11rem, 0) !important;
+.responsive-container :global(.recharts-surface) :global(.recharts-layer.recharts-yAxis .recharts-cartesian-axis-tick):last-of-type :global(g):nth-of-type(1) {
+  transform: translate(10rem, 0) !important;
 }
-.responsive-container
-  :global(.recharts-surface)
-  :global(
-    .recharts-layer.recharts-yAxis .recharts-cartesian-axis-tick
-  ):last-of-type
-  :global(g):nth-of-type(2) {
-  transform: translate(32rem, 0) !important;
+.responsive-container :global(.recharts-surface) :global(.recharts-layer.recharts-yAxis .recharts-cartesian-axis-tick):last-of-type :global(g):nth-of-type(2) {
+  transform: translate(45rem, 0) !important;
 }
-.responsive-container
-  :global(.recharts-surface)
-  :global(
-    .recharts-layer.recharts-yAxis .recharts-cartesian-axis-tick
-  ):last-of-type
-  :global(g):nth-of-type(3) {
-  transform: translate(52rem, 0) !important;
+.responsive-container :global(.recharts-surface) :global(.recharts-layer.recharts-yAxis .recharts-cartesian-axis-tick):last-of-type :global(g):nth-of-type(3) {
+  transform: translate(80rem, 0) !important;
 }
-.responsive-container
-  :global(.recharts-surface)
-  :global(.recharts-cartesian-grid-horizontal)
-  line:first-of-type {
+.responsive-container :global(.recharts-surface) :global(.recharts-cartesian-grid-horizontal) line:first-of-type {
   display: none;
 }
 
@@ -72,4 +50,4 @@
   text-align: center;
   border-top: 0.1rem solid black;
   padding-top: 1rem;
-} /*# sourceMappingURL=stackedBar.module..map */
+}/*# sourceMappingURL=stackedBar.module.css.map */

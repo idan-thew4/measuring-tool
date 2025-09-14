@@ -29,7 +29,12 @@ const CustomYAxisTick = (props: CustomYAxisTickProps) => {
   const { y, payload, width } = props;
   const remToPx = (rem: number) =>
     rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
-  const dataPoints = [11, 32, 52].map(remToPx); // 110px, 270px, 450px if 1rem = 16px
+  const dataPoints = [10, 45, 80].map(remToPx); // 110px, 270px, 450px if 1rem = 16px
+
+  console.log(
+    "rem",
+    parseFloat(getComputedStyle(document.documentElement).fontSize)
+  );
 
   return (
     <>
@@ -45,8 +50,7 @@ const CustomYAxisTick = (props: CustomYAxisTickProps) => {
                 ? "30"
                 : "20"
             }
-            height={10}
-          ></rect>
+            height={10}></rect>
           <text
             x={0}
             y={4}
@@ -54,8 +58,7 @@ const CustomYAxisTick = (props: CustomYAxisTickProps) => {
             textAnchor="middle"
             fill="#CFD3D1"
             fontWeight="bold"
-            fontSize={10}
-          >
+            fontSize={10}>
             {payload.value}
           </text>
         </g>
@@ -220,8 +223,7 @@ export function StackedBar({
       <ResponsiveContainer
         width="100%"
         height={200}
-        className={styles["responsive-container"]}
-      >
+        className={styles["responsive-container"]}>
         <BarChart
           className={styles["bar-chart"]}
           data={parameters}
@@ -230,8 +232,7 @@ export function StackedBar({
             right: 0,
             left: -60,
             bottom: 0,
-          }}
-        >
+          }}>
           <CartesianGrid vertical={false} />
           <XAxis dataKey="subChapterNumber" axisLine={false} tickLine={false} />
           <YAxis
@@ -272,12 +273,10 @@ export function StackedBar({
                 textAnchor="middle"
                 fill="#black"
                 fontWeight="bold"
-                fontSize="1rem"
-              >
+                fontSize="1rem">
                 {value}
               </text>
-            )}
-          >
+            )}>
             {parameters.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
@@ -294,14 +293,12 @@ export function StackedBar({
           style={{
             display: "grid",
             gridTemplateColumns: `repeat(${parameters.length}, 1fr)`,
-          }}
-        >
+          }}>
           {barData.map((bar, idx) => (
             <li
               className={clsx("paragraph_11", styles["data-bar-item"])}
               key={bar.chapter}
-              style={gridColumns?.[idx] ?? {}}
-            >
+              style={gridColumns?.[idx] ?? {}}>
               {bar.chapter}
             </li>
           ))}

@@ -15,7 +15,7 @@
       }
 
       &:last-of-type {
-        $dataPoints: 11rem, 32rem, 52rem;
+        $dataPoints: 10rem, 45rem, 80rem;
         @for $i from 1 through length($dataPoints) {
           :global(g):nth-of-type(#{$i}) {
             transform: translate(nth($dataPoints, $i), 0) !important;
