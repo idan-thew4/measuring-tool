@@ -101,6 +101,13 @@ export type structureProps = {
   registration: Registration;
   summary: Summary;
   "summary-report": SummaryReport;
+  "self-assessment": SelfAssessment;
+};
+
+type SelfAssessment = {
+  headline: string;
+  "sub-headline": string;
+  "summary-title": string;
 };
 
 type SummaryReport = {
@@ -191,6 +198,15 @@ export type totalCompleted = {
   totalChapters?: number;
 }[];
 
+export type CalcParameters = {
+  chapter: number;
+  "sub-chapter"?: number;
+  "general-score": number;
+  "max-score": number;
+  "net-zero-impact": number;
+  type?: string;
+};
+
 type ApiContextType = {
   scoreObject: ScoreType;
   setScoreObject: React.Dispatch<React.SetStateAction<ScoreType>>;
@@ -200,6 +216,11 @@ type ApiContextType = {
   getCurrentChapter: (chapterSlug: string) => Chapter | undefined;
   setRegistrationStatus: React.Dispatch<React.SetStateAction<boolean>>;
   registrationStatus: boolean;
+  calculateScores: (
+    data: ChapterPoints[],
+    graph: string,
+    type: string
+  ) => CalcParameters[];
 };
 
 const url = "http://localhost:3000/";
@@ -395,6 +416,75 @@ function Store({ children }: PropsWithChildren<{}>) {
     );
   };
 
+  function calculateScores(data: ChapterPoints[], graph: string, type: string) {
+    let index = 0;
+    let calcParameters: CalcParameters[] = [];
+    let subChapterObj: CalcParameters;
+
+    data?.forEach((chapter, chapterIndex) => {
+      if (graph === "chapters") {
+        index = chapterIndex;
+        calcParameters.push({
+          chapter: chapterIndex,
+          "general-score": 0,
+          "net-zero-impact": 0,
+          "max-score": 0,
+          type: type,
+        });
+      }
+      chapter["chapter-data"].forEach((subChapterData, subChapterIndex) => {
+        if (graph === "subchapters") {
+          index = subChapterIndex;
+          subChapterObj = {
+            chapter: chapterIndex,
+            "sub-chapter": subChapterIndex,
+            "general-score": 0,
+            "max-score": 0,
+            "net-zero-impact": 0,
+            type: type,
+          };
+        }
+
+        subChapterData.principles.forEach((principle, principleIndex) => {
+          if (typeof principle.choice === "number" && principle.choice >= 0) {
+            const structurePrinciple =
+              structure?.questionnaire.content?.[chapterIndex]?.[
+                "chapter-content"
+              ]?.[subChapterIndex]?.["principles"]?.[principleIndex];
+
+            const generalScore =
+              structurePrinciple?.choices?.[principle.choice - 1];
+            const netZeroImpactScore = structurePrinciple?.choices?.[3];
+            const maxScore = structurePrinciple?.choices?.[4];
+
+            if (generalScore && typeof generalScore.score === "number") {
+              if (graph === "chapters") {
+                calcParameters[index]["general-score"] += generalScore.score;
+                calcParameters[index]["net-zero-impact"] +=
+                  netZeroImpactScore?.score ?? 0;
+                calcParameters[index]["max-score"] += maxScore?.score ?? 0;
+              } else if (
+                graph === "subchapters" &&
+                subChapterObj &&
+                typeof subChapterObj["max-score"] === "number"
+              ) {
+                subChapterObj["general-score"] += generalScore.score;
+                subChapterObj["net-zero-impact"] +=
+                  netZeroImpactScore?.score ?? 0;
+                subChapterObj["max-score"] += maxScore?.score ?? 0;
+              }
+            }
+          }
+        });
+        if (graph === "subchapters") {
+          calcParameters.push(subChapterObj);
+        }
+      });
+    });
+
+    return calcParameters;
+  }
+
   return (
     <ApiContext.Provider
       value={{
@@ -406,6 +496,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         getCurrentChapter,
         setRegistrationStatus,
         registrationStatus,
+        calculateScores,
       }}>
       {children}
     </ApiContext.Provider>

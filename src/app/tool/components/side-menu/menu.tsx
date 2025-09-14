@@ -6,11 +6,14 @@ import {
   useStore,
   ScoreType,
   structureProps,
+  CalcParameters,
 } from "../../../../contexts/Store";
+import { useEffect, useState } from "react";
 
 export type structureAndChaptersProps = {
   structure: structureProps | undefined;
   currentChapter: string[];
+  selfAssessment?: boolean;
 };
 
 // Check if all choices in a sub-chapter are completed
@@ -40,44 +43,169 @@ function isChoiceCompleted(
   );
 }
 
-//  Check if all chapter is completed§
+//  Check if all chapter is completed
 function isChapterCompleted(completedChapters: number, totalChapters: number) {
   return completedChapters === totalChapters;
 }
+type RangeSliderProps = {
+  id: string;
+  name: string;
+  min?: number;
+  max: number;
+  value: number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
 
-export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
-  const { completedChapters, scoreObject } = useStore();
+function RangeSlider({ id, name, max, onChange }: RangeSliderProps) {
+  return (
+    <input
+      type="range"
+      id={id}
+      name={name}
+      min={0}
+      max={max}
+      onChange={onChange}
+    />
+  );
+}
+
+export function Menu({
+  structure,
+  currentChapter,
+  selfAssessment,
+}: structureAndChaptersProps) {
+  const { completedChapters, scoreObject, calculateScores } = useStore();
+  const [maxScores, setMaxScores] = useState<{
+    chapters: number[];
+    secondChapter: number[];
+  }>({ chapters: [], secondChapter: [] });
+
+  useEffect(() => {
+    if (selfAssessment) {
+      // chapters //
+      let questionnaireParams = [] as CalcParameters[];
+
+      questionnaireParams = calculateScores(
+        scoreObject.data.questionnaire ?? [],
+        "chapters",
+        "questionnaire"
+      );
+
+      const maxScoresChapterTemp: number[] = [];
+
+      questionnaireParams.map((chapter, index) => {
+        const maxScore = Math.round(
+          (chapter["max-score"] / chapter["net-zero-impact"]) * 100
+        );
+
+        maxScoresChapterTemp.push(maxScore);
+      });
+
+      // secondChapter //
+
+      questionnaireParams = [];
+
+      const maxScoresSecondChapterTemp: number[] = [];
+
+      questionnaireParams = calculateScores(
+        scoreObject.data.questionnaire ?? [],
+        "subchapters",
+        "questionnaire"
+      );
+
+      const filteredQuestionnaireParams = questionnaireParams.filter(
+        (chapter) => chapter["chapter"] === 1
+      );
+
+      filteredQuestionnaireParams.map((subChapter, index) => {
+        const maxScore = Math.round(
+          (subChapter["max-score"] / subChapter["net-zero-impact"]) * 100
+        );
+
+        maxScoresSecondChapterTemp.push(maxScore);
+      });
+
+      setMaxScores({
+        chapters: maxScoresChapterTemp,
+        secondChapter: maxScoresSecondChapterTemp,
+      });
+    }
+  }, [selfAssessment]);
+
+  const handleRangeChange = (
+    value: number,
+    chapterIndex: number,
+    type: string
+  ) => {
+    console.log("Range changed", value);
+  };
 
   return (
-    <div className={styles["menu"]}>
-      <ProgressBar completed={completedChapters} structure={structure} />
+    <div
+      className={clsx(
+        styles["menu"],
+        selfAssessment && styles["self-assessment"]
+      )}>
+      {!selfAssessment ? (
+        <ProgressBar completed={completedChapters} structure={structure} />
+      ) : (
+        <div className={styles["self-assessment-header"]}>
+          <h1 className={clsx("headline_medium-small bold", styles["title"])}>
+            {structure?.["self-assessment"].headline}
+          </h1>
+          <p className="paragraph_15">
+            {" "}
+            {structure?.["self-assessment"]["sub-headline"]}
+          </p>
+        </div>
+      )}
       <ul className={styles["nav-side-menu"]}>
         {structure?.questionnaire.content.map((chapter, chapterIndex) => (
           <li
             className={clsx(
+              chapterIndex === 1 && selfAssessment && styles["active"],
+
               styles["chapter"],
               chapter["chapter-slug"] === currentChapter[0]
                 ? styles["active"]
                 : "",
 
-              isChapterCompleted(
-                completedChapters[chapterIndex]?.completedChapters ?? 0,
-                completedChapters[chapterIndex]?.totalChapters ?? 0
-              )
+              !selfAssessment &&
+                isChapterCompleted(
+                  completedChapters[chapterIndex]?.completedChapters ?? 0,
+                  completedChapters[chapterIndex]?.totalChapters ?? 0
+                )
                 ? styles["completed"]
                 : ""
             )}
-            key={chapterIndex}
-          >
+            key={chapterIndex}>
             <div
-              className={clsx("nav-side-text__chapter", styles["chapter-text"])}
-            >
+              className={clsx(
+                "nav-side-text__chapter",
+                styles["chapter-text"]
+              )}>
               <Link href={`/tool/${chapter["chapter-slug"]}/1/1`}>
                 {`${chapterIndex + 1}. ${chapter["chapter-title"]}`}
               </Link>
-              <p>{`${completedChapters[chapterIndex]?.completedChapters ?? 0}/${
-                completedChapters[chapterIndex]?.totalChapters ?? 0
-              }`}</p>
+              {selfAssessment && chapterIndex !== 1 && selfAssessment && (
+                <RangeSlider
+                  id={chapter["chapter-title"]}
+                  name="chapter"
+                  max={maxScores.chapters[chapterIndex] ?? 100}
+                  value={
+                    completedChapters[chapterIndex]?.completedChapters ?? 0
+                  }
+                  onChange={(e) =>
+                    handleRangeChange(e.target.value, chapterIndex, "chapter")
+                  }
+                />
+              )}
+
+              {!selfAssessment && (
+                <p>{`${
+                  completedChapters[chapterIndex]?.completedChapters ?? 0
+                }/${completedChapters[chapterIndex]?.totalChapters ?? 0}`}</p>
+              )}
             </div>
 
             <ul className={styles["chapter-content"]}>
@@ -95,53 +223,58 @@ export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
                   <li
                     key={subIndex}
                     className={clsx(
+                      chapterIndex === 1 && selfAssessment && styles["active"],
                       isActiveSubChapter && styles["active"],
-                      subChapterCompleted && styles["completed"]
-                    )}
-                  >
+                      !selfAssessment &&
+                        subChapterCompleted &&
+                        styles["completed"]
+                    )}>
                     <Link
                       className="nav-side-text__sub-chapter"
                       href={`/tool/${chapter["chapter-slug"]}/${
                         subIndex + 1
-                      }/1`}
-                    >
+                      }/1`}>
                       {`${chapterIndex + 1}.${subIndex + 1} ${
                         subChapter["sub-chapter-title"]
                       }`}
                     </Link>
-                    <ul className={styles["principles"]}>
-                      {subChapter["principles"].map(
-                        (subChoices, subChoicesIndex) => {
-                          const isActiveChoice =
-                            isActiveSubChapter &&
-                            subChoicesIndex + 1 === parseInt(currentChapter[2]);
-                          const choiceCompleted = isChoiceCompleted(
-                            scoreObject,
-                            chapterIndex,
-                            subIndex,
-                            subChoicesIndex
-                          );
-                          return (
-                            <li
-                              key={subChoicesIndex}
-                              className={clsx(
-                                isActiveChoice && styles["active"],
-                                choiceCompleted && styles["completed"]
-                              )}
-                            >
-                              <Link
-                                className="nav-side-text__sub-chapter-choice"
-                                href={`/tool/${chapter["chapter-slug"]}/${
-                                  subIndex + 1
-                                }/${subChoicesIndex + 1}`}
-                              >
-                                {`${subChoicesIndex + 1}. ${subChoices.title}`}
-                              </Link>
-                            </li>
-                          );
-                        }
-                      )}
-                    </ul>
+                    {selfAssessment && chapterIndex === 1 && <RangeSlider />}
+                    {!selfAssessment && (
+                      <ul className={styles["principles"]}>
+                        {subChapter["principles"].map(
+                          (subChoices, subChoicesIndex) => {
+                            const isActiveChoice =
+                              isActiveSubChapter &&
+                              subChoicesIndex + 1 ===
+                                parseInt(currentChapter[2]);
+                            const choiceCompleted = isChoiceCompleted(
+                              scoreObject,
+                              chapterIndex,
+                              subIndex,
+                              subChoicesIndex
+                            );
+                            return (
+                              <li
+                                key={subChoicesIndex}
+                                className={clsx(
+                                  isActiveChoice && styles["active"],
+                                  choiceCompleted && styles["completed"]
+                                )}>
+                                <Link
+                                  className="nav-side-text__sub-chapter-choice"
+                                  href={`/tool/${chapter["chapter-slug"]}/${
+                                    subIndex + 1
+                                  }/${subChoicesIndex + 1}`}>
+                                  {`${subChoicesIndex + 1}. ${
+                                    subChoices.title
+                                  }`}
+                                </Link>
+                              </li>
+                            );
+                          }
+                        )}
+                      </ul>
+                    )}
                   </li>
                 );
               })}
@@ -149,15 +282,17 @@ export function Menu({ structure, currentChapter }: structureAndChaptersProps) {
           </li>
         ))}
       </ul>
-      <ul className={styles["bottom-links"]}>
-        {structure?.sidebar["bottom-options"].map((option, index) => (
-          <li key={index}>
-            <Link className="paragraph_18 bold" href={""}>
-              {option}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {!selfAssessment && (
+        <ul className={styles["bottom-links"]}>
+          {structure?.sidebar["bottom-options"].map((option, index) => (
+            <li key={index}>
+              <Link className="paragraph_18 bold" href={""}>
+                {option}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useStore, ChapterPoints } from "@/contexts/Store";
+import { useStore, CalcParameters } from "@/contexts/Store";
 import { RadarGraph } from "./graphs/graph/radar/radar";
 import { StackedBar } from "./graphs/graph/stackedBar/stackedBar";
 import { useEffect, useState } from "react";
@@ -15,17 +15,8 @@ export type ScoreData = {
   [key: string]: number | string | null;
 };
 
-type CalcParameters = {
-  chapter: number;
-  "sub-chapter"?: number;
-  "general-score": number;
-  "max-score"?: number;
-  "net-zero-impact": number;
-  type?: string;
-};
-
 export default function SummaryReport() {
-  const { structure, scoreObject } = useStore();
+  const { structure, scoreObject, calculateScores } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
     secondChapter: ScoreData[];
@@ -35,73 +26,6 @@ export default function SummaryReport() {
     secondChapter: [],
     subChapters: [],
   });
-
-  function calculateScores(data: ChapterPoints[], graph: string, type: string) {
-    let index = 0;
-    let calcParameters: CalcParameters[] = [];
-    let subChapterObj: CalcParameters;
-
-    data?.forEach((chapter, chapterIndex) => {
-      if (graph === "chapters") {
-        index = chapterIndex;
-        calcParameters.push({
-          chapter: chapterIndex,
-          "general-score": 0,
-          "net-zero-impact": 0,
-          type: type,
-        });
-      }
-      chapter["chapter-data"].forEach((subChapterData, subChapterIndex) => {
-        if (graph === "subchapters") {
-          index = subChapterIndex;
-          subChapterObj = {
-            chapter: chapterIndex,
-            "sub-chapter": subChapterIndex,
-            "general-score": 0,
-            "max-score": 0,
-            "net-zero-impact": 0,
-            type: type,
-          };
-        }
-
-        subChapterData.principles.forEach((principle, principleIndex) => {
-          if (typeof principle.choice === "number" && principle.choice >= 0) {
-            const structurePrinciple =
-              structure?.questionnaire.content?.[chapterIndex]?.[
-                "chapter-content"
-              ]?.[subChapterIndex]?.["principles"]?.[principleIndex];
-
-            const generalScore =
-              structurePrinciple?.choices?.[principle.choice - 1];
-            const netZeroImpactScore = structurePrinciple?.choices?.[3];
-            const maxScore = structurePrinciple?.choices?.[4];
-
-            if (generalScore && typeof generalScore.score === "number") {
-              if (graph === "chapters") {
-                calcParameters[index]["general-score"] += generalScore.score;
-                calcParameters[index]["net-zero-impact"] +=
-                  netZeroImpactScore?.score ?? 0;
-              } else if (
-                graph === "subchapters" &&
-                subChapterObj &&
-                typeof subChapterObj["max-score"] === "number"
-              ) {
-                subChapterObj["general-score"] += generalScore.score;
-                subChapterObj["net-zero-impact"] +=
-                  netZeroImpactScore?.score ?? 0;
-                subChapterObj["max-score"] += maxScore?.score ?? 0;
-              }
-            }
-          }
-        });
-        if (graph === "subchapters") {
-          calcParameters.push(subChapterObj);
-        }
-      });
-    });
-
-    return calcParameters;
-  }
 
   useEffect(() => {
     // chapters //

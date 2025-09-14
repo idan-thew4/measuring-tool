@@ -65,6 +65,7 @@
           opacity: 0;
           visibility: hidden;
           padding-right: 3rem;
+
           > li.active {
             padding-bottom: 1rem;
           }
@@ -95,6 +96,36 @@
 
     ul.bottom-links {
       padding-top: 3rem;
+    }
+
+    &.self-assessment {
+      .self-assessment-header {
+        margin: 4rem 0;
+
+        .title {
+          margin-bottom: 1rem;
+        }
+      }
+      ul.nav-side-menu {
+        .chapter {
+          height: auto;
+
+          a,
+          .active {
+            pointer-events: none;
+            color: black !important;
+          }
+
+          &-text,
+          .active {
+            display: flex;
+            flex-direction: column;
+            height: auto !important;
+            align-items: normal !important;
+          }
+          // }
+        }
+      }
     }
   }
 
