@@ -57,9 +57,20 @@ type RangeSliderProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-function RangeSlider({ id, name, max, value }: RangeSliderProps) {
+function RangeSlider({ id, name, max, value, onChange }: RangeSliderProps) {
   const percent = (value / max) * 100;
-  return <input type="range" id={id} name={name} min={0} max={max} />;
+
+  return (
+    <input
+      type="range"
+      id={id}
+      name={name}
+      min={0}
+      max={max}
+      onChange={onChange}
+      className={styles["range-slider"]}
+    />
+  );
 }
 
 export function Menu({
@@ -67,7 +78,8 @@ export function Menu({
   currentChapter,
   selfAssessment,
 }: structureAndChaptersProps) {
-  const { completedChapters, scoreObject, calculateScores } = useStore();
+  const { completedChapters, scoreObject, calculateScores, setScoreObject } =
+    useStore();
   const [maxScores, setMaxScores] = useState<{
     chapters: number[];
     secondChapter: number[];
@@ -80,13 +92,11 @@ export function Menu({
       // chapters //
       let questionnaireParams = [] as CalcParameters[];
 
-      console.log(
-        (questionnaireParams = calculateScores(
-          scoreObject.data.questionnaire ?? [],
-          "chapters",
-          "questionnaire",
-          true
-        ))
+      questionnaireParams = calculateScores(
+        scoreObject.data.questionnaire ?? [],
+        "chapters",
+        "questionnaire",
+        true
       );
 
       const maxScoresChapterTemp: number[] = [];
@@ -131,16 +141,40 @@ export function Menu({
     }
   }, [selfAssessment]);
 
-  useEffect(() => {
-    console.log("maxScores", maxScores);
-  }, [maxScores]);
-
   const handleRangeChange = (
     value: string,
     chapterIndex: number,
-    type: string
+    type: string,
+    subChapterIndex?: number
   ) => {
-    console.log("Range changed", value);
+    switch (type) {
+      case "chapters":
+        setScoreObject((prev) => {
+          const updatedAssessment = [...(prev.data.assessment || [])];
+          updatedAssessment[chapterIndex]["chapter-score"] = Number(value);
+          return {
+            ...prev,
+            data: { ...prev.data, assessment: updatedAssessment },
+          };
+        });
+        break;
+      case "subchapters":
+        setScoreObject((prev) => {
+          const updatedAssessment = [...(prev.data.assessment || [])];
+          if (
+            typeof subChapterIndex === "number" &&
+            updatedAssessment[chapterIndex]?.["sub-chapters"]?.[subChapterIndex]
+          ) {
+            updatedAssessment[chapterIndex]["sub-chapters"][subChapterIndex][
+              "sub-chapter-score"
+            ] = Number(value);
+          }
+          return {
+            ...prev,
+            data: { ...prev.data, assessment: updatedAssessment },
+          };
+        });
+    }
   };
 
   return (
@@ -195,7 +229,9 @@ export function Menu({
                   name="chapter"
                   value={sliderValue}
                   max={maxScores.chapters[chapterIndex] ?? 100}
-                  onChange={(e) => setSliderValue(Number(e.target.value))}
+                  onChange={(e) =>
+                    handleRangeChange(e.target.value, chapterIndex, "chapters")
+                  }
                 />
               )}
 
@@ -206,77 +242,96 @@ export function Menu({
               )}
             </div>
 
-            <ul className={styles["chapter-content"]}>
-              {chapter["chapter-content"].map((subChapter, subIndex) => {
-                const isActiveSubChapter =
-                  chapter["chapter-slug"] === currentChapter[0] &&
-                  subIndex + 1 === parseInt(currentChapter[1]);
-                const subChapterCompleted = isSubChapterCompleted(
-                  scoreObject,
-                  chapterIndex,
-                  subIndex,
-                  subChapter["principles"].length
-                );
-                return (
-                  <li
-                    key={subIndex}
-                    className={clsx(
-                      chapterIndex === 1 && selfAssessment && styles["active"],
-                      isActiveSubChapter && styles["active"],
-                      !selfAssessment &&
-                        subChapterCompleted &&
-                        styles["completed"]
-                    )}>
-                    <Link
-                      className="nav-side-text__sub-chapter"
-                      href={`/tool/${chapter["chapter-slug"]}/${
-                        subIndex + 1
-                      }/1`}>
-                      {`${chapterIndex + 1}.${subIndex + 1} ${
-                        subChapter["sub-chapter-title"]
-                      }`}
-                    </Link>
-                    {selfAssessment && chapterIndex === 1 && <RangeSlider />}
-                    {!selfAssessment && (
-                      <ul className={styles["principles"]}>
-                        {subChapter["principles"].map(
-                          (subChoices, subChoicesIndex) => {
-                            const isActiveChoice =
-                              isActiveSubChapter &&
-                              subChoicesIndex + 1 ===
-                                parseInt(currentChapter[2]);
-                            const choiceCompleted = isChoiceCompleted(
-                              scoreObject,
+            {(!selfAssessment || (selfAssessment && chapterIndex === 1)) && (
+              <ul className={styles["chapter-content"]}>
+                {chapter["chapter-content"].map((subChapter, subIndex) => {
+                  const isActiveSubChapter =
+                    chapter["chapter-slug"] === currentChapter[0] &&
+                    subIndex + 1 === parseInt(currentChapter[1]);
+                  const subChapterCompleted = isSubChapterCompleted(
+                    scoreObject,
+                    chapterIndex,
+                    subIndex,
+                    subChapter["principles"].length
+                  );
+                  return (
+                    <li
+                      key={subIndex}
+                      className={clsx(
+                        chapterIndex === 1 &&
+                          selfAssessment &&
+                          styles["active"],
+                        isActiveSubChapter && styles["active"],
+                        !selfAssessment &&
+                          subChapterCompleted &&
+                          styles["completed"]
+                      )}>
+                      <Link
+                        className="nav-side-text__sub-chapter"
+                        href={`/tool/${chapter["chapter-slug"]}/${
+                          subIndex + 1
+                        }/1`}>
+                        {`${chapterIndex + 1}.${subIndex + 1} ${
+                          subChapter["sub-chapter-title"]
+                        }`}
+                      </Link>
+                      {selfAssessment && chapterIndex === 1 && (
+                        <RangeSlider
+                          id={chapter["chapter-title"]}
+                          name="chapter"
+                          value={sliderValue}
+                          max={maxScores.chapters[chapterIndex] ?? 100}
+                          onChange={(e) =>
+                            handleRangeChange(
+                              e.target.value,
                               chapterIndex,
-                              subIndex,
-                              subChoicesIndex
-                            );
-                            return (
-                              <li
-                                key={subChoicesIndex}
-                                className={clsx(
-                                  isActiveChoice && styles["active"],
-                                  choiceCompleted && styles["completed"]
-                                )}>
-                                <Link
-                                  className="nav-side-text__sub-chapter-choice"
-                                  href={`/tool/${chapter["chapter-slug"]}/${
-                                    subIndex + 1
-                                  }/${subChoicesIndex + 1}`}>
-                                  {`${subChoicesIndex + 1}. ${
-                                    subChoices.title
-                                  }`}
-                                </Link>
-                              </li>
-                            );
+                              "subchapters",
+                              subIndex
+                            )
                           }
-                        )}
-                      </ul>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
+                        />
+                      )}
+                      {!selfAssessment && (
+                        <ul className={styles["principles"]}>
+                          {subChapter["principles"].map(
+                            (subChoices, subChoicesIndex) => {
+                              const isActiveChoice =
+                                isActiveSubChapter &&
+                                subChoicesIndex + 1 ===
+                                  parseInt(currentChapter[2]);
+                              const choiceCompleted = isChoiceCompleted(
+                                scoreObject,
+                                chapterIndex,
+                                subIndex,
+                                subChoicesIndex
+                              );
+                              return (
+                                <li
+                                  key={subChoicesIndex}
+                                  className={clsx(
+                                    isActiveChoice && styles["active"],
+                                    choiceCompleted && styles["completed"]
+                                  )}>
+                                  <Link
+                                    className="nav-side-text__sub-chapter-choice"
+                                    href={`/tool/${chapter["chapter-slug"]}/${
+                                      subIndex + 1
+                                    }/${subChoicesIndex + 1}`}>
+                                    {`${subChoicesIndex + 1}. ${
+                                      subChoices.title
+                                    }`}
+                                  </Link>
+                                </li>
+                              );
+                            }
+                          )}
+                        </ul>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </li>
         ))}
       </ul>

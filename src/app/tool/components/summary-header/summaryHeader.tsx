@@ -11,19 +11,19 @@ function formatDate(timestamp: number) {
 }
 
 export function SummaryHeader({
+  title,
   structure,
   scoreObject,
   children,
 }: {
+  title: string;
   structure: structureProps;
   scoreObject: ScoreType;
   children?: React.ReactNode;
 }) {
   return (
     <div className={styles["summary-header"]}>
-      <h1 className={clsx(styles["title"], "headline_small")}>
-        {structure?.summary.header.title}
-      </h1>
+      <h1 className={clsx(styles["title"], "headline_small")}>{title}</h1>
       <div className={styles["summary-main"]}>
         <div className={styles["summary-details"]}>
           <p className="paragraph_15">

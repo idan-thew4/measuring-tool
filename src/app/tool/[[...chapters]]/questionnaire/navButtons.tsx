@@ -22,8 +22,6 @@ export function NavButtons({ currentChapter }: { currentChapter: string[] }) {
       (s) => s["chapter-slug"] === currentChapter[0]
     );
 
-    console.log("chapterIdx:", chapterIdx);
-
     const principleIdx = Number(currentChapter[1]) - 1;
     const subChoiceIdx = Number(currentChapter[2]) - 1;
     let chapter = structure.questionnaire.content[chapterIdx];

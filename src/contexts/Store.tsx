@@ -51,12 +51,21 @@ export type ScoreType = {
 
 export type ScoreVariations = {
   questionnaire: ChapterPoints[];
-  assessment: ChapterPoints[];
+  assessment: AssessmentProps[];
 };
 
 export type ChapterPoints = {
   "chapter-number": number;
   "chapter-data": SubChapterPoints[];
+};
+
+export type AssessmentProps = {
+  "chapter-number": number;
+  "chapter-score": number;
+  "sub-chapters"?: {
+    "sub-chapter-number": number;
+    "sub-chapter-score": number;
+  }[];
 };
 
 type SubChapterPoints = {
@@ -337,18 +346,24 @@ function Store({ children }: PropsWithChildren<{}>) {
               ),
             })
           ),
-          assessment: structureObject.questionnaire.content.map((chapter) => ({
-            "chapter-number": chapter["chapter-number"],
-            "chapter-data": chapter["chapter-content"].map(
-              (subChapter, subIndex) => ({
-                "sub-chapter-number": subIndex + 1,
-                principles: subChapter["principles"].map((sub, subIndex) => ({
-                  id: subIndex + 1,
-                  choice: undefined,
-                })),
-              })
-            ),
-          })),
+          assessment: structureObject.questionnaire.content.map(
+            (chapter, index) => {
+              const chapterTemp: AssessmentProps = {
+                "chapter-number": chapter["chapter-number"],
+                "chapter-score": 0,
+              };
+              if (index === 1) {
+                const subchaptersTemp = chapter["chapter-content"].map(
+                  (subChapter, subIndex) => ({
+                    "sub-chapter-number": subIndex + 1,
+                    "sub-chapter-score": 0,
+                  })
+                );
+                chapterTemp["sub-chapters"] = subchaptersTemp;
+              }
+              return chapterTemp;
+            }
+          ),
         },
       };
     }

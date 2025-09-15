@@ -31,11 +31,6 @@ const CustomYAxisTick = (props: CustomYAxisTickProps) => {
     rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
   const dataPoints = [10, 45, 80].map(remToPx); // 110px, 270px, 450px if 1rem = 16px
 
-  console.log(
-    "rem",
-    parseFloat(getComputedStyle(document.documentElement).fontSize)
-  );
-
   return (
     <>
       {dataPoints.map((chartMiddle: number) => (
@@ -120,7 +115,6 @@ export function StackedBar({
   structure: structureProps;
   filters?: string[];
 }) {
-  console.log("stacked bar parameters", parameters);
   const [filtersStatus, setFiltersStatus] = useState<boolean>(false);
   const [maxValue, setMaxValue] = useState<number>();
   const [legend, setLegend] = useState<string[]>([]);

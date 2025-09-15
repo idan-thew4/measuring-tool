@@ -38,16 +38,6 @@ export default function SummaryReport() {
       "questionnaire"
     );
 
-    let assessmentParams = [] as CalcParameters[];
-
-    if (scoreObject.data.assessment.length > 0) {
-      assessmentParams = calculateScores(
-        scoreObject.data.assessment ?? [],
-        "chapters",
-        "assessment"
-      );
-    }
-
     const chaptersScoresTemp: ScoreData[] = questionnaireParams.map(
       (chapter, index) => {
         const subject =
@@ -57,24 +47,16 @@ export default function SummaryReport() {
           (chapter["general-score"] / chapter["net-zero-impact"]) * 100
         );
 
-        const hasAssessment = assessmentParams.length > 0;
-
-        // &&
-        // assessmentParams[index] &&
-        // typeof assessmentParams[index]["general-score"] === "number" &&
-        // typeof assessmentParams[index]["net-zero-impact"] === "number" &&
-        // assessmentParams[index]["net-zero-impact"] !== 0;
+        const hasAssessment =
+          scoreObject.data.assessment.length > 0 &&
+          scoreObject.data.assessment[index]["chapter-score"];
 
         return {
           subject,
           questionnaire,
           ...(hasAssessment
             ? {
-                assessment: Math.round(
-                  (assessmentParams[index]["general-score"] /
-                    assessmentParams[index]["net-zero-impact"]) *
-                    100
-                ),
+                assessment: hasAssessment,
               }
             : {}),
         };
@@ -90,14 +72,6 @@ export default function SummaryReport() {
       "subchapters",
       "questionnaire"
     );
-
-    if (scoreObject.data.assessment.length > 0) {
-      assessmentParams = calculateScores(
-        scoreObject.data.assessment ?? [],
-        "subchapters",
-        "assessment"
-      );
-    }
 
     const filteredQuestionnaireParams = questionnaireParams.filter(
       (chapter) => chapter["chapter"] === 1
@@ -118,24 +92,18 @@ export default function SummaryReport() {
           (subChapter["general-score"] / subChapter["net-zero-impact"]) * 100
         );
 
-        const hasAssessment = assessmentParams.length > 0;
-
-        // &&
-        // assessmentParams[index] &&
-        // typeof assessmentParams[index]["general-score"] === "number" &&
-        // typeof assessmentParams[index]["net-zero-impact"] === "number" &&
-        // assessmentParams[index]["net-zero-impact"] !== 0;
+        const hasAssessment =
+          scoreObject.data.assessment.length > 0 &&
+          scoreObject.data.assessment[index]?.["sub-chapters"]?.[
+            subChapterIndex
+          ]?.["sub-chapter-score"];
 
         return {
           subject,
           questionnaire,
           ...(hasAssessment
             ? {
-                assessment: Math.round(
-                  (assessmentParams[index]["general-score"] /
-                    assessmentParams[index]["net-zero-impact"]) *
-                    100
-                ),
+                assessment: hasAssessment,
               }
             : {}),
         };
@@ -177,7 +145,12 @@ export default function SummaryReport() {
     <div className={clsx(styles["main-container"], "main-container")}>
       {structure && (
         <>
-          <SummaryHeader structure={structure} scoreObject={scoreObject} />
+          <SummaryHeader
+            title={structure?.summary.header.title}
+            structure={structure}
+            scoreObject={scoreObject}
+          />
+
           <div className={styles["graphs"]}>
             {structure["summary-report"].graphs.map((graph, index) => {
               switch (graph.type) {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useStore } from "@/contexts/Store";
-import { SummaryTableHeader } from "./summaryHeader/SummaryTableHeader";
+import { SummaryHeader } from "../components/summary-header/summaryHeader";
 import { Table } from "./table/table";
 import styles from "./summary.module.scss";
 import clsx from "clsx";
@@ -12,7 +12,11 @@ export default function Summary() {
   return (
     <div className={clsx(styles["summary"], "main-container")}>
       {structure && (
-        <SummaryTableHeader structure={structure} scoreObject={scoreObject} />
+        <SummaryHeader
+          title={structure?.summary.header.title}
+          structure={structure}
+          scoreObject={scoreObject}
+        />
       )}
       <div className={styles["tables-container"]}>
         {structure?.questionnaire.content.map((chapter) => {

@@ -35,6 +35,8 @@ export function RadarGraph({
   });
   const [maxValue, setMaxValue] = useState<number>();
 
+  console.log("parameters", parameters);
+
   useEffect(() => {
     const tempDataKeys: string[] = [];
     if (parameters.length > 0) {
@@ -57,10 +59,7 @@ export function RadarGraph({
       )
     );
 
-    console.log("tempDataKeys", tempDataKeys);
-
     setMaxValue(maxValue);
-
     setDataKeys(tempDataKeys);
   }, [parameters]);
 
@@ -87,31 +86,34 @@ export function RadarGraph({
       headline={headline}
       structure={structure}
       legend={["17%-0%", "33%-18%", "100%-34%", "100%<"]}>
-      <ul className={graphStyles["filters"]}>
-        {dataKeys?.slice().map((filter, index) => (
-          <li key={index} className={graphStyles["filter-item"]}>
-            <label
-              className={clsx("paragraph_14", graphStyles["filter-label"])}>
-              <div
-                className={graphStyles["filter-color"]}
-                style={{
-                  backgroundColor: colors[index],
-                }}></div>
-              <input
-                type="checkbox"
-                checked={filtersStatus[filter] || false}
-                onChange={() => {
-                  setFiltersStatus((prev) => ({
-                    ...prev,
-                    [filter]: !prev[filter],
-                  }));
-                }}
-              />
-              {(filters ?? [])[index]}
-            </label>
-          </li>
-        ))}
-      </ul>
+      {filters && (
+        <ul className={graphStyles["filters"]}>
+          {dataKeys?.slice().map((filter, index) => (
+            <li key={index} className={graphStyles["filter-item"]}>
+              <label
+                className={clsx("paragraph_14", graphStyles["filter-label"])}>
+                <div
+                  className={graphStyles["filter-color"]}
+                  style={{
+                    backgroundColor: colors[index],
+                  }}></div>
+                <input
+                  type="checkbox"
+                  checked={filtersStatus[filter] || false}
+                  onChange={() => {
+                    setFiltersStatus((prev) => ({
+                      ...prev,
+                      [filter]: !prev[filter],
+                    }));
+                  }}
+                />
+                {(filters ?? [])[index]}
+              </label>
+            </li>
+          ))}
+        </ul>
+      )}
+
       <div className={styles["radar-graph-container"]}>
         <div className={styles["radar"]}>
           <Image
