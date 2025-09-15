@@ -51,9 +51,9 @@ export function Questionnaire({
     let chapterProgressTemp: totalCompleted = [];
 
     const choices =
-      scoreObject?.["data"]?.[currentChapter["chapter-number"] - 1]?.[
-        "chapter-data"
-      ];
+      scoreObject?.["data"]["questionnaire"]?.[
+        currentChapter["chapter-number"] - 1
+      ]?.["chapter-data"];
 
     const selectedChoice = choices?.[Number(currentSelection[1]) - 1];
 
@@ -111,8 +111,7 @@ export function Questionnaire({
                   : item
               )
             )
-          }
-        >
+          }>
           <p className="paragraph_20">{currentChapterHeaders?.title}</p>
         </button>
         <p
@@ -123,8 +122,7 @@ export function Questionnaire({
             )?.state
               ? "auto"
               : "0",
-          }}
-        >
+          }}>
           {currentChapterHeaders?.titleDescription}
         </p>
 
@@ -145,15 +143,13 @@ export function Questionnaire({
                   : item
               )
             )
-          }
-        >
+          }>
           <h1 className="headline_medium-big bold">
             <span
               className={clsx(
                 "number headline_medium-small bold",
                 styles["number"]
-              )}
-            >
+              )}>
               {currentChapterHeaders?.subtitleNumber}
             </span>
             {`${
@@ -176,8 +172,7 @@ export function Questionnaire({
             )?.state
               ? "4rem"
               : "0",
-          }}
-        >
+          }}>
           {currentChapterHeaders?.subtitleDescription}
         </p>
 

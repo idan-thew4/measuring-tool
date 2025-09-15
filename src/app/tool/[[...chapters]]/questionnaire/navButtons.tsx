@@ -17,10 +17,12 @@ export function NavButtons({ currentChapter }: { currentChapter: string[] }) {
 
   useEffect(() => {
     if (!structure) return;
-    structure.questionnaire.content.forEach((chapter: any, idx: number) => {});
+
     const chapterIdx = structure.questionnaire.content.findIndex(
       (s) => s["chapter-slug"] === currentChapter[0]
     );
+
+    console.log("chapterIdx:", chapterIdx);
 
     const principleIdx = Number(currentChapter[1]) - 1;
     const subChoiceIdx = Number(currentChapter[2]) - 1;
@@ -84,8 +86,7 @@ export function NavButtons({ currentChapter }: { currentChapter: string[] }) {
             styles["nav-button"],
             styles["previous"],
             "basic-button outline with-icon"
-          )}
-        >
+          )}>
           {structure?.questionnaire.buttons?.[1]}
         </Link>
       )}
@@ -96,8 +97,7 @@ export function NavButtons({ currentChapter }: { currentChapter: string[] }) {
             styles["nav-button"],
             styles["next"],
             "basic-button outline with-icon"
-          )}
-        >
+          )}>
           {structure?.questionnaire.buttons?.[2]}
         </Link>
       )}

@@ -59,7 +59,6 @@ type RangeSliderProps = {
 
 function RangeSlider({ id, name, max, value }: RangeSliderProps) {
   const percent = (value / max) * 100;
-
   return <input type="range" id={id} name={name} min={0} max={max} />;
 }
 
@@ -74,6 +73,7 @@ export function Menu({
     secondChapter: number[];
   }>({ chapters: [], secondChapter: [] });
   const [sliderValue, setSliderValue] = useState(0);
+  const links = ["summary", "summary-report", "glossary"];
 
   useEffect(() => {
     if (selfAssessment) {
@@ -148,8 +148,7 @@ export function Menu({
       className={clsx(
         styles["menu"],
         selfAssessment && styles["self-assessment"]
-      )}
-    >
+      )}>
       {!selfAssessment ? (
         <ProgressBar completed={completedChapters} structure={structure} />
       ) : (
@@ -181,11 +180,12 @@ export function Menu({
                 ? styles["completed"]
                 : ""
             )}
-            key={chapterIndex}
-          >
+            key={chapterIndex}>
             <div
-              className={clsx("nav-side-text__chapter", styles["chapter-text"])}
-            >
+              className={clsx(
+                "nav-side-text__chapter",
+                styles["chapter-text"]
+              )}>
               <Link href={`/tool/${chapter["chapter-slug"]}/1/1`}>
                 {`${chapterIndex + 1}. ${chapter["chapter-title"]}`}
               </Link>
@@ -226,14 +226,12 @@ export function Menu({
                       !selfAssessment &&
                         subChapterCompleted &&
                         styles["completed"]
-                    )}
-                  >
+                    )}>
                     <Link
                       className="nav-side-text__sub-chapter"
                       href={`/tool/${chapter["chapter-slug"]}/${
                         subIndex + 1
-                      }/1`}
-                    >
+                      }/1`}>
                       {`${chapterIndex + 1}.${subIndex + 1} ${
                         subChapter["sub-chapter-title"]
                       }`}
@@ -259,14 +257,12 @@ export function Menu({
                                 className={clsx(
                                   isActiveChoice && styles["active"],
                                   choiceCompleted && styles["completed"]
-                                )}
-                              >
+                                )}>
                                 <Link
                                   className="nav-side-text__sub-chapter-choice"
                                   href={`/tool/${chapter["chapter-slug"]}/${
                                     subIndex + 1
-                                  }/${subChoicesIndex + 1}`}
-                                >
+                                  }/${subChoicesIndex + 1}`}>
                                   {`${subChoicesIndex + 1}. ${
                                     subChoices.title
                                   }`}
@@ -288,7 +284,9 @@ export function Menu({
         <ul className={styles["bottom-links"]}>
           {structure?.sidebar["bottom-options"].map((option, index) => (
             <li key={index}>
-              <Link className="paragraph_18 bold" href={""}>
+              <Link
+                className="paragraph_18 bold"
+                href={`/tool/${links[index]}`}>
                 {option}
               </Link>
             </li>

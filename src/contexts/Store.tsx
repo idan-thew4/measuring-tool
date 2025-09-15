@@ -224,7 +224,9 @@ type ApiContextType = {
   ) => CalcParameters[];
 };
 
-const url = "http://localhost:3000/";
+// const url = "http://localhost:3000/";
+const url =
+  "https://wordpress-1080689-5737105.cloudwaysapps.com/wp-json/slil-api/structure";
 
 function Store({ children }: PropsWithChildren<{}>) {
   const [structure, setStructure] = useState<structureProps>();
@@ -272,11 +274,15 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   async function getContent() {
     try {
-      const response = await fetch(`${url}/api/temp`);
+      const response = await fetch(`${url}`);
+
+      // const response = await fetch(`${url}/api/temp`);
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+      console.log(data);
 
       setStructure(data);
       createScoreObject(data);
@@ -462,12 +468,14 @@ function Store({ children }: PropsWithChildren<{}>) {
             const generalScore =
               structurePrinciple?.choices?.[principle.choice - 1];
             const netZeroImpactScore = structurePrinciple?.choices?.[3];
+            const maxScore = structurePrinciple?.choices?.[4];
 
             if (generalScore && typeof generalScore.score === "number") {
               if (graph === "chapters") {
                 calcParameters[index]["general-score"] += generalScore.score;
                 calcParameters[index]["net-zero-impact"] +=
                   netZeroImpactScore?.score ?? 0;
+                calcParameters[index]["max-score"] += maxScore?.score ?? 0;
               } else if (
                 graph === "subchapters" &&
                 subChapterObj &&
@@ -476,6 +484,7 @@ function Store({ children }: PropsWithChildren<{}>) {
                 subChapterObj["general-score"] += generalScore.score;
                 subChapterObj["net-zero-impact"] +=
                   netZeroImpactScore?.score ?? 0;
+                subChapterObj["max-score"] += maxScore?.score ?? 0;
               }
             }
           } else {
@@ -514,8 +523,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         setRegistrationStatus,
         registrationStatus,
         calculateScores,
-      }}
-    >
+      }}>
       {children}
     </ApiContext.Provider>
   );

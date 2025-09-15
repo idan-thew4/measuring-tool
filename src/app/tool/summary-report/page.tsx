@@ -57,12 +57,13 @@ export default function SummaryReport() {
           (chapter["general-score"] / chapter["net-zero-impact"]) * 100
         );
 
-        const hasAssessment =
-          assessmentParams.length > 0 &&
-          assessmentParams[index] &&
-          typeof assessmentParams[index]["general-score"] === "number" &&
-          typeof assessmentParams[index]["net-zero-impact"] === "number" &&
-          assessmentParams[index]["net-zero-impact"] !== 0;
+        const hasAssessment = assessmentParams.length > 0;
+
+        // &&
+        // assessmentParams[index] &&
+        // typeof assessmentParams[index]["general-score"] === "number" &&
+        // typeof assessmentParams[index]["net-zero-impact"] === "number" &&
+        // assessmentParams[index]["net-zero-impact"] !== 0;
 
         return {
           subject,
@@ -117,12 +118,13 @@ export default function SummaryReport() {
           (subChapter["general-score"] / subChapter["net-zero-impact"]) * 100
         );
 
-        const hasAssessment =
-          assessmentParams.length > 0 &&
-          assessmentParams[index] &&
-          typeof assessmentParams[index]["general-score"] === "number" &&
-          typeof assessmentParams[index]["net-zero-impact"] === "number" &&
-          assessmentParams[index]["net-zero-impact"] !== 0;
+        const hasAssessment = assessmentParams.length > 0;
+
+        // &&
+        // assessmentParams[index] &&
+        // typeof assessmentParams[index]["general-score"] === "number" &&
+        // typeof assessmentParams[index]["net-zero-impact"] === "number" &&
+        // assessmentParams[index]["net-zero-impact"] !== 0;
 
         return {
           subject,

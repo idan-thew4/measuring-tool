@@ -57,6 +57,8 @@ export function RadarGraph({
       )
     );
 
+    console.log("tempDataKeys", tempDataKeys);
+
     setMaxValue(maxValue);
 
     setDataKeys(tempDataKeys);
@@ -84,37 +86,31 @@ export function RadarGraph({
     <Graph
       headline={headline}
       structure={structure}
-      legend={["17%-0%", "33%-18%", "100%-34%", "100%<"]}
-    >
+      legend={["17%-0%", "33%-18%", "100%-34%", "100%<"]}>
       <ul className={graphStyles["filters"]}>
-        {dataKeys
-          ?.slice()
-          .reverse()
-          .map((filter, index) => (
-            <li key={index} className={graphStyles["filter-item"]}>
-              <label
-                className={clsx("paragraph_14", graphStyles["filter-label"])}
-              >
-                <div
-                  className={graphStyles["filter-color"]}
-                  style={{
-                    backgroundColor: colors[index],
-                  }}
-                ></div>
-                <input
-                  type="checkbox"
-                  checked={filtersStatus[filter] || false}
-                  onChange={() => {
-                    setFiltersStatus((prev) => ({
-                      ...prev,
-                      [filter]: !prev[filter],
-                    }));
-                  }}
-                />
-                {(filters ?? [])[index]}
-              </label>
-            </li>
-          ))}
+        {dataKeys?.slice().map((filter, index) => (
+          <li key={index} className={graphStyles["filter-item"]}>
+            <label
+              className={clsx("paragraph_14", graphStyles["filter-label"])}>
+              <div
+                className={graphStyles["filter-color"]}
+                style={{
+                  backgroundColor: colors[index],
+                }}></div>
+              <input
+                type="checkbox"
+                checked={filtersStatus[filter] || false}
+                onChange={() => {
+                  setFiltersStatus((prev) => ({
+                    ...prev,
+                    [filter]: !prev[filter],
+                  }));
+                }}
+              />
+              {(filters ?? [])[index]}
+            </label>
+          </li>
+        ))}
       </ul>
       <div className={styles["radar-graph-container"]}>
         <div className={styles["radar"]}>
@@ -130,8 +126,7 @@ export function RadarGraph({
             width={600}
             height={600}
             data={parameters}
-            className={styles["radar"]}
-          >
+            className={styles["radar"]}>
             <PolarRadiusAxis
               axisLine={false}
               tick={false}
@@ -186,8 +181,7 @@ export function RadarGraph({
                             fontSize={12}
                             textAnchor="middle"
                             dominantBaseline="central"
-                            className={styles["data-label"]}
-                          >
+                            className={styles["data-label"]}>
                             {value}%
                           </text>
                         </g>

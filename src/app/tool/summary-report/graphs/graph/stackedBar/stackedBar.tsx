@@ -75,7 +75,7 @@ const CustomTopBar = (props: any) => {
   const strokeColor = "#D3D4D4";
   const strokeWidth = 1;
   const { payload } = props;
-  const overlap = payload && payload.generalScore === 0 ? 0 : 8;
+  const overlap = payload && payload.generalScore === 0 ? 0 : 2;
 
   const barPath = `
     M${x},${y + height + overlap}
@@ -120,6 +120,7 @@ export function StackedBar({
   structure: structureProps;
   filters?: string[];
 }) {
+  console.log("stacked bar parameters", parameters);
   const [filtersStatus, setFiltersStatus] = useState<boolean>(false);
   const [maxValue, setMaxValue] = useState<number>();
   const [legend, setLegend] = useState<string[]>([]);
