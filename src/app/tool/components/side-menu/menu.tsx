@@ -9,6 +9,7 @@ import {
   CalcParameters,
 } from "../../../../contexts/Store";
 import { useEffect, useState } from "react";
+import { set } from "react-hook-form";
 
 export type structureAndChaptersProps = {
   structure: structureProps | undefined;
@@ -54,22 +55,52 @@ type RangeSliderProps = {
   min?: number;
   max: number;
   value: number;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onMouseUp: (e: React.MouseEvent<HTMLInputElement>) => void;
 };
 
-function RangeSlider({ id, name, max, value, onChange }: RangeSliderProps) {
-  const percent = (value / max) * 100;
+function RangeSlider({
+  id,
+  name,
+  max,
+  value,
+  onChange,
+  onMouseUp,
+}: RangeSliderProps) {
+  const percent = max > 0 ? (value / max) * 100 : 0;
 
   return (
-    <input
-      type="range"
-      id={id}
-      name={name}
-      min={0}
-      max={max}
-      onChange={onChange}
-      className={styles["range-slider"]}
-    />
+    <div className={styles["range-slider-container"]}>
+      <input
+        type="range"
+        id={id}
+        name={name}
+        min={0}
+        max={max}
+        defaultValue={value ?? 0}
+        onMouseUp={onMouseUp}
+        onChange={onChange}
+        className={styles["range-slider"]}
+      />
+      <div
+        className={styles["range-slider-progress"]}
+        style={{ width: `${percent}%` }}
+      ></div>
+      <div
+        className={styles["range-slider-value"]}
+        style={{
+          right: `${
+            percent > 95 && percent > 0
+              ? "89%"
+              : percent < 6
+              ? "2%"
+              : `calc(${percent}% - ${percent > 99 ? "4.5" : "1.5"}rem)`
+          }`,
+        }}
+      >
+        {value}%
+      </div>
+    </div>
   );
 }
 
@@ -84,12 +115,33 @@ export function Menu({
     chapters: number[];
     secondChapter: number[];
   }>({ chapters: [], secondChapter: [] });
-  const [sliderValue, setSliderValue] = useState(0);
+  const [sliderValue, setSliderValue] = useState<{
+    chapter: number[];
+    subChapter: number[];
+  }>({
+    chapter: [],
+    subChapter: [],
+  });
   const links = ["summary", "summary-report", "glossary"];
 
   useEffect(() => {
     if (selfAssessment) {
-      // chapters //
+      //Slider value;
+
+      const TempChapterScoreValue = scoreObject.data.assessment.map(
+        (chapter) => chapter["chapter-score"] || 0
+      );
+
+      const TempSubChapterScoreValue =
+        scoreObject.data.assessment[1]?.["sub-chapters"]?.map(
+          (subChapter) => subChapter["sub-chapter-score"] || 0
+        ) || [];
+
+      setSliderValue({
+        chapter: TempChapterScoreValue,
+        subChapter: TempSubChapterScoreValue,
+      });
+
       let questionnaireParams = [] as CalcParameters[];
 
       questionnaireParams = calculateScores(
@@ -147,6 +199,7 @@ export function Menu({
     type: string,
     subChapterIndex?: number
   ) => {
+    console.log("value", value);
     switch (type) {
       case "chapters":
         setScoreObject((prev) => {
@@ -182,7 +235,8 @@ export function Menu({
       className={clsx(
         styles["menu"],
         selfAssessment && styles["self-assessment"]
-      )}>
+      )}
+    >
       {!selfAssessment ? (
         <ProgressBar completed={completedChapters} structure={structure} />
       ) : (
@@ -214,12 +268,11 @@ export function Menu({
                 ? styles["completed"]
                 : ""
             )}
-            key={chapterIndex}>
+            key={chapterIndex}
+          >
             <div
-              className={clsx(
-                "nav-side-text__chapter",
-                styles["chapter-text"]
-              )}>
+              className={clsx("nav-side-text__chapter", styles["chapter-text"])}
+            >
               <Link href={`/tool/${chapter["chapter-slug"]}/1/1`}>
                 {`${chapterIndex + 1}. ${chapter["chapter-title"]}`}
               </Link>
@@ -227,10 +280,26 @@ export function Menu({
                 <RangeSlider
                   id={chapter["chapter-title"]}
                   name="chapter"
-                  value={sliderValue}
-                  max={maxScores.chapters[chapterIndex] ?? 100}
+                  value={sliderValue.chapter[chapterIndex]}
+                  max={maxScores.chapters[chapterIndex]}
                   onChange={(e) =>
-                    handleRangeChange(e.target.value, chapterIndex, "chapters")
+                    setSliderValue((prev) => {
+                      const updatedChapter = prev.chapter.slice();
+                      updatedChapter[chapterIndex] = Number(
+                        (e.target as HTMLInputElement).value
+                      );
+                      return {
+                        ...prev,
+                        chapter: updatedChapter,
+                      };
+                    })
+                  }
+                  onMouseUp={(e) =>
+                    handleRangeChange(
+                      (e.target as HTMLInputElement).value,
+                      chapterIndex,
+                      "chapters"
+                    )
                   }
                 />
               )}
@@ -265,12 +334,14 @@ export function Menu({
                         !selfAssessment &&
                           subChapterCompleted &&
                           styles["completed"]
-                      )}>
+                      )}
+                    >
                       <Link
                         className="nav-side-text__sub-chapter"
                         href={`/tool/${chapter["chapter-slug"]}/${
                           subIndex + 1
-                        }/1`}>
+                        }/1`}
+                      >
                         {`${chapterIndex + 1}.${subIndex + 1} ${
                           subChapter["sub-chapter-title"]
                         }`}
@@ -279,16 +350,28 @@ export function Menu({
                         <RangeSlider
                           id={chapter["chapter-title"]}
                           name="chapter"
-                          value={sliderValue}
-                          max={maxScores.chapters[chapterIndex] ?? 100}
+                          value={sliderValue.subChapter[subIndex]}
+                          max={maxScores.secondChapter[subIndex]}
                           onChange={(e) =>
+                            setSliderValue((prev) => {
+                              const updatedSubChapter = prev.subChapter.slice();
+                              updatedSubChapter[subIndex] = Number(
+                                (e.target as HTMLInputElement).value
+                              );
+                              return {
+                                ...prev,
+                                subChapter: updatedSubChapter,
+                              };
+                            })
+                          }
+                          onMouseUp={(e) => {
                             handleRangeChange(
-                              e.target.value,
+                              (e.target as HTMLInputElement).value,
                               chapterIndex,
                               "subchapters",
                               subIndex
-                            )
-                          }
+                            );
+                          }}
                         />
                       )}
                       {!selfAssessment && (
@@ -311,12 +394,14 @@ export function Menu({
                                   className={clsx(
                                     isActiveChoice && styles["active"],
                                     choiceCompleted && styles["completed"]
-                                  )}>
+                                  )}
+                                >
                                   <Link
                                     className="nav-side-text__sub-chapter-choice"
                                     href={`/tool/${chapter["chapter-slug"]}/${
                                       subIndex + 1
-                                    }/${subChoicesIndex + 1}`}>
+                                    }/${subChoicesIndex + 1}`}
+                                  >
                                     {`${subChoicesIndex + 1}. ${
                                       subChoices.title
                                     }`}
@@ -341,7 +426,8 @@ export function Menu({
             <li key={index}>
               <Link
                 className="paragraph_18 bold"
-                href={`/tool/${links[index]}`}>
+                href={`/tool/${links[index]}`}
+              >
                 {option}
               </Link>
             </li>

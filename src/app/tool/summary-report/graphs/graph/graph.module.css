@@ -1,0 +1,71 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.container {
+  background-color: white;
+  padding: 4rem 5rem;
+  border-radius: 4rem;
+}
+.container .title {
+  margin-bottom: 3rem;
+}
+
+ul.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 5rem;
+}
+ul.filters .filter-item:has(input:checked) .filter-label:before {
+  background: url("../../../../../../public/icons/check.svg") no-repeat center;
+  background-size: 1.1rem;
+}
+ul.filters .filter-label {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+}
+ul.filters .filter-label:before {
+  content: "";
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 0.2rem solid #979797;
+  display: block;
+  border-radius: 0.5rem;
+}
+ul.filters .filter-label input {
+  display: none;
+}
+ul.filters .filter-color {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 0.3rem;
+}
+
+ul.legend {
+  display: flex;
+  gap: 3rem;
+  margin-top: 4rem;
+}
+ul.legend .percentage {
+  color: white;
+  padding: 0.7rem 1rem 0.2rem 1rem;
+  border-radius: 2rem;
+  width: fit-content;
+}/*# sourceMappingURL=graph.module.css.map */

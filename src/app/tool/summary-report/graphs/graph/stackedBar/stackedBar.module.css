@@ -1,0 +1,53 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.responsive-container > div {
+  width: 100% !important;
+  height: 100% !important;
+}
+.responsive-container :global(.recharts-surface) {
+  overflow: visible;
+}
+.responsive-container :global(.recharts-surface) :global(.recharts-layer.recharts-yAxis .recharts-cartesian-axis-tick):first-of-type {
+  display: none;
+}
+.responsive-container :global(.recharts-surface) :global(.recharts-layer.recharts-yAxis .recharts-cartesian-axis-tick):last-of-type :global(g):nth-of-type(1) {
+  transform: translate(10rem, 0) !important;
+}
+.responsive-container :global(.recharts-surface) :global(.recharts-layer.recharts-yAxis .recharts-cartesian-axis-tick):last-of-type :global(g):nth-of-type(2) {
+  transform: translate(45rem, 0) !important;
+}
+.responsive-container :global(.recharts-surface) :global(.recharts-layer.recharts-yAxis .recharts-cartesian-axis-tick):last-of-type :global(g):nth-of-type(3) {
+  transform: translate(80rem, 0) !important;
+}
+.responsive-container :global(.recharts-surface) :global(.recharts-cartesian-grid-horizontal) line:first-of-type {
+  display: none;
+}
+
+.data-bar {
+  direction: ltr;
+  gap: 1.6rem;
+  padding: 0 0.8rem 0 0.6rem;
+  margin-top: -0.5rem;
+}
+.data-bar-item {
+  color: #979797;
+  text-align: center;
+  border-top: 0.1rem solid black;
+  padding-top: 1rem;
+}/*# sourceMappingURL=stackedBar.module.css.map */

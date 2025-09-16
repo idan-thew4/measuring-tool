@@ -31,8 +31,6 @@ export default function SelfAssessment() {
           } else {
             const subChapter =
               scoreObject.data.assessment[index]["sub-chapters"];
-
-            console.log(subChapter, "subChapter");
             const avg =
               subChapter && subChapter.length > 0
                 ? subChapter.reduce(
@@ -50,16 +48,34 @@ export default function SelfAssessment() {
         }
       );
 
+      //Second Chapters //
+
+      const TempSecondChapterScoreValue =
+        scoreObject.data.assessment[1]?.["sub-chapters"]?.map(
+          (subChapter, index) => {
+            const subject =
+              structure?.questionnaire.content?.[1]?.["chapter-content"]?.[
+                index
+              ]["sub-chapter-title"] ?? "";
+
+            const questionnaire =
+              scoreObject.data.assessment[1]["sub-chapters"]?.[index][
+                "sub-chapter-score"
+              ] ?? 0;
+
+            return {
+              subject,
+              questionnaire,
+            };
+          }
+        ) ?? [];
+
       setScores({
         chapters: chaptersScoresTemp,
-        secondChapter: [],
+        secondChapter: TempSecondChapterScoreValue,
       });
     }
   }, [scoreObject, structure]);
-
-  useEffect(() => {
-    console.log("scores", scores);
-  }, [scores]);
 
   return (
     <div className={clsx(styles["main-container"], "main-container")}>
@@ -79,10 +95,14 @@ export default function SelfAssessment() {
                       parameters={
                         graph.data === "chapters"
                           ? scores.chapters
-                          : scores.chapters
+                          : scores.secondChapter
                       }
                       key={index}
-                      headline={graph.title}
+                      headline={
+                        structure["self-assessment"]["graphs-headlines"][
+                          index
+                        ] ?? ""
+                      }
                       structure={structure}
                       imageGridURL={`/pages/graphs/radar_grid_${graph.data}.svg`}
                     />

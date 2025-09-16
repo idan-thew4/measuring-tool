@@ -51,13 +51,11 @@
 }
 .summary-buttons button.download:after,
 .summary-buttons a.download:after {
-  background: url("../../../../../public/icons/download_icon.svg") no-repeat
-    center;
+  background: url("../../../../../public/icons/download_icon.svg") no-repeat center;
 }
 .summary-buttons button.download:hover:after,
 .summary-buttons a.download:hover:after {
-  background: url("../../../../../public/icons/download_icon_white.svg")
-    no-repeat center;
+  background: url("../../../../../public/icons/download_icon_white.svg") no-repeat center;
 }
 .summary-buttons button.print:after,
 .summary-buttons a.print:after {
@@ -65,11 +63,10 @@
 }
 .summary-buttons button.print:hover:after,
 .summary-buttons a.print:hover:after {
-  background: url("../../../../../public/icons/print_icon_white.svg") no-repeat
-    center;
+  background: url("../../../../../public/icons/print_icon_white.svg") no-repeat center;
 }
 .summary-details {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-} /*# sourceMappingURL=summary-header.module..map */
+}/*# sourceMappingURL=summary-header.module.css.map */

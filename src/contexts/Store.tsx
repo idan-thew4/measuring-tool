@@ -117,6 +117,7 @@ type SelfAssessment = {
   headline: string;
   "sub-headline": string;
   "summary-title": string;
+  "graps-headlines": string[];
 };
 
 type SummaryReport = {
@@ -291,7 +292,6 @@ function Store({ children }: PropsWithChildren<{}>) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
 
       setStructure(data);
       createScoreObject(data);
@@ -538,7 +538,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         setRegistrationStatus,
         registrationStatus,
         calculateScores,
-      }}>
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );
