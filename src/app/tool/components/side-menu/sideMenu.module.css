@@ -110,10 +110,7 @@
   height: auto;
 }
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter-content .active {
-  margin-bottom: 4rem;
-}
-.side-menu .menu.self-assessment ul.nav-side-menu .chapter-content .active .range-slider-progress {
-  top: 0.78rem !important;
+  margin-bottom: 2rem;
 }
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter a,
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter .active {
@@ -130,9 +127,6 @@
   height: auto !important;
   align-items: normal !important;
 }
-.side-menu .menu.self-assessment ul.nav-side-menu .chapter:first-child .range-slider-progress {
-  top: 1rem;
-}
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter .range-slider {
   pointer-events: all;
   width: 100%;
@@ -143,6 +137,7 @@
   border-radius: 1rem;
   opacity: 1;
   transition: 0.3s all;
+  position: absolute;
 }
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter .range-slider:hover {
   opacity: 1;
@@ -168,18 +163,19 @@
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter .range-slider-container {
   position: relative;
   width: 100%;
+  height: 4rem;
+  margin-top: 1rem;
 }
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter .range-slider-progress {
   background-color: #00a6ce;
   height: 0.8rem;
   border-radius: 1rem;
   position: absolute;
-  top: 1.5rem;
   z-index: 0;
 }
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter .range-slider-value {
   position: absolute;
-  top: 3.5rem;
+  top: 3rem;
   right: 2rem;
   pointer-events: none;
   transition: left 0.1s;

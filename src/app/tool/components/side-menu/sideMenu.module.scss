@@ -114,12 +114,7 @@
 
           &-content {
             .active {
-              margin-bottom: 4rem;
-              .range-slider {
-                &-progress {
-                  top: 0.78rem !important;
-                }
-              }
+              margin-bottom: 2rem;
             }
           }
 
@@ -141,13 +136,6 @@
             align-items: normal !important;
           }
 
-          &:first-child {
-            .range-slider {
-              &-progress {
-                top: 1rem;
-              }
-            }
-          }
           .range-slider {
             pointer-events: all;
             width: 100%;
@@ -158,6 +146,7 @@
             border-radius: 1rem;
             opacity: 1;
             transition: 0.3s all;
+            position: absolute;
 
             &:hover {
               opacity: 1;
@@ -188,6 +177,8 @@
             &-container {
               position: relative;
               width: 100%;
+              height: 4rem;
+              margin-top: 1rem;
             }
 
             &-progress {
@@ -195,13 +186,12 @@
               height: 0.8rem;
               border-radius: 1rem;
               position: absolute;
-              top: 1.5rem;
               z-index: -0;
             }
 
             &-value {
               position: absolute;
-              top: 3.5rem;
+              top: 3rem;
               right: 2rem;
               pointer-events: none;
               transition: left 0.1s;
