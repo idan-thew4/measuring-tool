@@ -18,19 +18,6 @@ export function Graph({
 }) {
   const legendColors = ["#577686", "#00679B", "#0089CE", "#00A9FF"];
 
-  // function getPercentage(index: number) {
-  //   switch (index) {
-  //     case 1:
-  //       return legend ? legend[index-1] : "";
-  //     case 2:
-  //       return legend[index];
-  //     case 3:
-  //       return legend[index];
-  //     case 4:
-  //       return legend[index];
-  //   }
-  // }
-
   return (
     <div className={styles["container"]}>
       <h2 className={clsx("medium-small", styles["title"])}>{headline}</h2>
@@ -43,8 +30,7 @@ export function Graph({
               <p className={clsx("paragraph_14", styles["text"])}>{option}</p>
               <p
                 style={{ backgroundColor: legendColors[index - 1] }}
-                className={clsx("paragraph_12", styles["percentage"])}
-              >
+                className={clsx("paragraph_12", styles["percentage"])}>
                 {legend[index - 1]}
               </p>
             </li>

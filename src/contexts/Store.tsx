@@ -138,7 +138,7 @@ type Summary = {
     "buttons-copy": string[];
   };
   table: {
-    columns: string[];
+    columns: { title: string; dataIndex: string; key: string }[];
     "buttons-copy": string[];
   };
 };
@@ -538,8 +538,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         setRegistrationStatus,
         registrationStatus,
         calculateScores,
-      }}
-    >
+      }}>
       {children}
     </ApiContext.Provider>
   );

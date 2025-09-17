@@ -616,7 +616,12 @@
       "buttons-copy": ["הורדת קובץ", "הדפסה"]
     },
     "table": {
-      "columns": ["קרטריון", "רמת ביצוע", "ציון", "הערות"],
+      "columns": [
+        { "title": "קרטריון", "dataIndex": "criterion" },
+        { "title": "רמת ביצוע", "dataIndex": "performanceLevel" },
+        { "title": "נקודות", "scores": "score", "sub-title": "אחוזי הצלחה" },
+        { "title": "הערות", "dataIndex": "comments" }
+      ],
       "buttons-copy": ["קרא עוד", "קרא פחות"]
     }
   },
