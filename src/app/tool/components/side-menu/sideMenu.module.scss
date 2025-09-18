@@ -26,19 +26,19 @@
         color: $basic-grey;
 
         &:hover {
-          color: $lime-green;
+          color: $light-blue;
         }
       }
       .active {
         > * {
-          color: $lime-green;
+          color: $light-blue;
         }
       }
 
       .completed {
         a,
         p {
-          color: $lime-green !important;
+          color: $light-blue !important;
         }
       }
 
@@ -171,7 +171,7 @@
 
             &::-webkit-slider-thumb:active,
             &::-webkit-slider-thumb:focus {
-              background-color: $light-blue; // or use a hex code like #2196f3
+              background-color: $blue; // or use a hex code like #2196f3
             }
 
             &-container {
@@ -182,7 +182,7 @@
             }
 
             &-progress {
-              background-color: $light-blue;
+              background-color: $blue;
               height: 0.8rem;
               border-radius: 1rem;
               position: absolute;

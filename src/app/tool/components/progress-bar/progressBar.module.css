@@ -26,7 +26,7 @@
   padding: 5rem 0 3rem 0;
 }
 .progress-bar-container.questionnaire .progress-count {
-  background-color: #f3f9ed;
+  background-color: #dfe5e6;
   width: fit-content;
   margin-right: auto;
 }
@@ -64,6 +64,10 @@
   right: 0;
   top: 0;
   border-radius: 1rem;
-  background-color: #7ab51d;
   transition: 0.3s all;
+}
+.progress-bar-container ul.progress-bar-chapters li.progress-bar-item .progress-bar-item-indicator.skipped {
+  background-color: #dfe5e6;
+  border: 0.2rem solid #00a6ce;
+  box-sizing: border-box;
 }/*# sourceMappingURL=progressBar.module.css.map */

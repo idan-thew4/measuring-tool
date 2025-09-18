@@ -34,7 +34,7 @@
   border-radius: 4rem;
 }
 .chapters-slider-container .chapter-box .chapter-headline-container {
-  color: #0c5a37;
+  color: #5b6771;
   transition: 0.3s all;
 }
 .chapters-slider-container .chapter-box .chapter-headline-container .headline {
@@ -161,8 +161,8 @@
   display: none;
 }
 .chapters-slider-container .chapter-box ul.chapter-options li.option input[type=radio]:checked + label::before {
-  background-color: #0c5a37;
-  border-color: #0c5a37;
+  background-color: #5b6771;
+  border-color: #5b6771;
 }
 .chapters-slider-container .chapter-box ul.chapter-options li.option .choice-text {
   overflow: hidden;
@@ -179,23 +179,23 @@
   border-bottom: none;
 }
 .chapters-slider-container .chapter-box ul.chapter-options li.option.selected, .chapters-slider-container .chapter-box ul.chapter-options li.option.selected:hover {
-  color: #0c5a37;
+  color: #5b6771;
 }
 .chapters-slider-container .chapter-box ul.chapter-options li.option.selected:first-child, .chapters-slider-container .chapter-box ul.chapter-options li.option.selected:hover:first-child {
   border-bottom: none;
 }
 .chapters-slider-container .chapter-box ul.chapter-options li.option.selected:not(:first-child), .chapters-slider-container .chapter-box ul.chapter-options li.option.selected:hover:not(:first-child) {
-  border-top: 0.1rem solid #0c5a37;
+  border-top: 0.1rem solid #5b6771;
   border-bottom: none;
 }
 .chapters-slider-container .chapter-box ul.chapter-options li.option.selected + li, .chapters-slider-container .chapter-box ul.chapter-options li.option.selected:hover + li {
-  border-top: 0.1rem solid #0c5a37;
+  border-top: 0.1rem solid #5b6771;
 }
 .chapters-slider-container .chapter-box ul.chapter-options li.option.selected button:after, .chapters-slider-container .chapter-box ul.chapter-options li.option.selected:hover button:after {
-  background: url("../../../../public/icons/arrow-down_green.svg") no-repeat center;
+  background: url("../../../../public/icons/arrow-down_dark-blue.svg") no-repeat center;
 }
 .chapters-slider-container .chapter-box ul.chapter-options li.option.selected button, .chapters-slider-container .chapter-box ul.chapter-options li.option.selected:hover button {
-  color: #0c5a37;
+  color: #5b6771;
 }
 .chapters-slider-container .chapter-box ul.chapter-options li.option.selected label {
   pointer-events: none;

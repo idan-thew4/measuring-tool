@@ -62,6 +62,7 @@ export function Questionnaire({
         completed:
           choice.choice === -1 ? 1 : choice.choice === undefined ? 0 : 1,
         total: 1,
+        ...(choice.choice === -1 ? { skipped: true } : {}), // Add `skipped` only if `choice.choice === -1`
       });
     });
 

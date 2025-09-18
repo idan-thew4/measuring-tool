@@ -34,7 +34,7 @@
   width: 1.5rem;
   height: 1.5rem;
   background-size: 1.5rem !important;
-  background: url("../../../../../public/icons/arrow-down_green.svg") no-repeat center;
+  background: url("../../../../../public/icons/arrow-down_dark-blue.svg") no-repeat center;
 }
 .nav-buttons .nav-button.previous {
   padding: 1rem 1rem 1rem 2rem;
@@ -53,7 +53,7 @@
   rotate: -90deg;
 }
 .nav-buttons .nav-button:hover {
-  background-color: #0c5a37;
+  background-color: #5b6771;
   color: white;
 }
 .nav-buttons .nav-button:hover:after, .nav-buttons .nav-button:hover:before {

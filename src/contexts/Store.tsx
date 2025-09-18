@@ -206,6 +206,7 @@ export type totalCompleted = {
   completed: number;
   completedChapters?: number;
   totalChapters?: number;
+  skipped?: boolean;
 }[];
 
 export type CalcParameters = {

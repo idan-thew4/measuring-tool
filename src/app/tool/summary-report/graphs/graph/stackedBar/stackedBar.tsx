@@ -13,9 +13,7 @@ import { Graph } from "../graph";
 import { structureProps } from "@/contexts/Store";
 import styles from "./stackedBar.module.scss";
 import graphStyles from "../graph.module.scss";
-
 import clsx from "clsx";
-import { set } from "react-hook-form";
 
 interface CustomYAxisTickProps {
   y: number;
@@ -26,7 +24,7 @@ interface CustomYAxisTickProps {
 }
 
 const CustomYAxisTick = (props: CustomYAxisTickProps) => {
-  const { y, payload, width } = props;
+  const { y, payload } = props;
   const remToPx = (rem: number) =>
     rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
   const dataPoints = [10, 45, 80].map(remToPx); // 110px, 270px, 450px if 1rem = 16px
@@ -171,7 +169,7 @@ export function StackedBar({
       }
       if (index === 0) return;
       if (index === avgs.length - 1) {
-        legendTemp.push(`${avgs[index]}`);
+        legendTemp.push(`${avgs[index]}<`);
       } else {
         legendTemp.push(`${avgs[index] + increase} - ${avgs[index + 1]}`);
       }

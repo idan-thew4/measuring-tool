@@ -61,7 +61,7 @@
   margin-bottom: 1rem;
   position: sticky;
   top: 4rem;
-  background-color: #f3f9ed;
+  background-color: #dfe5e6;
 }
 .row-titles p:first-child {
   grid-column: 1/3;

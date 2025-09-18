@@ -45,14 +45,14 @@
   color: #979797;
 }
 .side-menu .menu ul.nav-side-menu *:hover {
-  color: #7ab51d;
+  color: #dfe5e6;
 }
 .side-menu .menu ul.nav-side-menu .active > * {
-  color: #7ab51d;
+  color: #dfe5e6;
 }
 .side-menu .menu ul.nav-side-menu .completed a,
 .side-menu .menu ul.nav-side-menu .completed p {
-  color: #7ab51d !important;
+  color: #dfe5e6 !important;
 }
 .side-menu .menu ul.nav-side-menu .chapter {
   border-bottom: 0.1rem solid #979797;

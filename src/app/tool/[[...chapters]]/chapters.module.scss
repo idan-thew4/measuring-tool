@@ -17,7 +17,7 @@
     border-radius: 4rem;
 
     .chapter-headline-container {
-      color: $dark-green;
+      color: $dark-blue;
       transition: 0.3s all;
 
       .headline {
@@ -169,8 +169,8 @@
           &[type="radio"] {
             display: none;
             &:checked + label::before {
-              background-color: $dark-green;
-              border-color: $dark-green;
+              background-color: $dark-blue;
+              border-color: $dark-blue;
             }
           }
         }
@@ -197,34 +197,34 @@
 
         &.selected,
         &.selected:hover {
-          color: $dark-green;
+          color: $dark-blue;
 
           &:first-child {
             border-bottom: none;
           }
 
           &:not(:first-child) {
-            border-top: 0.1rem solid $dark-green;
+            border-top: 0.1rem solid $dark-blue;
             border-bottom: none;
           }
 
           + li {
-            border-top: 0.1rem solid $dark-green;
+            border-top: 0.1rem solid $dark-blue;
           }
 
           // &:not(:last-child) {
-          //   border-bottom: 0.1rem solid $dark-green;
+          //   border-bottom: 0.1rem solid $dark-blue;
           // }
 
           button {
             &:after {
-              background: url("../../../../public/icons/arrow-down_green.svg")
+              background: url("../../../../public/icons/arrow-down_dark-blue.svg")
                 no-repeat center;
             }
           }
 
           button {
-            color: $dark-green;
+            color: $dark-blue;
           }
         }
 

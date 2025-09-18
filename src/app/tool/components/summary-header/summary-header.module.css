@@ -20,7 +20,7 @@
   grid-column: 2/9;
   position: sticky;
   top: -11rem;
-  background-color: #f3f9ed;
+  background-color: #dfe5e6;
   grid-template-columns: subgrid;
   display: grid;
   z-index: 9;

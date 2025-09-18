@@ -43,7 +43,10 @@ export function ProgressBar({
         {completed.map((chapter, index) => (
           <li className={styles["progress-bar-item"]} key={index}>
             <div
-              className={styles["progress-bar-item-indicator"]}
+              className={clsx(
+                styles["progress-bar-item-indicator"],
+                !structure && chapter.skipped && styles["skipped"]
+              )}
               style={{
                 width: `${(chapter.completed / chapter.total) * 100}%`,
               }}></div>

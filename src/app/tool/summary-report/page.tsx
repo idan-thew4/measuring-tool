@@ -52,9 +52,7 @@ export default function SummaryReport() {
         );
 
         const assessment =
-          hasAssessment &&
-          scoreObject.data.assessment.length > 0 &&
-          scoreObject.data.assessment[index]["chapter-score"];
+          hasAssessment && scoreObject.data.assessment[index]["chapter-score"];
 
         return {
           subject,
@@ -83,7 +81,7 @@ export default function SummaryReport() {
     );
 
     const secondChapterTemp: ScoreData[] = filteredQuestionnaireParams.map(
-      (subChapter, index) => {
+      (subChapter) => {
         const subChapterIndex =
           typeof subChapter["sub-chapter"] === "number"
             ? subChapter["sub-chapter"]
@@ -98,11 +96,9 @@ export default function SummaryReport() {
         );
 
         const assessment =
-          hasAssessment && scoreObject.data.assessment.length > 0
-            ? scoreObject.data.assessment[index]?.["sub-chapters"]?.[
-                subChapterIndex
-              ]?.["sub-chapter-score"]
-            : 0;
+          scoreObject.data.assessment[1]?.["sub-chapters"]?.[subChapterIndex]?.[
+            "sub-chapter-score"
+          ];
 
         return {
           subject,

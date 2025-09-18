@@ -12,7 +12,7 @@
 
   &.questionnaire {
     .progress-count {
-      background-color: $lime-light;
+      background-color: $light-blue;
       width: fit-content;
       margin-right: auto;
     }
@@ -55,8 +55,14 @@
         right: 0;
         top: 0;
         border-radius: 1rem;
-        background-color: $lime-green;
+        // background-color: $blue;
         transition: 0.3s all;
+
+        &.skipped {
+          background-color: $light-blue;
+          border: 0.2rem solid $blue;
+          box-sizing: border-box;
+        }
       }
     }
   }
