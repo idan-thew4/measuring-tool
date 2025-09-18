@@ -61,6 +61,8 @@ export function RadarGraph({
     setDataKeys(tempDataKeys);
   }, [parameters]);
 
+  console.log(parameters);
+
   function getDataLabelColor(value: string | number, type: string) {
     switch (type) {
       case "assessment":

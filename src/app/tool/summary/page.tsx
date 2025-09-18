@@ -113,11 +113,31 @@ export default function Summary() {
           className={clsx(
             tableStyles["row"],
             "paragraph_15 bold",
-            tableStyles["row-titles"]
+            tableStyles["row-titles"],
+            tableStyles["row-titles-sticky"]
           )}>
-          {structure?.summary?.table?.columns.map((column, index) => (
-            <p key={index}>{column.title}</p>
-          ))}
+          {structure?.summary?.table?.columns.map(
+            (
+              column: {
+                title: string;
+                dataIndex: string;
+                key: string;
+                "sub-title"?: string;
+              },
+              index: number
+            ) => (
+              <p
+                key={index}
+                className={column["sub-title"] && tableStyles["score-points"]}>
+                {column.title}
+                {column["sub-title"] && (
+                  <span className={tableStyles["percentage-bubble"]}>
+                    {column["sub-title"]}
+                  </span>
+                )}
+              </p>
+            )
+          )}
         </div>
         {structure?.questionnaire.content.map((chapter, index) => {
           return (

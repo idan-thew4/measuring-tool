@@ -1,6 +1,6 @@
 import { SubChapter, useStore } from "@/contexts/Store";
 import styles from "./table.module.scss";
-import React, { JSX, useState } from "react";
+import React, { JSX, useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import { ScoreData } from "../../summary-report/page";
 
@@ -21,17 +21,39 @@ export function Table({
 }: TableProps) {
   const { structure, scoreObject } = useStore();
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const [tableDropdown, setTableDropdown] = useState<boolean>(true);
+  const [tableDropdownHeights, setTableDropdownHeights] = useState<{
+    opened: number | null;
+    closed: number;
+  }>({ opened: null, closed: 6.7 });
+
+  useEffect(() => {
+    if (tableContainerRef.current) {
+      const height = tableContainerRef.current.getBoundingClientRect().height;
+      const rootFontSize = parseFloat(
+        getComputedStyle(document.documentElement).fontSize
+      );
+
+      setTableDropdownHeights((prev) => ({
+        ...prev,
+        opened: Math.round(height / rootFontSize),
+      }));
+
+      setTableDropdown(false);
+    }
+  }, []);
 
   function getComment(comment: string, key: number) {
     let formattedComment: JSX.Element | null = <p className="paragraph_15"></p>;
     const isExpanded = expandedKey === String(key);
 
-    if (comment.split("").length > 32) {
+    if (comment.split("").length > 20) {
       formattedComment = (
         <div className={styles["comment-container"]}>
           <div className={styles["comment-header"]}>
             <p className="paragraph_15">
-              {`${comment.split(" ").slice(0, 4).join(" ")}...`}
+              {`${comment.split(" ").slice(0, 3).join(" ")}...`}
             </p>
             <button
               className={styles["comment-button"]}
@@ -50,7 +72,7 @@ export function Table({
           </span>
         </div>
       );
-    } else if (comment.split("").length <= 32 && comment.split("").length > 1) {
+    } else if (comment.split("").length <= 20 && comment.split("").length > 1) {
       formattedComment = <p className="paragraph_15">{comment}</p>;
     } else {
       return (formattedComment = null);
@@ -98,39 +120,61 @@ export function Table({
     return "";
   }
 
-  function getGeneralScore(
+  function getScoreValue(
     scores: ScoreData[] | ScoreData,
+    key: "generalScore" | "percentage",
     indexOrGetScoreLabel?: number
   ): string | number {
     if (Array.isArray(scores)) {
       const index = indexOrGetScoreLabel as number;
       if (
         scores[index] &&
-        typeof scores[index].generalScore === "number" &&
-        scores[index].generalScore > 0
+        typeof scores[index][key] === "number" &&
+        scores[index][key] > 0
       ) {
-        return scores[index].generalScore;
+        return scores[index][key];
       }
-    } else if (
-      scores &&
-      typeof scores.generalScore === "number" &&
-      scores.generalScore > 0
-    ) {
-      return scores.generalScore;
+    } else if (scores && typeof scores[key] === "number" && scores[key] > 0) {
+      return scores[key];
     }
     return "";
   }
 
   return (
-    <div className={styles["table-container"]}>
-      <div className={clsx(styles["row"], styles["row-headline"])}>
+    <div
+      className={clsx(
+        styles["table-container"],
+        tableDropdown && styles["collapsed"]
+      )}
+      ref={tableContainerRef}
+      style={{
+        height: tableDropdown
+          ? `${tableDropdownHeights.opened}rem`
+          : `${tableDropdownHeights.closed}rem`,
+      }}>
+      <div
+        className={clsx(styles["row"], styles["row-headline"])}
+        onClick={() => setTableDropdown(!tableDropdown)}>
         <h2
           className={clsx(
             styles["table-title"],
             "headline_small bold"
           )}>{`${chapterNumber}. ${title}`}</h2>
         <p>{getPercentageLabel(chapterScore, getScoreLabel)}</p>
-        <p>{getGeneralScore(chapterScore)}</p>
+        <p className={styles["score-points"]}>
+          {getScoreValue(chapterScore, "generalScore") && (
+            <>
+              <strong>{getScoreValue(chapterScore, "generalScore")}</strong>
+              {structure?.summary.table.columns[2]?.title}
+            </>
+          )}
+          {getScoreValue(chapterScore, "percentage") && (
+            <span className={styles["percentage-bubble"]}>
+              {getScoreValue(chapterScore, "percentage")}%
+            </span>
+          )}
+        </p>
+        <div className={styles["table-dropdown-button"]}></div>
       </div>
 
       <div key={chapterNumber} className={styles["table"]}>
@@ -153,7 +197,38 @@ export function Table({
                 )}
               </p>
 
-              <p>{getGeneralScore(subChaptersScores, subChapterIndex)}</p>
+              <p className={styles["score-points"]}>
+                {getScoreValue(
+                  subChaptersScores,
+                  "generalScore",
+                  subChapterIndex
+                ) && (
+                  <>
+                    <strong>
+                      {getScoreValue(
+                        subChaptersScores,
+                        "generalScore",
+                        subChapterIndex
+                      )}
+                    </strong>
+                    {structure?.summary.table.columns[2]?.title}
+                  </>
+                )}
+                {getScoreValue(
+                  subChaptersScores,
+                  "percentage",
+                  subChapterIndex
+                ) && (
+                  <span className={styles["percentage-bubble"]}>
+                    {getScoreValue(
+                      subChaptersScores,
+                      "percentage",
+                      subChapterIndex
+                    )}
+                    %
+                  </span>
+                )}
+              </p>
             </div>
             {subChapter.principles.map((principle, principleIndex) => {
               const inputNumber =
@@ -175,14 +250,22 @@ export function Table({
               // if (!inputNumber) return null;
 
               return (
-                <div key={principleIndex} className={styles["row"]}>
-                  <p className="paragraph_15">{`${chapterNumber}.${
-                    subChapterIndex + 1
-                  }.${principleIndex + 1}.`}</p>
+                <div
+                  key={principleIndex}
+                  className={clsx(
+                    styles["row"],
+                    inputNumber === -1 && styles["skipped"],
+                    inputNumber === undefined && styles["not-answered"]
+                  )}>
+                  <p
+                    className={clsx(
+                      styles["paragraph_15"],
+                      styles["principle-number"]
+                    )}>{`${chapterNumber}.${subChapterIndex + 1}.${
+                    principleIndex + 1
+                  }.`}</p>
                   <h4
                     className={clsx(
-                      inputNumber === -1 && styles["skipped"],
-                      inputNumber === undefined && styles["not-answered"],
                       styles["principle-title"],
                       "paragraph_15"
                     )}>{`${principle["title"]}`}</h4>
@@ -191,7 +274,7 @@ export function Table({
                       ? structure?.questionnaire?.options?.[inputNumber - 1]
                       : ""}
                   </p>
-                  <p className="paragraph_15">{score}</p>
+                  <p className={styles["score-points"]}>{score}</p>
                   {getComment(
                     scoreObject.data?.questionnaire?.[chapterNumber - 1]?.[
                       "chapter-data"

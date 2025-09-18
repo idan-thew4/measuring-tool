@@ -12,7 +12,7 @@ export type ScoreData = {
   subject?: string;
   name?: string;
 } & {
-  [key: string]: number | string | null;
+  [key: string]: number | string | null | boolean;
 };
 
 export default function SummaryReport() {
@@ -28,6 +28,10 @@ export default function SummaryReport() {
   });
 
   useEffect(() => {
+    const hasAssessment = !scoreObject.data.assessment.every(
+      (chapter) => chapter["chapter-score"] === 0
+    );
+
     // chapters //
 
     let questionnaireParams = [] as CalcParameters[];
@@ -47,7 +51,8 @@ export default function SummaryReport() {
           (chapter["general-score"] / chapter["net-zero-impact"]) * 100
         );
 
-        const hasAssessment =
+        const assessment =
+          hasAssessment &&
           scoreObject.data.assessment.length > 0 &&
           scoreObject.data.assessment[index]["chapter-score"];
 
@@ -56,7 +61,7 @@ export default function SummaryReport() {
           questionnaire,
           ...(hasAssessment
             ? {
-                assessment: hasAssessment,
+                assessment: assessment,
               }
             : {}),
         };
@@ -92,18 +97,19 @@ export default function SummaryReport() {
           (subChapter["general-score"] / subChapter["net-zero-impact"]) * 100
         );
 
-        const hasAssessment =
-          scoreObject.data.assessment.length > 0 &&
-          scoreObject.data.assessment[index]?.["sub-chapters"]?.[
-            subChapterIndex
-          ]?.["sub-chapter-score"];
+        const assessment =
+          hasAssessment && scoreObject.data.assessment.length > 0
+            ? scoreObject.data.assessment[index]?.["sub-chapters"]?.[
+                subChapterIndex
+              ]?.["sub-chapter-score"]
+            : 0;
 
         return {
           subject,
           questionnaire,
           ...(hasAssessment
             ? {
-                assessment: hasAssessment,
+                assessment: assessment,
               }
             : {}),
         };

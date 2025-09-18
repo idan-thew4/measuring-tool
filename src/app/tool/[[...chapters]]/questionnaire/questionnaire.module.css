@@ -19,6 +19,7 @@
 .questionnaire-container {
   position: relative;
   grid-template-rows: repeat(3, min-content);
+  padding-bottom: 0;
 }
 .questionnaire-container .questionnaire-header {
   grid-column: 3/8;

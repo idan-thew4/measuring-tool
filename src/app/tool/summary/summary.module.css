@@ -18,7 +18,6 @@
 }
 .summary {
   grid-template-rows: repeat(2, min-content);
-  row-gap: 4rem;
 }
 .summary .tables-container {
   grid-column: 3/8;
