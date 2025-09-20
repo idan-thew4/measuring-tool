@@ -1,5 +1,15 @@
-.headerContainer {
+@use "../../styles/variables" as *;
+
+.header-container {
   grid-column: 1 / 13;
   height: 10rem;
-  background-color: grey;
+  background-color: $darker-blue;
+  padding: 2rem;
+  box-sizing: border-box;
+  display: flex;
+
+  .logo {
+    width: 22rem;
+    height: 100%;
+  }
 }

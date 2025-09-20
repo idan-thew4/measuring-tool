@@ -1,5 +1,30 @@
-.headerContainer {
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.header-container {
   grid-column: 1/13;
   height: 10rem;
-  background-color: grey;
+  background-color: #0e0d23;
+  padding: 2rem;
+  box-sizing: border-box;
+  display: flex;
+}
+.header-container .logo {
+  width: 22rem;
+  height: 100%;
 }/*# sourceMappingURL=header.module.css.map */

@@ -213,20 +213,20 @@ export default function ChapterPage() {
                   value={option}
                   checked={currentChapter.score === index + 1}
                   onChange={() => {
-                    if (scoreObject["personal-details"].contactEmail) {
-                      setScoreObject((prev) =>
-                        updateScoreObject(
-                          prev,
-                          chapter,
-                          subChapter,
-                          principle,
-                          getCurrentChapter,
-                          index + 1
-                        )
-                      );
-                    } else {
-                      setRegistrationStatus(true);
-                    }
+                    // if (scoreObject["personal-details"].contactEmail) {
+                    setScoreObject((prev) =>
+                      updateScoreObject(
+                        prev,
+                        chapter,
+                        subChapter,
+                        principle,
+                        getCurrentChapter,
+                        index + 1
+                      )
+                    );
+                    // } else {
+                    //   setRegistrationStatus(true);
+                    // }
                   }}
                 ></input>
                 <label

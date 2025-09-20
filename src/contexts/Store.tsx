@@ -327,7 +327,7 @@ function Store({ children }: PropsWithChildren<{}>) {
           education: "",
           gender: "",
           contactPerson: "",
-          contactEmail: "",
+          contactEmail: "mail@idanportal.com",
           contactPhone: "",
           planningOffice: "",
           evaluationExecutor: "",
