@@ -536,18 +536,27 @@ export function Menu({
           </li>
         ))}
       </ul>
+
       {!selfAssessment && (
         <ul className={styles["bottom-links"]}>
-          {structure?.sidebar["bottom-options"].map((option, index) => (
-            <li key={index}>
-              <Link
-                className="paragraph_18 bold"
-                href={`/tool/${links[index]}`}
-              >
-                {option}
-              </Link>
-            </li>
-          ))}
+          {structure?.sidebar["bottom-options"].map((option, index) => {
+            {
+              /* TODO: Remove this condition when going live */
+            }
+
+            if (index < 2) {
+              return (
+                <li key={index}>
+                  <Link
+                    className="paragraph_18 bold"
+                    href={`/tool/${links[index]}`}
+                  >
+                    {option}
+                  </Link>
+                </li>
+              );
+            }
+          })}
         </ul>
       )}
     </div>

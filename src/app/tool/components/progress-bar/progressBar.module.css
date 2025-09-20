@@ -24,6 +24,7 @@
   border-bottom: 0.1rem solid #979797;
   top: -2rem;
   padding: 5rem 0 3rem 0;
+  z-index: 2;
 }
 .progress-bar-container.questionnaire .progress-count {
   background-color: #dfe5e6;

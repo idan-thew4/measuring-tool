@@ -213,6 +213,7 @@ export default function ChapterPage() {
                   value={option}
                   checked={currentChapter.score === index + 1}
                   onChange={() => {
+                    /* TODO: Add this conditions when going live */
                     // if (scoreObject["personal-details"].contactEmail) {
                     setScoreObject((prev) =>
                       updateScoreObject(
