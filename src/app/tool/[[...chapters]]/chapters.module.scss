@@ -17,54 +17,13 @@
     border-radius: 4rem;
 
     .chapter-headline-container {
-      color: $dark-blue;
+      color: $darker-blue;
       transition: 0.3s all;
 
       .headline {
         display: flex;
         justify-content: space-between;
         margin-bottom: 3rem;
-
-        .toggle-container {
-          color: $basic-grey;
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          cursor: pointer;
-
-          .toggle {
-            width: 3.6rem;
-            height: 2rem;
-            background-color: $light-grey;
-            border-radius: 1.2rem;
-            position: relative;
-            transition: all 0.3s;
-
-            &:after {
-              position: absolute;
-              background-color: white;
-              filter: drop-shadow(0 1px 2px rgba(16, 24, 40, 0.06))
-                drop-shadow(0 1px 3px rgba(16, 24, 40, 0.1));
-              width: 1.5rem;
-              height: 1.5rem;
-              content: "";
-              display: block;
-              border-radius: 100%;
-              top: 0;
-              bottom: 0;
-              margin: auto;
-              left: 0.3rem;
-              transition: all 0.3s ease-in-out;
-            }
-
-            &.active {
-              background-color: $dark-grey;
-              &:after {
-                left: 1.8rem;
-              }
-            }
-          }
-        }
       }
 
       .description {
@@ -83,6 +42,11 @@
         transform: translateX(100%);
         animation: slideIn 0.5s forwards;
       }
+    }
+
+    .title {
+      color: $darker-blue;
+      transition: 0.3s all;
     }
 
     ul.chapter-options {
@@ -237,7 +201,8 @@
     }
 
     &.skip {
-      .chapter-headline-container {
+      .chapter-headline-container,
+      .title {
         color: $basic-grey;
         .headline {
           display: flex;

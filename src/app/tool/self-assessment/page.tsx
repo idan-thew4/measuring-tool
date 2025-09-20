@@ -7,6 +7,7 @@ import { SummaryHeader } from "../components/summary-header/summaryHeader";
 import { RadarGraph } from "../summary-report/graphs/graph/radar/radar";
 import { useEffect, useState } from "react";
 import { ScoreData } from "../summary-report/page";
+import Link from "next/link";
 
 export default function SelfAssessment() {
   const { structure, scoreObject } = useStore();
@@ -85,7 +86,14 @@ export default function SelfAssessment() {
             title={structure?.["self-assessment"]["summary-title"]}
             structure={structure}
             scoreObject={scoreObject}
-          />
+          >
+            <Link
+              className="basic-button outline"
+              href={`/tool/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`}
+            >
+              המשך לשאלון
+            </Link>
+          </SummaryHeader>
           <div className={styles["graphs"]}>
             {structure["summary-report"].graphs.map((graph, index) => {
               switch (graph.type) {

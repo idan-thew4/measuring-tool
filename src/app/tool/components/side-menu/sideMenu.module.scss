@@ -22,23 +22,59 @@
     flex-direction: column;
     // gap: 3rem;
     ul.nav-side-menu {
-      * {
-        color: $basic-grey;
-
+      > li {
+        &.active,
         &:hover {
-          color: $light-blue;
+          .chapter-text {
+            > a,
+            p {
+              color: $blue;
+            }
+          }
         }
-      }
-      .active {
-        > * {
-          color: $light-blue;
-        }
-      }
 
-      .completed {
-        a,
-        p {
-          color: $light-blue !important;
+        .sub-chapter {
+          &.completed {
+            > a,
+            p {
+              color: $blue;
+            }
+          }
+        }
+
+        &.skipped {
+          .chapter-text {
+            > a,
+            p {
+              text-decoration: line-through;
+            }
+          }
+        }
+        *:not(.active) {
+          color: $basic-grey;
+
+          &:hover {
+            color: $blue;
+          }
+        }
+        .active {
+          > * {
+            color: $blue !important;
+          }
+        }
+
+        .completed {
+          a,
+          p {
+            color: $darker-blue;
+          }
+        }
+
+        .skipped {
+          a,
+          p {
+            text-decoration: line-through;
+          }
         }
       }
 
@@ -46,6 +82,11 @@
         border-bottom: 0.1rem solid $basic-grey;
         height: 6.1rem;
         overflow: hidden;
+
+        &-progress {
+          display: flex;
+          gap: 1rem;
+        }
 
         .chapter-text {
           display: block;
@@ -121,7 +162,7 @@
           a,
           .active {
             pointer-events: none;
-            color: black !important;
+            color: $blue !important;
           }
 
           &-text {

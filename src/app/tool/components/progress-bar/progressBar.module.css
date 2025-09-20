@@ -64,6 +64,7 @@
   right: 0;
   top: 0;
   border-radius: 1rem;
+  background-color: #00a6ce;
   transition: 0.3s all;
 }
 .progress-bar-container ul.progress-bar-chapters li.progress-bar-item .progress-bar-item-indicator.skipped {

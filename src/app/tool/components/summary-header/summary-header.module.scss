@@ -30,8 +30,8 @@
     display: flex;
     gap: 2.9rem;
 
-    button,
-    a {
+    button.with-icon,
+    a.with-icon {
       &:after {
         content: "";
         width: 1.5rem;

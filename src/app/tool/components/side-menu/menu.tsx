@@ -9,7 +9,6 @@ import {
   CalcParameters,
 } from "../../../../contexts/Store";
 import { useEffect, useState } from "react";
-import { set } from "react-hook-form";
 
 export type structureAndChaptersProps = {
   structure: structureProps | undefined;
@@ -24,12 +23,24 @@ function isSubChapterCompleted(
   subChapterIdx: number,
   numChoices: number
 ) {
+  let allCompleted = true;
+  let allSkipped = true;
+
   for (let i = 0; i < numChoices; i++) {
-    if (!isChoiceCompleted(scoreObject, chapterIdx, subChapterIdx, i))
-      return false;
+    const result = isChoiceCompleted(scoreObject, chapterIdx, subChapterIdx, i);
+    if (result !== "completed") {
+      allCompleted = false;
+    }
+    if (result !== "skipped") {
+      allSkipped = false;
+    }
   }
-  return true;
+
+  if (allCompleted) return "completed";
+  if (allSkipped) return "skipped";
+  // Otherwise, return nothing (undefined)
 }
+
 //  Check if a choice is completed
 function isChoiceCompleted(
   scoreObject: ScoreType,
@@ -37,18 +48,73 @@ function isChoiceCompleted(
   subChapterIdx: number,
   choiceIdx: number
 ) {
-  return (
+  if (
     scoreObject?.data?.questionnaire?.[chapterIdx]?.["chapter-data"]?.[
       subChapterIdx
-    ]?.["principles"]?.[choiceIdx]?.choice !== undefined
-  );
+    ]?.["principles"]?.[choiceIdx]?.choice !== undefined &&
+    scoreObject?.data?.questionnaire?.[chapterIdx]?.["chapter-data"]?.[
+      subChapterIdx
+    ]?.["principles"]?.[choiceIdx]?.choice !== -1
+  ) {
+    return "completed";
+  }
+  if (
+    scoreObject?.data?.questionnaire?.[chapterIdx]?.["chapter-data"]?.[
+      subChapterIdx
+    ]?.["principles"]?.[choiceIdx]?.choice === -1
+  ) {
+    return "skipped";
+  }
 }
 
 //  Check if all chapter is completed
-function isChapterCompleted(completedChapters: number, totalChapters: number) {
-  return completedChapters === totalChapters;
+function isChapterCompleted(
+  totalChapters: number,
+  completedChapters: number,
+  skippedChapters: number
+) {
+  if (completedChapters === totalChapters) {
+    return "completed";
+  }
+
+  if (skippedChapters === totalChapters) {
+    return "skipped";
+  }
 }
 
+// Skip all Chapter //
+function skipAllChapter(
+  scoreObject: ScoreType,
+  chapterIdx: number,
+  setScoreObject: (update: (prev: ScoreType) => ScoreType) => void,
+  active: boolean
+) {
+  const choiceSelection = active === false ? -1 : undefined;
+  setScoreObject((prev) => {
+    const updatedQuestionnaire = prev.data.questionnaire.map((chapter, idx) => {
+      if (idx === chapterIdx) {
+        return {
+          ...chapter,
+          "chapter-data": chapter["chapter-data"].map((subChapter) => ({
+            ...subChapter,
+            principles: subChapter.principles.map((choiceObj) => ({
+              ...choiceObj,
+              choice: choiceSelection,
+            })),
+          })),
+        };
+      }
+      return chapter;
+    });
+    return {
+      ...prev,
+      data: {
+        ...prev.data,
+        questionnaire: updatedQuestionnaire,
+      },
+    };
+  });
+}
 type RangeSliderProps = {
   id: string;
   name: string;
@@ -84,7 +150,8 @@ function RangeSlider({
       />
       <div
         className={styles["range-slider-progress"]}
-        style={{ width: `${percent}%` }}></div>
+        style={{ width: `${percent}%` }}
+      ></div>
       <div
         className={styles["range-slider-value"]}
         style={{
@@ -95,7 +162,8 @@ function RangeSlider({
               ? "2%"
               : `calc(${percent}% - ${percent > 99 ? "4.5" : "1.5"}rem)`
           }`,
-        }}>
+        }}
+      >
         {value}%
       </div>
     </div>
@@ -121,6 +189,25 @@ export function Menu({
     subChapter: [],
   });
   const links = ["summary", "summary-report", "glossary"];
+  const [toggleList, setToggleSetToggleList] = useState<
+    { chapterIdx: number; state: boolean }[]
+  >([]);
+
+  useEffect(() => {
+    let tempToggleList: { chapterIdx: number; state: boolean }[] = [];
+
+    scoreObject.data.questionnaire.forEach((chapter) => {
+      const allSkipped = chapter["chapter-data"].every((subChapter) =>
+        subChapter.principles.every((choiceObj) => choiceObj.choice === -1)
+      );
+      tempToggleList.push({
+        chapterIdx: chapter["chapter-number"] - 1,
+        state: allSkipped,
+      });
+    });
+
+    setToggleSetToggleList(tempToggleList);
+  }, [scoreObject]);
 
   useEffect(() => {
     if (selfAssessment) {
@@ -129,8 +216,6 @@ export function Menu({
       const TempChapterScoreValue = scoreObject.data.assessment.map(
         (chapter) => chapter["chapter-score"] || 0
       );
-
-      console.log("TempChapterScoreValue", TempChapterScoreValue);
 
       const TempSubChapterScoreValue =
         scoreObject.data.assessment[1]?.["sub-chapters"]?.map(
@@ -235,7 +320,8 @@ export function Menu({
       className={clsx(
         styles["menu"],
         selfAssessment && styles["self-assessment"]
-      )}>
+      )}
+    >
       {!selfAssessment ? (
         <ProgressBar completed={completedChapters} structure={structure} />
       ) : (
@@ -253,26 +339,24 @@ export function Menu({
           <li
             className={clsx(
               chapterIndex === 1 && selfAssessment && styles["active"],
-
               styles["chapter"],
               chapter["chapter-slug"] === currentChapter[0]
                 ? styles["active"]
                 : "",
-
               !selfAssessment &&
-                isChapterCompleted(
-                  completedChapters[chapterIndex]?.completedChapters ?? 0,
-                  completedChapters[chapterIndex]?.totalChapters ?? 0
-                )
-                ? styles["completed"]
-                : ""
+                styles[
+                  isChapterCompleted(
+                    completedChapters[chapterIndex]?.totalChapters ?? 0,
+                    completedChapters[chapterIndex]?.completedChapters ?? 0,
+                    completedChapters[chapterIndex]?.skippedChapters ?? 0
+                  ) || ""
+                ]
             )}
-            key={chapterIndex}>
+            key={chapterIndex}
+          >
             <div
-              className={clsx(
-                "nav-side-text__chapter",
-                styles["chapter-text"]
-              )}>
+              className={clsx("nav-side-text__chapter", styles["chapter-text"])}
+            >
               <Link href={`/tool/${chapter["chapter-slug"]}/1/1`}>
                 {`${chapterIndex + 1}. ${chapter["chapter-title"]}`}
               </Link>
@@ -305,9 +389,43 @@ export function Menu({
               )}
 
               {!selfAssessment && (
-                <p>{`${
-                  completedChapters[chapterIndex]?.completedChapters ?? 0
-                }/${completedChapters[chapterIndex]?.totalChapters ?? 0}`}</p>
+                <div className={styles["chapter-progress"]}>
+                  <div className={"toggle-container"}>
+                    <button
+                      className={clsx(
+                        "toggle",
+                        isChapterCompleted(
+                          completedChapters[chapterIndex]?.totalChapters ?? 0,
+                          completedChapters[chapterIndex]?.completedChapters ??
+                            0,
+                          completedChapters[chapterIndex]?.skippedChapters ?? 0
+                        ) === "completed" || toggleList[chapterIndex]?.state
+                          ? "active"
+                          : ""
+                      )}
+                      onClick={() => {
+                        skipAllChapter(
+                          scoreObject,
+                          chapterIndex,
+                          setScoreObject,
+                          toggleList[chapterIndex]?.state
+                        );
+                        setToggleSetToggleList((prev) =>
+                          prev.map((item) =>
+                            item.chapterIdx === chapterIndex
+                              ? { ...item, state: !item.state }
+                              : item
+                          )
+                        );
+                      }}
+                    ></button>
+                  </div>
+                  <p>
+                    {`${
+                      completedChapters[chapterIndex]?.completedChapters ?? 0
+                    }/${completedChapters[chapterIndex]?.totalChapters ?? 0}`}
+                  </p>
+                </div>
               )}
             </div>
 
@@ -331,15 +449,15 @@ export function Menu({
                           selfAssessment &&
                           styles["active"],
                         isActiveSubChapter && styles["active"],
-                        !selfAssessment &&
-                          subChapterCompleted &&
-                          styles["completed"]
-                      )}>
+                        !selfAssessment && styles[subChapterCompleted || ""]
+                      )}
+                    >
                       <Link
                         className="nav-side-text__sub-chapter"
                         href={`/tool/${chapter["chapter-slug"]}/${
                           subIndex + 1
-                        }/1`}>
+                        }/1`}
+                      >
                         {`${chapterIndex + 1}.${subIndex + 1} ${
                           subChapter["sub-chapter-title"]
                         }`}
@@ -391,13 +509,15 @@ export function Menu({
                                   key={subChoicesIndex}
                                   className={clsx(
                                     isActiveChoice && styles["active"],
-                                    choiceCompleted && styles["completed"]
-                                  )}>
+                                    styles[choiceCompleted || ""]
+                                  )}
+                                >
                                   <Link
                                     className="nav-side-text__sub-chapter-choice"
                                     href={`/tool/${chapter["chapter-slug"]}/${
                                       subIndex + 1
-                                    }/${subChoicesIndex + 1}`}>
+                                    }/${subChoicesIndex + 1}`}
+                                  >
                                     {`${subChoicesIndex + 1}. ${
                                       subChoices.title
                                     }`}
@@ -422,7 +542,8 @@ export function Menu({
             <li key={index}>
               <Link
                 className="paragraph_18 bold"
-                href={`/tool/${links[index]}`}>
+                href={`/tool/${links[index]}`}
+              >
                 {option}
               </Link>
             </li>

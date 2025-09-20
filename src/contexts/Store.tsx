@@ -117,7 +117,7 @@ type SelfAssessment = {
   headline: string;
   "sub-headline": string;
   "summary-title": string;
-  "graps-headlines": string[];
+  "graphs-headlines": string[];
 };
 
 type SummaryReport = {
@@ -205,8 +205,9 @@ export type totalCompleted = {
   total: number;
   completed: number;
   completedChapters?: number;
+  skippedChapters?: number;
   totalChapters?: number;
-  skipped?: boolean;
+  skipped?: number | boolean;
 }[];
 
 export type CalcParameters = {
@@ -378,33 +379,51 @@ function Store({ children }: PropsWithChildren<{}>) {
     if (scoreObject.data) {
       let total = 0;
       let completedChapters = 0;
+      let skippedChapters = 0;
 
       scoreObject.data.questionnaire.forEach((chapterData, index) => {
         let completed = 0;
+        let skipped = 0;
         chapterData["chapter-data"].forEach((subChapter) => {
           const allFilled = subChapter["principles"].every(
             (choiceObj) => choiceObj.choice !== undefined
           );
+          const allSkipped = subChapter["principles"].every(
+            (choiceObj) => choiceObj.choice === -1
+          );
+
           subChapter["principles"].forEach((subChapterChoice) => {
             total++;
             if (subChapterChoice.choice !== undefined) {
               completed++;
             }
+            if (subChapterChoice.choice === -1) {
+              skipped++;
+            }
           });
           if (allFilled) {
             completedChapters++;
+          }
+          if (allSkipped) {
+            skippedChapters++;
           }
         });
 
         totalCompletedChapters.push({
           total: total,
           completed: completed,
-          completedChapters: completedChapters,
+          completedChapters:
+            skippedChapters === chapterData["chapter-data"].length
+              ? 0
+              : completedChapters,
+          skippedChapters: skippedChapters,
+          skipped: skipped,
           totalChapters: chapterData["chapter-data"].length,
         });
 
         total = 0;
         completedChapters = 0;
+        skippedChapters = 0;
       });
 
       return totalCompletedChapters;
@@ -539,7 +558,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         setRegistrationStatus,
         registrationStatus,
         calculateScores,
-      }}>
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );

@@ -34,49 +34,13 @@
   border-radius: 4rem;
 }
 .chapters-slider-container .chapter-box .chapter-headline-container {
-  color: #5b6771;
+  color: #0e0d23;
   transition: 0.3s all;
 }
 .chapters-slider-container .chapter-box .chapter-headline-container .headline {
   display: flex;
   justify-content: space-between;
   margin-bottom: 3rem;
-}
-.chapters-slider-container .chapter-box .chapter-headline-container .headline .toggle-container {
-  color: #979797;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  cursor: pointer;
-}
-.chapters-slider-container .chapter-box .chapter-headline-container .headline .toggle-container .toggle {
-  width: 3.6rem;
-  height: 2rem;
-  background-color: #d9d9d9;
-  border-radius: 1.2rem;
-  position: relative;
-  transition: all 0.3s;
-}
-.chapters-slider-container .chapter-box .chapter-headline-container .headline .toggle-container .toggle:after {
-  position: absolute;
-  background-color: white;
-  filter: drop-shadow(0 1px 2px rgba(16, 24, 40, 0.06)) drop-shadow(0 1px 3px rgba(16, 24, 40, 0.1));
-  width: 1.5rem;
-  height: 1.5rem;
-  content: "";
-  display: block;
-  border-radius: 100%;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  left: 0.3rem;
-  transition: all 0.3s ease-in-out;
-}
-.chapters-slider-container .chapter-box .chapter-headline-container .headline .toggle-container .toggle.active {
-  background-color: #4d4d4d;
-}
-.chapters-slider-container .chapter-box .chapter-headline-container .headline .toggle-container .toggle.active:after {
-  left: 1.8rem;
 }
 .chapters-slider-container .chapter-box .chapter-headline-container .description {
   margin-bottom: 2rem;
@@ -89,6 +53,10 @@
   opacity: 1;
   transform: translateX(100%);
   animation: slideIn 0.5s forwards;
+}
+.chapters-slider-container .chapter-box .title {
+  color: #0e0d23;
+  transition: 0.3s all;
 }
 .chapters-slider-container .chapter-box ul.chapter-options li.option {
   color: #979797;
@@ -200,10 +168,12 @@
 .chapters-slider-container .chapter-box ul.chapter-options li.option.selected label {
   pointer-events: none;
 }
-.chapters-slider-container .chapter-box.skip .chapter-headline-container {
+.chapters-slider-container .chapter-box.skip .chapter-headline-container,
+.chapters-slider-container .chapter-box.skip .title {
   color: #979797;
 }
-.chapters-slider-container .chapter-box.skip .chapter-headline-container .headline {
+.chapters-slider-container .chapter-box.skip .chapter-headline-container .headline,
+.chapters-slider-container .chapter-box.skip .title .headline {
   display: flex;
   justify-content: space-between;
   margin-bottom: 3rem;
