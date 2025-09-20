@@ -16,17 +16,17 @@
     width: 100%;
     height: 100%;
   }
+
+  :global(.recharts-wrapper) {
+    width: 100% !important;
+    height: 100% !important;
+
+    :global(.recharts-polar-grid-concentric) {
+      display: none;
+    }
+  }
 }
 
 .data-label {
   background-color: red;
-}
-
-:global(.recharts-wrapper) {
-  width: 100% !important;
-  height: 100% !important;
-
-  :global(.recharts-polar-grid-concentric) {
-    display: none;
-  }
 }

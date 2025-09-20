@@ -31,15 +31,14 @@
   width: 100%;
   height: 100%;
 }
-
-.data-label {
-  background-color: red;
-}
-
-:global(.recharts-wrapper) {
+.radar :global(.recharts-wrapper) {
   width: 100% !important;
   height: 100% !important;
 }
-:global(.recharts-wrapper) :global(.recharts-polar-grid-concentric) {
+.radar :global(.recharts-wrapper) :global(.recharts-polar-grid-concentric) {
   display: none;
+}
+
+.data-label {
+  background-color: red;
 }/*# sourceMappingURL=radar.module.css.map */
