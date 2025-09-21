@@ -42,29 +42,6 @@
   display: flex;
   gap: 2.9rem;
 }
-.summary-buttons button.with-icon:after,
-.summary-buttons a.with-icon:after {
-  content: "";
-  width: 1.5rem;
-  height: 1.5rem;
-  background-size: 1.5rem !important;
-}
-.summary-buttons button.with-icon.download:after,
-.summary-buttons a.with-icon.download:after {
-  background: url("../../../../../public/icons/download_icon.svg") no-repeat center;
-}
-.summary-buttons button.with-icon.download:hover:after,
-.summary-buttons a.with-icon.download:hover:after {
-  background: url("../../../../../public/icons/download_icon_white.svg") no-repeat center;
-}
-.summary-buttons button.with-icon.print:after,
-.summary-buttons a.with-icon.print:after {
-  background: url("../../../../../public/icons/print_icon.svg") no-repeat center;
-}
-.summary-buttons button.with-icon.print:hover:after,
-.summary-buttons a.with-icon.print:hover:after {
-  background: url("../../../../../public/icons/print_icon_white.svg") no-repeat center;
-}
 .summary-details {
   display: flex;
   flex-direction: column;

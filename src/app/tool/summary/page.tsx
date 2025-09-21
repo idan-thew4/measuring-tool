@@ -34,14 +34,29 @@ function formatDate(timestamp: number) {
 
 //CSV//
 
+function getFormattedTimestamp() {
+  const date = new Date();
+
+  // Get the timezone offset in minutes and convert to hours and minutes
+  const timezoneOffset = -date.getTimezoneOffset(); // Negative because getTimezoneOffset returns the opposite sign
+  const offsetHours = String(
+    Math.floor(Math.abs(timezoneOffset) / 60)
+  ).padStart(2, "0");
+  const offsetMinutes = String(Math.abs(timezoneOffset) % 60).padStart(2, "0");
+  const offsetSign = timezoneOffset >= 0 ? "+" : "-";
+
+  // Format the date as ISO string and append the timezone offset
+  const isoString = date.toISOString(); // Example: "2022-03-05T13:55:09.123Z"
+  const formattedTimestamp = `${isoString.slice(
+    0,
+    -1
+  )}${offsetSign}${offsetHours}:${offsetMinutes}`;
+
+  return formattedTimestamp;
+}
+
 type SummaryRow = {
-  פרק: string;
-  "תת-פרק": string;
-  קרטריון: string;
-  "רמת ביצוע": string;
-  ציון: number | string;
-  הערות: string;
-  [key: string]: string | number;
+  [key: string]: string | number | boolean;
 };
 
 function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
@@ -55,11 +70,25 @@ function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
           ]?.["principles"]?.[principleIdx]?.choice;
 
         let score: number | undefined;
+        let max_score: number | undefined;
+        let zero_impact_score: number | undefined;
+        let achievement_level: string | undefined;
+
         if (inputNumber) {
           score =
             structure?.questionnaire.content[chapterIdx]["chapter-content"][
               subChapterIdx
             ]["principles"][principleIdx]["choices"][inputNumber - 1]?.score;
+          max_score =
+            structure?.questionnaire.content[chapterIdx]["chapter-content"][
+              subChapterIdx
+            ]["principles"][principleIdx]["choices"][4]?.score;
+          zero_impact_score =
+            structure?.questionnaire.content[chapterIdx]["chapter-content"][
+              subChapterIdx
+            ]["principles"][principleIdx]["choices"][3]?.score;
+          achievement_level =
+            structure?.questionnaire?.options?.[inputNumber - 1];
         }
 
         const comment =
@@ -69,16 +98,35 @@ function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
 
         if (inputNumber) {
           rows.push({
-            פרק: `${chapter["chapter-number"]}. ${chapter["chapter-title"]}`,
-            "תת-פרק": `${chapter["chapter-number"]}.${subChapterIdx + 1}. ${
+            eval_id: "",
+            project_name: scoreObject["personal-details"].projectName,
+            version_name: "",
+            region: scoreObject["personal-details"].localAuthority,
+            project_type: scoreObject["personal-details"].projectType,
+            sub_type: scoreObject["personal-details"].projectSubType,
+            proj_area: scoreObject["personal-details"].projectArea,
+            proj_status: scoreObject["personal-details"].projectStatus,
+            year_start: scoreObject["personal-details"].projectStartYear,
+            year_comp: scoreObject["personal-details"].projectEndYear,
+            approve_contact: scoreObject["personal-details"].contactPerson,
+            contact: scoreObject["personal-details"].contactPerson,
+            email: scoreObject["personal-details"].contactEmail,
+            tel: scoreObject["personal-details"].contactPhone,
+            criteria_no: "",
+            chapter: `${chapter["chapter-number"]}. ${chapter["chapter-title"]}`,
+            "תת-פרק": `${chapter["chapter-number"]}`,
+            sub_chapter: `.${subChapterIdx + 1}. ${
               subChapter["sub-chapter-title"]
             }`,
-            קרטריון: `${chapter["chapter-number"]}.${subChapterIdx + 1}.${
-              principleIdx + 1
-            }. ${principle["title"]}`,
-            "רמת ביצוע": structure?.questionnaire?.options?.[inputNumber] ?? "",
-            ציון: score ?? "",
-            הערות: comment,
+            full_criteria_name: `${chapter["chapter-number"]}.${
+              subChapterIdx + 1
+            }.${principleIdx + 1}. ${principle["title"]}`,
+            score: score ?? "",
+            max_score: max_score ?? "",
+            zero_impact_score: zero_impact_score ?? "",
+            achievement_level: achievement_level ?? "",
+            comments: comment,
+            eval_timestamp: getFormattedTimestamp(),
           });
         }
       });
@@ -89,7 +137,7 @@ function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
 
 function downloadAllCSV(structure: structureProps, scoreObject: ScoreType) {
   const rows = flattenAllTables(structure, scoreObject);
-  const columns = ["הערות", "ציון", "רמת ביצוע", "קרטריון", "תת-פרק", "פרק"];
+  const columns = rows.length > 0 ? Object.keys(rows[0]) : [];
   const csv =
     columns.join(",") +
     "\n" +
@@ -351,11 +399,8 @@ export default function Summary() {
           title={structure?.summary.header.title}
           structure={structure}
           scoreObject={scoreObject}>
-          {/* <button
-            className={clsx(
-              styles["download"],
-              "basic-button with-icon outline"
-            )}
+          <button
+            className={clsx("download", "basic-button with-icon outline")}
             onClick={() => downloadAllCSV(structure, scoreObject)}>
             {structure?.summary.header["buttons-copy"][0]}
           </button>
@@ -366,9 +411,9 @@ export default function Summary() {
             fileName={`${
               scoreObject["personal-details"].projectName
             }-${formatDate(Date.now())}.pdf`}
-            className={clsx(styles["print"], "basic-button with-icon outline")}>
+            className={clsx("print", "basic-button with-icon outline")}>
             {structure?.summary.header["buttons-copy"][1]}
-          </PDFDownloadLink> */}
+          </PDFDownloadLink>
         </SummaryHeader>
       )}
 

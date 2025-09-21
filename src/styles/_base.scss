@@ -56,6 +56,40 @@
   }
 }
 
+button.with-icon,
+a.with-icon {
+  &:after {
+    content: "";
+    width: 1.5rem;
+    height: 1.5rem;
+    background-size: 1.5rem !important;
+  }
+
+  &.download {
+    &:after {
+      background: url("../../public/icons/download_icon.svg") no-repeat center;
+    }
+    &:hover {
+      &:after {
+        background: url("../../public/icons/download_icon_white.svg") no-repeat
+          center;
+      }
+    }
+  }
+
+  &.print {
+    &:after {
+      background: url("../../public/icons/print_icon.svg") no-repeat center;
+    }
+    &:hover {
+      &:after {
+        background: url("../../public/icons/print_icon_white.svg") no-repeat
+          center;
+      }
+    }
+  }
+}
+
 .toggle-container {
   color: $basic-grey;
   display: flex;

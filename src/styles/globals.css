@@ -71,6 +71,30 @@
   gap: 1.2rem;
 }
 
+button.with-icon:after,
+a.with-icon:after {
+  content: "";
+  width: 1.5rem;
+  height: 1.5rem;
+  background-size: 1.5rem !important;
+}
+button.with-icon.download:after,
+a.with-icon.download:after {
+  background: url("../../public/icons/download_icon.svg") no-repeat center;
+}
+button.with-icon.download:hover:after,
+a.with-icon.download:hover:after {
+  background: url("../../public/icons/download_icon_white.svg") no-repeat center;
+}
+button.with-icon.print:after,
+a.with-icon.print:after {
+  background: url("../../public/icons/print_icon.svg") no-repeat center;
+}
+button.with-icon.print:hover:after,
+a.with-icon.print:hover:after {
+  background: url("../../public/icons/print_icon_white.svg") no-repeat center;
+}
+
 .toggle-container {
   color: #979797;
   display: flex;
