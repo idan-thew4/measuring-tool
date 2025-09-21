@@ -69,66 +69,66 @@ function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
             subChapterIdx
           ]?.["principles"]?.[principleIdx]?.choice;
 
-        let score: number | undefined;
-        let max_score: number | undefined;
-        let zero_impact_score: number | undefined;
-        let achievement_level: string | undefined;
+        let score: number | undefined = undefined;
+        let max_score: number | undefined = undefined;
+        let zero_impact_score: number | undefined = undefined;
+        let achievement_level: string | undefined = undefined;
 
         if (inputNumber) {
           score =
             structure?.questionnaire.content[chapterIdx]["chapter-content"][
               subChapterIdx
             ]["principles"][principleIdx]["choices"][inputNumber - 1]?.score;
-          max_score =
-            structure?.questionnaire.content[chapterIdx]["chapter-content"][
-              subChapterIdx
-            ]["principles"][principleIdx]["choices"][4]?.score;
-          zero_impact_score =
-            structure?.questionnaire.content[chapterIdx]["chapter-content"][
-              subChapterIdx
-            ]["principles"][principleIdx]["choices"][3]?.score;
           achievement_level =
             structure?.questionnaire?.options?.[inputNumber - 1];
         }
+
+        max_score =
+          structure?.questionnaire.content[chapterIdx]["chapter-content"][
+            subChapterIdx
+          ]["principles"][principleIdx]["choices"][4]?.score;
+        zero_impact_score =
+          structure?.questionnaire.content[chapterIdx]["chapter-content"][
+            subChapterIdx
+          ]["principles"][principleIdx]["choices"][3]?.score;
 
         const comment =
           scoreObject.data?.questionnaire?.[chapterIdx]?.["chapter-data"]?.[
             subChapterIdx
           ]?.["principles"]?.[principleIdx]?.comment ?? "";
 
-        if (inputNumber) {
-          rows.push({
-            eval_id: "",
-            project_name: scoreObject["personal-details"].projectName,
-            version_name: "",
-            region: scoreObject["personal-details"].localAuthority,
-            project_type: scoreObject["personal-details"].projectType,
-            sub_type: scoreObject["personal-details"].projectSubType,
-            proj_area: scoreObject["personal-details"].projectArea,
-            proj_status: scoreObject["personal-details"].projectStatus,
-            year_start: scoreObject["personal-details"].projectStartYear,
-            year_comp: scoreObject["personal-details"].projectEndYear,
-            approve_contact: scoreObject["personal-details"].contactPerson,
-            contact: scoreObject["personal-details"].contactPerson,
-            email: scoreObject["personal-details"].contactEmail,
-            tel: scoreObject["personal-details"].contactPhone,
-            criteria_no: "",
-            chapter: `${chapter["chapter-number"]}. ${chapter["chapter-title"]}`,
-            "תת-פרק": `${chapter["chapter-number"]}`,
-            sub_chapter: `.${subChapterIdx + 1}. ${
-              subChapter["sub-chapter-title"]
-            }`,
-            full_criteria_name: `${chapter["chapter-number"]}.${
-              subChapterIdx + 1
-            }.${principleIdx + 1}. ${principle["title"]}`,
-            score: score ?? "",
-            max_score: max_score ?? "",
-            zero_impact_score: zero_impact_score ?? "",
-            achievement_level: achievement_level ?? "",
-            comments: comment,
-            eval_timestamp: getFormattedTimestamp(),
-          });
-        }
+        // if (inputNumber) {
+        rows.push({
+          eval_id: "",
+          project_name: scoreObject["personal-details"].projectName,
+          version_name: "",
+          region: scoreObject["personal-details"].localAuthority,
+          project_type: scoreObject["personal-details"].projectType,
+          sub_type: scoreObject["personal-details"].projectSubType,
+          proj_area: scoreObject["personal-details"].projectArea,
+          proj_status: scoreObject["personal-details"].projectStatus,
+          year_start: scoreObject["personal-details"].projectStartYear,
+          year_comp: scoreObject["personal-details"].projectEndYear,
+          approve_contact: scoreObject["personal-details"].contactPerson,
+          contact: scoreObject["personal-details"].contactPerson,
+          email: scoreObject["personal-details"].contactEmail,
+          tel: scoreObject["personal-details"].contactPhone,
+          criteria_no: "",
+          chapter: `${chapter["chapter-number"]}. ${chapter["chapter-title"]}`,
+          sub_chapter: `.${subChapterIdx + 1}. ${
+            subChapter["sub-chapter-title"]
+          }`,
+          full_criteria_name: `${chapter["chapter-number"]}.${
+            subChapterIdx + 1
+          }.${principleIdx + 1}. ${principle["title"]}`,
+          score: score ?? "",
+          max_score: max_score ?? "",
+          zero_impact_score: zero_impact_score ?? "",
+          achievement_level: achievement_level ?? "",
+          comments: comment,
+          eval_timestamp: getFormattedTimestamp(),
+        });
+        // }
       });
     });
   });
@@ -137,6 +137,7 @@ function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
 
 function downloadAllCSV(structure: structureProps, scoreObject: ScoreType) {
   const rows = flattenAllTables(structure, scoreObject);
+  console.log("Rows:", rows);
   const columns = rows.length > 0 ? Object.keys(rows[0]) : [];
   const csv =
     columns.join(",") +
@@ -404,7 +405,7 @@ export default function Summary() {
             onClick={() => downloadAllCSV(structure, scoreObject)}>
             {structure?.summary.header["buttons-copy"][0]}
           </button>
-          <PDFDownloadLink
+          {/* <PDFDownloadLink
             document={
               <MyDocument structure={structure} scoreObject={scoreObject} />
             }
@@ -413,7 +414,7 @@ export default function Summary() {
             }-${formatDate(Date.now())}.pdf`}
             className={clsx("print", "basic-button with-icon outline")}>
             {structure?.summary.header["buttons-copy"][1]}
-          </PDFDownloadLink>
+          </PDFDownloadLink> */}
         </SummaryHeader>
       )}
 

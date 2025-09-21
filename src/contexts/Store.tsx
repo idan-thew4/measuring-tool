@@ -307,7 +307,7 @@ function Store({ children }: PropsWithChildren<{}>) {
     // const cookies = getCookie(`${scoreObject["personal-details"].email}`);
 
     //To DO: // Remove specific email
-    const cookies = getCookie(`mail@idanportal.com`);
+    const cookies = getCookie(`office@tdfmail.com`);
 
     if (cookies) {
       scoreObjectTemp = JSON.parse(cookies);
@@ -315,24 +315,24 @@ function Store({ children }: PropsWithChildren<{}>) {
       scoreObjectTemp = {
         "personal-details": {
           date: Date.now(),
-          //To DO: // Remove specific project name
+          //To DO: // Remove all placeholder data
 
-          projectName: "הפרויקט הראשון שלי",
-          localAuthority: "",
-          projectType: "",
-          projectSubType: "",
-          projectArea: "",
-          projectStatus: "",
-          projectStartYear: "",
-          projectEndYear: "",
+          projectName: "רחוב הדולב",
+          localAuthority: "הנגב",
+          projectType: "פיתוח עירוני",
+          projectSubType: "שכונה",
+          projectArea: "320",
+          projectStatus: "מתמשך",
+          projectStartYear: "2022",
+          projectEndYear: "NaN",
           professionalTraining: "",
           planningTeamRole: "",
           yearsOfExperience: "",
           education: "",
           gender: "",
-          contactPerson: "",
-          contactEmail: "mail@idanportal.com",
-          contactPhone: "",
+          contactPerson: "תמר דראל-פוספלד",
+          contactEmail: "office@tdfmail.com",
+          contactPhone: "050-5565555",
           planningOffice: "",
           evaluationExecutor: "",
           "data-agreement": "",

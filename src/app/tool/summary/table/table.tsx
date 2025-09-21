@@ -48,12 +48,14 @@ export function Table({
     let formattedComment: JSX.Element | null = <p className="paragraph_15"></p>;
     const isExpanded = expandedKey === String(key);
 
-    if (comment.split("").length > 20) {
+    if (comment.split("").length > 10) {
+      console.log("Comment length:", comment.split("").length);
+
       formattedComment = (
         <div className={styles["comment-container"]}>
           <div className={styles["comment-header"]}>
-            <p className="paragraph_15">
-              {`${comment.split(" ").slice(0, 3).join(" ")}...`}
+            <p className="paragraph_18">
+              {`${comment.split(" ").slice(0, 2).join(" ")}...`}
             </p>
             <button
               className={styles["comment-button"]}
@@ -72,8 +74,8 @@ export function Table({
           </span>
         </div>
       );
-    } else if (comment.split("").length <= 20 && comment.split("").length > 1) {
-      formattedComment = <p className="paragraph_15">{comment}</p>;
+    } else if (comment.split("").length <= 10 && comment.split("").length > 1) {
+      formattedComment = <p className="paragraph_18">{comment}</p>;
     } else {
       return (formattedComment = null);
     }

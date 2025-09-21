@@ -30,6 +30,11 @@
         content: "";
         rotate: 90deg;
       }
+
+      &:after {
+        content: "";
+        display: none;
+      }
     }
 
     &.next {

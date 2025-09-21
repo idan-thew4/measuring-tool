@@ -4,7 +4,7 @@
 .row {
   height: 6.7rem;
   margin: 0 2.4rem;
-  grid-template-columns: 4% 35% 10% 9% 1fr;
+  grid-template-columns: 4% 48% 10% 9% 1fr;
   display: grid;
   justify-content: space-between;
   align-items: center;
@@ -183,6 +183,8 @@
     transition: 0.3s all;
     top: 0;
     z-index: 9;
+    width: 20rem;
+    left: 0;
 
     &.expanded {
       visibility: visible;

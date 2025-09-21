@@ -44,6 +44,10 @@
   content: "";
   rotate: 90deg;
 }
+.nav-buttons .nav-button.previous:after {
+  content: "";
+  display: none;
+}
 .nav-buttons .nav-button.next {
   padding: 1rem 2rem 1rem 1rem;
   grid-column: 2/3;
