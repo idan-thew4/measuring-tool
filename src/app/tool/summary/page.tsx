@@ -61,6 +61,7 @@ type SummaryRow = {
 
 function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
   const rows: SummaryRow[] = [];
+  let principleCount = 0;
   structure?.questionnaire.content.forEach((chapter, chapterIdx) => {
     chapter["chapter-content"].forEach((subChapter, subChapterIdx) => {
       subChapter.principles.forEach((principle, principleIdx) => {
@@ -69,18 +70,24 @@ function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
             subChapterIdx
           ]?.["principles"]?.[principleIdx]?.choice;
 
-        let score: number | undefined = undefined;
+        let score: number | string | undefined = undefined;
         let max_score: number | undefined = undefined;
         let zero_impact_score: number | undefined = undefined;
         let achievement_level: string | undefined = undefined;
+        principleCount++;
 
         if (inputNumber) {
-          score =
-            structure?.questionnaire.content[chapterIdx]["chapter-content"][
-              subChapterIdx
-            ]["principles"][principleIdx]["choices"][inputNumber - 1]?.score;
-          achievement_level =
-            structure?.questionnaire?.options?.[inputNumber - 1];
+          if (inputNumber === -1) {
+            score = "N/A";
+            achievement_level = "N/A";
+          } else {
+            score =
+              structure?.questionnaire.content[chapterIdx]["chapter-content"][
+                subChapterIdx
+              ]["principles"][principleIdx]["choices"][inputNumber - 1]?.score;
+            achievement_level =
+              structure?.questionnaire?.options?.[inputNumber - 1];
+          }
         }
 
         max_score =
@@ -97,9 +104,17 @@ function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
             subChapterIdx
           ]?.["principles"]?.[principleIdx]?.comment ?? "";
 
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+
+        // TO DO: user real ID here//
+
+        const eval_id = `${year}_${month}_1`;
+
         // if (inputNumber) {
         rows.push({
-          eval_id: "",
+          eval_id: eval_id,
           project_name: scoreObject["personal-details"].projectName,
           version_name: "",
           region: scoreObject["personal-details"].localAuthority,
@@ -113,7 +128,7 @@ function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
           contact: scoreObject["personal-details"].contactPerson,
           email: scoreObject["personal-details"].contactEmail,
           tel: scoreObject["personal-details"].contactPhone,
-          criteria_no: "",
+          criteria_no: principleCount,
           chapter: `${chapter["chapter-number"]}. ${chapter["chapter-title"]}`,
           sub_chapter: `.${subChapterIdx + 1}. ${
             subChapter["sub-chapter-title"]

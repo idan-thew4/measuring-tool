@@ -21,7 +21,9 @@ export function SideMenu({
         currentChapter={currentChapter}
         selfAssessment={pathSegments === "self-assessment"}
       />
-      {pathSegments !== "self-assessment" && <More structure={structure} />}
+
+      {/* TO DO: unmark more menu */}
+      {/* {pathSegments !== "self-assessment" && <More structure={structure} />} */}
     </aside>
   );
 }
