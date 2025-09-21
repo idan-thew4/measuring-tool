@@ -305,6 +305,8 @@ function Store({ children }: PropsWithChildren<{}>) {
   function createScoreObject(structureObject: structureProps) {
     let scoreObjectTemp: ScoreType;
     // const cookies = getCookie(`${scoreObject["personal-details"].email}`);
+
+    //To DO: // Remove specific email
     const cookies = getCookie(`mail@idanportal.com`);
 
     if (cookies) {
@@ -313,7 +315,9 @@ function Store({ children }: PropsWithChildren<{}>) {
       scoreObjectTemp = {
         "personal-details": {
           date: Date.now(),
-          projectName: "",
+          //To DO: // Remove specific project name
+
+          projectName: "הפרויקט הראשון שלי",
           localAuthority: "",
           projectType: "",
           projectSubType: "",
@@ -558,8 +562,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         setRegistrationStatus,
         registrationStatus,
         calculateScores,
-      }}
-    >
+      }}>
       {children}
     </ApiContext.Provider>
   );

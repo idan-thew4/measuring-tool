@@ -113,7 +113,7 @@ export function StackedBar({
   structure: structureProps;
   filters?: string[];
 }) {
-  const [filtersStatus, setFiltersStatus] = useState<boolean>(false);
+  const [filtersStatus, setFiltersStatus] = useState<boolean>(true);
   const [maxValue, setMaxValue] = useState<number>();
   const [legend, setLegend] = useState<string[]>([]);
   const [barData, setBarData] =
@@ -237,14 +237,6 @@ export function StackedBar({
             domain={typeof maxValue === "number" ? [0, maxValue] : undefined}
           />
 
-          {filtersStatus && (
-            <Bar
-              dataKey="possibleScore"
-              stackId="a"
-              fill="rgba(123, 133, 139, 0.06)"
-              shape={CustomTopBar}
-            />
-          )}
           <Bar
             radius={[10, 10, 0, 0]}
             dataKey="generalScore"
@@ -277,6 +269,14 @@ export function StackedBar({
               />
             ))}
           </Bar>
+          {filtersStatus && (
+            <Bar
+              dataKey="possibleScore"
+              stackId="a"
+              fill="rgba(123, 133, 139, 0.06)"
+              shape={CustomTopBar}
+            />
+          )}
         </BarChart>
       </ResponsiveContainer>
 

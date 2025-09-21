@@ -128,7 +128,10 @@ export default function Summary() {
             ) => (
               <p
                 key={index}
-                className={column["sub-title"] && tableStyles["score-points"]}>
+                className={clsx(
+                  column["sub-title"] && tableStyles["score-points"],
+                  "paragraph_15 bold"
+                )}>
                 {column.title}
                 {column["sub-title"] && (
                   <span className={tableStyles["percentage-bubble"]}>

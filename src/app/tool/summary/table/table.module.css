@@ -19,7 +19,7 @@
 .row {
   height: 6.7rem;
   margin: 0 2.4rem;
-  grid-template-columns: 4% 35% 10% 7% 1fr;
+  grid-template-columns: 4% 35% 10% 9% 1fr;
   display: grid;
   justify-content: space-between;
   align-items: center;
@@ -52,7 +52,8 @@
 .row.row-titles-sticky .percentage-bubble {
   font-size: 0.9rem;
   white-space: nowrap;
-  padding: 0.2 em 1rem 0rem 1rem;
+  padding: 0.2rem 1rem 0rem 1rem;
+  font-size: 1.1rem;
 }
 .row-titles {
   display: grid;
@@ -79,7 +80,7 @@
 }
 .row .score-points {
   text-align: center;
-  font-size: 1.1rem;
+  line-height: 100%;
 }
 .row .score-points strong {
   padding-left: 0.5rem;

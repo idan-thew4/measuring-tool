@@ -160,8 +160,10 @@ export function Table({
             styles["table-title"],
             "headline_small bold"
           )}>{`${chapterNumber}. ${title}`}</h2>
-        <p>{getPercentageLabel(chapterScore, getScoreLabel)}</p>
-        <p className={styles["score-points"]}>
+        <p className="paragraph_18">
+          {getPercentageLabel(chapterScore, getScoreLabel)}
+        </p>
+        <p className={clsx(styles["score-points"], "paragraph_18")}>
           {getScoreValue(chapterScore, "generalScore") && (
             <>
               <strong>{getScoreValue(chapterScore, "generalScore")}</strong>
@@ -185,10 +187,10 @@ export function Table({
               className={clsx(
                 styles["row"],
                 styles["row-title"],
-                "paragraph_15"
+                "paragraph_18 "
               )}>
               <p>{`${chapterNumber}.${subChapterIndex + 1}.`}</p>
-              <h3>{`${subChapter["sub-chapter-title"]}`}</h3>
+              <h3 className="paragraph_18 bold">{`${subChapter["sub-chapter-title"]}`}</h3>
               <p>
                 {getPercentageLabel(
                   subChaptersScores,
@@ -197,7 +199,7 @@ export function Table({
                 )}
               </p>
 
-              <p className={styles["score-points"]}>
+              <p className={clsx(styles["score-points"], "paragraph_18")}>
                 {getScoreValue(
                   subChaptersScores,
                   "generalScore",
@@ -259,7 +261,7 @@ export function Table({
                   )}>
                   <p
                     className={clsx(
-                      styles["paragraph_15"],
+                      styles["paragraph_18"],
                       styles["principle-number"]
                     )}>{`${chapterNumber}.${subChapterIndex + 1}.${
                     principleIndex + 1
@@ -267,9 +269,9 @@ export function Table({
                   <h4
                     className={clsx(
                       styles["principle-title"],
-                      "paragraph_15"
+                      "paragraph_18"
                     )}>{`${principle["title"]}`}</h4>
-                  <p className="paragraph_15">
+                  <p className="paragraph_18">
                     {inputNumber !== undefined
                       ? structure?.questionnaire?.options?.[inputNumber - 1]
                       : ""}
