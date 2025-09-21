@@ -23,6 +23,8 @@
   padding: 2rem;
   box-sizing: border-box;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .header-container .logo {
   width: 22rem;
