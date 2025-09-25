@@ -160,6 +160,7 @@ type RegistrationInputField = {
   label: string;
   mandatory: boolean;
   "validation-error": string;
+  "format-error": string;
   placeholder: string;
   name: string;
   "dropdown-options"?: string[];
@@ -304,10 +305,10 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   function createScoreObject(structureObject: structureProps) {
     let scoreObjectTemp: ScoreType;
-    // const cookies = getCookie(`${scoreObject["personal-details"].email}`);
+    const cookies = getCookie(`${scoreObject["personal-details"].email}`);
 
     //To DO: // Remove specific email
-    const cookies = getCookie(`office@tdfmail.com`);
+    // const cookies = getCookie(`office@tdfmail.com`);
 
     if (cookies) {
       scoreObjectTemp = JSON.parse(cookies);
@@ -317,22 +318,22 @@ function Store({ children }: PropsWithChildren<{}>) {
           date: Date.now(),
           //To DO: // Remove all placeholder data
 
-          projectName: "רחוב הדולב",
-          localAuthority: "הנגב",
-          projectType: "פיתוח עירוני",
-          projectSubType: "שכונה",
-          projectArea: "320",
-          projectStatus: "מתמשך",
-          projectStartYear: "2022",
-          projectEndYear: "NaN",
+          projectName: "",
+          localAuthority: "",
+          projectType: "",
+          projectSubType: "",
+          projectArea: "",
+          projectStatus: "",
+          projectStartYear: "",
+          projectEndYear: "",
           professionalTraining: "",
           planningTeamRole: "",
           yearsOfExperience: "",
           education: "",
           gender: "",
-          contactPerson: "תמר דראל-פוספלד",
-          contactEmail: "office@tdfmail.com",
-          contactPhone: "050-5565555",
+          contactPerson: "",
+          contactEmail: "",
+          contactPhone: "",
           planningOffice: "",
           evaluationExecutor: "",
           "data-agreement": "",

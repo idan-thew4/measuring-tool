@@ -45,6 +45,8 @@ export function RegistrationPopup() {
     handleSubmit,
     setValue,
     control,
+    watch,
+    trigger,
     formState: { errors },
   } = useForm<Inputs>();
 
@@ -102,6 +104,16 @@ export function RegistrationPopup() {
             (scoreObject["personal-details"] as Inputs)[field.name]
           );
         }
+
+        if (field.name === "password") {
+          step["input-fields"].splice(index + 1, 0, {
+            ...field,
+            name: "confirmPassword",
+            label: "אישור סיסמא",
+            "validation-error": "יש להזין את הסיסמא שוב",
+            "format-error": "הסיסמא לא תואמת את הסיסמא שהוזנה",
+          });
+        }
       });
     }
   }, [scoreObject, step]);
@@ -133,6 +145,12 @@ export function RegistrationPopup() {
   };
   if (!registrationStatus) return null;
   if (!structure || !step) return <div>Loading...</div>;
+
+  const password = watch("password");
+
+  const handlePasswordChange = () => {
+    trigger("confirmPassword");
+  };
 
   return (
     <div className={styles["registration-pop-up-container"]}>
@@ -209,15 +227,35 @@ export function RegistrationPopup() {
                           ? {
                               value:
                                 /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                              message: field["validation-error"],
+                              message: field["format-error"],
                             }
                           : field.type === "tel"
                           ? {
                               value: /^0\d{1,2}-?\d{7}$/,
-                              message: field["validation-error"],
+                              message: field["format-error"],
+                            }
+                          : field.type === "password"
+                          ? {
+                              value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                              message: field["format-error"],
                             }
                           : undefined,
+                      validate:
+                        field.name === "confirmPassword"
+                          ? (value) =>
+                              value === password || field["format-error"]
+                          : undefined,
                     })}
+                    // onChange={
+                    //   field.name === "confirmPassword" ||
+                    //   field.name === "password"
+                    //     ? (e) => {
+                    //         trigger(field.name);
+                    //         setValue(field.name, e.target.value);
+                    //         console.log(e.target.value);
+                    //       }
+                    //     : undefined
+                    // }
                   />
                 ) : (
                   <Controller

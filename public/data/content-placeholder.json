@@ -8,10 +8,103 @@
     "more": ["הוראות שימוש בכלי", "אודות"]
   },
   "registration": {
-    "title": "פתיחת פרויקט",
     "validation-general-copy": "* שדות המסומנים בכוכבית הינם חובה",
-    "nav-buttons": ["המשך", "המשך", "החל במדידה "],
+    "nav-buttons": ["המשך", "המשך", "המשך", "החל במדידה "],
     "steps": [
+      {
+        "headline": "הרשמה למערכת",
+        "title": "הרשמה למערכת",
+        "input-fields": [
+          {
+            "label": "דוא״ל",
+            "mandatory": true,
+            "type": "email",
+            "row": 1,
+            "validation-error": "יש להזין כתובת דוא״ל ",
+            "format-error": "יש להזין דוא״ל תקין",
+            "placeholder": "דוא״ל",
+            "name": "email"
+          },
+          {
+            "label": "סיסמה",
+            "mandatory": true,
+            "type": "password",
+            "row": 1,
+            "validation-error": "יש להזין סיסמה",
+            "format-error": "הסיסמה חייבת להכיל לפחות 8 תווים, אותיות ומספרים",
+            "placeholder": "סיסמה",
+            "name": "password"
+          },
+          {
+            "label": "אני מאשר קבלת חומר פרסומי",
+            "type": "checkbox",
+            "mandatory": false,
+            "validation-error": "יש לבחור את תיבת הסימון",
+            "name": "commercial-agreement"
+          },
+          {
+            "label": "אני מסכים שצוות כלי המדידה ייצור איתי קשר לצרכי מחקר ופיתוח",
+            "type": "checkbox",
+            "mandatory": false,
+            "validation-error": "יש לבחור את תיבת הסימון",
+            "name": "research-agreement"
+          },
+          {
+            "label": "אני מאשר את תנאי השימוש ומדיניות הפרטיות",
+            "type": "checkbox",
+            "mandatory": false,
+            "validation-error": "יש לבחור את תיבת הסימון",
+            "name": "privacy-policy-terms-of-use-agreement"
+          }
+        ]
+      },
+      {
+        "headline": "פתיחת פרויקט",
+        "title": "מידע כללי על הפרויקט",
+        "description": "המידע נשמר בצורה אנונימית, לצרכי תפעול הכלי. ולא משותף עם צד שלישי ",
+        "input-fields": [
+          {
+            "label": "איש קשר",
+            "mandatory": true,
+            "row": 1,
+            "validation-error": "יש להזין איש קשר",
+            "placeholder": "איש קשר",
+            "name": "contactPerson"
+          },
+          {
+            "label": "טלפון",
+            "mandatory": true,
+            "row": 1,
+            "validation-error": "יש להזין מספר טלפון",
+            "format-error": "יש להזין טלפון תקין",
+            "placeholder": "טלפון",
+            "name": "contactPhone",
+            "type": "tel"
+          },
+          {
+            "label": "משרד מתכנן",
+            "mandatory": true,
+            "row": 1,
+            "validation-error": "יש להזין משרד מתכנן",
+            "placeholder": "משרד מתכנן",
+            "name": "planningOffice"
+          },
+          {
+            "label": "מבצע ההערכה",
+            "mandatory": true,
+            "row": 1,
+            "validation-error": "יש להזין מבצע ההערכה",
+            "placeholder": "מבצע ההערכה",
+            "name": "evaluationExecutor",
+            "dropdown-options": [
+              { "value": "evaluationExecutor-1", "label": "מבצע ההערכה 1" },
+              { "value": "evaluationExecutor-2", "label": "מבצע ההערכה 2" },
+              { "value": "evaluationExecutor-3", "label": "מבצע ההערכה 3" },
+              { "value": "evaluationExecutor-4", "label": "מבצע ההערכה 4" }
+            ]
+          }
+        ]
+      },
       {
         "title": "מידע כללי על הפרויקט",
         "description": "המידע נשמר בצורה אנונימית, לצרכי תפעול הכלי. ולא משותף עם צד שלישי ",
@@ -27,19 +120,14 @@
           },
 
           {
-            "label": "רשות מקומית",
+            "label": "איזור בארץ",
             "mandatory": false,
             "type": "text",
             "row": 1,
-            "validation-error": "יש להזין רשות מקומית",
-            "placeholder": "רשות מקומית",
+            "validation-error": "יש להזין איזור בארץ",
+            "placeholder": "איזור בארץ",
             "name": "localAuthority",
-            "dropdown-options": [
-              { "value": "localAuthority-1", "label": "רשות מקומית 1" },
-              { "value": "localAuthority-2", "label": "רשות מקומית 2" },
-              { "value": "localAuthority-3", "label": "רשות מקומית 3" },
-              { "value": "localAuthority-4", "label": "רשות מקומית 4" }
-            ]
+            "dropdown-options": []
           },
           {
             "label": "סוג המיזם",
@@ -50,10 +138,10 @@
             "placeholder": "סוג המיזם",
             "name": "projectType",
             "dropdown-options": [
-              { "value": "projectType-1", "label": "סוג 1" },
-              { "value": "projectType-2", "label": "סוג 2" },
-              { "value": "projectType-3", "label": "סוג 3" },
-              { "value": "projectType-4", "label": "סוג 4" }
+              { "value": "infrastructure", "label": "תשתית" },
+              { "value": "urban-development", "label": "פיתוח עירוני" },
+              { "value": "open-spaces", "label": "שטחים פתוחים" },
+              { "value": "other", "label": "אחר" }
             ]
           },
           {
@@ -62,7 +150,17 @@
             "row": 0.5,
             "validation-error": "יש להזין תת סוג המיזם",
             "placeholder": "תת סוג המיזם",
-            "name": "projectSubType"
+            "name": "projectSubType",
+            "dropdown-options": [
+              { "value": "park", "label": "פארק" },
+              { "value": "neighborhood", "label": "שכונה" },
+              { "value": "road", "label": "כביש" },
+              { "value": "communication", "label": "תקשורת" },
+              { "value": "drainage", "label": "ניקוז" },
+              { "value": "stream", "label": "נחל" },
+              { "value": "nature-reserve", "label": "שמורת טבע" },
+              { "value": "other", "label": "אחר" }
+            ]
           },
           {
             "label": "שטח המיזם",
@@ -80,10 +178,10 @@
             "placeholder": "שלב / סטטוס הפרויקט",
             "name": "projectStatus",
             "dropdown-options": [
-              { "value": "projectStatus-1", "label": "שלב 1" },
-              { "value": "projectStatus-2", "label": "שלב 2" },
-              { "value": "projectStatus-3", "label": "שלב 3" },
-              { "value": "projectStatus-4", "label": "שלב 4" }
+              { "value": "planning", "label": "תכנון" },
+              { "value": "execution", "label": "ביצוע" },
+              { "value": "ongoing", "label": "מתמשך" },
+              { "value": "delivery", "label": "מסירה" }
             ]
           },
           {
@@ -93,12 +191,7 @@
             "validation-error": "יש להזין שנת תחילת תכנון",
             "placeholder": "שנת תחילת תכנון",
             "name": "projectStartYear",
-            "dropdown-options": [
-              { "value": "projectStartYear-2021", "label": "2021" },
-              { "value": "projectStartYear-2022", "label": "2022" },
-              { "value": "projectStartYear-2023", "label": "2023" },
-              { "value": "projectStartYear-2024", "label": "2024" }
-            ]
+            "dropdown-options": []
           },
           {
             "label": "שנת סיום שלב",
@@ -107,12 +200,7 @@
             "validation-error": "יש להזין שנת סיום שלב",
             "placeholder": "שנת סיום שלב",
             "name": "projectEndYear",
-            "dropdown-options": [
-              { "value": "projectEndYear-2021", "label": "2021" },
-              { "value": "projectEndYear-2022", "label": "2022" },
-              { "value": "projectEndYear-2023", "label": "2023" },
-              { "value": "projectEndYear-2024", "label": "2024" }
-            ]
+            "dropdown-options": []
           }
         ]
       },
@@ -128,10 +216,11 @@
             "placeholder": "הכשרה מקצועית",
             "name": "professionalTraining",
             "dropdown-options": [
-              { "value": "professionalTraining-1", "label": "הכשרה מקצועית 1" },
-              { "value": "professionalTraining-2", "label": "הכשרה מקצועית 2" },
-              { "value": "professionalTraining-3", "label": "הכשרה מקצועית 3" },
-              { "value": "professionalTraining-4", "label": "הכשרה מקצועית 4" }
+              { "value": "landscape-architect", "label": "אדריכל נוף" },
+              { "value": "architect", "label": "אדריכל" },
+              { "value": "planner", "label": "מתכנן" },
+              { "value": "engineer", "label": "מהנדס" },
+              { "value": "other", "label": "אחר" }
             ]
           },
           {
@@ -158,10 +247,10 @@
             "placeholder": "השכלה",
             "name": "education",
             "dropdown-options": [
-              { "value": "education-1", "label": "השכלה 1" },
-              { "value": "education-2", "label": "השכלה 2" },
-              { "value": "education-3", "label": "השכלה 3" },
-              { "value": "education-4", "label": "השכלה 4" }
+              { "value": "professional-degree", "label": "תואר מקצועי" },
+              { "value": "BA", "label": "תואר ראשון" },
+              { "value": "MA", "label": "תואר שני" },
+              { "value": "PHD", "label": "דוקטורט" }
             ]
           },
           {
@@ -174,69 +263,8 @@
             "dropdown-options": [
               { "value": "gender-male", "label": "זכר" },
               { "value": "gender-female", "label": "נקבה" },
-              { "value": "gender-other", "label": "אחר" }
+              { "value": "prefer-not-to-identify", "label": "מעדיף לא להזדהות" }
             ]
-          }
-        ]
-      },
-      {
-        "title": "הרשמה למערכת",
-        "description": "לצרכי שליחת עדכונים במייל ויצירת קשר",
-        "input-fields": [
-          {
-            "label": "איש קשר",
-            "mandatory": true,
-            "row": 1,
-            "validation-error": "יש להזין איש קשר",
-            "placeholder": "איש קשר",
-            "name": "contactPerson"
-          },
-          {
-            "label": "דוא״ל",
-            "mandatory": true,
-            "row": 1,
-            "validation-error": "יש להזין דוא״ל",
-            "placeholder": "דוא״ל",
-            "name": "contactEmail",
-            "type": "email"
-          },
-          {
-            "label": "טלפון",
-            "mandatory": true,
-            "row": 1,
-            "validation-error": "יש להזין טלפון",
-            "placeholder": "טלפון",
-            "name": "contactPhone",
-            "type": "tel"
-          },
-          {
-            "label": "משרד מתכנן",
-            "mandatory": true,
-            "row": 1,
-            "validation-error": "יש להזין משרד מתכנן",
-            "placeholder": "משרד מתכנן",
-            "name": "planningOffice"
-          },
-          {
-            "label": "מבצע ההערכה",
-            "mandatory": true,
-            "row": 1,
-            "validation-error": "יש להזין מבצע ההערכה",
-            "placeholder": "מבצע ההערכה",
-            "name": "evaluationExecutor",
-            "dropdown-options": [
-              { "value": "evaluationExecutor-1", "label": "מבצע ההערכה 1" },
-              { "value": "evaluationExecutor-2", "label": "מבצע ההערכה 2" },
-              { "value": "evaluationExecutor-3", "label": "מבצע ההערכה 3" },
-              { "value": "evaluationExecutor-4", "label": "מבצע ההערכה 4" }
-            ]
-          },
-          {
-            "label": "אני מסכים שצוות כלי המדידה ייצור איתי קשר לצרכי מחקר ופיתוח",
-            "type": "checkbox",
-            "mandatory": false,
-            "validation-error": "יש לבחור את תיבת הסימון",
-            "name": "data-agreement"
           }
         ]
       }
