@@ -48,7 +48,7 @@
   background-color: #5b6771 !important;
   position: absolute;
   z-index: 10;
-  background: url("../../../public/icons/close_icon_white.svg") no-repeat center;
+  background: url("../../../../public/icons/close_icon_white.svg") no-repeat center;
   background-size: 1.5rem;
   top: -4rem;
   right: -4rem;
@@ -163,7 +163,7 @@
 .pop-up .form-container form input[type=checkbox]:checked:before {
   background-color: #5b6771 !important;
   border-color: #5b6771;
-  background: url("../../../public/icons/checkmark_white.svg") no-repeat center;
+  background: url("../../../../public/icons/checkmark_white.svg") no-repeat center;
   background-size: 1rem !important;
 }
 .pop-up .form-container form input[type=checkbox]:checked:after {
@@ -192,7 +192,7 @@
   height: 1.5rem;
   background-size: 1.5rem !important;
   content: "";
-  background: url("../../../public/icons/arrow-down.svg") no-repeat center;
+  background: url("../../../../public/icons/arrow-down.svg") no-repeat center;
   rotate: 0deg;
   transition: 0.3s all;
 }

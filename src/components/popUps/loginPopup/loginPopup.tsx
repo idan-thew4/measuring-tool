@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
-import { PopUpContainer } from "../../popUpContainer/popUpContainer";
+import { PopUpContainer } from "../popUpContainer/popUpContainer";
 
 type Inputs = {
   [key: string]: string | { value: string; label: string } | boolean | number;

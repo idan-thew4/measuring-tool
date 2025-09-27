@@ -1,12 +1,12 @@
 "use client";
-import styles from "../popUps/popUpContainer/form.module.scss";
-import { useStore, totalCompleted } from "../../contexts/Store";
+import styles from "../popUpContainer/form.module.scss";
+import { useStore, totalCompleted } from "../../../contexts/Store";
 import { useEffect, useState } from "react";
 import { ProgressBar } from "@/app/tool/components/progress-bar/progress-bar";
 import clsx from "clsx";
 import { useForm, Controller, set } from "react-hook-form";
 import Select from "react-select";
-import { PopUpContainer } from "../popUps/popUpContainer/popUpContainer";
+import { PopUpContainer } from "../popUpContainer/popUpContainer";
 
 type Inputs = {
   [key: string]: string | { value: string; label: string } | boolean | number;
