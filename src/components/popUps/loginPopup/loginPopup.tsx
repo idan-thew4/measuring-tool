@@ -1,10 +1,10 @@
 "use client";
 import { useStore } from "../../../contexts/Store";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import clsx from "clsx";
 import { useForm, Controller } from "react-hook-form";
-import Select from "react-select";
 import { PopUpContainer } from "../popUpContainer/popUpContainer";
+import formStyles from "../popUpContainer/form.module.scss";
 
 type Inputs = {
   [key: string]: string | { value: string; label: string } | boolean | number;
@@ -71,10 +71,12 @@ export function LoginPopup() {
         {structure.login["input-fields"].map((field, index) => (
           <div
             className={clsx(
-              styles["field"],
-              styles["row"],
-              styles[`row-${field.row}`],
-              field.type !== "checkbox" ? styles["input"] : styles["checkbox"]
+              formStyles["field"],
+              formStyles["row"],
+              formStyles[`row-${field.row}`],
+              field.type !== "checkbox"
+                ? formStyles["input"]
+                : formStyles["checkbox"]
             )}
             key={index}
           >
@@ -111,7 +113,7 @@ export function LoginPopup() {
                 required: field.mandatory ? field["validation-error"] : false,
               }}
               render={({ field: controllerField }) => (
-                <label className={styles["checkbox-label"]}>
+                <label className={formStyles["checkbox-label"]}>
                   <input
                     type="checkbox"
                     checked={!!controllerField.value}
@@ -126,7 +128,7 @@ export function LoginPopup() {
             />
 
             {typeof errors[field.name]?.message === "string" ? (
-              <span className={styles["error-message"]}>
+              <span className={formStyles["error-message"]}>
                 {errors[field.name]?.message as string}
               </span>
             ) : null}
@@ -134,18 +136,19 @@ export function LoginPopup() {
         ))}
         <button
           className={clsx(
-            styles["submit-button"],
+            formStyles["submit-button"],
             "basic-button solid",
             loading && "loading"
           )}
           type="submit"
           disabled={Object.keys(errors).length > 0}
-        >
-          {structure.registration["nav-buttons"][currentStep]}
-        </button>
+        ></button>
         {generalError && (
           <div
-            className={clsx(styles["error-message"], styles["general-error"])}
+            className={clsx(
+              formStyles["error-message"],
+              formStyles["general-error"]
+            )}
           >
             {generalError}
           </div>

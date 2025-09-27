@@ -1,5 +1,5 @@
 "use client";
-import styles from "../popUps/popUpContainer/form.module.scss";
+import formStyles from "../popUps/popUpContainer/form.module.scss";
 import { useStore, totalCompleted } from "../../contexts/Store";
 import { useEffect, useState } from "react";
 import { ProgressBar } from "@/app/tool/components/progress-bar/progress-bar";
@@ -197,15 +197,18 @@ export function RegistrationPopup() {
       {completedSteps && (
         <ProgressBar completed={completedSteps} indicator={true} />
       )}
-      <div className={styles["form-container"]}>
+      <div className={formStyles["form-container"]}>
         <div>
           <h3
-            className={clsx("headline_medium-small bold", styles["headline"])}
+            className={clsx(
+              "headline_medium-small bold",
+              formStyles["headline"]
+            )}
           >
             {step.title}
           </h3>
           <p className="paragraph_16">{step.description}</p>
-          <p className={clsx(styles["validation"], "paragraph_16")}>
+          <p className={clsx(formStyles["validation"], "paragraph_16")}>
             {structure.registration["validation-general-copy"]}
           </p>
         </div>
@@ -216,10 +219,12 @@ export function RegistrationPopup() {
           {step["input-fields"].map((field, index) => (
             <div
               className={clsx(
-                styles["field"],
-                styles["row"],
-                styles[`row-${field.row}`],
-                field.type !== "checkbox" ? styles["input"] : styles["checkbox"]
+                formStyles["field"],
+                formStyles["row"],
+                formStyles[`row-${field.row}`],
+                field.type !== "checkbox"
+                  ? formStyles["input"]
+                  : formStyles["checkbox"]
               )}
               key={index}
             >
@@ -301,7 +306,7 @@ export function RegistrationPopup() {
                       : false,
                   }}
                   render={({ field: controllerField }) => (
-                    <label className={styles["checkbox-label"]}>
+                    <label className={formStyles["checkbox-label"]}>
                       <input
                         type="checkbox"
                         checked={!!controllerField.value}
@@ -319,7 +324,7 @@ export function RegistrationPopup() {
               )}
 
               {typeof errors[field.name]?.message === "string" ? (
-                <span className={styles["error-message"]}>
+                <span className={formStyles["error-message"]}>
                   {errors[field.name]?.message as string}
                 </span>
               ) : null}
@@ -327,7 +332,7 @@ export function RegistrationPopup() {
           ))}
           <button
             className={clsx(
-              styles["submit-button"],
+              formStyles["submit-button"],
               "basic-button solid",
               loading && "loading"
             )}
@@ -338,7 +343,10 @@ export function RegistrationPopup() {
           </button>
           {generalError && (
             <div
-              className={clsx(styles["error-message"], styles["general-error"])}
+              className={clsx(
+                formStyles["error-message"],
+                formStyles["general-error"]
+              )}
             >
               {generalError}
             </div>
