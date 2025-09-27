@@ -1,20 +1,26 @@
+// src/middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get("your-cookie-name")?.value;
 
+    if (request.nextUrl.pathname === "/tool/preparation-and-pre-planning/1/1") {
+    return NextResponse.next();
+  }
 
-//   if (!token) {
-//     // Redirect to your desired page if token is missing
-//     return NextResponse.redirect(new URL("/tool/preparation-and-pre-planning/1/1", request.url));
-//   }
+  const token = request.cookies.get("jwt_token")?.value;
 
-  // Optionally, validate the token with an external API here
+  console.log("Middleware token:", token);
 
-//   return NextResponse.next();
+  if (!token) {
+    // Redirect to login or registration if jwt_token is missing
+    return NextResponse.redirect(new URL("/tool/preparation-and-pre-planning/1/1", request.url));
+  }
+
+  // Allow the request to continue if jwt_token exists
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/tool/:path*"], // Only run on /tool routes
+  matcher: ["/tool/:path*"], // Adjust to match your protected routes
 };

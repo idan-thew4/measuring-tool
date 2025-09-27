@@ -24,7 +24,7 @@ export default function RootLayout({
             <Header />
             <main className={styles.main}>{children}</main>
             <RegistrationPopup />
-            <LoginPopup />
+            {/* <LoginPopup /> */}
           </Store>
         </div>
       </body>
