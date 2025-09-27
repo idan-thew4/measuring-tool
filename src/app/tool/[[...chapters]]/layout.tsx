@@ -19,7 +19,8 @@ export default function ChapterLayout({
   return (
     <Questionnaire
       structure={structure}
-      currentChapter={[chapter, subChapter, principle]}>
+      currentChapter={[chapter, subChapter, principle]}
+    >
       {children}
     </Questionnaire>
   );

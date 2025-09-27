@@ -18,8 +18,7 @@
 }
 .registration-pop-up {
   width: 54vh;
-  height: 71vh;
-  min-height: 75rem;
+  height: auto;
   min-width: 54rem;
   background-color: white;
   border-radius: 4rem;
@@ -56,13 +55,20 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   column-gap: 2.1rem;
-  grid-auto-rows: 5rem;
   align-content: space-between;
   height: 100%;
 }
 .registration-pop-up .form-container form .row {
   position: relative;
   margin-bottom: -0.3rem;
+}
+.registration-pop-up .form-container form .row.input {
+  height: 5rem;
+  margin-bottom: 5rem;
+}
+.registration-pop-up .form-container form .row.checkbox {
+  height: 2rem;
+  margin-bottom: 2rem;
 }
 .registration-pop-up .form-container form .row-1 {
   grid-column: 1/3;
@@ -203,6 +209,10 @@
   margin-top: 1rem;
   position: relative;
   z-index: 1;
+}
+.registration-pop-up .form-container form .error-message.general-error {
+  text-align: center;
+  grid-column: 1/3;
 }
 .registration-pop-up .form-container form .submit-button {
   width: 100%;

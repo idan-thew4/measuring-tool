@@ -31,6 +31,7 @@ export function RegistrationPopup() {
     setScoreObject,
     registrationStatus,
     setRegistrationStatus,
+    url,
   } = useStore();
   const [completedSteps, setCompletedSteps] = useState<totalCompleted>();
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -46,9 +47,12 @@ export function RegistrationPopup() {
     setValue,
     control,
     watch,
-    trigger,
+    setError,
+
     formState: { errors },
   } = useForm<Inputs>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [generalError, setGeneralError] = useState<string>("");
 
   const step = structure?.registration.steps[currentStep];
 
@@ -77,6 +81,34 @@ export function RegistrationPopup() {
       setTownsList(TownsListTemp);
     } catch (error) {
       console.error("Failed to fetch content:", error);
+    }
+  }
+
+  async function createNewUser(email: string, password: string) {
+    setLoading(true);
+    try {
+      const response = await fetch(`${url}/create-new-user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        return true;
+      } else {
+        if (data.message) {
+          setGeneralError(data.message);
+        }
+      }
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Error creating new user:", error);
     }
   }
 
@@ -118,13 +150,22 @@ export function RegistrationPopup() {
     }
   }, [scoreObject, step]);
 
-  const onSubmit = (stepData: Inputs, index: number) => {
+  const onSubmit = async (stepData: Inputs, index: number) => {
     const updatedPersonalDetails = {
       ...scoreObject["personal-details"],
       ...stepData,
     };
     setData(updatedPersonalDetails);
     if (completedSteps && index !== completedSteps.length - 1) {
+      if (index === 0) {
+        const userCreated = await createNewUser(
+          stepData["email"] as string,
+          stepData["password"] as string
+        );
+        if (!userCreated) {
+          return;
+        }
+      }
       setCurrentStep(index + 1);
       setCompletedSteps((prev) => {
         if (!prev) return prev;
@@ -148,10 +189,6 @@ export function RegistrationPopup() {
 
   const password = watch("password");
 
-  const handlePasswordChange = () => {
-    trigger("confirmPassword");
-  };
-
   return (
     <div className={styles["registration-pop-up-container"]}>
       <div className={styles["registration-pop-up"]}>
@@ -162,10 +199,8 @@ export function RegistrationPopup() {
         <div className={styles["form-container"]}>
           <div>
             <h3
-              className={clsx(
-                "headline_medium-small bold",
-                styles["headline"]
-              )}>
+              className={clsx("headline_medium-small bold", styles["headline"])}
+            >
               {step.title}
             </h3>
             <p className="paragraph_16">{step.description}</p>
@@ -173,15 +208,22 @@ export function RegistrationPopup() {
               {structure.registration["validation-general-copy"]}
             </p>
           </div>
-          <form onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}>
+          <form
+            style={{ pointerEvents: loading ? "none" : "auto" }}
+            onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}
+          >
             {step["input-fields"].map((field, index) => (
               <div
                 className={clsx(
                   styles["field"],
                   styles["row"],
-                  styles[`row-${field.row}`]
+                  styles[`row-${field.row}`],
+                  field.type !== "checkbox"
+                    ? styles["input"]
+                    : styles["checkbox"]
                 )}
-                key={index}>
+                key={index}
+              >
                 {field["dropdown-options"] ? (
                   <Controller
                     name={field.name}
@@ -236,7 +278,8 @@ export function RegistrationPopup() {
                             }
                           : field.type === "password"
                           ? {
-                              value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                              value:
+                                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
                               message: field["format-error"],
                             }
                           : undefined,
@@ -246,16 +289,9 @@ export function RegistrationPopup() {
                               value === password || field["format-error"]
                           : undefined,
                     })}
-                    // onChange={
-                    //   field.name === "confirmPassword" ||
-                    //   field.name === "password"
-                    //     ? (e) => {
-                    //         trigger(field.name);
-                    //         setValue(field.name, e.target.value);
-                    //         console.log(e.target.value);
-                    //       }
-                    //     : undefined
-                    // }
+                    onFocus={(e) => {
+                      setGeneralError("");
+                    }}
                   />
                 ) : (
                   <Controller
@@ -292,11 +328,26 @@ export function RegistrationPopup() {
               </div>
             ))}
             <button
-              className={clsx(styles["submit-button"], "basic-button solid")}
+              className={clsx(
+                styles["submit-button"],
+                "basic-button solid",
+                loading && "loading"
+              )}
               type="submit"
-              disabled={Object.keys(errors).length > 0}>
+              disabled={Object.keys(errors).length > 0}
+            >
               {structure.registration["nav-buttons"][currentStep]}
             </button>
+            {generalError && (
+              <div
+                className={clsx(
+                  styles["error-message"],
+                  styles["general-error"]
+                )}
+              >
+                {generalError}
+              </div>
+            )}
           </form>
         </div>
       </div>

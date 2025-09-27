@@ -80,28 +80,6 @@
             "placeholder": "טלפון",
             "name": "contactPhone",
             "type": "tel"
-          },
-          {
-            "label": "משרד מתכנן",
-            "mandatory": true,
-            "row": 1,
-            "validation-error": "יש להזין משרד מתכנן",
-            "placeholder": "משרד מתכנן",
-            "name": "planningOffice"
-          },
-          {
-            "label": "מבצע ההערכה",
-            "mandatory": true,
-            "row": 1,
-            "validation-error": "יש להזין מבצע ההערכה",
-            "placeholder": "מבצע ההערכה",
-            "name": "evaluationExecutor",
-            "dropdown-options": [
-              { "value": "evaluationExecutor-1", "label": "מבצע ההערכה 1" },
-              { "value": "evaluationExecutor-2", "label": "מבצע ההערכה 2" },
-              { "value": "evaluationExecutor-3", "label": "מבצע ההערכה 3" },
-              { "value": "evaluationExecutor-4", "label": "מבצע ההערכה 4" }
-            ]
           }
         ]
       },

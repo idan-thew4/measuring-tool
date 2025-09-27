@@ -24,6 +24,7 @@
   box-sizing: border-box;
   height: 4.2rem;
   padding: 1rem 2rem;
+  text-align: center;
 
   &.outline {
     background-color: white;
@@ -39,6 +40,7 @@
   &.solid {
     background-color: $dark-blue;
     color: white;
+    position: relative;
 
     &:hover {
       background-color: color.adjust($dark-blue, $lightness: -10%);
@@ -48,6 +50,21 @@
     &:disabled {
       background-color: $light-grey;
       cursor: not-allowed;
+    }
+
+    &.loading {
+      color: transparent;
+      background-color: color.adjust($dark-blue, $lightness: -10%) !important;
+      &:before {
+        content: "";
+        width: 2rem;
+        height: 2rem;
+        position: absolute;
+        margin: auto;
+        inset: 0;
+        background: url("../../public/icons/spinner_white.svg") no-repeat center;
+        background-size: 2rem !important;
+      }
     }
   }
 

@@ -235,11 +235,12 @@ type ApiContextType = {
     type: string,
     maxScoresOnly?: boolean
   ) => CalcParameters[];
+  url: string;
 };
 
 // const url = "http://localhost:3000/";
 const url =
-  "https://wordpress-1080689-5737105.cloudwaysapps.com/wp-json/slil-api/structure";
+  "https://wordpress-1080689-5737105.cloudwaysapps.com/wp-json/slil-api";
 
 function Store({ children }: PropsWithChildren<{}>) {
   const [structure, setStructure] = useState<structureProps>();
@@ -287,7 +288,7 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   async function getContent() {
     try {
-      const response = await fetch(`${url}`);
+      const response = await fetch(`${url}/structure`);
 
       // const response = await fetch(`${url}/api/temp`);
 
@@ -305,7 +306,9 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   function createScoreObject(structureObject: structureProps) {
     let scoreObjectTemp: ScoreType;
-    const cookies = getCookie(`${scoreObject["personal-details"].email}`);
+    const cookies = getCookie(
+      `${scoreObject["personal-details"].contactEmail}`
+    );
 
     //To DO: // Remove specific email
     // const cookies = getCookie(`office@tdfmail.com`);
@@ -316,7 +319,6 @@ function Store({ children }: PropsWithChildren<{}>) {
       scoreObjectTemp = {
         "personal-details": {
           date: Date.now(),
-          //To DO: // Remove all placeholder data
 
           projectName: "",
           localAuthority: "",
@@ -563,7 +565,9 @@ function Store({ children }: PropsWithChildren<{}>) {
         setRegistrationStatus,
         registrationStatus,
         calculateScores,
-      }}>
+        url,
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );

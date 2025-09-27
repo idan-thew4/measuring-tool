@@ -45,6 +45,7 @@
   box-sizing: border-box;
   height: 4.2rem;
   padding: 1rem 2rem;
+  text-align: center;
 }
 .basic-button.outline {
   background-color: white;
@@ -58,6 +59,7 @@
 .basic-button.solid {
   background-color: #5b6771;
   color: white;
+  position: relative;
 }
 .basic-button.solid:hover {
   background-color: rgb(68.25, 77.25, 84.75);
@@ -66,6 +68,20 @@
 .basic-button.solid:disabled {
   background-color: #d9d9d9;
   cursor: not-allowed;
+}
+.basic-button.solid.loading {
+  color: transparent;
+  background-color: rgb(68.25, 77.25, 84.75) !important;
+}
+.basic-button.solid.loading:before {
+  content: "";
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  margin: auto;
+  inset: 0;
+  background: url("../../public/icons/spinner_white.svg") no-repeat center;
+  background-size: 2rem !important;
 }
 .basic-button.with-icon {
   gap: 1.2rem;
