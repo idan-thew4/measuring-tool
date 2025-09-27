@@ -4,6 +4,7 @@ import styles from "./layout.module.scss";
 import "../styles/globals.scss";
 import { Store } from "../contexts/Store";
 import { RegistrationPopup } from "@/components/registrationPopup/registrationPopup";
+import { LoginPopup } from "@/components/popUps/loginPopup/loginPopup";
 
 export const metadata: Metadata = {
   title: "Slil",
@@ -23,6 +24,7 @@ export default function RootLayout({
             <Header />
             <main className={styles.main}>{children}</main>
             <RegistrationPopup />
+            {/* <LoginPopup /> */}
           </Store>
         </div>
       </body>

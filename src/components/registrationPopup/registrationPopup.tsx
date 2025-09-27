@@ -1,11 +1,12 @@
 "use client";
-import styles from "./registration-pop-up.module.scss";
+import styles from "../popUpContainer/form.module.scss";
 import { useStore, totalCompleted } from "../../contexts/Store";
 import { useEffect, useState } from "react";
 import { ProgressBar } from "@/app/tool/components/progress-bar/progress-bar";
 import clsx from "clsx";
 import { useForm, Controller, set } from "react-hook-form";
 import Select from "react-select";
+import { PopUpContainer } from "../popUpContainer/popUpContainer";
 
 type Inputs = {
   [key: string]: string | { value: string; label: string } | boolean | number;
@@ -99,14 +100,13 @@ export function RegistrationPopup() {
       const data = await response.json();
 
       if (data.success) {
+        setLoading(false);
         return true;
       } else {
         if (data.message) {
           setGeneralError(data.message);
         }
       }
-
-      setLoading(false);
     } catch (error) {
       console.error("Error creating new user:", error);
     }
@@ -190,167 +190,161 @@ export function RegistrationPopup() {
   const password = watch("password");
 
   return (
-    <div className={styles["registration-pop-up-container"]}>
-      <div className={styles["registration-pop-up"]}>
-        <h2 className="headline_medium-big">{structure.registration.title}</h2>
-        {completedSteps && (
-          <ProgressBar completed={completedSteps} indicator={true} />
-        )}
-        <div className={styles["form-container"]}>
-          <div>
-            <h3
-              className={clsx("headline_medium-small bold", styles["headline"])}
-            >
-              {step.title}
-            </h3>
-            <p className="paragraph_16">{step.description}</p>
-            <p className={clsx(styles["validation"], "paragraph_16")}>
-              {structure.registration["validation-general-copy"]}
-            </p>
-          </div>
-          <form
-            style={{ pointerEvents: loading ? "none" : "auto" }}
-            onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}
+    <PopUpContainer
+      headline={structure.registration.steps[currentStep].title}
+      closeButton={() => setRegistrationStatus(false)}
+    >
+      {completedSteps && (
+        <ProgressBar completed={completedSteps} indicator={true} />
+      )}
+      <div className={styles["form-container"]}>
+        <div>
+          <h3
+            className={clsx("headline_medium-small bold", styles["headline"])}
           >
-            {step["input-fields"].map((field, index) => (
-              <div
-                className={clsx(
-                  styles["field"],
-                  styles["row"],
-                  styles[`row-${field.row}`],
-                  field.type !== "checkbox"
-                    ? styles["input"]
-                    : styles["checkbox"]
-                )}
-                key={index}
-              >
-                {field["dropdown-options"] ? (
-                  <Controller
-                    name={field.name}
-                    control={control}
-                    rules={{
-                      required: field.mandatory
-                        ? field["validation-error"]
-                        : false,
-                    }}
-                    render={({ field: controllerField }) => (
-                      <Select
-                        className="dropdown paragraph_18"
-                        classNamePrefix={"dropdown"}
-                        placeholder={`${field.label}${
-                          field.mandatory ? " *" : ""
-                        }`}
-                        isClearable={true}
-                        value={controllerField.value}
-                        isSearchable={true}
-                        // menuIsOpen={true}
-                        options={
-                          field.name === "localAuthority"
-                            ? townsList
-                            : field["dropdown-options"]
-                        }
-                        onChange={(option) =>
-                          controllerField.onChange(option ? option : null)
+            {step.title}
+          </h3>
+          <p className="paragraph_16">{step.description}</p>
+          <p className={clsx(styles["validation"], "paragraph_16")}>
+            {structure.registration["validation-general-copy"]}
+          </p>
+        </div>
+        <form
+          style={{ pointerEvents: loading ? "none" : "auto" }}
+          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}
+        >
+          {step["input-fields"].map((field, index) => (
+            <div
+              className={clsx(
+                styles["field"],
+                styles["row"],
+                styles[`row-${field.row}`],
+                field.type !== "checkbox" ? styles["input"] : styles["checkbox"]
+              )}
+              key={index}
+            >
+              {field["dropdown-options"] ? (
+                <Controller
+                  name={field.name}
+                  control={control}
+                  rules={{
+                    required: field.mandatory
+                      ? field["validation-error"]
+                      : false,
+                  }}
+                  render={({ field: controllerField }) => (
+                    <Select
+                      className="dropdown paragraph_18"
+                      classNamePrefix={"dropdown"}
+                      placeholder={`${field.label}${
+                        field.mandatory ? " *" : ""
+                      }`}
+                      isClearable={true}
+                      value={controllerField.value}
+                      isSearchable={true}
+                      // menuIsOpen={true}
+                      options={
+                        field.name === "localAuthority"
+                          ? townsList
+                          : field["dropdown-options"]
+                      }
+                      onChange={(option) =>
+                        controllerField.onChange(option ? option : null)
+                      }
+                    />
+                  )}
+                />
+              ) : field.type !== "checkbox" ? (
+                <input
+                  type={field.type ? field.type : "text"}
+                  placeholder={`${field.label}${field.mandatory ? " *" : ""}`}
+                  className="paragraph_18"
+                  {...register(field.name, {
+                    required: field.mandatory
+                      ? field["validation-error"]
+                      : false,
+                    pattern:
+                      field.type === "email"
+                        ? {
+                            value:
+                              /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                            message: field["format-error"],
+                          }
+                        : field.type === "tel"
+                        ? {
+                            value: /^0\d{1,2}-?\d{7}$/,
+                            message: field["format-error"],
+                          }
+                        : field.type === "password"
+                        ? {
+                            value:
+                              /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
+                            message: field["format-error"],
+                          }
+                        : undefined,
+                    validate:
+                      field.name === "confirmPassword"
+                        ? (value) => value === password || field["format-error"]
+                        : undefined,
+                  })}
+                  onFocus={(e) => {
+                    setGeneralError("");
+                  }}
+                />
+              ) : (
+                <Controller
+                  name={field.name}
+                  control={control}
+                  rules={{
+                    required: field.mandatory
+                      ? field["validation-error"]
+                      : false,
+                  }}
+                  render={({ field: controllerField }) => (
+                    <label className={styles["checkbox-label"]}>
+                      <input
+                        type="checkbox"
+                        checked={!!controllerField.value}
+                        onChange={(e) =>
+                          controllerField.onChange(e.target.checked)
                         }
                       />
-                    )}
-                  />
-                ) : field.type !== "checkbox" ? (
-                  <input
-                    type={field.type ? field.type : "text"}
-                    placeholder={`${field.label}${field.mandatory ? " *" : ""}`}
-                    className="paragraph_18"
-                    {...register(field.name, {
-                      required: field.mandatory
-                        ? field["validation-error"]
-                        : false,
-                      pattern:
-                        field.type === "email"
-                          ? {
-                              value:
-                                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                              message: field["format-error"],
-                            }
-                          : field.type === "tel"
-                          ? {
-                              value: /^0\d{1,2}-?\d{7}$/,
-                              message: field["format-error"],
-                            }
-                          : field.type === "password"
-                          ? {
-                              value:
-                                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
-                              message: field["format-error"],
-                            }
-                          : undefined,
-                      validate:
-                        field.name === "confirmPassword"
-                          ? (value) =>
-                              value === password || field["format-error"]
-                          : undefined,
-                    })}
-                    onFocus={(e) => {
-                      setGeneralError("");
-                    }}
-                  />
-                ) : (
-                  <Controller
-                    name={field.name}
-                    control={control}
-                    rules={{
-                      required: field.mandatory
-                        ? field["validation-error"]
-                        : false,
-                    }}
-                    render={({ field: controllerField }) => (
-                      <label className={styles["checkbox-label"]}>
-                        <input
-                          type="checkbox"
-                          checked={!!controllerField.value}
-                          onChange={(e) =>
-                            controllerField.onChange(e.target.checked)
-                          }
-                        />
-                        <span className="paragraph_14">
-                          {field.label}
-                          {field.mandatory ? " *" : ""}
-                        </span>
-                      </label>
-                    )}
-                  />
-                )}
-
-                {typeof errors[field.name]?.message === "string" ? (
-                  <span className={styles["error-message"]}>
-                    {errors[field.name]?.message as string}
-                  </span>
-                ) : null}
-              </div>
-            ))}
-            <button
-              className={clsx(
-                styles["submit-button"],
-                "basic-button solid",
-                loading && "loading"
+                      <span className="paragraph_14">
+                        {field.label}
+                        {field.mandatory ? " *" : ""}
+                      </span>
+                    </label>
+                  )}
+                />
               )}
-              type="submit"
-              disabled={Object.keys(errors).length > 0}
-            >
-              {structure.registration["nav-buttons"][currentStep]}
-            </button>
-            {generalError && (
-              <div
-                className={clsx(
-                  styles["error-message"],
-                  styles["general-error"]
-                )}
-              >
-                {generalError}
-              </div>
+
+              {typeof errors[field.name]?.message === "string" ? (
+                <span className={styles["error-message"]}>
+                  {errors[field.name]?.message as string}
+                </span>
+              ) : null}
+            </div>
+          ))}
+          <button
+            className={clsx(
+              styles["submit-button"],
+              "basic-button solid",
+              loading && "loading"
             )}
-          </form>
-        </div>
+            type="submit"
+            disabled={Object.keys(errors).length > 0}
+          >
+            {structure.registration["nav-buttons"][currentStep]}
+          </button>
+          {generalError && (
+            <div
+              className={clsx(styles["error-message"], styles["general-error"])}
+            >
+              {generalError}
+            </div>
+          )}
+        </form>
       </div>
-    </div>
+    </PopUpContainer>
   );
 }

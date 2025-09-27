@@ -1,5 +1,4 @@
-@use "../../../styles/variables" as *;
-@use "sass:color";
+@use "../../styles/variables" as *;
 
 .form-container {
   display: flex;
@@ -25,6 +24,75 @@
     overflow: auto;
 
     @include scroll-bar;
+
+    .row {
+      position: relative;
+      margin-bottom: -0.3rem;
+
+      &.input {
+        height: 5rem;
+        margin-bottom: 5rem;
+      }
+
+      &.checkbox {
+        height: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      &-1 {
+        grid-column: 1/3;
+      }
+
+      &:has(input[type="checkbox"]) {
+        grid-column: 1/3;
+        display: flex;
+        align-items: center;
+      }
+
+      &:has(.error-message) {
+        > input,
+        :global(.dropdown__control) {
+          border-bottom: 0.1rem solid $validation-red !important;
+        }
+      }
+    }
+
+    input:not(input[type="checkbox"]),
+    :global(.dropdown__control) {
+      &,
+      &:focus {
+        width: 100%;
+        border: none;
+        border-bottom: 0.1rem solid $basic-grey;
+        outline: none;
+        font-family: $font-main;
+        padding: 0;
+        height: 100%;
+        transition: 0.3s all;
+        border-radius: 0;
+        box-shadow: none;
+        direction: rtl;
+
+        * {
+          padding: 0;
+          color: $dark-forest-green;
+        }
+
+        &::placeholder {
+          color: $dark-forest-green;
+        }
+      }
+
+      &:-webkit-autofill,
+      &:-webkit-autofill:focus,
+      &:-webkit-autofill:hover,
+      &:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 1000px #fff inset !important; // or your desired bg color
+        box-shadow: 0 0 0 1000px #fff inset !important;
+        -webkit-text-fill-color: #000 !important; // or your desired text color
+        transition: background-color 5000s ease-in-out 0s;
+      }
+    }
 
     //checkbox//
 
@@ -53,7 +121,7 @@
         &:before {
           background-color: $dark-blue !important;
           border-color: $dark-blue;
-          background: url("../../../../public//icons//checkmark_white.svg")
+          background: url("../../../public//icons/checkmark_white.svg")
             no-repeat center;
           background-size: 1rem !important;
         }
@@ -93,8 +161,7 @@
         height: 1.5rem;
         background-size: 1.5rem !important;
         content: "";
-        background: url("../../../../public/icons/arrow-down.svg") no-repeat
-          center;
+        background: url("../../../public/icons/arrow-down.svg") no-repeat center;
         rotate: 0deg;
         transition: 0.3s all;
       }

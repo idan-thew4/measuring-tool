@@ -111,6 +111,14 @@ export type structureProps = {
   summary: Summary;
   "summary-report": SummaryReport;
   "self-assessment": SelfAssessment;
+  login: Login;
+};
+
+type Login = {
+  title: string;
+  text: string[];
+  "input-fields": RegistrationInputField[];
+  "buttons-copy": string;
 };
 
 type SelfAssessment = {
@@ -236,6 +244,8 @@ type ApiContextType = {
     maxScoresOnly?: boolean
   ) => CalcParameters[];
   url: string;
+  loginStatus: boolean;
+  setLoginStatus: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // const url = "http://localhost:3000/";
@@ -281,6 +291,7 @@ function Store({ children }: PropsWithChildren<{}>) {
     string[] | undefined
   >();
   const [registrationStatus, setRegistrationStatus] = useState<boolean>(false);
+  const [loginStatus, setLoginStatus] = useState<boolean>(false);
 
   useEffect(() => {
     setPreviousChapter([chapter, subChapter, principle]);
@@ -566,6 +577,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         registrationStatus,
         calculateScores,
         url,
+        loginStatus,
+        setLoginStatus,
       }}
     >
       {children}

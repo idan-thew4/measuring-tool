@@ -7,6 +7,33 @@
     "bottom-options": ["סיכום", "דוח מסכם", "מילון מונחים"],
     "more": ["הוראות שימוש בכלי", "אודות"]
   },
+  "login": {
+    "title": "ברוכים הבאים לכלי המדידה לאדריכלות נטף מקיימת",
+    "text": ["אין לך חשבון", "הרשמ/י כאן"],
+    "input-fields": [
+      {
+        "label": "דוא״ל",
+        "mandatory": true,
+        "type": "email",
+        "row": 1,
+        "validation-error": "יש להזין כתובת דוא״ל ",
+        "format-error": "יש להזין דוא״ל תקין",
+        "placeholder": "דוא״ל",
+        "name": "email"
+      },
+      {
+        "label": "סיסמה",
+        "mandatory": true,
+        "type": "password",
+        "row": 1,
+        "validation-error": "יש להזין סיסמה",
+        "format-error": "הסיסמה חייבת להכיל לפחות 8 תווים, אותיות ומספרים",
+        "placeholder": "סיסמה",
+        "name": "password"
+      }
+    ],
+    "button-copy": "התחבר"
+  },
   "registration": {
     "validation-general-copy": "* שדות המסומנים בכוכבית הינם חובה",
     "nav-buttons": ["המשך", "המשך", "המשך", "החל במדידה "],

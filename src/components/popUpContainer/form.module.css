@@ -44,6 +44,66 @@
   background-color: #d9d9d9;
   border-radius: 10rem;
 }
+.form-container form .row {
+  position: relative;
+  margin-bottom: -0.3rem;
+}
+.form-container form .row.input {
+  height: 5rem;
+  margin-bottom: 5rem;
+}
+.form-container form .row.checkbox {
+  height: 2rem;
+  margin-bottom: 2rem;
+}
+.form-container form .row-1 {
+  grid-column: 1/3;
+}
+.form-container form .row:has(input[type=checkbox]) {
+  grid-column: 1/3;
+  display: flex;
+  align-items: center;
+}
+.form-container form .row:has(.error-message) > input,
+.form-container form .row:has(.error-message) :global(.dropdown__control) {
+  border-bottom: 0.1rem solid #ff001d !important;
+}
+.form-container form input:not(input[type=checkbox]), .form-container form input:not(input[type=checkbox]):focus,
+.form-container form :global(.dropdown__control),
+.form-container form :global(.dropdown__control):focus {
+  width: 100%;
+  border: none;
+  border-bottom: 0.1rem solid #979797;
+  outline: none;
+  font-family: "SimplerPro", sans-serif;
+  padding: 0;
+  height: 100%;
+  transition: 0.3s all;
+  border-radius: 0;
+  box-shadow: none;
+  direction: rtl;
+}
+.form-container form input:not(input[type=checkbox]) *, .form-container form input:not(input[type=checkbox]):focus *,
+.form-container form :global(.dropdown__control) *,
+.form-container form :global(.dropdown__control):focus * {
+  padding: 0;
+  color: #0e2517;
+}
+.form-container form input:not(input[type=checkbox])::placeholder, .form-container form input:not(input[type=checkbox]):focus::placeholder,
+.form-container form :global(.dropdown__control)::placeholder,
+.form-container form :global(.dropdown__control):focus::placeholder {
+  color: #0e2517;
+}
+.form-container form input:not(input[type=checkbox]):-webkit-autofill, .form-container form input:not(input[type=checkbox]):-webkit-autofill:focus, .form-container form input:not(input[type=checkbox]):-webkit-autofill:hover, .form-container form input:not(input[type=checkbox]):-webkit-autofill:active,
+.form-container form :global(.dropdown__control):-webkit-autofill,
+.form-container form :global(.dropdown__control):-webkit-autofill:focus,
+.form-container form :global(.dropdown__control):-webkit-autofill:hover,
+.form-container form :global(.dropdown__control):-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+  box-shadow: 0 0 0 1000px #fff inset !important;
+  -webkit-text-fill-color: #000 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
 .form-container form label:has(input[type=checkbox]) {
   display: flex;
   gap: 0.5rem;
@@ -66,7 +126,7 @@
 .form-container form input[type=checkbox]:checked:before {
   background-color: #5b6771 !important;
   border-color: #5b6771;
-  background: url("../../../../public//icons//checkmark_white.svg") no-repeat center;
+  background: url("../../../public//icons/checkmark_white.svg") no-repeat center;
   background-size: 1rem !important;
 }
 .form-container form input[type=checkbox]:checked:after {
@@ -95,7 +155,7 @@
   height: 1.5rem;
   background-size: 1.5rem !important;
   content: "";
-  background: url("../../../../public/icons/arrow-down.svg") no-repeat center;
+  background: url("../../../public/icons/arrow-down.svg") no-repeat center;
   rotate: 0deg;
   transition: 0.3s all;
 }
@@ -144,4 +204,4 @@
   width: 100%;
   grid-column: 1/3;
   margin-top: 0.5rem;
-}/*# sourceMappingURL=registration-pop-up.module.css.map */
+}/*# sourceMappingURL=form.module.css.map */
