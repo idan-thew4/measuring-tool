@@ -73,6 +73,11 @@
   }
 }
 
+.link {
+  color: $blue;
+  padding-right: 0.5rem;
+}
+
 button.with-icon,
 a.with-icon {
   &:after {

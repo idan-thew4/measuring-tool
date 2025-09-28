@@ -23,7 +23,8 @@ export default function ChapterPage() {
     scoreObject,
     getCurrentChapter,
     setScoreObject,
-    setRegistrationStatus,
+    setLoginStatus,
+    tokenValidated,
   } = useStore();
   const [currentChapter, setCurrentChapter] =
     useState<currentChapterType | null>(null);
@@ -214,7 +215,7 @@ export default function ChapterPage() {
                   checked={currentChapter?.score === index + 1}
                   onChange={() => {
                     /* TODO: Add this conditions when going live */
-                    if (scoreObject["personal-details"].contactEmail) {
+                    if (tokenValidated) {
                       setScoreObject((prev) =>
                         updateScoreObject(
                           prev,
@@ -226,7 +227,7 @@ export default function ChapterPage() {
                         )
                       );
                     } else {
-                      setRegistrationStatus(true);
+                      setLoginStatus(true);
                     }
                   }}
                 ></input>

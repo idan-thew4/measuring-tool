@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import React, {
   createContext,
   useContext,
@@ -118,7 +118,7 @@ type Login = {
   title: string;
   text: string[];
   "input-fields": RegistrationInputField[];
-  "buttons-copy": string;
+  "button-copy": string;
 };
 
 type SelfAssessment = {
@@ -246,6 +246,8 @@ type ApiContextType = {
   url: string;
   loginStatus: boolean;
   setLoginStatus: React.Dispatch<React.SetStateAction<boolean>>;
+  setTokenValidated: React.Dispatch<React.SetStateAction<boolean>>;
+  tokenValidated: boolean;
 };
 
 // const url = "http://localhost:3000/";
@@ -292,10 +294,42 @@ function Store({ children }: PropsWithChildren<{}>) {
   >();
   const [registrationStatus, setRegistrationStatus] = useState<boolean>(false);
   const [loginStatus, setLoginStatus] = useState<boolean>(false);
+  const [tokenValidated, setTokenValidated] = useState<boolean>(false);
 
   useEffect(() => {
     setPreviousChapter([chapter, subChapter, principle]);
   }, [chapter, subChapter, principle]);
+
+  async function validateToken() {
+    try {
+      const response = await fetch(`${url}/validate-token`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          // "authorization": `Bearer ${Cookies.get('authToken')}`,
+        },
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      console.log("validateToken data", data);
+
+      if (data) {
+        getContent().then((structure) => {
+          if (data.code === "missing_token") {
+            setLoginStatus(true);
+
+            redirect(
+              `/tool/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
+            );
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Failed to validate token:", error);
+    }
+  }
 
   async function getContent() {
     try {
@@ -307,9 +341,10 @@ function Store({ children }: PropsWithChildren<{}>) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-
       setStructure(data);
       createScoreObject(data);
+
+      return data;
     } catch (error) {
       console.error("Failed to fetch content:", error);
     }
@@ -449,7 +484,8 @@ function Store({ children }: PropsWithChildren<{}>) {
   }
 
   useEffect(() => {
-    getContent();
+    // getContent();
+    validateToken();
   }, []);
 
   useEffect(() => {
@@ -579,6 +615,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         url,
         loginStatus,
         setLoginStatus,
+        setTokenValidated,
+        tokenValidated,
       }}
     >
       {children}

@@ -54,6 +54,7 @@ export function RegistrationPopup() {
   } = useForm<Inputs>();
   const [loading, setLoading] = useState<boolean>(false);
   const [generalError, setGeneralError] = useState<string>("");
+  const [values, setValues] = useState<Inputs>([]);
 
   const step = structure?.registration.steps[currentStep];
 
@@ -193,6 +194,12 @@ export function RegistrationPopup() {
     <PopUpContainer
       headline={structure.registration.steps[currentStep].title}
       closeButton={() => setRegistrationStatus(false)}
+      navArrows={currentStep}
+      goToPrevSlide={() => {
+        if (currentStep > 0) {
+          setCurrentStep((prev) => prev - 1);
+        }
+      }}
     >
       {completedSteps && (
         <ProgressBar completed={completedSteps} indicator={true} />

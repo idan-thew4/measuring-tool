@@ -87,6 +87,11 @@
   gap: 1.2rem;
 }
 
+.link {
+  color: #00a6ce;
+  padding-right: 0.5rem;
+}
+
 button.with-icon:after,
 a.with-icon:after {
   content: "";

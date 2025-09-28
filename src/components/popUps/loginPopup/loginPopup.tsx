@@ -1,8 +1,8 @@
 "use client";
 import { useStore } from "../../../contexts/Store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, set } from "react-hook-form";
 import { PopUpContainer } from "../popUpContainer/popUpContainer";
 import formStyles from "../popUpContainer/form.module.scss";
 
@@ -11,37 +11,34 @@ type Inputs = {
 };
 
 export function LoginPopup() {
-  const { structure, url, loginStatus, setLoginStatus } = useStore();
+  const { structure, url, loginStatus, setLoginStatus, setRegistrationStatus } =
+    useStore();
 
   const {
     register,
     handleSubmit,
-    setValue,
-    control,
-    watch,
-
     formState: { errors },
   } = useForm<Inputs>();
   const [loading, setLoading] = useState<boolean>(false);
   const [generalError, setGeneralError] = useState<string>("");
 
-  async function Login(email: string, password: string) {
+  async function login(username: string, password: string) {
     setLoading(true);
     try {
-      const response = await fetch(`${url}/????`, {
+      const response = await fetch(`${url}/slil-login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
 
       if (data.success) {
         setLoading(false);
-        return true;
+        setLoginStatus(false);
       } else {
         if (data.message) {
           setGeneralError(data.message);
@@ -53,107 +50,105 @@ export function LoginPopup() {
   }
 
   const onSubmit = async (stepData: Inputs) => {
-    const email = stepData.email as string;
+    const username = stepData.email as string;
     const password = stepData.password as string;
+
+    login(username, password);
   };
+
+  if (!loginStatus) return null;
   if (!structure) return <div>Loading...</div>;
 
   return (
     <PopUpContainer
-      //   headline={structure.login.title}
-      headline={"temp"}
+      headline={structure.login.title}
       closeButton={() => setLoginStatus(false)}
     >
-      <form
-        style={{ pointerEvents: loading ? "none" : "auto" }}
-        onSubmit={handleSubmit((data) => onSubmit(data))}
-      >
-        {structure.login["input-fields"].map((field, index) => (
-          <div
-            className={clsx(
-              formStyles["field"],
-              formStyles["row"],
-              formStyles[`row-${field.row}`],
-              field.type !== "checkbox"
-                ? formStyles["input"]
-                : formStyles["checkbox"]
-            )}
-            key={index}
-          >
-            <input
-              type={field.type ? field.type : "text"}
-              placeholder={`${field.label}${field.mandatory ? " *" : ""}`}
-              className="paragraph_18"
-              {...register(field.name, {
-                required: field.mandatory ? field["validation-error"] : false,
-                pattern:
-                  field.type === "email"
-                    ? {
-                        value:
-                          /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                        message: field["format-error"],
-                      }
-                    : field.type === "password"
-                    ? {
-                        value:
-                          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
-                        message: field["format-error"],
-                      }
-                    : undefined,
-              })}
-              onFocus={(e) => {
-                setGeneralError("");
+      <div className={formStyles["form-container"]}>
+        <form
+          style={{ pointerEvents: loading ? "none" : "auto" }}
+          onSubmit={handleSubmit((data) => onSubmit(data))}
+        >
+          <p className="paragraph_18">
+            {structure.login["text"][0]}
+            <button
+              className="link"
+              onClick={() => {
+                setLoginStatus(false);
+                setRegistrationStatus(true);
               }}
-            />
-
-            <Controller
-              name={field.name}
-              control={control}
-              rules={{
-                required: field.mandatory ? field["validation-error"] : false,
-              }}
-              render={({ field: controllerField }) => (
-                <label className={formStyles["checkbox-label"]}>
-                  <input
-                    type="checkbox"
-                    checked={!!controllerField.value}
-                    onChange={(e) => controllerField.onChange(e.target.checked)}
-                  />
-                  <span className="paragraph_14">
-                    {field.label}
-                    {field.mandatory ? " *" : ""}
-                  </span>
-                </label>
+            >
+              {structure.login["text"][1]}
+            </button>
+          </p>
+          {structure.login["input-fields"].map((field, index) => (
+            <div
+              className={clsx(
+                formStyles["field"],
+                formStyles["row"],
+                formStyles[`row-${field.row}`],
+                field.type !== "checkbox"
+                  ? formStyles["input"]
+                  : formStyles["checkbox"]
               )}
-            />
+              key={index}
+            >
+              <input
+                type={field.type ? field.type : "text"}
+                placeholder={`${field.label}${field.mandatory ? " *" : ""}`}
+                className="paragraph_18"
+                {...register(field.name, {
+                  required: field.mandatory ? field["validation-error"] : false,
+                  pattern:
+                    field.type === "email"
+                      ? {
+                          value:
+                            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                          message: field["format-error"],
+                        }
+                      : field.type === "password"
+                      ? {
+                          value:
+                            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
+                          message: field["format-error"],
+                        }
+                      : undefined,
+                })}
+                onFocus={(e) => {
+                  setGeneralError("");
+                }}
+              />
 
-            {typeof errors[field.name]?.message === "string" ? (
-              <span className={formStyles["error-message"]}>
-                {errors[field.name]?.message as string}
-              </span>
-            ) : null}
-          </div>
-        ))}
-        <button
-          className={clsx(
-            formStyles["submit-button"],
-            "basic-button solid",
-            loading && "loading"
-          )}
-          type="submit"
-          disabled={Object.keys(errors).length > 0}
-        ></button>
-        {generalError && (
-          <div
+              {typeof errors[field.name]?.message === "string" ? (
+                <span className={formStyles["error-message"]}>
+                  {errors[field.name]?.message as string}
+                </span>
+              ) : null}
+            </div>
+          ))}
+          <button
             className={clsx(
-              formStyles["error-message"],
-              formStyles["general-error"]
+              formStyles["submit-button"],
+              "basic-button solid",
+              loading && "loading"
             )}
+            type="submit"
+            disabled={Object.keys(errors).length > 0}
           >
-            {generalError}
-          </div>
-        )}
-      </form>
+            {structure.login["button-copy"]}
+          </button>
+          {generalError && (
+            <div
+              className={clsx(
+                formStyles["error-message"],
+                formStyles["general-error"]
+              )}
+            >
+              {generalError}
+            </div>
+          )}
+        </form>
+      </div>
     </PopUpContainer>
   );
 }
