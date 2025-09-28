@@ -33,6 +33,7 @@ export function RegistrationPopup() {
     registrationStatus,
     setRegistrationStatus,
     url,
+    tokenValidated,
   } = useStore();
   const [completedSteps, setCompletedSteps] = useState<totalCompleted>();
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -54,10 +55,39 @@ export function RegistrationPopup() {
   } = useForm<Inputs>();
   const [loading, setLoading] = useState<boolean>(false);
   const [generalError, setGeneralError] = useState<string>("");
-  const [values, setValues] = useState<Inputs>([]);
 
-  const step = structure?.registration.steps[currentStep];
+  // If you want to cut the first child from the steps array:
+  const stepsArray = tokenValidated
+    ? structure?.registration.steps.slice(1)
+    : structure?.registration.steps;
+  const step = stepsArray ? stepsArray[currentStep] : undefined;
 
+  async function createNewUser(email: string, password: string) {
+    setLoading(true);
+    try {
+      const response = await fetch(`${url}/create-new-user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setLoading(false);
+        return true;
+      } else {
+        if (data.message) {
+          setGeneralError(data.message);
+        }
+      }
+    } catch (error) {
+      console.error("Error creating new user:", error);
+    }
+  }
   async function getTownList() {
     try {
       const response = await fetch(
@@ -86,38 +116,11 @@ export function RegistrationPopup() {
     }
   }
 
-  async function createNewUser(email: string, password: string) {
-    setLoading(true);
-    try {
-      const response = await fetch(`${url}/create-new-user`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setLoading(false);
-        return true;
-      } else {
-        if (data.message) {
-          setGeneralError(data.message);
-        }
-      }
-    } catch (error) {
-      console.error("Error creating new user:", error);
-    }
-  }
-
   useEffect(() => {
     getTownList();
 
-    if (structure) {
-      const steps = structure.registration.steps.map((step, index) => ({
+    if (stepsArray) {
+      const steps = stepsArray.map((step, index) => ({
         completed: index === 0 ? 1 : 0,
         total: 1,
       }));
@@ -152,13 +155,23 @@ export function RegistrationPopup() {
   }, [scoreObject, step]);
 
   const onSubmit = async (stepData: Inputs, index: number) => {
-    const updatedPersonalDetails = {
-      ...scoreObject["personal-details"],
-      ...stepData,
-    };
-    setData(updatedPersonalDetails);
+    const updatedPersonalDetails = { ...scoreObject["personal-details"] };
+
+    // Update only keys that exist in personal-details
+    Object.keys(stepData).forEach((key) => {
+      if (key in updatedPersonalDetails) {
+        (updatedPersonalDetails as any)[key] = stepData[key];
+      }
+    });
+
+    // Update the scoreObject state
+    setScoreObject((prev) => ({
+      ...prev,
+      "personal-details": updatedPersonalDetails,
+    }));
+
     if (completedSteps && index !== completedSteps.length - 1) {
-      if (index === 0) {
+      if (index === 0 && !tokenValidated) {
         const userCreated = await createNewUser(
           stepData["email"] as string,
           stepData["password"] as string
@@ -192,12 +205,21 @@ export function RegistrationPopup() {
 
   return (
     <PopUpContainer
-      headline={structure.registration.steps[currentStep].title}
+      headline={stepsArray ? stepsArray[currentStep].title : ""}
       closeButton={() => setRegistrationStatus(false)}
       navArrows={currentStep}
       goToPrevSlide={() => {
         if (currentStep > 0) {
           setCurrentStep((prev) => prev - 1);
+          setCompletedSteps((prev) => {
+            if (!prev) return prev;
+            const newSteps = [...prev];
+            newSteps[currentStep] = {
+              ...newSteps[currentStep],
+              completed: 0,
+            };
+            return newSteps;
+          });
         }
       }}
     >

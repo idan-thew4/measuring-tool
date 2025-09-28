@@ -12,8 +12,6 @@ export default function ToolLayout({
   const [chapter, subChapter, principle] = params?.chapters || [];
   const { structure, tokenValidated } = useStore();
 
-  console.log("tokenValidated", params);
-
   if (!structure || (!tokenValidated && !params.chapters)) {
     return <div>Loading...</div>;
   }

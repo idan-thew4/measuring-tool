@@ -80,26 +80,20 @@ type ChoicePoints = {
 };
 
 type PersonalDetails = {
-  date: number;
   projectName: string;
-  localAuthority: string;
-  projectType: string;
-  projectSubType: string;
-  projectArea: string;
-  projectStatus: string;
-  projectStartYear: string;
-  projectEndYear: string;
-  professionalTraining: string;
-  planningTeamRole: string;
+  localAuthority: { value: string; label: string } | string;
+  projectType: { value: string; label: string } | string;
+  projectSubType: { value: string; label: string } | string;
+  projectStatus: { value: string; label: string } | string;
+  projectStartYear: { value: string; label: string } | string;
+  projectEndYear: { value: string; label: string } | string;
   yearsOfExperience: string;
-  education: string;
-  gender: string;
+  education: { value: string; label: string } | string;
+  gender: { value: string; label: string } | string;
+  professionalTraining: { value: string; label: string } | string;
   contactPerson: string;
   contactEmail: string;
   contactPhone: string;
-  planningOffice: string;
-  evaluationExecutor: string;
-  "data-agreement": string;
 };
 
 //Structure types//
@@ -258,26 +252,20 @@ function Store({ children }: PropsWithChildren<{}>) {
   const [structure, setStructure] = useState<structureProps>();
   const [scoreObject, setScoreObject] = useState<ScoreType>({
     "personal-details": {
-      date: Date.now(),
       projectName: "",
-      localAuthority: "",
-      projectType: "",
-      projectSubType: "",
-      projectArea: "",
-      projectStatus: "",
-      projectStartYear: "",
-      projectEndYear: "",
-      professionalTraining: "",
-      planningTeamRole: "",
+      localAuthority: { value: "", label: "" },
+      projectType: { value: "", label: "" },
+      projectSubType: { value: "", label: "" },
+      projectStatus: { value: "", label: "" },
+      projectStartYear: { value: "", label: "" },
+      projectEndYear: { value: "", label: "" },
       yearsOfExperience: "",
-      education: "",
-      gender: "",
+      education: { value: "", label: "" },
+      gender: { value: "", label: "" },
+      professionalTraining: { value: "", label: "" },
       contactPerson: "",
       contactEmail: "",
       contactPhone: "",
-      planningOffice: "",
-      evaluationExecutor: "",
-      "data-agreement": "",
     },
     data: {
       questionnaire: [],
@@ -294,7 +282,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   >();
   const [registrationStatus, setRegistrationStatus] = useState<boolean>(false);
   const [loginStatus, setLoginStatus] = useState<boolean>(false);
-  const [tokenValidated, setTokenValidated] = useState<boolean>(false);
+  const [tokenValidated, setTokenValidated] = useState<boolean>(true);
 
   useEffect(() => {
     setPreviousChapter([chapter, subChapter, principle]);
@@ -313,8 +301,6 @@ function Store({ children }: PropsWithChildren<{}>) {
 
       const data = await response.json();
 
-      console.log("validateToken data", data);
-
       if (data) {
         getContent().then((structure) => {
           if (data.code === "missing_token") {
@@ -323,6 +309,11 @@ function Store({ children }: PropsWithChildren<{}>) {
             redirect(
               `/tool/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
             );
+          }
+
+          if (data.success) {
+            setLoginStatus(false);
+            setTokenValidated(true);
           }
         });
       }
@@ -364,27 +355,20 @@ function Store({ children }: PropsWithChildren<{}>) {
     } else {
       scoreObjectTemp = {
         "personal-details": {
-          date: Date.now(),
-
           projectName: "",
           localAuthority: "",
           projectType: "",
           projectSubType: "",
-          projectArea: "",
           projectStatus: "",
           projectStartYear: "",
           projectEndYear: "",
-          professionalTraining: "",
-          planningTeamRole: "",
           yearsOfExperience: "",
           education: "",
           gender: "",
+          professionalTraining: "",
           contactPerson: "",
           contactEmail: "",
           contactPhone: "",
-          planningOffice: "",
-          evaluationExecutor: "",
-          "data-agreement": "",
         },
         data: {
           questionnaire: structureObject.questionnaire.content.map(

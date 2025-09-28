@@ -40,6 +40,22 @@
     }
   }
 
+  .headline-container {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    .nav-arrow {
+      background: url("../../../../public/icons/arrow-down.svg") no-repeat
+        center;
+      background-size: 2.4rem;
+      width: 2.4rem;
+      height: 2.4rem;
+      opacity: 0.5;
+      rotate: 270deg;
+    }
+  }
+
   .form-container {
     display: flex;
     flex-direction: column;
