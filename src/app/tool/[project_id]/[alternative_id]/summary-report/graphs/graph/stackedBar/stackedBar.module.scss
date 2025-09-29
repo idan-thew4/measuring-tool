@@ -1,0 +1,46 @@
+@use "../../../../../../../../styles/variables" as *;
+
+.responsive-container {
+  > div {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  :global(.recharts-surface) {
+    overflow: visible;
+
+    :global(.recharts-layer.recharts-yAxis .recharts-cartesian-axis-tick) {
+      &:first-of-type {
+        display: none;
+      }
+
+      &:last-of-type {
+        $dataPoints: 10rem, 45rem, 80rem;
+        @for $i from 1 through length($dataPoints) {
+          :global(g):nth-of-type(#{$i}) {
+            transform: translate(nth($dataPoints, $i), 0) !important;
+          }
+        }
+      }
+    }
+
+    :global(.recharts-cartesian-grid-horizontal) {
+      line:first-of-type {
+        display: none;
+      }
+    }
+  }
+}
+
+.data-bar {
+  direction: ltr;
+  gap: 1.6rem;
+  padding: 0 0.8rem 0 0.6rem;
+  margin-top: -0.5rem;
+  &-item {
+    color: $basic-grey;
+    text-align: center;
+    border-top: 0.1rem solid black;
+    padding-top: 1rem;
+  }
+}

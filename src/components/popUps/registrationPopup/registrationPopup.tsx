@@ -6,7 +6,7 @@ import {
   PersonalDetails,
 } from "../../../contexts/Store";
 import { useEffect, useState } from "react";
-import { ProgressBar } from "@/app/tool/components/progress-bar/progress-bar";
+import { ProgressBar } from "@/app/tool/[project_id]/[alternative_id]/components/progress-bar/progress-bar";
 import clsx from "clsx";
 import { useForm, Controller, set } from "react-hook-form";
 import Select from "react-select";
@@ -294,7 +294,7 @@ export function RegistrationPopup() {
       setRegistrationStatus(false);
     }
   };
-  if (registrationStatus) return null;
+  if (!registrationStatus) return null;
   if (!structure || !step) return <div>Loading...</div>;
 
   const password = watch("password");

@@ -1,0 +1,9 @@
+@use "../../../../../styles/variables" as *;
+
+.summary {
+  grid-template-rows: repeat(2, min-content);
+
+  .tables-container {
+    grid-column: 3 / 8;
+  }
+}

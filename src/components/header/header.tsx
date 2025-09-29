@@ -21,7 +21,8 @@ export function Header() {
       <button
         onClick={() => {
           document.cookie = `office@tdfmail.com=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-          window.location.href = "/tool/self-assessment";
+          window.location.href =
+            "/tool/${project_id}/${alternative_id}/${project_id}/${alternative_id}self-assessment";
         }}
         className="basic-button outline negative">
         התחל שאלון חדש
