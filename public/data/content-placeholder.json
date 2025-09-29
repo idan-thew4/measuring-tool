@@ -99,6 +99,16 @@
             "name": "contactPerson"
           },
           {
+            "label": "דוא״ל",
+            "mandatory": true,
+            "type": "email",
+            "row": 1,
+            "validation-error": "יש להזין כתובת דוא״ל ",
+            "format-error": "יש להזין דוא״ל תקין",
+            "placeholder": "דוא״ל",
+            "name": "email"
+          },
+          {
             "label": "טלפון",
             "mandatory": true,
             "row": 1,

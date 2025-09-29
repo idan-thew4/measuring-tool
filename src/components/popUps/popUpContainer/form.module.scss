@@ -98,6 +98,11 @@
       }
     }
 
+    :global(.dropdown__control--is-disabled) {
+      background-color: transparent;
+      opacity: 0.5;
+    }
+
     //checkbox//
 
     label:has(input[type="checkbox"]) {
@@ -203,7 +208,13 @@
         :global(.dropdown__option--is-focused),
         :global(.dropdown__option--is-selected) {
           background-color: transparent;
-          color: $lime-green;
+          color: $blue;
+        }
+      }
+
+      &:global(.bottom-dropdown) {
+        :global(.dropdown__menu) {
+          // top: -14rem;
         }
       }
     }

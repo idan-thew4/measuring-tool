@@ -79,7 +79,7 @@ type ChoicePoints = {
   comment?: string;
 };
 
-type PersonalDetails = {
+export type PersonalDetails = {
   projectName: string;
   localAuthority: { value: string; label: string } | string;
   projectType: { value: string; label: string } | string;
@@ -94,6 +94,8 @@ type PersonalDetails = {
   contactPerson: string;
   contactEmail: string;
   contactPhone: string;
+  projectArea: string;
+  planningTeamRole: string;
 };
 
 //Structure types//
@@ -266,6 +268,8 @@ function Store({ children }: PropsWithChildren<{}>) {
       contactPerson: "",
       contactEmail: "",
       contactPhone: "",
+      projectArea: "",
+      planningTeamRole: "",
     },
     data: {
       questionnaire: [],
@@ -369,6 +373,8 @@ function Store({ children }: PropsWithChildren<{}>) {
           contactPerson: "",
           contactEmail: "",
           contactPhone: "",
+          projectArea: "",
+          planningTeamRole: "",
         },
         data: {
           questionnaire: structureObject.questionnaire.content.map(
@@ -601,8 +607,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         setLoginStatus,
         setTokenValidated,
         tokenValidated,
-      }}
-    >
+      }}>
       {children}
     </ApiContext.Provider>
   );

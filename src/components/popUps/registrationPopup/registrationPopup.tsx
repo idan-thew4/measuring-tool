@@ -1,6 +1,10 @@
 "use client";
-import styles from "../popUpContainer/form.module.scss";
-import { useStore, totalCompleted } from "../../../contexts/Store";
+import formStyles from "../popUpContainer/form.module.scss";
+import {
+  useStore,
+  totalCompleted,
+  PersonalDetails,
+} from "../../../contexts/Store";
 import { useEffect, useState } from "react";
 import { ProgressBar } from "@/app/tool/components/progress-bar/progress-bar";
 import clsx from "clsx";
@@ -37,26 +41,26 @@ export function RegistrationPopup() {
   } = useStore();
   const [completedSteps, setCompletedSteps] = useState<totalCompleted>();
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [data, setData] = useState<Inputs>({});
-  const [showRegistrationPopup, setShowRegistrationPopup] =
-    useState<boolean>(false);
   const [townsList, setTownsList] = useState<
     { value: string; label: string }[]
   >([]);
+  const [yearsList, setYearsList] = useState<{
+    start: { value: string; label: string }[];
+    end: { value: string; label: string }[];
+  }>({ start: [], end: [] });
+
   const {
     register,
     handleSubmit,
     setValue,
     control,
     watch,
-    setError,
 
     formState: { errors },
   } = useForm<Inputs>();
   const [loading, setLoading] = useState<boolean>(false);
   const [generalError, setGeneralError] = useState<string>("");
 
-  // If you want to cut the first child from the steps array:
   const stepsArray = tokenValidated
     ? structure?.registration.steps.slice(1)
     : structure?.registration.steps;
@@ -88,6 +92,73 @@ export function RegistrationPopup() {
       console.error("Error creating new user:", error);
     }
   }
+
+  async function createProject(personalDetails: PersonalDetails) {
+    setLoading(true);
+
+    const personalDetailsForSend = Object.entries(personalDetails).reduce(
+      (acc, [key, value]) => {
+        if (
+          key === "localAuthority" ||
+          key === "projectStartYear" ||
+          key === "projectEndYear"
+        ) {
+          acc[key] = (value as { label: string }).label;
+        } else {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {} as Record<string, string | number | { value: string; label: string }>
+    );
+
+    console.log(personalDetailsForSend);
+
+    // try {
+    //   const response = await fetch(`${url}/create-project`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     credentials: "include",
+    //     body: JSON.stringify({ personalDetails: personalDetailsForSend }),
+    //   });
+
+    //   const data = await response.json();
+
+    //   if (data.success) {
+    //     setLoading(false);
+    //     return true;
+    //   } else {
+    //     if (data.message) {
+    //       setGeneralError(data.message);
+    //     }
+    try {
+      const response = await fetch(`${url}/create-project`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(personalDetailsForSend),
+      });
+
+      const data = await response.json();
+
+      // console.log(data);
+
+      if (data.success) {
+        setLoading(false);
+      } else {
+        if (data.message) {
+          setGeneralError(data.message);
+        }
+      }
+    } catch (error) {
+      console.error("Error creating new user:", error);
+    }
+  }
+
   async function getTownList() {
     try {
       const response = await fetch(
@@ -115,9 +186,39 @@ export function RegistrationPopup() {
       console.error("Failed to fetch content:", error);
     }
   }
+  function getYearsList() {
+    let currentYear = new Date().getFullYear();
+    let years: { value: string; label: string }[] = [];
+    for (let i = currentYear; i >= 1945; i--) {
+      years.push({ value: i.toString(), label: i.toString() });
+    }
+    setYearsList((prev) => ({
+      ...prev,
+      start: [...(prev?.start || []), ...years],
+      end: prev.end,
+    }));
+  }
+  function setEndYears(
+    startYearOption: { value: string; label: string } | null
+  ) {
+    if (startYearOption) {
+      const startYear = parseInt(startYearOption.value);
+      const endYears: { value: string; label: string }[] = [];
+
+      for (let year = startYear + 1; year <= new Date().getFullYear(); year++) {
+        endYears.push({ value: year.toString(), label: year.toString() });
+      }
+
+      setYearsList((prev) => ({
+        ...prev,
+        end: endYears,
+      }));
+    }
+  }
 
   useEffect(() => {
     getTownList();
+    getYearsList();
 
     if (stepsArray) {
       const steps = stepsArray.map((step, index) => ({
@@ -163,8 +264,6 @@ export function RegistrationPopup() {
         (updatedPersonalDetails as any)[key] = stepData[key];
       }
     });
-
-    // Update the scoreObject state
     setScoreObject((prev) => ({
       ...prev,
       "personal-details": updatedPersonalDetails,
@@ -191,14 +290,11 @@ export function RegistrationPopup() {
         return newSteps;
       });
     } else {
+      createProject(updatedPersonalDetails);
       setRegistrationStatus(false);
-      setScoreObject((prev) => ({
-        ...prev,
-        "personal-details": updatedPersonalDetails,
-      }));
     }
   };
-  if (!registrationStatus) return null;
+  if (registrationStatus) return null;
   if (!structure || !step) return <div>Loading...</div>;
 
   const password = watch("password");
@@ -221,37 +317,38 @@ export function RegistrationPopup() {
             return newSteps;
           });
         }
-      }}
-    >
+      }}>
       {completedSteps && (
         <ProgressBar completed={completedSteps} indicator={true} />
       )}
-      <div className={styles["form-container"]}>
+      <div className={formStyles["form-container"]}>
         <div>
           <h3
-            className={clsx("headline_medium-small bold", styles["headline"])}
-          >
+            className={clsx(
+              "headline_medium-small bold",
+              formStyles["headline"]
+            )}>
             {step.title}
           </h3>
           <p className="paragraph_16">{step.description}</p>
-          <p className={clsx(styles["validation"], "paragraph_16")}>
+          <p className={clsx(formStyles["validation"], "paragraph_16")}>
             {structure.registration["validation-general-copy"]}
           </p>
         </div>
         <form
           style={{ pointerEvents: loading ? "none" : "auto" }}
-          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}
-        >
+          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}>
           {step["input-fields"].map((field, index) => (
             <div
               className={clsx(
-                styles["field"],
-                styles["row"],
-                styles[`row-${field.row}`],
-                field.type !== "checkbox" ? styles["input"] : styles["checkbox"]
+                formStyles["field"],
+                formStyles["row"],
+                formStyles[`row-${field.row}`],
+                field.type !== "checkbox"
+                  ? formStyles["input"]
+                  : formStyles["checkbox"]
               )}
-              key={index}
-            >
+              key={index}>
               {field["dropdown-options"] ? (
                 <Controller
                   name={field.name}
@@ -263,7 +360,12 @@ export function RegistrationPopup() {
                   }}
                   render={({ field: controllerField }) => (
                     <Select
-                      className="dropdown paragraph_18"
+                      className={`dropdown paragraph_18 ${
+                        field.name === "projectStartYear" ||
+                        field.name === "projectEndYear"
+                          ? "bottom-dropdown"
+                          : ""
+                      }`}
                       classNamePrefix={"dropdown"}
                       placeholder={`${field.label}${
                         field.mandatory ? " *" : ""
@@ -271,15 +373,25 @@ export function RegistrationPopup() {
                       isClearable={true}
                       value={controllerField.value}
                       isSearchable={true}
+                      isDisabled={
+                        field.name === "projectEndYear" &&
+                        yearsList.end.length === 0
+                      }
                       // menuIsOpen={true}
                       options={
                         field.name === "localAuthority"
                           ? townsList
+                          : field.name === "projectStartYear"
+                          ? yearsList.start
+                          : field.name === "projectEndYear"
+                          ? yearsList.end
                           : field["dropdown-options"]
                       }
-                      onChange={(option) =>
-                        controllerField.onChange(option ? option : null)
-                      }
+                      onChange={(option) => {
+                        controllerField.onChange(option ? option : null);
+                        field.name === "projectStartYear" &&
+                          setEndYears(option);
+                      }}
                     />
                   )}
                 />
@@ -330,7 +442,7 @@ export function RegistrationPopup() {
                       : false,
                   }}
                   render={({ field: controllerField }) => (
-                    <label className={styles["checkbox-label"]}>
+                    <label className={formStyles["checkbox-label"]}>
                       <input
                         type="checkbox"
                         checked={!!controllerField.value}
@@ -348,7 +460,7 @@ export function RegistrationPopup() {
               )}
 
               {typeof errors[field.name]?.message === "string" ? (
-                <span className={styles["error-message"]}>
+                <span className={formStyles["error-message"]}>
                   {errors[field.name]?.message as string}
                 </span>
               ) : null}
@@ -356,19 +468,20 @@ export function RegistrationPopup() {
           ))}
           <button
             className={clsx(
-              styles["submit-button"],
+              formStyles["submit-button"],
               "basic-button solid",
               loading && "loading"
             )}
             type="submit"
-            disabled={Object.keys(errors).length > 0}
-          >
+            disabled={Object.keys(errors).length > 0}>
             {structure.registration["nav-buttons"][currentStep]}
           </button>
           {generalError && (
             <div
-              className={clsx(styles["error-message"], styles["general-error"])}
-            >
+              className={clsx(
+                formStyles["error-message"],
+                formStyles["general-error"]
+              )}>
               {generalError}
             </div>
           )}
