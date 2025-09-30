@@ -8,10 +8,11 @@ import { RadarGraph } from "../summary-report/graphs/graph/radar/radar";
 import { useEffect, useState } from "react";
 import { ScoreData } from "../summary-report/page";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function SelfAssessment() {
-  const { structure, scoreObject } = useStore();
+  const { structure, scoreObject, url, setScoreObject, setSideMenu } =
+    useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
     secondChapter: ScoreData[];
@@ -20,6 +21,44 @@ export default function SelfAssessment() {
     secondChapter: [],
   });
   const params = useParams();
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
+  async function getSelfAssessmentData(project_id: string) {
+    try {
+      const response = await fetch(`${url}/get-self-assessment-data`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ project_id }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setLoading(false);
+        setSideMenu("self-assessment");
+
+        if (data.data !== 0) {
+          setScoreObject((prev) => ({
+            ...prev,
+            data: {
+              ...prev.data,
+              assessment: data.data,
+            },
+          }));
+        }
+      } else {
+        router.push(
+          `/tool/0/0/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
+        );
+      }
+    } catch (error) {
+      console.error("Error creating new user:", error);
+    }
+  }
 
   useEffect(() => {
     if (scoreObject && structure) {
@@ -79,6 +118,16 @@ export default function SelfAssessment() {
       });
     }
   }, [scoreObject, structure]);
+
+  useEffect(() => {
+    if (params.project_id) {
+      getSelfAssessmentData(String(params.project_id));
+    }
+  }, [params.project_id]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className={clsx(styles["main-container"], "main-container")}>

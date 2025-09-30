@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect, useParams } from "next/navigation";
+import { redirect, useParams, usePathname } from "next/navigation";
 import React, {
   createContext,
   useContext,
@@ -231,8 +231,8 @@ type ApiContextType = {
   structure: structureProps | undefined;
   previousChapter?: string[];
   getCurrentChapter: (chapterSlug: string) => Chapter | undefined;
-  setRegistrationStatus: React.Dispatch<React.SetStateAction<boolean>>;
-  registrationStatus: boolean;
+  setRegistrationPopup: React.Dispatch<React.SetStateAction<string>>;
+  registrationPopup: string;
   calculateScores: (
     data: ChapterPoints[],
     graph: string,
@@ -240,10 +240,15 @@ type ApiContextType = {
     maxScoresOnly?: boolean
   ) => CalcParameters[];
   url: string;
-  loginStatus: boolean;
-  setLoginStatus: React.Dispatch<React.SetStateAction<boolean>>;
-  setTokenValidated: React.Dispatch<React.SetStateAction<boolean>>;
-  tokenValidated: boolean;
+  loginPopup: boolean;
+  setLoginPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  getContent: () => Promise<structureProps | undefined>;
+  setIsTokenChecked: React.Dispatch<React.SetStateAction<boolean>>;
+  isTokenChecked: boolean;
+  sideMenu: string;
+  setSideMenu: React.Dispatch<React.SetStateAction<string>>;
+  isUserLogged: boolean;
+  setIsUserLogged: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // const url = "http://localhost:3000/";
@@ -284,47 +289,15 @@ function Store({ children }: PropsWithChildren<{}>) {
   const [previousChapter, setPreviousChapter] = useState<
     string[] | undefined
   >();
-  const [registrationStatus, setRegistrationStatus] = useState<boolean>(false);
-  const [loginStatus, setLoginStatus] = useState<boolean>(false);
-  const [tokenValidated, setTokenValidated] = useState<boolean>(false);
+  const [registrationPopup, setRegistrationPopup] = useState<string>("");
+  const [loginPopup, setLoginPopup] = useState<boolean>(false);
+  const [isTokenChecked, setIsTokenChecked] = useState(false);
+  const [sideMenu, setSideMenu] = useState<string>("");
+  const [isUserLogged, setIsUserLogged] = useState(false);
 
   useEffect(() => {
     setPreviousChapter([chapter, subChapter, principle]);
   }, [chapter, subChapter, principle]);
-
-  async function validateToken() {
-    try {
-      const response = await fetch(`${url}/validate-token`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          // "authorization": `Bearer ${Cookies.get('authToken')}`,
-        },
-        credentials: "include",
-      });
-
-      const data = await response.json();
-
-      if (data) {
-        getContent().then((structure) => {
-          if (data.code === "missing_token") {
-            setLoginStatus(true);
-
-            redirect(
-              `/tool/0/0/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
-            );
-          }
-
-          if (data.success) {
-            setLoginStatus(false);
-            setTokenValidated(true);
-          }
-        });
-      }
-    } catch (error) {
-      console.error("Failed to validate token:", error);
-    }
-  }
 
   async function getContent() {
     try {
@@ -474,8 +447,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   }
 
   useEffect(() => {
-    // getContent();
-    validateToken();
+    getContent();
   }, []);
 
   useEffect(() => {
@@ -486,7 +458,7 @@ function Store({ children }: PropsWithChildren<{}>) {
       scoreObject.data.questionnaire &&
       scoreObject.data.questionnaire.length > 0
     ) {
-      setRegistrationStatus(false);
+      setRegistrationPopup("");
       const jsonCookie = JSON.stringify(scoreObject);
       setCookie(
         `${scoreObject["personal-details"].contactEmail}`,
@@ -599,14 +571,19 @@ function Store({ children }: PropsWithChildren<{}>) {
         structure,
         previousChapter,
         getCurrentChapter,
-        setRegistrationStatus,
-        registrationStatus,
+        setRegistrationPopup,
+        registrationPopup,
         calculateScores,
         url,
-        loginStatus,
-        setLoginStatus,
-        setTokenValidated,
-        tokenValidated,
+        loginPopup,
+        setLoginPopup,
+        getContent,
+        setIsTokenChecked,
+        isTokenChecked,
+        sideMenu,
+        setSideMenu,
+        isUserLogged,
+        setIsUserLogged,
       }}
     >
       {children}

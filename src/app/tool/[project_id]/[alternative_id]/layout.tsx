@@ -11,9 +11,9 @@ export default function ToolLayout({
   const params = useParams();
   const [chapter, subChapter, principle] = params?.chapters || [];
 
-  const { structure, tokenValidated } = useStore();
+  const { structure, sideMenu } = useStore();
 
-  if (!structure || (!tokenValidated && !params.chapters)) {
+  if (!structure) {
     return <div>Loading...</div>;
   }
 
@@ -22,6 +22,7 @@ export default function ToolLayout({
       <SideMenu
         structure={structure}
         currentChapter={[chapter, subChapter, principle]}
+        type={sideMenu}
         project_id={Number(params.project_id)}
         alternative_id={Number(params.alternative_id)}
       />

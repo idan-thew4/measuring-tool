@@ -5,6 +5,7 @@ import { useStore, ScoreType, Chapter } from "../../../../../contexts/Store";
 import styles from "./chapters.module.scss";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type currentChapterType = {
   score: number;
@@ -23,8 +24,14 @@ export default function ChapterPage() {
     scoreObject,
     getCurrentChapter,
     setScoreObject,
-    setLoginStatus,
-    tokenValidated,
+    setLoginPopup,
+    getContent,
+    setIsTokenChecked,
+    isTokenChecked,
+    url,
+    setSideMenu,
+    setIsUserLogged,
+    isUserLogged,
   } = useStore();
   const [currentChapter, setCurrentChapter] =
     useState<currentChapterType | null>(null);
@@ -57,10 +64,55 @@ export default function ChapterPage() {
     },
   ]);
   const [comment, setComment] = useState("");
+  const router = useRouter();
 
-  const [animationClass, setAnimationClass] = useState("slide-in");
+  async function validateToken() {
+    console.log("validating token function");
+    try {
+      const response = await fetch(`${url}/validate-token`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          // "authorization": `Bearer ${Cookies.get('authToken')}`,
+        },
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      if (data) {
+        setLoginPopup(false);
+
+        getContent().then((structure) => {
+          if (data.code === "missing_token") {
+            router.push(`/tool/0/0/${chapter}/${subChapter}/${principle}`);
+          }
+
+          if (data.success) {
+            router.push(`/tool/user-dashboard`);
+            setIsUserLogged(true);
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Failed to validate token:", error);
+    }
+  }
 
   useEffect(() => {
+    if (
+      (params.project_id === "0" || params.alternative_id === "0") &&
+      !isTokenChecked
+    ) {
+      validateToken();
+      setIsTokenChecked(true);
+    } else {
+    }
+  }, [params]);
+
+  useEffect(() => {
+    setSideMenu("questionnaire");
+
     if (scoreObject.data) {
       setCurrentChapter({
         score:
@@ -162,7 +214,8 @@ export default function ChapterPage() {
         className={clsx(
           styles["chapter-box"],
           currentChapter?.score === -1 && styles["skip"]
-        )}>
+        )}
+      >
         <div className={styles["chapter-headline-container"]}>
           <div className={styles["headline"]}>
             <h2 className={clsx("headline_small bold", styles["title"])}>
@@ -189,7 +242,8 @@ export default function ChapterPage() {
                       toggle ? undefined : -1
                     )
                   );
-                }}></button>
+                }}
+              ></button>
             </div>
           </div>
           <p className={clsx("paragraph_19", styles["description"])}>
@@ -203,7 +257,8 @@ export default function ChapterPage() {
               className={clsx(
                 styles["option"],
                 currentChapter?.score === index + 1 ? styles["selected"] : ""
-              )}>
+              )}
+            >
               <div className={clsx(styles["option-selection"], "paragraph_19")}>
                 <input
                   type="radio"
@@ -211,8 +266,7 @@ export default function ChapterPage() {
                   value={option}
                   checked={currentChapter?.score === index + 1}
                   onChange={() => {
-                    /* TODO: Add this conditions when going live */
-                    if (tokenValidated) {
+                    if (isUserLogged) {
                       setScoreObject((prev) =>
                         updateScoreObject(
                           prev,
@@ -224,12 +278,14 @@ export default function ChapterPage() {
                         )
                       );
                     } else {
-                      setLoginStatus(true);
+                      setLoginPopup(true);
                     }
-                  }}></input>
+                  }}
+                ></input>
                 <label
                   className="paragraph_19 bold"
-                  htmlFor={`option-${index + 1}`}>
+                  htmlFor={`option-${index + 1}`}
+                >
                   {option}
                 </label>
 
@@ -250,7 +306,8 @@ export default function ChapterPage() {
                             : item
                         )
                       )
-                    }>
+                    }
+                  >
                     {currentChapter.choices[index]?.title && (
                       <>{currentChapter.choices[index].title}</>
                     )}
@@ -270,7 +327,8 @@ export default function ChapterPage() {
                     )?.state
                       ? "1.5rem"
                       : "0",
-                  }}>
+                  }}
+                >
                   {currentChapter?.choices[index]?.text && (
                     <>{currentChapter.choices[index].text}</>
                   )}

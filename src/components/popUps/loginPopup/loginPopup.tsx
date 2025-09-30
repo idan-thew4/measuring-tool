@@ -1,17 +1,18 @@
 "use client";
 import { useStore } from "../../../contexts/Store";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import clsx from "clsx";
 import { useForm, Controller, set } from "react-hook-form";
 import { PopUpContainer } from "../popUpContainer/popUpContainer";
 import formStyles from "../popUpContainer/form.module.scss";
+import { useRouter } from "next/navigation";
 
 type Inputs = {
   [key: string]: string | { value: string; label: string } | boolean | number;
 };
 
 export function LoginPopup() {
-  const { structure, url, loginStatus, setLoginStatus, setRegistrationStatus } =
+  const { structure, url, loginPopup, setLoginPopup, setRegistrationPopup } =
     useStore();
 
   const {
@@ -21,6 +22,7 @@ export function LoginPopup() {
   } = useForm<Inputs>();
   const [loading, setLoading] = useState<boolean>(false);
   const [generalError, setGeneralError] = useState<string>("");
+  const router = useRouter();
 
   async function login(username: string, password: string) {
     setLoading(true);
@@ -38,7 +40,8 @@ export function LoginPopup() {
 
       if (data.success) {
         setLoading(false);
-        setLoginStatus(false);
+        setLoginPopup(false);
+        router.push(`/tool/user-dashboard`);
       } else {
         if (data.message) {
           setGeneralError(data.message);
@@ -56,13 +59,13 @@ export function LoginPopup() {
     login(username, password);
   };
 
-  if (!loginStatus) return null;
+  if (!loginPopup) return null;
   if (!structure) return <div>Loading...</div>;
 
   return (
     <PopUpContainer
       headline={structure.login.title}
-      closeButton={() => setLoginStatus(false)}
+      closeButton={() => setLoginPopup(false)}
     >
       <div className={formStyles["form-container"]}>
         <form
@@ -74,8 +77,8 @@ export function LoginPopup() {
             <button
               className="link"
               onClick={() => {
-                setLoginStatus(false);
-                setRegistrationStatus(true);
+                setLoginPopup(false);
+                setRegistrationPopup("register");
               }}
             >
               {structure.login["text"][1]}

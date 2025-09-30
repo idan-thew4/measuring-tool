@@ -11,7 +11,7 @@ import clsx from "clsx";
 import { useForm, Controller, set } from "react-hook-form";
 import Select from "react-select";
 import { PopUpContainer } from "../popUpContainer/popUpContainer";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 type Inputs = {
   [key: string]: string | { value: string; label: string } | boolean | number;
@@ -36,10 +36,9 @@ export function RegistrationPopup() {
     structure,
     scoreObject,
     setScoreObject,
-    registrationStatus,
-    setRegistrationStatus,
+    registrationPopup,
+    setRegistrationPopup,
     url,
-    tokenValidated,
   } = useStore();
   const [completedSteps, setCompletedSteps] = useState<totalCompleted>();
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -62,10 +61,12 @@ export function RegistrationPopup() {
   } = useForm<Inputs>();
   const [loading, setLoading] = useState<boolean>(false);
   const [generalError, setGeneralError] = useState<string>("");
+  const params = useParams();
 
-  const stepsArray = tokenValidated
-    ? structure?.registration.steps.slice(1)
-    : structure?.registration.steps;
+  const stepsArray =
+    registrationPopup === "register"
+      ? structure?.registration.steps.slice(1)
+      : structure?.registration.steps;
   const step = stepsArray ? stepsArray[currentStep] : undefined;
 
   async function createNewUser(email: string, password: string) {
@@ -127,13 +128,11 @@ export function RegistrationPopup() {
       const data = await response.json();
       if (data.success) {
         setLoading(false);
-        setRegistrationStatus(false);
+        setRegistrationPopup("");
 
         router.push(
           `/tool/${data.data.project_id}/${data.data.alternative_id}/self-assessment`
         );
-
-        return true;
       } else {
         if (data.message) {
           setGeneralError(data.message);
@@ -171,6 +170,7 @@ export function RegistrationPopup() {
       console.error("Failed to fetch content:", error);
     }
   }
+
   function getYearsList() {
     let currentYear = new Date().getFullYear();
     let years: { value: string; label: string }[] = [];
@@ -255,7 +255,7 @@ export function RegistrationPopup() {
     }));
 
     if (completedSteps && index !== completedSteps.length - 1) {
-      if (index === 0 && !tokenValidated) {
+      if (index === 0 && registrationPopup === "register") {
         const userCreated = await createNewUser(
           stepData["email"] as string,
           stepData["password"] as string
@@ -276,10 +276,10 @@ export function RegistrationPopup() {
       });
     } else {
       createProject(updatedPersonalDetails);
-      setRegistrationStatus(false);
+      setRegistrationPopup("");
     }
   };
-  if (!registrationStatus) return null;
+  if (!registrationPopup) return null;
   if (!structure || !step) return <div>Loading...</div>;
 
   const password = watch("password");
@@ -287,7 +287,7 @@ export function RegistrationPopup() {
   return (
     <PopUpContainer
       headline={stepsArray ? stepsArray[currentStep].title : ""}
-      closeButton={() => setRegistrationStatus(false)}
+      closeButton={() => setRegistrationPopup("")}
       navArrows={currentStep}
       goToPrevSlide={() => {
         if (currentStep > 0) {
@@ -378,8 +378,18 @@ export function RegistrationPopup() {
                       }
                       onChange={(option) => {
                         controllerField.onChange(option ? option : null);
-                        field.name === "projectStartYear" &&
-                          setEndYears(option);
+                        if (
+                          field.name === "projectStartYear" &&
+                          (option === null ||
+                            (typeof option === "object" &&
+                              option !== null &&
+                              "value" in option &&
+                              "label" in option))
+                        ) {
+                          setEndYears(
+                            option as { value: string; label: string } | null
+                          );
+                        }
                       }}
                     />
                   )}
