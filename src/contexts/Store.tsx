@@ -286,11 +286,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   >();
   const [registrationStatus, setRegistrationStatus] = useState<boolean>(false);
   const [loginStatus, setLoginStatus] = useState<boolean>(false);
-  const [tokenValidated, setTokenValidated] = useState<boolean>(true);
-  const [ids, setIds] = useState<{
-    project_id: number;
-    alternative_id: number;
-  }>({ project_id: 0, alternative_id: 0 });
+  const [tokenValidated, setTokenValidated] = useState<boolean>(false);
 
   useEffect(() => {
     setPreviousChapter([chapter, subChapter, principle]);
@@ -315,7 +311,7 @@ function Store({ children }: PropsWithChildren<{}>) {
             setLoginStatus(true);
 
             redirect(
-              `/tool/${project_id}/${alternative_id}/${project_id}/${alternative_id}${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
+              `/tool/0/0/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
             );
           }
 
@@ -611,7 +607,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         setLoginStatus,
         setTokenValidated,
         tokenValidated,
-      }}>
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );

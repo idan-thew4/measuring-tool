@@ -11,6 +11,7 @@ import clsx from "clsx";
 import { useForm, Controller, set } from "react-hook-form";
 import Select from "react-select";
 import { PopUpContainer } from "../popUpContainer/popUpContainer";
+import { useRouter } from "next/navigation";
 
 type Inputs = {
   [key: string]: string | { value: string; label: string } | boolean | number;
@@ -30,6 +31,7 @@ type TownRecord = {
 };
 
 export function RegistrationPopup() {
+  const router = useRouter();
   const {
     structure,
     scoreObject,
@@ -112,27 +114,6 @@ export function RegistrationPopup() {
       {} as Record<string, string | number | { value: string; label: string }>
     );
 
-    console.log(personalDetailsForSend);
-
-    // try {
-    //   const response = await fetch(`${url}/create-project`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     credentials: "include",
-    //     body: JSON.stringify({ personalDetails: personalDetailsForSend }),
-    //   });
-
-    //   const data = await response.json();
-
-    //   if (data.success) {
-    //     setLoading(false);
-    //     return true;
-    //   } else {
-    //     if (data.message) {
-    //       setGeneralError(data.message);
-    //     }
     try {
       const response = await fetch(`${url}/create-project`, {
         method: "POST",
@@ -140,15 +121,19 @@ export function RegistrationPopup() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify(personalDetailsForSend),
+        body: JSON.stringify({ personalDetails: personalDetailsForSend }),
       });
 
       const data = await response.json();
-
-      // console.log(data);
-
       if (data.success) {
         setLoading(false);
+        setRegistrationStatus(false);
+
+        router.push(
+          `/tool/${data.data.project_id}/${data.data.alternative_id}/self-assessment`
+        );
+
+        return true;
       } else {
         if (data.message) {
           setGeneralError(data.message);
@@ -317,7 +302,8 @@ export function RegistrationPopup() {
             return newSteps;
           });
         }
-      }}>
+      }}
+    >
       {completedSteps && (
         <ProgressBar completed={completedSteps} indicator={true} />
       )}
@@ -327,7 +313,8 @@ export function RegistrationPopup() {
             className={clsx(
               "headline_medium-small bold",
               formStyles["headline"]
-            )}>
+            )}
+          >
             {step.title}
           </h3>
           <p className="paragraph_16">{step.description}</p>
@@ -337,7 +324,8 @@ export function RegistrationPopup() {
         </div>
         <form
           style={{ pointerEvents: loading ? "none" : "auto" }}
-          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}>
+          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}
+        >
           {step["input-fields"].map((field, index) => (
             <div
               className={clsx(
@@ -348,7 +336,8 @@ export function RegistrationPopup() {
                   ? formStyles["input"]
                   : formStyles["checkbox"]
               )}
-              key={index}>
+              key={index}
+            >
               {field["dropdown-options"] ? (
                 <Controller
                   name={field.name}
@@ -473,7 +462,8 @@ export function RegistrationPopup() {
               loading && "loading"
             )}
             type="submit"
-            disabled={Object.keys(errors).length > 0}>
+            disabled={Object.keys(errors).length > 0}
+          >
             {structure.registration["nav-buttons"][currentStep]}
           </button>
           {generalError && (
@@ -481,7 +471,8 @@ export function RegistrationPopup() {
               className={clsx(
                 formStyles["error-message"],
                 formStyles["general-error"]
-              )}>
+              )}
+            >
               {generalError}
             </div>
           )}

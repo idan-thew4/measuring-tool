@@ -118,7 +118,8 @@ export function Questionnaire({
                   : item
               )
             )
-          }>
+          }
+        >
           <p className="paragraph_20">{currentChapterHeaders?.title}</p>
         </button>
         <p
@@ -129,7 +130,8 @@ export function Questionnaire({
             )?.state
               ? "auto"
               : "0",
-          }}>
+          }}
+        >
           {currentChapterHeaders?.titleDescription}
         </p>
 
@@ -150,13 +152,15 @@ export function Questionnaire({
                   : item
               )
             )
-          }>
+          }
+        >
           <h1 className="headline_medium-big bold">
             <span
               className={clsx(
                 "number headline_medium-small bold",
                 styles["number"]
-              )}>
+              )}
+            >
               {currentChapterHeaders?.subtitleNumber}
             </span>
             {`${
@@ -179,7 +183,8 @@ export function Questionnaire({
             )?.state
               ? "4rem"
               : "0",
-          }}>
+          }}
+        >
           {currentChapterHeaders?.subtitleDescription}
         </p>
 

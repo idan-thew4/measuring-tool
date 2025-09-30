@@ -8,6 +8,7 @@ import { RadarGraph } from "../summary-report/graphs/graph/radar/radar";
 import { useEffect, useState } from "react";
 import { ScoreData } from "../summary-report/page";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export default function SelfAssessment() {
   const { structure, scoreObject } = useStore();
@@ -18,6 +19,7 @@ export default function SelfAssessment() {
     chapters: [],
     secondChapter: [],
   });
+  const params = useParams();
 
   useEffect(() => {
     if (scoreObject && structure) {
@@ -85,10 +87,12 @@ export default function SelfAssessment() {
           <SummaryHeader
             title={structure?.["self-assessment"]["summary-title"]}
             structure={structure}
-            scoreObject={scoreObject}>
+            scoreObject={scoreObject}
+          >
             <Link
               className="basic-button outline"
-              href={`/tool/${project_id}/${alternative_id}/${project_id}/${alternative_id}${structure.questionnaire.content[0]["chapter-slug"]}/1/1`}>
+              href={`/tool/${params.project_id}/${params.alternative_id}/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`}
+            >
               המשך לשאלון
             </Link>
           </SummaryHeader>
