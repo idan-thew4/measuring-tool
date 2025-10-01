@@ -186,6 +186,7 @@
   width: 100%;
   height: 4rem;
   margin-top: 1rem;
+  z-index: 1;
 }
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter .range-slider-progress {
   background-color: #00a6ce;

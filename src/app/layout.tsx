@@ -5,6 +5,7 @@ import "../styles/globals.scss";
 import { Store } from "../contexts/Store";
 import { RegistrationPopup } from "@/components/popUps/registrationPopup/registrationPopup";
 import { LoginPopup } from "@/components/popUps/loginPopup/loginPopup";
+import { SelfAssessmentPopup } from "@/components/popUps/selfAssessmentPopup/selfAssessmentPopup";
 
 export const metadata: Metadata = {
   title: "Slil",
@@ -25,6 +26,7 @@ export default function RootLayout({
             <main className={styles.main}>{children}</main>
             <RegistrationPopup />
             <LoginPopup />
+            <SelfAssessmentPopup />
           </Store>
         </div>
       </body>

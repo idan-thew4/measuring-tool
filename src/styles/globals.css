@@ -48,21 +48,21 @@
   text-align: center;
 }
 .basic-button.outline {
-  background-color: white;
-  border: 0.1rem solid #5b6771;
-  color: #5b6771;
+  background-color: transparent;
+  border: 0.1rem solid #00a6ce;
+  color: #00a6ce;
 }
 .basic-button.outline:hover {
-  background-color: #5b6771;
+  background-color: #00a6ce;
   color: white;
 }
 .basic-button.solid {
-  background-color: #5b6771;
+  background-color: #00a6ce;
   color: white;
   position: relative;
 }
 .basic-button.solid:hover {
-  background-color: rgb(68.25, 77.25, 84.75);
+  background-color: rgb(0, 124.9029126214, 155);
   color: white;
 }
 .basic-button.solid:disabled {

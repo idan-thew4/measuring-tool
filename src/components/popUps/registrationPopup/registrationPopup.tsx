@@ -3,7 +3,8 @@ import formStyles from "../popUpContainer/form.module.scss";
 import {
   useStore,
   totalCompleted,
-  PersonalDetails,
+  ProjectDetails,
+  RegistrationStep,
 } from "../../../contexts/Store";
 import { useEffect, useState } from "react";
 import { ProgressBar } from "@/app/tool/[project_id]/[alternative_id]/components/progress-bar/progress-bar";
@@ -38,6 +39,7 @@ export function RegistrationPopup() {
     setScoreObject,
     registrationPopup,
     setRegistrationPopup,
+    setSelfAssessmentPopup,
     url,
   } = useStore();
   const [completedSteps, setCompletedSteps] = useState<totalCompleted>();
@@ -49,6 +51,8 @@ export function RegistrationPopup() {
     start: { value: string; label: string }[];
     end: { value: string; label: string }[];
   }>({ start: [], end: [] });
+  const params = useParams();
+  const [chapter, subChapter, principle] = params?.chapters || [];
 
   const {
     register,
@@ -61,13 +65,45 @@ export function RegistrationPopup() {
   } = useForm<Inputs>();
   const [loading, setLoading] = useState<boolean>(false);
   const [generalError, setGeneralError] = useState<string>("");
-  const params = useParams();
+  const [steps, setSteps] = useState<{
+    array: RegistrationStep[] | undefined;
+    single: RegistrationStep | undefined;
+  }>({
+    array: [],
+    single: undefined,
+  });
 
-  const stepsArray =
-    registrationPopup === "register"
-      ? structure?.registration.steps.slice(1)
-      : structure?.registration.steps;
-  const step = stepsArray ? stepsArray[currentStep] : undefined;
+  useEffect(() => {
+    let stepsArray: RegistrationStep[] | undefined = [];
+    switch (registrationPopup) {
+      case "register":
+        stepsArray = structure?.registration.steps;
+        break;
+      case "new-project":
+        stepsArray = structure?.registration.steps.slice(1);
+        break;
+      default:
+    }
+    stepsArray = addConfirmPasswordToSteps(stepsArray);
+
+    const step = stepsArray ? stepsArray[currentStep] : undefined;
+
+    setSteps({ array: stepsArray, single: step });
+
+    if (
+      stepsArray &&
+      (completedSteps === undefined || completedSteps.length === 0)
+    ) {
+      const completedStepsArray: totalCompleted = stepsArray.map(
+        (step, index) => ({
+          completed: index === 0 ? 1 : 0,
+          total: 1,
+        })
+      );
+
+      setCompletedSteps(completedStepsArray);
+    }
+  }, [structure, registrationPopup, currentStep]);
 
   async function createNewUser(email: string, password: string) {
     setLoading(true);
@@ -83,12 +119,15 @@ export function RegistrationPopup() {
 
       const data = await response.json();
 
-      if (data.success) {
+      if (data) {
         setLoading(false);
-        return true;
-      } else {
-        if (data.message) {
-          setGeneralError(data.message);
+
+        if (data.success) {
+          return true;
+        } else {
+          if (data.message) {
+            setGeneralError(data.message);
+          }
         }
       }
     } catch (error) {
@@ -96,10 +135,10 @@ export function RegistrationPopup() {
     }
   }
 
-  async function createProject(personalDetails: PersonalDetails) {
+  async function createProject(ProjectDetails: ProjectDetails) {
     setLoading(true);
 
-    const personalDetailsForSend = Object.entries(personalDetails).reduce(
+    const ProjectDetailsForSend = Object.entries(ProjectDetails).reduce(
       (acc, [key, value]) => {
         if (
           key === "localAuthority" ||
@@ -108,7 +147,10 @@ export function RegistrationPopup() {
         ) {
           acc[key] = (value as { label: string }).label;
         } else {
-          acc[key] = value;
+          acc[key] = value as
+            | string
+            | number
+            | { value: string; label: string };
         }
         return acc;
       },
@@ -122,16 +164,17 @@ export function RegistrationPopup() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ personalDetails: personalDetailsForSend }),
+        body: JSON.stringify({ ProjectDetails: ProjectDetailsForSend }),
       });
 
       const data = await response.json();
+
       if (data.success) {
         setLoading(false);
         setRegistrationPopup("");
-
+        setSelfAssessmentPopup(true);
         router.push(
-          `/tool/${data.data.project_id}/${data.data.alternative_id}/self-assessment`
+          `/tool/${data.data.project_id}/${data.data.alternative_id}/${chapter}/${subChapter}/${principle}`
         );
       } else {
         if (data.message) {
@@ -183,6 +226,7 @@ export function RegistrationPopup() {
       end: prev.end,
     }));
   }
+
   function setEndYears(
     startYearOption: { value: string; label: string } | null
   ) {
@@ -201,57 +245,66 @@ export function RegistrationPopup() {
     }
   }
 
+  function addConfirmPasswordToSteps(
+    stepsArray: RegistrationStep[] | undefined
+  ): RegistrationStep[] | undefined {
+    if (!stepsArray) return stepsArray;
+    return stepsArray.map((step) => {
+      // Only add if password field exists and confirmPassword does not
+      const passwordIndex = step["input-fields"].findIndex(
+        (field) => field.name === "password"
+      );
+      const hasConfirm = step["input-fields"].some(
+        (field) => field.name === "confirmPassword"
+      );
+      if (passwordIndex !== -1 && !hasConfirm) {
+        const newFields = [...step["input-fields"]];
+        newFields.splice(passwordIndex + 1, 0, {
+          ...newFields[passwordIndex],
+          name: "confirmPassword",
+          label: "אישור סיסמא",
+          "validation-error": "יש להזין את הסיסמא שוב",
+          "format-error": "הסיסמא לא תואמת את הסיסמא שהוזנה",
+        });
+        return { ...step, ["input-fields"]: newFields };
+      }
+      return step;
+    });
+  }
+
   useEffect(() => {
     getTownList();
     getYearsList();
-
-    if (stepsArray) {
-      const steps = stepsArray.map((step, index) => ({
-        completed: index === 0 ? 1 : 0,
-        total: 1,
-      }));
-      setCompletedSteps(steps);
-    }
-  }, [structure]);
+  }, []);
 
   useEffect(() => {
-    if (step) {
-      step["input-fields"].forEach((field, index) => {
+    if (steps.single) {
+      steps.single["input-fields"].forEach((field, index) => {
         if (
-          scoreObject["personal-details"] &&
-          field.name in scoreObject["personal-details"]
+          scoreObject["project-details"] &&
+          field.name in scoreObject["project-details"]
         ) {
           setValue(
             field.name,
-            (scoreObject["personal-details"] as Inputs)[field.name]
+            (scoreObject["project-details"] as Inputs)[field.name]
           );
-        }
-
-        if (field.name === "password") {
-          step["input-fields"].splice(index + 1, 0, {
-            ...field,
-            name: "confirmPassword",
-            label: "אישור סיסמא",
-            "validation-error": "יש להזין את הסיסמא שוב",
-            "format-error": "הסיסמא לא תואמת את הסיסמא שהוזנה",
-          });
         }
       });
     }
-  }, [scoreObject, step]);
+  }, [scoreObject, steps]);
 
   const onSubmit = async (stepData: Inputs, index: number) => {
-    const updatedPersonalDetails = { ...scoreObject["personal-details"] };
+    const updatedProjectDetails = { ...scoreObject["project-details"] };
 
-    // Update only keys that exist in personal-details
+    // Update only keys that exist in project-details
     Object.keys(stepData).forEach((key) => {
-      if (key in updatedPersonalDetails) {
-        (updatedPersonalDetails as any)[key] = stepData[key];
+      if (key in updatedProjectDetails) {
+        (updatedProjectDetails as any)[key] = stepData[key];
       }
     });
     setScoreObject((prev) => ({
       ...prev,
-      "personal-details": updatedPersonalDetails,
+      "project-details": updatedProjectDetails,
     }));
 
     if (completedSteps && index !== completedSteps.length - 1) {
@@ -275,18 +328,18 @@ export function RegistrationPopup() {
         return newSteps;
       });
     } else {
-      createProject(updatedPersonalDetails);
+      createProject(updatedProjectDetails);
       setRegistrationPopup("");
     }
   };
   if (!registrationPopup) return null;
-  if (!structure || !step) return <div>Loading...</div>;
+  if (!structure || !steps.single) return <div>Loading...</div>;
 
   const password = watch("password");
 
   return (
     <PopUpContainer
-      headline={stepsArray ? stepsArray[currentStep].title : ""}
+      headline={steps.array ? steps.array[currentStep].title : ""}
       closeButton={() => setRegistrationPopup("")}
       navArrows={currentStep}
       goToPrevSlide={() => {
@@ -315,9 +368,9 @@ export function RegistrationPopup() {
               formStyles["headline"]
             )}
           >
-            {step.title}
+            {steps.single.title}
           </h3>
-          <p className="paragraph_16">{step.description}</p>
+          <p className="paragraph_16">{steps.single.description}</p>
           <p className={clsx(formStyles["validation"], "paragraph_16")}>
             {structure.registration["validation-general-copy"]}
           </p>
@@ -326,7 +379,7 @@ export function RegistrationPopup() {
           style={{ pointerEvents: loading ? "none" : "auto" }}
           onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}
         >
-          {step["input-fields"].map((field, index) => (
+          {steps.single["input-fields"].map((field, index) => (
             <div
               className={clsx(
                 formStyles["field"],

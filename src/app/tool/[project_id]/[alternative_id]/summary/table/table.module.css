@@ -128,7 +128,7 @@
 .table-dropdown-button {
   width: 1.5rem;
   height: 1.5rem;
-  background: url("../../../../../public/icons/arrow-down.svg") no-repeat center;
+  background: url("../../../../../../../public/icons/arrow-down.svg") no-repeat center;
   background-size: 1.5rem;
   rotate: 90deg;
   transition: 0.3s all;

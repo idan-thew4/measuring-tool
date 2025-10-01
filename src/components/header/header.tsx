@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useStore } from "../../contexts/Store";
 
 export function Header() {
-  const { structure } = useStore();
+  const { structure, setRegistrationPopup } = useStore();
 
   return (
     <header className={styles["header-container"]}>
@@ -18,13 +18,16 @@ export function Header() {
       />
       {/* TO DO: remove "clear data" button */}
 
+      <button onClick={() => setRegistrationPopup("new-project")}>test</button>
+
       <button
         onClick={() => {
           document.cookie = `office@tdfmail.com=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
           window.location.href =
             "/tool/${project_id}/${alternative_id}/${project_id}/${alternative_id}self-assessment";
         }}
-        className="basic-button outline negative">
+        className="basic-button outline negative"
+      >
         התחל שאלון חדש
       </button>
       {/* TO DO: unmark <nav> */}

@@ -86,7 +86,7 @@
   width: 1.5rem;
   height: 1.5rem;
   background-size: 1.5rem !important;
-  background: url("../../../../public/icons/arrow-down_grey.svg") no-repeat center;
+  background: url("../../../../../../public/icons/arrow-down_grey.svg") no-repeat center;
   rotate: 180deg;
   cursor: pointer;
   transition: 0.3s all;
@@ -160,7 +160,7 @@
   border-top: 0.1rem solid #5b6771;
 }
 .chapters-slider-container .chapter-box ul.chapter-options li.option.selected button:after, .chapters-slider-container .chapter-box ul.chapter-options li.option.selected:hover button:after {
-  background: url("../../../../public/icons/arrow-down_dark-blue.svg") no-repeat center;
+  background: url("../../../../../../public/icons/arrow-down_dark-blue.svg") no-repeat center;
 }
 .chapters-slider-container .chapter-box ul.chapter-options li.option.selected button, .chapters-slider-container .chapter-box ul.chapter-options li.option.selected:hover button {
   color: #5b6771;

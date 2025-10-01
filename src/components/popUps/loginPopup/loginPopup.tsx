@@ -41,10 +41,12 @@ export function LoginPopup() {
       if (data.success) {
         setLoading(false);
         setLoginPopup(false);
+
         router.push(`/tool/user-dashboard`);
       } else {
         if (data.message) {
           setGeneralError(data.message);
+          setLoading(false);
         }
       }
     } catch (error) {

@@ -179,8 +179,13 @@ export function Menu({
   alternative_id,
   type,
 }: structureAndChaptersProps) {
-  const { completedChapters, scoreObject, calculateScores, setScoreObject } =
-    useStore();
+  const {
+    completedChapters,
+    scoreObject,
+    calculateScores,
+    setScoreObject,
+    selfAssessmentIsLoaded,
+  } = useStore();
   const [maxScores, setMaxScores] = useState<{
     chapters: number[];
     secondChapter: number[];
@@ -319,7 +324,9 @@ export function Menu({
   };
 
   if (!type) {
-    return <div>Loading...</div>;
+    if (type === "self-assessment" && !selfAssessmentIsLoaded) {
+      return <div>Loading...</div>;
+    }
   }
 
   return (

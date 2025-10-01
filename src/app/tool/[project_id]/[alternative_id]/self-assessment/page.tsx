@@ -11,8 +11,14 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 
 export default function SelfAssessment() {
-  const { structure, scoreObject, url, setScoreObject, setSideMenu } =
-    useStore();
+  const {
+    structure,
+    scoreObject,
+    url,
+    setScoreObject,
+    selfAssessmentIsLoaded,
+    setSelfAssessmentIsLoaded,
+  } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
     secondChapter: ScoreData[];
@@ -22,7 +28,6 @@ export default function SelfAssessment() {
   });
   const params = useParams();
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
 
   async function getSelfAssessmentData(project_id: string) {
     try {
@@ -38,8 +43,7 @@ export default function SelfAssessment() {
       const data = await response.json();
 
       if (data.success) {
-        setLoading(false);
-        setSideMenu("self-assessment");
+        setSelfAssessmentIsLoaded(false);
 
         if (data.data !== 0) {
           setScoreObject((prev) => ({
@@ -125,7 +129,7 @@ export default function SelfAssessment() {
     }
   }, [params.project_id]);
 
-  if (loading) {
+  if (selfAssessmentIsLoaded) {
     return <div>Loading...</div>;
   }
 

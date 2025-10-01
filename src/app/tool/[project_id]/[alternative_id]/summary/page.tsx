@@ -115,19 +115,19 @@ function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
         // if (inputNumber) {
         rows.push({
           eval_id: eval_id,
-          project_name: scoreObject["personal-details"].projectName,
+          project_name: scoreObject["project-details"].projectName,
           version_name: "",
-          region: scoreObject["personal-details"].localAuthority,
-          project_type: scoreObject["personal-details"].projectType,
-          sub_type: scoreObject["personal-details"].projectSubType,
-          proj_area: scoreObject["personal-details"].projectArea,
-          proj_status: scoreObject["personal-details"].projectStatus,
-          year_start: scoreObject["personal-details"].projectStartYear,
-          year_comp: scoreObject["personal-details"].projectEndYear,
-          approve_contact: scoreObject["personal-details"].contactPerson,
-          contact: scoreObject["personal-details"].contactPerson,
-          email: scoreObject["personal-details"].contactEmail,
-          tel: scoreObject["personal-details"].contactPhone,
+          region: scoreObject["project-details"].localAuthority,
+          project_type: scoreObject["project-details"].projectType,
+          sub_type: scoreObject["project-details"].projectSubType,
+          proj_area: scoreObject["project-details"].projectArea,
+          proj_status: scoreObject["project-details"].projectStatus,
+          year_start: scoreObject["project-details"].projectStartYear,
+          year_comp: scoreObject["project-details"].projectEndYear,
+          approve_contact: scoreObject["project-details"].contactPerson,
+          contact: scoreObject["project-details"].contactPerson,
+          email: scoreObject["project-details"].contactEmail,
+          tel: scoreObject["project-details"].contactPhone,
           criteria_no: principleCount,
           chapter: `${chapter["chapter-number"]}. ${chapter["chapter-title"]}`,
           sub_chapter: `.${subChapterIdx + 1}. ${
@@ -152,7 +152,6 @@ function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
 
 function downloadAllCSV(structure: structureProps, scoreObject: ScoreType) {
   const rows = flattenAllTables(structure, scoreObject);
-  console.log("Rows:", rows);
   const columns = rows.length > 0 ? Object.keys(rows[0]) : [];
   const csv =
     columns.join(",") +
@@ -175,7 +174,7 @@ function downloadAllCSV(structure: structureProps, scoreObject: ScoreType) {
 
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${scoreObject["personal-details"].projectName}-${formatDate(
+  a.download = `${scoreObject["project-details"].projectName}-${formatDate(
     Date.now()
   )}.csv`;
   document.body.appendChild(a);
@@ -309,7 +308,7 @@ const MyDocument = ({
               direction: "rtl",
             }}
           >
-            {`${scoreObject["personal-details"].projectName}-${formatDate(
+            {`${scoreObject["project-details"].projectName}-${formatDate(
               Date.now()
             )}`}
           </Text>
@@ -432,7 +431,7 @@ export default function Summary() {
               <MyDocument structure={structure} scoreObject={scoreObject} />
             }
             fileName={`${
-              scoreObject["personal-details"].projectName
+              scoreObject["project-details"].projectName
             }-${formatDate(Date.now())}.pdf`}
             className={clsx("print", "basic-button with-icon outline")}>
             {structure?.summary.header["buttons-copy"][1]}

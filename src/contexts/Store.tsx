@@ -1,6 +1,7 @@
 "use client";
 
 import { redirect, useParams, usePathname } from "next/navigation";
+import path from "path";
 import React, {
   createContext,
   useContext,
@@ -46,7 +47,7 @@ function useStore() {
 
 export type ScoreType = {
   data: ScoreVariations;
-  "personal-details": PersonalDetails;
+  "project-details": ProjectDetails;
 };
 
 export type ScoreVariations = {
@@ -79,7 +80,7 @@ type ChoicePoints = {
   comment?: string;
 };
 
-export type PersonalDetails = {
+export type ProjectDetails = {
   projectName: string;
   localAuthority: { value: string; label: string } | string;
   projectType: { value: string; label: string } | string;
@@ -118,6 +119,10 @@ type Login = {
 };
 
 type SelfAssessment = {
+  "pop-up": {
+    title: string;
+    "buttons-copy": string[];
+  };
   headline: string;
   "sub-headline": string;
   "summary-title": string;
@@ -154,7 +159,7 @@ export type Registration = {
   steps: RegistrationStep[];
 };
 
-type RegistrationStep = {
+export type RegistrationStep = {
   title: string;
   description: string;
   "input-fields": RegistrationInputField[];
@@ -249,6 +254,10 @@ type ApiContextType = {
   setSideMenu: React.Dispatch<React.SetStateAction<string>>;
   isUserLogged: boolean;
   setIsUserLogged: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelfAssessmentPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  selfAssessmentPopup: boolean;
+  selfAssessmentIsLoaded: boolean;
+  setSelfAssessmentIsLoaded: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // const url = "http://localhost:3000/";
@@ -258,7 +267,7 @@ const url =
 function Store({ children }: PropsWithChildren<{}>) {
   const [structure, setStructure] = useState<structureProps>();
   const [scoreObject, setScoreObject] = useState<ScoreType>({
-    "personal-details": {
+    "project-details": {
       projectName: "",
       localAuthority: { value: "", label: "" },
       projectType: { value: "", label: "" },
@@ -291,9 +300,13 @@ function Store({ children }: PropsWithChildren<{}>) {
   >();
   const [registrationPopup, setRegistrationPopup] = useState<string>("");
   const [loginPopup, setLoginPopup] = useState<boolean>(false);
+  const [selfAssessmentPopup, setSelfAssessmentPopup] =
+    useState<boolean>(false);
   const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [sideMenu, setSideMenu] = useState<string>("");
   const [isUserLogged, setIsUserLogged] = useState(false);
+  const pathname = usePathname();
+  const [selfAssessmentIsLoaded, setSelfAssessmentIsLoaded] = useState(false);
 
   useEffect(() => {
     setPreviousChapter([chapter, subChapter, principle]);
@@ -320,9 +333,7 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   function createScoreObject(structureObject: structureProps) {
     let scoreObjectTemp: ScoreType;
-    const cookies = getCookie(
-      `${scoreObject["personal-details"].contactEmail}`
-    );
+    const cookies = getCookie(`${scoreObject["project-details"].contactEmail}`);
 
     //To DO: // Remove specific email
     // const cookies = getCookie(`office@tdfmail.com`);
@@ -331,7 +342,7 @@ function Store({ children }: PropsWithChildren<{}>) {
       scoreObjectTemp = JSON.parse(cookies);
     } else {
       scoreObjectTemp = {
-        "personal-details": {
+        "project-details": {
           projectName: "",
           localAuthority: "",
           projectType: "",
@@ -451,17 +462,25 @@ function Store({ children }: PropsWithChildren<{}>) {
   }, []);
 
   useEffect(() => {
+    if (pathname.includes("self-assessment")) {
+      setSideMenu("self-assessment");
+    } else if (pathname.includes(params.chapters?.[0] || "")) {
+      setSideMenu("questionnaire");
+    }
+  }, [pathname]);
+
+  useEffect(() => {
     const chapters = getCompletedChapters(scoreObject) ?? [];
     setCompletedChapters(chapters);
     if (
-      scoreObject["personal-details"].contactEmail &&
+      scoreObject["project-details"].contactEmail &&
       scoreObject.data.questionnaire &&
       scoreObject.data.questionnaire.length > 0
     ) {
       setRegistrationPopup("");
       const jsonCookie = JSON.stringify(scoreObject);
       setCookie(
-        `${scoreObject["personal-details"].contactEmail}`,
+        `${scoreObject["project-details"].contactEmail}`,
         jsonCookie,
         0.15
       );
@@ -584,6 +603,10 @@ function Store({ children }: PropsWithChildren<{}>) {
         setSideMenu,
         isUserLogged,
         setIsUserLogged,
+        selfAssessmentPopup,
+        setSelfAssessmentPopup,
+        selfAssessmentIsLoaded,
+        setSelfAssessmentIsLoaded,
       }}
     >
       {children}

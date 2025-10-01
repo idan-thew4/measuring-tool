@@ -53,192 +53,22 @@
   top: -4rem;
   right: -4rem;
 }
-.pop-up .form-container {
+.pop-up .headline-container {
   display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-.pop-up .form-container .headline {
-  margin-bottom: 1rem;
-}
-.pop-up .form-container .validation,
-.pop-up .form-container .error-message {
-  color: #ff001d;
-}
-.pop-up .form-container form {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  column-gap: 2.1rem;
-  align-content: space-between;
-  height: 100%;
-  max-height: 50vh;
-  overflow: auto;
-}
-.pop-up .form-container form::-webkit-scrollbar {
-  width: 0.8rem;
-}
-.pop-up .form-container form::-webkit-scrollbar-thumb {
-  background-color: #d9d9d9;
-  border-radius: 10rem;
-}
-.pop-up .form-container form .row {
-  position: relative;
-  margin-bottom: -0.3rem;
-}
-.pop-up .form-container form .row.input {
-  height: 5rem;
-  margin-bottom: 5rem;
-}
-.pop-up .form-container form .row.checkbox {
-  height: 2rem;
+  gap: 1rem;
+  align-items: center;
   margin-bottom: 2rem;
 }
-.pop-up .form-container form .row-1 {
-  grid-column: 1/3;
-}
-.pop-up .form-container form .row:has(input[type=checkbox]) {
-  grid-column: 1/3;
-  display: flex;
-  align-items: center;
-}
-.pop-up .form-container form .row:has(.error-message) > input,
-.pop-up .form-container form .row:has(.error-message) :global(.dropdown__control) {
-  border-bottom: 0.1rem solid #ff001d !important;
-}
-.pop-up .form-container form input:not(input[type=checkbox]), .pop-up .form-container form input:not(input[type=checkbox]):focus,
-.pop-up .form-container form :global(.dropdown__control),
-.pop-up .form-container form :global(.dropdown__control):focus {
-  width: 100%;
-  border: none;
-  border-bottom: 0.1rem solid #979797;
-  outline: none;
-  font-family: "SimplerPro", sans-serif;
-  padding: 0;
-  height: 100%;
-  transition: 0.3s all;
-  border-radius: 0;
-  box-shadow: none;
-  direction: rtl;
-}
-.pop-up .form-container form input:not(input[type=checkbox]) *, .pop-up .form-container form input:not(input[type=checkbox]):focus *,
-.pop-up .form-container form :global(.dropdown__control) *,
-.pop-up .form-container form :global(.dropdown__control):focus * {
-  padding: 0;
-  color: #0e2517;
-}
-.pop-up .form-container form input:not(input[type=checkbox])::placeholder, .pop-up .form-container form input:not(input[type=checkbox]):focus::placeholder,
-.pop-up .form-container form :global(.dropdown__control)::placeholder,
-.pop-up .form-container form :global(.dropdown__control):focus::placeholder {
-  color: #0e2517;
-}
-.pop-up .form-container form input:not(input[type=checkbox]):-webkit-autofill, .pop-up .form-container form input:not(input[type=checkbox]):-webkit-autofill:focus, .pop-up .form-container form input:not(input[type=checkbox]):-webkit-autofill:hover, .pop-up .form-container form input:not(input[type=checkbox]):-webkit-autofill:active,
-.pop-up .form-container form :global(.dropdown__control):-webkit-autofill,
-.pop-up .form-container form :global(.dropdown__control):-webkit-autofill:focus,
-.pop-up .form-container form :global(.dropdown__control):-webkit-autofill:hover,
-.pop-up .form-container form :global(.dropdown__control):-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
-  box-shadow: 0 0 0 1000px #fff inset !important;
-  -webkit-text-fill-color: #000 !important;
-  transition: background-color 5000s ease-in-out 0s;
-}
-.pop-up .form-container form label:has(input[type=checkbox]) {
-  display: flex;
-  gap: 0.5rem;
-  cursor: pointer;
-}
-.pop-up .form-container form input[type=checkbox] {
-  appearance: none;
-  margin: 0;
-}
-.pop-up .form-container form input[type=checkbox]:before {
-  content: "";
-  width: 1.6rem;
-  height: 1.6rem;
-  display: block;
-  border: 0.1rem solid #4d4d4d;
-  border-radius: 0.4rem;
-  background-color: white;
-  transition: 0.3s all;
-}
-.pop-up .form-container form input[type=checkbox]:checked:before {
-  background-color: #5b6771 !important;
-  border-color: #5b6771;
-  background: url("../../../../public/icons/checkmark_white.svg") no-repeat center;
-  background-size: 1rem !important;
-}
-.pop-up .form-container form input[type=checkbox]:checked:after {
-  content: "";
-  position: absolute;
-  top: 0.2rem;
-  left: 0.4rem;
-  width: 0.5rem;
-  height: 0.8rem;
-  border: solid white;
-  border-width: 0 0.2rem 0.2rem 0;
-  transform: rotate(45deg);
-}
-.pop-up .form-container form :global(.dropdown__indicator-separator) {
-  display: none;
-}
-.pop-up .form-container form :global(.dropdown__clear-indicator) {
-  display: none;
-}
-.pop-up .form-container form :global(.dropdown__indicator) svg {
-  display: none;
-}
-.pop-up .form-container form :global(.dropdown__indicator):after {
-  content: "";
-  width: 1.5rem;
-  height: 1.5rem;
-  background-size: 1.5rem !important;
-  content: "";
+.pop-up .headline-container .nav-arrow {
   background: url("../../../../public/icons/arrow-down.svg") no-repeat center;
-  rotate: 0deg;
-  transition: 0.3s all;
+  background-size: 2.4rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  opacity: 0.5;
+  rotate: 270deg;
 }
-.pop-up .form-container form :global(.dropdown__control--menu-is-open) :global(.dropdown__indicator):after {
-  rotate: 180deg;
-}
-.pop-up .form-container form :global(.dropdown) {
-  height: 100%;
-}
-.pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) {
-  box-shadow: 0 0 20px 0px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
-  z-index: 2;
-  top: 3.7rem;
-}
-.pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__menu-list) {
-  max-height: 14rem;
-}
-.pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__menu-list)::-webkit-scrollbar {
-  width: 0.8rem;
-}
-.pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__menu-list)::-webkit-scrollbar-thumb {
-  background-color: #d9d9d9;
-  border-radius: 10rem;
-}
-.pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option) {
-  transition: 0.3s all;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  color: #0e2517;
-}
-.pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option--is-focused),
-.pop-up .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option--is-selected) {
-  background-color: transparent;
-  color: #7ab51d;
-}
-.pop-up .form-container form .error-message {
-  margin-top: 1rem;
-  position: relative;
-  z-index: 1;
-}
-.pop-up .form-container form .error-message.general-error {
-  text-align: center;
-  grid-column: 1/3;
-}
-.pop-up .form-container form .submit-button {
-  width: 100%;
-  grid-column: 1/3;
-  margin-top: 0.5rem;
+.pop-up .buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
 }/*# sourceMappingURL=pop-up-container.module.css.map */

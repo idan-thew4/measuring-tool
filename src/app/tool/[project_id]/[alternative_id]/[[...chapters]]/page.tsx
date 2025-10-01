@@ -29,7 +29,6 @@ export default function ChapterPage() {
     setIsTokenChecked,
     isTokenChecked,
     url,
-    setSideMenu,
     setIsUserLogged,
     isUserLogged,
   } = useStore();
@@ -67,10 +66,9 @@ export default function ChapterPage() {
   const router = useRouter();
 
   async function validateToken() {
-    console.log("validating token function");
     try {
       const response = await fetch(`${url}/validate-token`, {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           // "authorization": `Bearer ${Cookies.get('authToken')}`,
@@ -99,6 +97,48 @@ export default function ChapterPage() {
     }
   }
 
+  async function getAlternativeQuestionnaireData(
+    project_id: string,
+    alternative_id: string
+  ) {
+    try {
+      const response = await fetch(
+        `${url}/get-alternative-questionnaire-data?project_id=${project_id}&alternative_id=${alternative_id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+
+      if (data) {
+        if (data.success) {
+          setIsUserLogged(true);
+          if (data.data !== 0) {
+            setScoreObject((prev) => ({
+              ...prev,
+              data: {
+                ...prev.data,
+                questionnaire: data.data,
+              },
+            }));
+          }
+          router.push(
+            `/tool/${project_id}/${alternative_id}/${chapter}/${subChapter}/${principle}`
+          );
+        } else {
+          router.push(`/tool/0/0/${chapter}/${subChapter}/${principle}`);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to validate token:", error);
+    }
+  }
+
   useEffect(() => {
     if (
       (params.project_id === "0" || params.alternative_id === "0") &&
@@ -106,13 +146,15 @@ export default function ChapterPage() {
     ) {
       validateToken();
       setIsTokenChecked(true);
-    } else {
+    } else if (!isUserLogged) {
+      getAlternativeQuestionnaireData(
+        params.project_id as string,
+        params.alternative_id as string
+      );
     }
   }, [params]);
 
   useEffect(() => {
-    setSideMenu("questionnaire");
-
     if (scoreObject.data) {
       setCurrentChapter({
         score:

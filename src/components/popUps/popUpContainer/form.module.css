@@ -35,7 +35,8 @@
   align-content: space-between;
   height: 100%;
   max-height: 50vh;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .form-container form::-webkit-scrollbar {
   width: 0.8rem;
@@ -49,8 +50,8 @@
   margin-bottom: -0.3rem;
 }
 .form-container form .row.input {
-  height: 5rem;
-  margin-bottom: 5rem;
+  height: 6rem;
+  margin-bottom: 3rem;
 }
 .form-container form .row.checkbox {
   height: 2rem;
@@ -61,12 +62,14 @@
 }
 .form-container form .row:has(input[type=checkbox]) {
   grid-column: 1/3;
-  display: flex;
   align-items: center;
 }
 .form-container form .row:has(.error-message) > input,
 .form-container form .row:has(.error-message) :global(.dropdown__control) {
   border-bottom: 0.1rem solid #ff001d !important;
+}
+.form-container form .row:has(.error-message) input:before {
+  border-color: red;
 }
 .form-container form input:not(input[type=checkbox]), .form-container form input:not(input[type=checkbox]):focus,
 .form-container form :global(.dropdown__control),
@@ -103,6 +106,10 @@
   box-shadow: 0 0 0 1000px #fff inset !important;
   -webkit-text-fill-color: #000 !important;
   transition: background-color 5000s ease-in-out 0s;
+}
+.form-container form :global(.dropdown__control--is-disabled) {
+  background-color: transparent;
+  opacity: 0.5;
 }
 .form-container form label:has(input[type=checkbox]) {
   display: flex;
@@ -189,7 +196,7 @@
 .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option--is-focused),
 .form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option--is-selected) {
   background-color: transparent;
-  color: #7ab51d;
+  color: #00a6ce;
 }
 .form-container form .error-message {
   margin-top: 1rem;
