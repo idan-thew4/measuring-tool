@@ -54,7 +54,8 @@
 
     &.loading {
       color: transparent;
-      background-color: color.adjust($dark-blue, $lightness: -10%) !important;
+      background-color: $blue;
+      pointer-events: none;
       &:before {
         content: "";
         width: 2rem;

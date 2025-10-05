@@ -33,14 +33,14 @@ export function SelfAssessmentPopup() {
     <PopUpContainer
       // Change hard copy to. copy from strcture
       headline={selfAssessment["pop-up"].title}
-      closeButton={() => setSelfAssessmentPopup(false)}
-    >
+      closeButton={() => setSelfAssessmentPopup(false)}>
       <div className={popUpContainerStyles["buttons"]}>
         {selfAssessment["pop-up"]["buttons-copy"].map((button, index) => (
           <button
             className={`basic-button ${index === 0 ? "solid" : "outline"}`}
             key={index}
             onClick={() => {
+              setSelfAssessmentPopup(false);
               if (index === 0) {
                 router.push(
                   `/tool/${params.project_id}/${params.alternative_id}/self-assessment`
@@ -50,8 +50,7 @@ export function SelfAssessmentPopup() {
                   `/tool/${params.project_id}/${params.alternative_id}/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`
                 );
               }
-            }}
-          >
+            }}>
             {button}
           </button>
         ))}

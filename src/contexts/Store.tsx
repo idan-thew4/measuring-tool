@@ -8,6 +8,7 @@ import React, {
   PropsWithChildren,
   useState,
   useEffect,
+  useRef,
 } from "react";
 
 const ApiContext = createContext<ApiContextType | undefined>(undefined);
@@ -82,6 +83,8 @@ type ChoicePoints = {
 
 export type ProjectDetails = {
   projectName: string;
+  alternativeName: string;
+  projectCreationDate: number;
   localAuthority: { value: string; label: string } | string;
   projectType: { value: string; label: string } | string;
   projectSubType: { value: string; label: string } | string;
@@ -126,7 +129,7 @@ type SelfAssessment = {
   headline: string;
   "sub-headline": string;
   "summary-title": string;
-  "graphs-headlines": string[];
+  "graph-headlines": string[];
 };
 
 type SummaryReport = {
@@ -252,12 +255,13 @@ type ApiContextType = {
   isTokenChecked: boolean;
   sideMenu: string;
   setSideMenu: React.Dispatch<React.SetStateAction<string>>;
-  isUserLogged: boolean;
-  setIsUserLogged: React.Dispatch<React.SetStateAction<boolean>>;
+  loggedInChecked: boolean;
+  setLoggedInChecked: React.Dispatch<React.SetStateAction<boolean>>;
   setSelfAssessmentPopup: React.Dispatch<React.SetStateAction<boolean>>;
   selfAssessmentPopup: boolean;
   selfAssessmentIsLoaded: boolean;
   setSelfAssessmentIsLoaded: React.Dispatch<React.SetStateAction<boolean>>;
+  isMounted: React.MutableRefObject<boolean>;
 };
 
 // const url = "http://localhost:3000/";
@@ -269,6 +273,8 @@ function Store({ children }: PropsWithChildren<{}>) {
   const [scoreObject, setScoreObject] = useState<ScoreType>({
     "project-details": {
       projectName: "",
+      projectCreationDate: 0,
+      alternativeName: "",
       localAuthority: { value: "", label: "" },
       projectType: { value: "", label: "" },
       projectSubType: { value: "", label: "" },
@@ -304,9 +310,10 @@ function Store({ children }: PropsWithChildren<{}>) {
     useState<boolean>(false);
   const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [sideMenu, setSideMenu] = useState<string>("");
-  const [isUserLogged, setIsUserLogged] = useState(false);
+  const [loggedInChecked, setLoggedInChecked] = useState(false);
   const pathname = usePathname();
   const [selfAssessmentIsLoaded, setSelfAssessmentIsLoaded] = useState(false);
+  const isMounted = useRef(false);
 
   useEffect(() => {
     setPreviousChapter([chapter, subChapter, principle]);
@@ -344,6 +351,8 @@ function Store({ children }: PropsWithChildren<{}>) {
       scoreObjectTemp = {
         "project-details": {
           projectName: "",
+          projectCreationDate: 0,
+          alternativeName: "",
           localAuthority: "",
           projectType: "",
           projectSubType: "",
@@ -601,14 +610,14 @@ function Store({ children }: PropsWithChildren<{}>) {
         isTokenChecked,
         sideMenu,
         setSideMenu,
-        isUserLogged,
-        setIsUserLogged,
+        loggedInChecked,
+        setLoggedInChecked,
         selfAssessmentPopup,
         setSelfAssessmentPopup,
         selfAssessmentIsLoaded,
         setSelfAssessmentIsLoaded,
-      }}
-    >
+        isMounted,
+      }}>
       {children}
     </ApiContext.Provider>
   );

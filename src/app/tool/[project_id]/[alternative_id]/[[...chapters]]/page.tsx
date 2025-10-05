@@ -1,10 +1,16 @@
 "use client";
 
 import clsx from "clsx";
-import { useStore, ScoreType, Chapter } from "../../../../../contexts/Store";
+import {
+  useStore,
+  ScoreType,
+  Chapter,
+  ScoreVariations,
+  ChapterPoints,
+} from "../../../../../contexts/Store";
 import styles from "./chapters.module.scss";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type currentChapterType = {
@@ -12,6 +18,11 @@ type currentChapterType = {
   title: string;
   description: string;
   choices: { title: string; text: string }[];
+};
+
+type storeAlternativeQuestionnaireDataResponse = {
+  success: boolean;
+  data: ScoreVariations;
 };
 
 // type ScoreChoice = { id: number; choice: number };
@@ -29,8 +40,9 @@ export default function ChapterPage() {
     setIsTokenChecked,
     isTokenChecked,
     url,
-    setIsUserLogged,
-    isUserLogged,
+    setLoggedInChecked,
+    loggedInChecked,
+    isMounted,
   } = useStore();
   const [currentChapter, setCurrentChapter] =
     useState<currentChapterType | null>(null);
@@ -64,11 +76,13 @@ export default function ChapterPage() {
   ]);
   const [comment, setComment] = useState("");
   const router = useRouter();
+  const [loader, setLoader] = useState(false);
+  const [newScore, setNewScore] = useState(false);
 
   async function validateToken() {
     try {
       const response = await fetch(`${url}/validate-token`, {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           // "authorization": `Bearer ${Cookies.get('authToken')}`,
@@ -88,7 +102,7 @@ export default function ChapterPage() {
 
           if (data.success) {
             router.push(`/tool/user-dashboard`);
-            setIsUserLogged(true);
+            setLoggedInChecked(true);
           }
         });
       }
@@ -101,6 +115,7 @@ export default function ChapterPage() {
     project_id: string,
     alternative_id: string
   ) {
+    setLoader(true);
     try {
       const response = await fetch(
         `${url}/get-alternative-questionnaire-data?project_id=${project_id}&alternative_id=${alternative_id}`,
@@ -116,20 +131,22 @@ export default function ChapterPage() {
       const data = await response.json();
 
       if (data) {
+        setLoader(false);
         if (data.success) {
-          setIsUserLogged(true);
-          if (data.data !== 0) {
+          setLoggedInChecked(true);
+          if (data.data.queastionnaire_data !== 0) {
             setScoreObject((prev) => ({
               ...prev,
               data: {
                 ...prev.data,
-                questionnaire: data.data,
+                questionnaire: data.data.queastionnaire_data,
+                assessment: data.data.self_assessment_data,
               },
             }));
           }
-          router.push(
-            `/tool/${project_id}/${alternative_id}/${chapter}/${subChapter}/${principle}`
-          );
+          // router.push(
+          //   `/tool/${project_id}/${alternative_id}/${chapter}/${subChapter}/${principle}`
+          // );
         } else {
           router.push(`/tool/0/0/${chapter}/${subChapter}/${principle}`);
         }
@@ -146,7 +163,7 @@ export default function ChapterPage() {
     ) {
       validateToken();
       setIsTokenChecked(true);
-    } else if (!isUserLogged) {
+    } else if (!loggedInChecked) {
       getAlternativeQuestionnaireData(
         params.project_id as string,
         params.alternative_id as string
@@ -190,6 +207,19 @@ export default function ChapterPage() {
       ]?.comment ?? ""
     );
   }, [subChapter, principle, scoreObject]);
+
+  useEffect(() => {
+    console.log("useEffect triggered with scoreObject change", scoreObject);
+    if (isMounted.current) {
+      // Defer the side effect to avoid triggering state updates during rendering
+      storeAlternativeQuestionnaireData(
+        String(Date.now()),
+        params.project_id as string,
+        params.alternative_id as string,
+        scoreObject.data.questionnaire
+      );
+    }
+  }, [scoreObject]);
 
   function updateScoreObject(
     prev: ScoreType,
@@ -238,6 +268,8 @@ export default function ChapterPage() {
         : chapterData
     );
 
+    isMounted.current = true;
+
     return {
       ...prev,
       data: {
@@ -246,7 +278,43 @@ export default function ChapterPage() {
       },
     };
   }
-  if (currentChapter === null && structure === undefined) {
+
+  async function storeAlternativeQuestionnaireData(
+    timestamp: string,
+    project_id: string,
+    alternative_id: string,
+    questionnaire_data: ChapterPoints[]
+  ): Promise<storeAlternativeQuestionnaireDataResponse | void> {
+    try {
+      setLoader(true);
+      const response = await fetch(
+        `${url}/store-alternative-questionnaire-data`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            timestamp,
+            project_id,
+            alternative_id,
+            questionnaire_data,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        setLoader(false);
+      }
+    } catch (error) {
+      console.error("Error creating new user:", error);
+    }
+  }
+
+  if ((currentChapter === null && structure === undefined) || loader) {
     return <div>Loading me</div>;
   }
 
@@ -256,8 +324,7 @@ export default function ChapterPage() {
         className={clsx(
           styles["chapter-box"],
           currentChapter?.score === -1 && styles["skip"]
-        )}
-      >
+        )}>
         <div className={styles["chapter-headline-container"]}>
           <div className={styles["headline"]}>
             <h2 className={clsx("headline_small bold", styles["title"])}>
@@ -284,8 +351,7 @@ export default function ChapterPage() {
                       toggle ? undefined : -1
                     )
                   );
-                }}
-              ></button>
+                }}></button>
             </div>
           </div>
           <p className={clsx("paragraph_19", styles["description"])}>
@@ -299,8 +365,7 @@ export default function ChapterPage() {
               className={clsx(
                 styles["option"],
                 currentChapter?.score === index + 1 ? styles["selected"] : ""
-              )}
-            >
+              )}>
               <div className={clsx(styles["option-selection"], "paragraph_19")}>
                 <input
                   type="radio"
@@ -308,7 +373,7 @@ export default function ChapterPage() {
                   value={option}
                   checked={currentChapter?.score === index + 1}
                   onChange={() => {
-                    if (isUserLogged) {
+                    if (loggedInChecked) {
                       setScoreObject((prev) =>
                         updateScoreObject(
                           prev,
@@ -322,12 +387,10 @@ export default function ChapterPage() {
                     } else {
                       setLoginPopup(true);
                     }
-                  }}
-                ></input>
+                  }}></input>
                 <label
                   className="paragraph_19 bold"
-                  htmlFor={`option-${index + 1}`}
-                >
+                  htmlFor={`option-${index + 1}`}>
                   {option}
                 </label>
 
@@ -348,8 +411,7 @@ export default function ChapterPage() {
                             : item
                         )
                       )
-                    }
-                  >
+                    }>
                     {currentChapter.choices[index]?.title && (
                       <>{currentChapter.choices[index].title}</>
                     )}
@@ -369,8 +431,7 @@ export default function ChapterPage() {
                     )?.state
                       ? "1.5rem"
                       : "0",
-                  }}
-                >
+                  }}>
                   {currentChapter?.choices[index]?.text && (
                     <>{currentChapter.choices[index].text}</>
                   )}

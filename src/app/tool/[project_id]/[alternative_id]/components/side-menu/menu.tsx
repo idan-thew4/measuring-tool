@@ -84,39 +84,6 @@ function isChapterCompleted(
   }
 }
 
-// Skip all Chapter //
-function skipAllChapter(
-  scoreObject: ScoreType,
-  chapterIdx: number,
-  setScoreObject: (update: (prev: ScoreType) => ScoreType) => void,
-  active: boolean
-) {
-  const choiceSelection = active === false ? -1 : undefined;
-  setScoreObject((prev) => {
-    const updatedQuestionnaire = prev.data.questionnaire.map((chapter, idx) => {
-      if (idx === chapterIdx) {
-        return {
-          ...chapter,
-          "chapter-data": chapter["chapter-data"].map((subChapter) => ({
-            ...subChapter,
-            principles: subChapter.principles.map((choiceObj) => ({
-              ...choiceObj,
-              choice: choiceSelection,
-            })),
-          })),
-        };
-      }
-      return chapter;
-    });
-    return {
-      ...prev,
-      data: {
-        ...prev.data,
-        questionnaire: updatedQuestionnaire,
-      },
-    };
-  });
-}
 type RangeSliderProps = {
   id: string;
   name: string;
@@ -152,8 +119,7 @@ function RangeSlider({
       />
       <div
         className={styles["range-slider-progress"]}
-        style={{ width: `${percent}%` }}
-      ></div>
+        style={{ width: `${percent}%` }}></div>
       <div
         className={styles["range-slider-value"]}
         style={{
@@ -164,8 +130,7 @@ function RangeSlider({
               ? "2%"
               : `calc(${percent}% - ${percent > 99 ? "4.5" : "1.5"}rem)`
           }`,
-        }}
-      >
+        }}>
         {value}%
       </div>
     </div>
@@ -185,6 +150,7 @@ export function Menu({
     calculateScores,
     setScoreObject,
     selfAssessmentIsLoaded,
+    isMounted,
   } = useStore();
   const [maxScores, setMaxScores] = useState<{
     chapters: number[];
@@ -323,8 +289,46 @@ export function Menu({
     }
   };
 
+  // Skip all Chapter //
+  function skipAllChapter(
+    scoreObject: ScoreType,
+    chapterIdx: number,
+    setScoreObject: (update: (prev: ScoreType) => ScoreType) => void,
+    active: boolean
+  ) {
+    const choiceSelection = active === false ? -1 : undefined;
+    setScoreObject((prev) => {
+      const updatedQuestionnaire = prev.data.questionnaire.map(
+        (chapter, idx) => {
+          if (idx === chapterIdx) {
+            return {
+              ...chapter,
+              "chapter-data": chapter["chapter-data"].map((subChapter) => ({
+                ...subChapter,
+                principles: subChapter.principles.map((choiceObj) => ({
+                  ...choiceObj,
+                  choice: choiceSelection,
+                })),
+              })),
+            };
+          }
+          return chapter;
+        }
+      );
+
+      isMounted.current = true;
+      return {
+        ...prev,
+        data: {
+          ...prev.data,
+          questionnaire: updatedQuestionnaire,
+        },
+      };
+    });
+  }
+
   if (!type) {
-    if (type === "self-assessment" && !selfAssessmentIsLoaded) {
+    if (type === "self-assessment" && selfAssessmentIsLoaded) {
       return <div>Loading...</div>;
     }
   }
@@ -334,8 +338,7 @@ export function Menu({
       className={clsx(
         styles["menu"],
         type === "self-assessment" && styles["self-assessment"]
-      )}
-    >
+      )}>
       {type !== "self-assessment" ? (
         <ProgressBar completed={completedChapters} structure={structure} />
       ) : (
@@ -368,14 +371,14 @@ export function Menu({
                   ) || ""
                 ]
             )}
-            key={chapterIndex}
-          >
+            key={chapterIndex}>
             <div
-              className={clsx("nav-side-text__chapter", styles["chapter-text"])}
-            >
+              className={clsx(
+                "nav-side-text__chapter",
+                styles["chapter-text"]
+              )}>
               <Link
-                href={`/tool/${project_id}/${alternative_id}/${chapter["chapter-slug"]}/1/1`}
-              >
+                href={`/tool/${project_id}/${alternative_id}/${chapter["chapter-slug"]}/1/1`}>
                 {`${chapterIndex + 1}. ${chapter["chapter-title"]}`}
               </Link>
               {type === "self-assessment" && chapterIndex !== 1 && (
@@ -435,8 +438,7 @@ export function Menu({
                               : item
                           )
                         );
-                      }}
-                    ></button>
+                      }}></button>
                   </div>
                   <p>
                     {`${
@@ -470,14 +472,12 @@ export function Menu({
                         isActiveSubChapter && styles["active"],
                         type !== "self-assessment" &&
                           styles[subChapterCompleted || ""]
-                      )}
-                    >
+                      )}>
                       <Link
                         className="nav-side-text__sub-chapter"
                         href={`/tool/${project_id}/${alternative_id}/${
                           chapter["chapter-slug"]
-                        }/${subIndex + 1}/1`}
-                      >
+                        }/${subIndex + 1}/1`}>
                         {`${chapterIndex + 1}.${subIndex + 1} ${
                           subChapter["sub-chapter-title"]
                         }`}
@@ -530,14 +530,12 @@ export function Menu({
                                   className={clsx(
                                     isActiveChoice && styles["active"],
                                     styles[choiceCompleted || ""]
-                                  )}
-                                >
+                                  )}>
                                   <Link
                                     className="nav-side-text__sub-chapter-choice"
                                     href={`/tool/${project_id}/${alternative_id}/${
                                       chapter["chapter-slug"]
-                                    }/${subIndex + 1}/${subChoicesIndex + 1}`}
-                                  >
+                                    }/${subIndex + 1}/${subChoicesIndex + 1}`}>
                                     {`${subChoicesIndex + 1}. ${
                                       subChoices.title
                                     }`}
@@ -569,8 +567,7 @@ export function Menu({
                 <li key={index}>
                   <Link
                     className="paragraph_18 bold"
-                    href={`/tool/${project_id}/${alternative_id}/${links[index]}`}
-                  >
+                    href={`/tool/${project_id}/${alternative_id}/${links[index]}`}>
                     {option}
                   </Link>
                 </li>

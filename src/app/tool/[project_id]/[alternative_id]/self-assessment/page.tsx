@@ -1,14 +1,27 @@
 "use client";
 
-import { useStore } from "@/contexts/Store";
+import { useStore, AssessmentProps } from "@/contexts/Store";
 import styles from "./self-assessment.module.scss";
 import clsx from "clsx";
 import { SummaryHeader } from "../components/summary-header/summaryHeader";
 import { RadarGraph } from "../summary-report/graphs/graph/radar/radar";
 import { useEffect, useState } from "react";
 import { ScoreData } from "../summary-report/page";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+
+type getSelfAssessmentResponse = {
+  success: boolean;
+  data: {
+    projectName: string;
+    projectCreationDate: string;
+    assessment: number | AssessmentProps[];
+  };
+};
+
+type storeSelfAssessmentResponse = {
+  success: boolean;
+  data: AssessmentProps[];
+};
 
 export default function SelfAssessment() {
   const {
@@ -29,7 +42,11 @@ export default function SelfAssessment() {
   const params = useParams();
   const router = useRouter();
 
-  async function getSelfAssessmentData(project_id: string) {
+  async function getSelfAssessmentData(
+    project_id: string
+  ): Promise<getSelfAssessmentResponse | void> {
+    setSelfAssessmentIsLoaded(true);
+
     try {
       const response = await fetch(`${url}/get-self-assessment-data`, {
         method: "POST",
@@ -43,20 +60,50 @@ export default function SelfAssessment() {
       const data = await response.json();
 
       if (data.success) {
-        setSelfAssessmentIsLoaded(false);
-
-        if (data.data !== 0) {
-          setScoreObject((prev) => ({
-            ...prev,
-            data: {
-              ...prev.data,
-              assessment: data.data,
-            },
-          }));
+        if (data.data === 0) {
+          setSelfAssessmentIsLoaded(false);
+          // router.push(
+          //   `/tool/${params.project_id}/${params.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
+          // );
         }
       } else {
         router.push(
           `/tool/0/0/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
+        );
+        setSelfAssessmentIsLoaded(false);
+      }
+    } catch (error) {
+      console.error("Error creating new user:", error);
+    }
+  }
+
+  console.log("structure:", structure);
+
+  async function storeSelfAssessment(
+    project_id: string,
+    assessment_data: AssessmentProps[]
+  ): Promise<storeSelfAssessmentResponse | void> {
+    setSelfAssessmentIsLoaded(true);
+    try {
+      const response = await fetch(`${url}/store-self-assessment-data`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          project_id,
+          assessment_data: assessment_data,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSelfAssessmentIsLoaded(false);
+
+        router.push(
+          `/tool/${params.project_id}/${params.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
         );
       }
     } catch (error) {
@@ -140,14 +187,18 @@ export default function SelfAssessment() {
           <SummaryHeader
             title={structure?.["self-assessment"]["summary-title"]}
             structure={structure}
-            scoreObject={scoreObject}
-          >
-            <Link
+            scoreObject={scoreObject}>
+            {/* TO DO: update button copy from structure */}
+            <button
               className="basic-button outline"
-              href={`/tool/${params.project_id}/${params.alternative_id}/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`}
-            >
+              onClick={() =>
+                storeSelfAssessment(
+                  params.project_id as string,
+                  scoreObject.data.assessment
+                )
+              }>
               המשך לשאלון
-            </Link>
+            </button>
           </SummaryHeader>
           <div className={styles["graphs"]}>
             {structure["summary-report"].graphs.map((graph, index) => {
@@ -162,7 +213,7 @@ export default function SelfAssessment() {
                       }
                       key={index}
                       headline={
-                        structure["self-assessment"]["graphs-headlines"][
+                        structure["self-assessment"]["graph-headlines"][
                           index
                         ] ?? ""
                       }

@@ -30,7 +30,10 @@ export function SummaryHeader({
             <span className="bold">
               {`${structure?.summary.header["summary-details"][0]}: `}
             </span>
-            {`${formatDate(scoreObject["project-details"].date)}`}
+            {`${
+              scoreObject["project-details"].projectCreationDate &&
+              formatDate(scoreObject["project-details"].projectCreationDate)
+            }`}
           </p>
           <p className="paragraph_15">
             <span className="bold">
