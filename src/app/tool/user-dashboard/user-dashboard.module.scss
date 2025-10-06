@@ -1,0 +1,33 @@
+@use "../../../styles/variables" as *;
+
+.head-title {
+  border-bottom: 0.1rem solid $dark-blue;
+  width: 100%;
+  padding-bottom: 5rem;
+  margin-bottom: 5rem;
+}
+
+.top-section {
+  .user-row {
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+
+    .small-title {
+      margin-bottom: 2rem;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 1rem;
+    }
+  }
+}
+
+.bottom-section {
+  .projects-headline-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

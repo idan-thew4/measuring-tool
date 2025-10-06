@@ -1,0 +1,28 @@
+@use "../../../../styles/variables" as *;
+
+.project-table {
+  border-radius: 2rem;
+  overflow: hidden;
+  background-color: white;
+  border: 0.1rem solid $light-grey;
+
+  .row {
+    height: 6.7rem;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 0 2.4rem;
+    align-items: center;
+
+    &-alternative {
+      border-bottom: 0.1rem solid $light-grey;
+
+      &.no-border {
+        border-bottom: none;
+      }
+    }
+
+    &-head {
+      background-color: $dark-blue;
+    }
+  }
+}

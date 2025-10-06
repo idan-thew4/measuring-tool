@@ -5,11 +5,16 @@
   grid-column: 4/13;
   display: grid;
   grid-template-columns: subgrid;
-  background-color: $light-blue;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 7.6rem 0;
   @include scroll-bar;
+
+  &-full {
+    grid-column: 4/10;
+    grid-template-columns: auto;
+    grid-template-rows: min-content;
+  }
 }
 
 .basic-button {
@@ -77,6 +82,34 @@
 .link {
   color: $blue;
   padding-right: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+
+  &:after {
+    content: "";
+
+    background-size: 1.6rem;
+    width: 1.6rem;
+    height: 1.6rem;
+    display: block;
+  }
+
+  &.white {
+    color: white;
+
+    &:after {
+      background: url("../../public/icons/edit_icon_white.svg") no-repeat center;
+    }
+  }
+
+  &.black {
+    color: black;
+
+    &:after {
+      background: url("../../public/icons/edit_icon_black.svg") no-repeat center;
+    }
+  }
 }
 
 button.with-icon,
@@ -108,6 +141,42 @@ a.with-icon {
       &:after {
         background: url("../../public/icons/print_icon_white.svg") no-repeat
           center;
+      }
+    }
+  }
+
+  &.delete {
+    &:after {
+      background: url("../../public/icons/trash.svg") no-repeat center;
+    }
+    &:hover {
+      &:after {
+        background: url("../../public/icons/trash_white.svg") no-repeat center;
+      }
+    }
+  }
+
+  &.add {
+    &:after {
+      background: url("../../public/icons/add_icon.svg") no-repeat center;
+    }
+    &:hover {
+      &:after {
+        background: url("../../public/icons/add_icon_white.svg") no-repeat
+          center;
+      }
+    }
+  }
+
+  &.add-new-alternative {
+    &:after {
+      background: url("../../public/icons/add_alternative_icon.svg") no-repeat
+        center;
+    }
+    &:hover {
+      &:after {
+        background: url("../../public/icons/add_alternative_icon_white.svg")
+          no-repeat center;
       }
     }
   }

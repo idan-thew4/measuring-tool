@@ -9,9 +9,7 @@
   overflow-y: auto;
   height: 86vh;
   position: relative;
-
-  @include scroll-bar;
-
+  background-color: white;
   a {
     color: $basic-grey;
     transition: 0.3s all;

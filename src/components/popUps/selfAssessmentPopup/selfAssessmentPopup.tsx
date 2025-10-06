@@ -14,46 +14,34 @@ export function SelfAssessmentPopup() {
   if (!selfAssessmentPopup) return null;
   if (!structure) return <div>Loading...</div>;
 
-  const selfAssessment = {
-    "pop-up": {
-      title: "האם אתה מעוניין בהערכה עצמית של המייזם",
-      "buttons-copy": ["הערכת המיזם", "החל במדידה"],
-    },
-    headline: "הערכה עצמית לרמת הקיימות של המיזם",
-    "sub-headline":
-      "הזז את המחלק (סליידר) לציון אותו אתה מעריך שהמיזם יקבל בסיום ההערכה",
-    "summary-title": "הערכה עצמית",
-    "graph-headlines": [
-      "רמת הקיימות המוערכת של המיזם לפי פרק",
-      "רמת הקיימות המוערכת של המיזם בפרק עיצוב ותכנון",
-    ],
-  };
-
   return (
     <PopUpContainer
-      // Change hard copy to. copy from strcture
-      headline={selfAssessment["pop-up"].title}
-      closeButton={() => setSelfAssessmentPopup(false)}>
+      headline={structure["self-assessment"]["pop-up"].title}
+      closeButton={() => setSelfAssessmentPopup(false)}
+    >
       <div className={popUpContainerStyles["buttons"]}>
-        {selfAssessment["pop-up"]["buttons-copy"].map((button, index) => (
-          <button
-            className={`basic-button ${index === 0 ? "solid" : "outline"}`}
-            key={index}
-            onClick={() => {
-              setSelfAssessmentPopup(false);
-              if (index === 0) {
-                router.push(
-                  `/tool/${params.project_id}/${params.alternative_id}/self-assessment`
-                );
-              } else {
-                router.push(
-                  `/tool/${params.project_id}/${params.alternative_id}/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`
-                );
-              }
-            }}>
-            {button}
-          </button>
-        ))}
+        {structure["self-assessment"]["pop-up"]["buttons-copy"].map(
+          (button, index) => (
+            <button
+              className={`basic-button ${index === 0 ? "solid" : "outline"}`}
+              key={index}
+              onClick={() => {
+                setSelfAssessmentPopup(false);
+                if (index === 0) {
+                  router.push(
+                    `/tool/${params.project_id}/${params.alternative_id}/self-assessment`
+                  );
+                } else {
+                  router.push(
+                    `/tool/${params.project_id}/${params.alternative_id}/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`
+                  );
+                }
+              }}
+            >
+              {button}
+            </button>
+          )
+        )}
       </div>
     </PopUpContainer>
   );

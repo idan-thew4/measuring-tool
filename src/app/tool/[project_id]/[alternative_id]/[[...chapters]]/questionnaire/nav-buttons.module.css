@@ -56,10 +56,6 @@
   content: "";
   rotate: -90deg;
 }
-.nav-buttons .nav-button:hover {
-  background-color: #5b6771;
-  color: white;
-}
 .nav-buttons .nav-button:hover:after, .nav-buttons .nav-button:hover:before {
   background-size: 1.5rem !important;
   background: url("../../../../../../../public/icons/arrow-down_white.svg") no-repeat center;

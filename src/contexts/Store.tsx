@@ -112,6 +112,24 @@ export type structureProps = {
   "summary-report": SummaryReport;
   "self-assessment": SelfAssessment;
   login: Login;
+  "user-dashboard": UserDashboard;
+};
+
+type UserDashboard = {
+  "top-section": {
+    title: string;
+    "info-captions": string[];
+    "buttons-copy": string[];
+  };
+  "bottom-section": {
+    title: string;
+    projects: {
+      header: string;
+      "buttons-copy": string;
+      "buttons-copy-project": string[];
+      "buttons-copy-alternative": string[];
+    };
+  };
 };
 
 type Login = {
@@ -617,7 +635,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         selfAssessmentIsLoaded,
         setSelfAssessmentIsLoaded,
         isMounted,
-      }}>
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );

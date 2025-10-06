@@ -1,8 +1,11 @@
+@use "../styles/variables" as *;
+
 .layoutContainer {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 10rem 1fr;
   height: 100vh;
+  background-color: $light-blue;
 
   .main {
     display: grid;
