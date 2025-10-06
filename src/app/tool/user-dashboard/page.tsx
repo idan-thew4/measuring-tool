@@ -6,6 +6,7 @@ import { useStore, structureProps } from "@/contexts/Store";
 import { useEffect, useReducer, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Project } from "./project/project";
+import { set } from "react-hook-form";
 
 type project = {
   project_name: string;
@@ -28,6 +29,7 @@ export default function userDashboard() {
   const { structure, url } = useStore();
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [projects, setProjects] = useState<project[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   async function getUserDashboardData(
@@ -45,6 +47,7 @@ export default function userDashboard() {
       const data = await response.json();
 
       if (data.projects) {
+        setLoading(false);
         setUserEmail(data.email);
         setProjects(data.projects);
       } else {
@@ -66,13 +69,8 @@ export default function userDashboard() {
     }
   }, [structure]);
 
-  useEffect(() => {
-    console.log("User Email:", userEmail);
-    console.log("Projects:", projects);
-  }, [userEmail, projects]);
-
-  if (!structure) {
-    return null;
+  if (!structure || loading) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -120,6 +118,7 @@ export default function userDashboard() {
             <Project
               key={index}
               project_name={project.project_name}
+              project_id={project.project_id}
               alternatives={project.alternatives}
             />
           ))}

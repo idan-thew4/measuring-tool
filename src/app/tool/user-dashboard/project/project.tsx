@@ -2,33 +2,39 @@ import { alternativeType } from "../page";
 import { useStore } from "@/contexts/Store";
 import styles from "./project.module.scss";
 import clsx from "clsx";
+import Link from "next/link";
 
 export function Project({
   project_name,
   alternatives,
+  project_id,
 }: {
   project_name: string;
   alternatives: alternativeType[];
+  project_id: number;
 }) {
   const { structure, url } = useStore();
 
   return (
     <ul className={styles["project-table"]}>
       <li className={clsx(styles["row"], styles["row-head"])} key={0}>
-        <h3 className={clsx("headline_small", styles["project-name"])}>
-          {project_name}
-        </h3>
-        <button className="paragraph_15 link white with-icon edit">
-          {structure
-            ? structure["user-dashboard"]["bottom-section"]["projects"][
-                "buttons-copy-project"
-              ][0]
-            : ""}
-        </button>
+        <div className={styles["project-name"]}>
+          <h3 className={clsx("headline_small", styles["project-name"])}>
+            {project_name}
+          </h3>
+          <button className="paragraph_15 link white with-icon edit">
+            {structure
+              ? structure["user-dashboard"]["bottom-section"]["projects"][
+                  "buttons-copy-project"
+                ][0]
+              : ""}
+          </button>
+        </div>
+
         <button
           className={clsx(
             "basic-button outline with-icon delete",
-            styles["delete -button"]
+            styles["delete-button"]
           )}
         >
           {structure
@@ -48,7 +54,12 @@ export function Project({
           )}
         >
           <div className={styles["alternative-name"]}>
-            <h4 className="paragraph_15">{alternative.alternative_name}</h4>
+            <Link
+              href={`/tool/${project_id}/${alternative.alternative_id}/${structure?.questionnaire.content[1]["chapter-slug"]}/1/1`}
+              className={clsx("paragraph_15", styles["alternative-link"])}
+            >
+              {alternative.alternative_name}
+            </Link>
             <button className="paragraph_15 link black with-icon edit">
               {
                 structure?.["user-dashboard"]["bottom-section"]["projects"][
