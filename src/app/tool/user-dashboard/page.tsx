@@ -3,10 +3,9 @@
 import clsx from "clsx";
 import styles from "./user-dashboard.module.scss";
 import { useStore, structureProps } from "@/contexts/Store";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Project } from "./project/project";
-import { set } from "react-hook-form";
 
 type project = {
   project_name: string;
@@ -26,7 +25,8 @@ type getUserDashboardDataResponse = {
 };
 
 export default function userDashboard() {
-  const { structure, url } = useStore();
+  const { structure, url, setRegistrationPopup, setChangePasswordPopup } =
+    useStore();
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [projects, setProjects] = useState<project[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -92,6 +92,12 @@ export default function userDashboard() {
                     "basic-button outline",
                     index === 1 && "delete with-icon"
                   )}
+                  onClick={() => {
+                    if (index === 0) {
+                      setChangePasswordPopup(true);
+                    } else {
+                    }
+                  }}
                 >
                   {button}
                 </button>
@@ -105,7 +111,10 @@ export default function userDashboard() {
           <h2 className={clsx(styles["title"], "headline_medium-big bold")}>
             {structure["user-dashboard"]["bottom-section"].title}
           </h2>
-          <button className="basic-button outline with-icon add">
+          <button
+            className="basic-button outline with-icon add"
+            onClick={() => setRegistrationPopup("new-project")}
+          >
             {
               structure["user-dashboard"]["bottom-section"]["projects"][
                 "buttons-copy"

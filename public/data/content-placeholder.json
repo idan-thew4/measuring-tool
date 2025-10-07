@@ -726,6 +726,94 @@
           "מחק חלופה"
         ]
       }
+    },
+    "pop-ups": {
+      "change-password": {
+        "title": "שינוי סיסמא",
+        "input-fields": [
+          {
+            "label": "סיסמא נוכחית",
+            "mandatory": true,
+            "type": "password",
+            "row": 1,
+            "validation-error": "יש להזין סיסמה נוכחית",
+            "format-error": "הסיסמה חייבת להכיל לפחות 8 תווים, אותיות ומספרים",
+            "placeholder": "סיסמא נוכחית",
+            "name": "currentPassword"
+          },
+          {
+            "label": "סיסמא חדשה",
+            "mandatory": true,
+            "type": "password",
+            "row": 1,
+            "validation-error": "יש להזין סיסמה חדשה",
+            "format-error": "הסיסמה חייבת להכיל לפחות 8 תווים, אותיות ומספרים",
+            "placeholder": "סיסמא חדשה",
+            "name": "newPassword"
+          }
+        ],
+        "buttons-copy": ["שמור", "בטל"]
+      },
+      "delete-project": {
+        "title": "מחיקת פרןיקט",
+        "description": "כדאי לשים לב, במידה ויאושר חלון זה. הפרויקט ימחק. אין אפשרות לשחזר אותו ואת המידע מחשבון שנמחק",
+        "buttons-copy": ["ביטול", "מחק פרויקט"]
+      },
+      "delete-alternative": {
+        "title": "מחיקת חלופה",
+        "description": "כדאי לשים לב, במידה ויאושר חלון זה. החלופה תמחק. אין אפשרות לשחזר אותה ואת המידע מחשבון שנמחק",
+        "buttons-copy": ["ביטול", "מחק חלופה"]
+      },
+      "delete-user": {
+        "title": "מחיקת משתמש",
+        "description": "כדאי לשים לב, במידה ויאושר חלון זה. המשתמש ימחק. אין אפשרות לשחזר אותו ואת המידע מחשבון שנמחק",
+        "buttons-copy": ["ביטול", "מחק חשבון"]
+      },
+      "change-project-name": {
+        "title": "עריכת שם הפרויקט",
+        "input-fields": [
+          {
+            "label": "שם הפרויקט",
+            "mandatory": true,
+            "type": "text",
+            "row": 1,
+            "validation-error": "יש להזין שם פרויקט",
+            "placeholder": "שם הפרויקט",
+            "name": "projectName"
+          }
+        ],
+        "buttons-copy": ["שמור", "בטל"]
+      },
+      "change-alternative-name": {
+        "title": "עריכת שם החלופה",
+        "input-fields": [
+          {
+            "label": "שם החלופה",
+            "mandatory": true,
+            "type": "text",
+            "row": 1,
+            "validation-error": "יש להזין שם חלופה",
+            "placeholder": "שם חלופה",
+            "name": "alternativeName"
+          }
+        ],
+        "buttons-copy": ["שמור", "בטל"]
+      },
+      "create-new-alternative": {
+        "title": "יצירת חלופה חדשה",
+        "input-fields": [
+          {
+            "label": "שם החלופה",
+            "mandatory": true,
+            "type": "text",
+            "row": 1,
+            "validation-error": "יש להזין שם חלופה",
+            "placeholder": "שם חלופה",
+            "name": "alternativeName"
+          }
+        ],
+        "buttons-copy": ["יצירת חלופה", "בטל"]
+      }
     }
   }
 }

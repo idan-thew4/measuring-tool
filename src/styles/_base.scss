@@ -60,7 +60,6 @@
 
     &.loading {
       color: transparent;
-      background-color: $blue;
       pointer-events: none;
       &:before {
         content: "";
@@ -71,6 +70,15 @@
         inset: 0;
         background: url("../../public/icons/spinner_white.svg") no-repeat center;
         background-size: 2rem !important;
+      }
+    }
+
+    &.warning {
+      background-color: $validation-red;
+
+      &:hover {
+        background-color: color.adjust($validation-red, $lightness: -10%);
+        color: white;
       }
     }
   }

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import styles from "./summary-report.module.scss";
 import { SummaryHeader } from "../components/summary-header/summaryHeader";
 import clsx from "clsx";
+import { useParams } from "next/navigation";
 
 export type ScoreData = {
   subject?: string;
@@ -16,7 +17,13 @@ export type ScoreData = {
 };
 
 export default function SummaryReport() {
-  const { structure, scoreObject, calculateScores } = useStore();
+  const {
+    structure,
+    scoreObject,
+    calculateScores,
+    getAlternativeQuestionnaireData,
+    loader,
+  } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
     secondChapter: ScoreData[];
@@ -26,11 +33,23 @@ export default function SummaryReport() {
     secondChapter: [],
     subChapters: [],
   });
+  const params = useParams();
 
   useEffect(() => {
-    const hasAssessment = !scoreObject.data.assessment.every(
-      (chapter) => chapter["chapter-score"] === 0
+    getAlternativeQuestionnaireData(
+      params.project_id as string,
+      params.alternative_id as string
     );
+  }, []);
+
+  useEffect(() => {
+    console.log("scoreObject", scoreObject);
+
+    const hasAssessment =
+      Array.isArray(scoreObject.data.assessment) &&
+      !scoreObject.data.assessment.every(
+        (chapter) => chapter["chapter-score"] === 0
+      );
 
     // chapters //
 
@@ -142,6 +161,10 @@ export default function SummaryReport() {
       subChapters: subChaptersTemp,
     });
   }, [structure, scoreObject]);
+
+  if (loader) {
+    return <div>Loading..</div>;
+  }
 
   return (
     <div className={clsx(styles["main-container"], "main-container")}>

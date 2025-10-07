@@ -43,6 +43,9 @@ export default function ChapterPage() {
     setLoggedInChecked,
     loggedInChecked,
     isMounted,
+    getAlternativeQuestionnaireData,
+    loader,
+    setLoader,
   } = useStore();
   const [currentChapter, setCurrentChapter] =
     useState<currentChapterType | null>(null);
@@ -76,7 +79,6 @@ export default function ChapterPage() {
   ]);
   const [comment, setComment] = useState("");
   const router = useRouter();
-  const [loader, setLoader] = useState(false);
 
   async function validateToken() {
     try {
@@ -105,51 +107,6 @@ export default function ChapterPage() {
             setLoggedInChecked(true);
           }
         });
-      }
-    } catch (error) {
-      console.error("Failed to validate token:", error);
-    }
-  }
-
-  async function getAlternativeQuestionnaireData(
-    project_id: string,
-    alternative_id: string
-  ) {
-    setLoader(true);
-    try {
-      const response = await fetch(
-        `${url}/get-alternative-questionnaire-data?project_id=${project_id}&alternative_id=${alternative_id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
-
-      const data = await response.json();
-
-      if (data) {
-        setLoader(false);
-        if (data.success) {
-          setLoggedInChecked(true);
-          if (data.data.queastionnaire_data !== 0) {
-            setScoreObject((prev) => ({
-              ...prev,
-              data: {
-                ...prev.data,
-                questionnaire: data.data.queastionnaire_data,
-                assessment: data.data.self_assessment_data,
-              },
-            }));
-          }
-          // router.push(
-          //   `/tool/${project_id}/${alternative_id}/${chapter}/${subChapter}/${principle}`
-          // );
-        } else {
-          router.push(`/tool/0/0/${chapter}/${subChapter}/${principle}`);
-        }
       }
     } catch (error) {
       console.error("Failed to validate token:", error);

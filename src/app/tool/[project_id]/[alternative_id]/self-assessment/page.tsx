@@ -77,8 +77,6 @@ export default function SelfAssessment() {
     }
   }
 
-  console.log("structure:", structure);
-
   async function storeSelfAssessment(
     project_id: string,
     assessment_data: AssessmentProps[]
@@ -187,7 +185,8 @@ export default function SelfAssessment() {
           <SummaryHeader
             title={structure?.["self-assessment"]["summary-title"]}
             structure={structure}
-            scoreObject={scoreObject}>
+            scoreObject={scoreObject}
+          >
             {/* TO DO: update button copy from structure */}
             <button
               className="basic-button outline"
@@ -196,7 +195,8 @@ export default function SelfAssessment() {
                   params.project_id as string,
                   scoreObject.data.assessment
                 )
-              }>
+              }
+            >
               המשך לשאלון
             </button>
           </SummaryHeader>

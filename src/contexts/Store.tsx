@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect, useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import path from "path";
 import React, {
   createContext,
@@ -130,6 +130,15 @@ type UserDashboard = {
       "buttons-copy-alternative": string[];
     };
   };
+
+  "pop-ups": { [key: string]: Popups };
+};
+
+export type Popups = {
+  title: string;
+  description?: string;
+  "input-fields"?: RegistrationInputField[];
+  "buttons-copy": string[];
 };
 
 type Login = {
@@ -280,6 +289,16 @@ type ApiContextType = {
   selfAssessmentIsLoaded: boolean;
   setSelfAssessmentIsLoaded: React.Dispatch<React.SetStateAction<boolean>>;
   isMounted: React.MutableRefObject<boolean>;
+  getAlternativeQuestionnaireData: (
+    project_id: string,
+    alternative_id: string
+  ) => Promise<void>;
+  loader: boolean;
+  setLoader: React.Dispatch<React.SetStateAction<boolean>>;
+  changePasswordPopup: boolean;
+  setChangePasswordPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  deletePopup: string;
+  setDeletePopup: React.Dispatch<React.SetStateAction<string>>;
 };
 
 // const url = "http://localhost:3000/";
@@ -322,16 +341,24 @@ function Store({ children }: PropsWithChildren<{}>) {
   const [previousChapter, setPreviousChapter] = useState<
     string[] | undefined
   >();
+
+  // Pop ups //
   const [registrationPopup, setRegistrationPopup] = useState<string>("");
   const [loginPopup, setLoginPopup] = useState<boolean>(false);
+  const [changePasswordPopup, setChangePasswordPopup] =
+    useState<boolean>(false);
   const [selfAssessmentPopup, setSelfAssessmentPopup] =
     useState<boolean>(false);
+  const [deletePopup, setDeletePopup] = useState<string>("");
+
   const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [sideMenu, setSideMenu] = useState<string>("");
   const [loggedInChecked, setLoggedInChecked] = useState(false);
   const pathname = usePathname();
   const [selfAssessmentIsLoaded, setSelfAssessmentIsLoaded] = useState(false);
   const isMounted = useRef(false);
+  const [loader, setLoader] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     setPreviousChapter([chapter, subChapter, principle]);
@@ -481,6 +508,51 @@ function Store({ children }: PropsWithChildren<{}>) {
       });
 
       return totalCompletedChapters;
+    }
+  }
+
+  async function getAlternativeQuestionnaireData(
+    project_id: string,
+    alternative_id: string
+  ) {
+    setLoader(true);
+    try {
+      const response = await fetch(
+        `${url}/get-alternative-questionnaire-data?project_id=${project_id}&alternative_id=${alternative_id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+
+      if (data) {
+        setLoader(false);
+        if (data.success) {
+          setLoggedInChecked(true);
+          if (data.data.queastionnaire_data !== 0) {
+            setScoreObject((prev) => ({
+              ...prev,
+              data: {
+                ...prev.data,
+                questionnaire: data.data.queastionnaire_data,
+                assessment: data.data.self_assessment_data,
+              },
+            }));
+          }
+          // router.push(
+          //   `/tool/${project_id}/${alternative_id}/${chapter}/${subChapter}/${principle}`
+          // );
+        } else {
+          router.push(`/tool/0/0/${chapter}/${subChapter}/${principle}`);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to validate token:", error);
     }
   }
 
@@ -635,6 +707,13 @@ function Store({ children }: PropsWithChildren<{}>) {
         selfAssessmentIsLoaded,
         setSelfAssessmentIsLoaded,
         isMounted,
+        getAlternativeQuestionnaireData,
+        loader,
+        setLoader,
+        changePasswordPopup,
+        setChangePasswordPopup,
+        deletePopup,
+        setDeletePopup,
       }}
     >
       {children}

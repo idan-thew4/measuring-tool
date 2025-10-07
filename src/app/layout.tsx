@@ -6,6 +6,8 @@ import { Store } from "../contexts/Store";
 import { RegistrationPopup } from "@/components/popUps/registrationPopup/registrationPopup";
 import { LoginPopup } from "@/components/popUps/loginPopup/loginPopup";
 import { SelfAssessmentPopup } from "@/components/popUps/selfAssessmentPopup/selfAssessmentPopup";
+import { ChangePasswordPopup } from "@/components/popUps/changePasswordPopup/changePasswordPopup";
+import { DeletePopup } from "@/components/popUps/deletePopup/deletePopup";
 
 export const metadata: Metadata = {
   title: "Slil",
@@ -27,6 +29,8 @@ export default function RootLayout({
             <RegistrationPopup />
             <LoginPopup />
             <SelfAssessmentPopup />
+            <ChangePasswordPopup />
+            <DeletePopup type={"delete-user"} />
           </Store>
         </div>
       </body>

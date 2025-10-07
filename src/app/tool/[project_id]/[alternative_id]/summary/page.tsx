@@ -23,6 +23,7 @@ import {
   Font,
   PDFViewer,
 } from "@react-pdf/renderer";
+import { useParams } from "next/navigation";
 
 function formatDate(timestamp: number) {
   const date = new Date(timestamp);
@@ -320,7 +321,13 @@ const MyDocument = ({
 };
 
 export default function Summary() {
-  const { structure, scoreObject, calculateScores } = useStore();
+  const {
+    structure,
+    scoreObject,
+    calculateScores,
+    getAlternativeQuestionnaireData,
+    loader,
+  } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
     subChapters: { [key: string]: ScoreData[] };
@@ -328,6 +335,14 @@ export default function Summary() {
     chapters: [],
     subChapters: {},
   });
+  const params = useParams();
+
+  useEffect(() => {
+    getAlternativeQuestionnaireData(
+      params.project_id as string,
+      params.alternative_id as string
+    );
+  }, []);
 
   //Table//
 
@@ -410,7 +425,9 @@ export default function Summary() {
     });
   }, [scoreObject]);
 
-  //Export //
+  if (loader) {
+    return <div>Loading..</div>;
+  }
 
   return (
     <div className={clsx(styles["summary"], "main-container")}>
