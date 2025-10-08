@@ -5,7 +5,7 @@ import Image from "next/image";
 import { structureProps, useStore } from "../../contexts/Store";
 import Link from "next/link";
 import clsx from "clsx";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type logOutResponse = {
   success: boolean;
@@ -22,6 +22,8 @@ export function Header() {
     setLoggedInChecked,
   } = useStore();
   const router = useRouter();
+  const params = useParams();
+  const [chapter, subChapter, principle] = params?.chapters || [];
 
   async function logOut(
     structure: structureProps
@@ -48,8 +50,6 @@ export function Header() {
     }
   }
 
-  console.log(loggedInChecked);
-
   return (
     <header className={styles["header-container"]}>
       <div className={clsx(styles["right-side"], styles["flex-h-align"])}>
@@ -67,7 +67,7 @@ export function Header() {
               <Link href={"/tool/user-dashboard"}>
                 {structure?.header.user[1]}
               </Link>
-              <button onClick={() => logOut(structure)}>
+              <button onClick={() => structure && logOut(structure)}>
                 {structure?.header.user[2]}
               </button>
             </div>
@@ -78,8 +78,8 @@ export function Header() {
           )
         ) : null}
       </div>
-      {loggedInChecked !== undefined && loggedInChecked && (
-        <div className={styles["left-side"]}></div>
+      {loggedInChecked !== undefined && loggedInChecked && params?.chapters && (
+        <div className={styles["left-side"]}>tets</div>
       )}
     </header>
   );
