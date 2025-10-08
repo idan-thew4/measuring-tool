@@ -259,6 +259,24 @@ export type CalcParameters = {
   type?: string;
 };
 
+export type ProjectType = {
+  project_name: string;
+  project_id: number;
+  alternatives: alternativeType[];
+};
+
+export type alternativeType = {
+  alternative_id: number;
+  alternative_name: string;
+  alternative_created_date_timestamp: number;
+};
+
+type getUserDashboardDataResponse = {
+  user_id: number;
+  email: string;
+  projects: ProjectType[];
+};
+
 type ApiContextType = {
   scoreObject: ScoreType;
   setScoreObject: React.Dispatch<React.SetStateAction<ScoreType>>;
@@ -297,8 +315,37 @@ type ApiContextType = {
   setLoader: React.Dispatch<React.SetStateAction<boolean>>;
   changePasswordPopup: boolean;
   setChangePasswordPopup: React.Dispatch<React.SetStateAction<boolean>>;
-  deletePopup: string;
-  setDeletePopup: React.Dispatch<React.SetStateAction<string>>;
+  deletePopup: { type: string; project_id?: number; alternative_id?: number };
+  setDeletePopup: React.Dispatch<
+    React.SetStateAction<{
+      type: string;
+      project_id?: number;
+      alternative_id?: number;
+    }>
+  >;
+  addRenamePopup: {
+    type: string;
+    project_id?: number;
+    alternative_id?: number;
+    project_name?: string;
+    alternative_name?: string;
+  };
+  setAddRenamePopup: React.Dispatch<
+    React.SetStateAction<{
+      type: string;
+      project_id?: number;
+      alternative_id?: number;
+      project_name?: string;
+      alternative_name?: string;
+    }>
+  >;
+  projects: ProjectType[];
+  setProjects: React.Dispatch<React.SetStateAction<ProjectType[]>>;
+  userEmail: string | null;
+  setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
+  getUserDashboardData: (
+    structure: structureProps
+  ) => Promise<getUserDashboardDataResponse | void>;
 };
 
 // const url = "http://localhost:3000/";
@@ -349,7 +396,20 @@ function Store({ children }: PropsWithChildren<{}>) {
     useState<boolean>(false);
   const [selfAssessmentPopup, setSelfAssessmentPopup] =
     useState<boolean>(false);
-  const [deletePopup, setDeletePopup] = useState<string>("");
+  const [deletePopup, setDeletePopup] = useState<{
+    type: string;
+    project_id?: number;
+    alternative_id?: number;
+  }>({ type: "" });
+  const [addRenamePopup, setAddRenamePopup] = useState<{
+    type: string;
+    project_id?: number;
+    alternative_id?: number;
+    project_name?: string;
+    alternative_name?: string;
+  }>({ type: "" });
+  const [projects, setProjects] = useState<ProjectType[]>([]);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [sideMenu, setSideMenu] = useState<string>("");
@@ -359,10 +419,6 @@ function Store({ children }: PropsWithChildren<{}>) {
   const isMounted = useRef(false);
   const [loader, setLoader] = useState(true);
   const router = useRouter();
-
-  useEffect(() => {
-    setPreviousChapter([chapter, subChapter, principle]);
-  }, [chapter, subChapter, principle]);
 
   async function getContent() {
     try {
@@ -556,36 +612,6 @@ function Store({ children }: PropsWithChildren<{}>) {
     }
   }
 
-  useEffect(() => {
-    getContent();
-  }, []);
-
-  useEffect(() => {
-    if (pathname.includes("self-assessment")) {
-      setSideMenu("self-assessment");
-    } else if (pathname.includes(params.chapters?.[0] || "")) {
-      setSideMenu("questionnaire");
-    }
-  }, [pathname]);
-
-  useEffect(() => {
-    const chapters = getCompletedChapters(scoreObject) ?? [];
-    setCompletedChapters(chapters);
-    if (
-      scoreObject["project-details"].contactEmail &&
-      scoreObject.data.questionnaire &&
-      scoreObject.data.questionnaire.length > 0
-    ) {
-      setRegistrationPopup("");
-      const jsonCookie = JSON.stringify(scoreObject);
-      setCookie(
-        `${scoreObject["project-details"].contactEmail}`,
-        jsonCookie,
-        0.15
-      );
-    }
-  }, [scoreObject]);
-
   const getCurrentChapter = (chapterSlug: string) => {
     return structure?.questionnaire.content.find(
       (structureChapter) => structureChapter["chapter-slug"] === chapterSlug
@@ -680,6 +706,71 @@ function Store({ children }: PropsWithChildren<{}>) {
     return calcParameters;
   }
 
+  async function getUserDashboardData(
+    structure: structureProps
+  ): Promise<getUserDashboardDataResponse | void> {
+    try {
+      const response = await fetch(`${url}/get-user-data-dashboard`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      if (data.projects) {
+        setLoader(false);
+        setUserEmail(data.user_email);
+        setProjects(data.projects);
+      } else {
+        router.push(
+          `/tool/0/0/${structure?.questionnaire.content[1]["chapter-slug"]}/1/1`
+        );
+      }
+    } catch (error) {
+      router.push(
+        `/tool/0/0/${structure?.questionnaire.content[1]["chapter-slug"]}/1/1`
+      );
+      //   console.error("Failed to validate token:", error);
+    }
+  }
+
+  useEffect(() => {
+    setPreviousChapter([chapter, subChapter, principle]);
+  }, [chapter, subChapter, principle]);
+
+  useEffect(() => {
+    getContent();
+  }, []);
+
+  useEffect(() => {
+    if (pathname.includes("self-assessment")) {
+      setSideMenu("self-assessment");
+    } else if (pathname.includes(params.chapters?.[0] || "")) {
+      setSideMenu("questionnaire");
+    }
+  }, [pathname]);
+
+  useEffect(() => {
+    const chapters = getCompletedChapters(scoreObject) ?? [];
+    setCompletedChapters(chapters);
+    if (
+      scoreObject["project-details"].contactEmail &&
+      scoreObject.data.questionnaire &&
+      scoreObject.data.questionnaire.length > 0
+    ) {
+      setRegistrationPopup("");
+      const jsonCookie = JSON.stringify(scoreObject);
+      setCookie(
+        `${scoreObject["project-details"].contactEmail}`,
+        jsonCookie,
+        0.15
+      );
+    }
+  }, [scoreObject]);
+
   return (
     <ApiContext.Provider
       value={{
@@ -714,8 +805,14 @@ function Store({ children }: PropsWithChildren<{}>) {
         setChangePasswordPopup,
         deletePopup,
         setDeletePopup,
-      }}
-    >
+        addRenamePopup,
+        setAddRenamePopup,
+        projects,
+        setProjects,
+        userEmail,
+        setUserEmail,
+        getUserDashboardData,
+      }}>
       {children}
     </ApiContext.Provider>
   );

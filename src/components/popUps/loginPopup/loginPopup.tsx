@@ -78,20 +78,21 @@ export function LoginPopup() {
       headline={structure.login.title}
       closeButton={() => setLoginPopup(false)}>
       <div className={formStyles["form-container"]}>
+        <p className="paragraph_18">
+          {structure.login["text"][0]}
+          <button
+            style={{ display: "inline-block", marginLeft: "0.5rem" }}
+            className="link paragraph_18"
+            onClick={() => {
+              setLoginPopup(false);
+              setRegistrationPopup("register");
+            }}>
+            {structure.login["text"][1]}
+          </button>
+        </p>
         <form
           style={{ pointerEvents: loading ? "none" : "auto" }}
           onSubmit={handleSubmit((data) => onSubmit(data))}>
-          <p className="paragraph_18">
-            {structure.login["text"][0]}
-            <button
-              className="link"
-              onClick={() => {
-                setLoginPopup(false);
-                setRegistrationPopup("register");
-              }}>
-              {structure.login["text"][1]}
-            </button>
-          </p>
           {structure.login["input-fields"].map((field, index) => (
             <div
               className={clsx(

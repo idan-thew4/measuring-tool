@@ -83,18 +83,16 @@ export function ChangePasswordPopup() {
 
   const password = watch("newPassword");
 
-  if (!changePasswordPopup || !structure) return <div>Loading...</div>;
+  if (!changePasswordPopup || !structure) return null;
 
   return (
     <PopUpContainer
       headline={structure["user-dashboard"]["pop-ups"]["change-password"].title}
-      closeButton={() => setChangePasswordPopup(false)}
-    >
+      closeButton={() => setChangePasswordPopup(false)}>
       <div className={formStyles["form-container"]}>
         <form
           style={{ pointerEvents: loading ? "none" : "auto" }}
-          onSubmit={handleSubmit((data) => onSubmit(data))}
-        >
+          onSubmit={handleSubmit((data) => onSubmit(data))}>
           {structure["user-dashboard"]["pop-ups"]["change-password"][
             "input-fields"
           ]?.map((field, index) => (
@@ -105,8 +103,7 @@ export function ChangePasswordPopup() {
                 formStyles[`row-${field.row}`],
                 formStyles["input"]
               )}
-              key={index}
-            >
+              key={index}>
               <input
                 type={field.type ? field.type : "text"}
                 placeholder={`${field.label}${field.mandatory ? " *" : ""}`}
@@ -151,8 +148,7 @@ export function ChangePasswordPopup() {
                       loading && "loading"
                     )}
                     type="submit"
-                    disabled={Object.keys(errors).length > 0}
-                  >
+                    disabled={Object.keys(errors).length > 0}>
                     {button}
                   </button>
                 );
@@ -163,8 +159,7 @@ export function ChangePasswordPopup() {
                     key={button}
                     className={clsx("basic-button", "outline")}
                     type="button"
-                    onClick={() => setChangePasswordPopup(false)}
-                  >
+                    onClick={() => setChangePasswordPopup(false)}>
                     {button}
                   </button>
                 );
@@ -176,8 +171,7 @@ export function ChangePasswordPopup() {
               className={clsx(
                 formStyles["error-message"],
                 formStyles["general-error"]
-              )}
-            >
+              )}>
               {generalError}
             </div>
           )}

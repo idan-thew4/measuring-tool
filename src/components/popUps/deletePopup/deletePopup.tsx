@@ -7,30 +7,45 @@ import popUpContainerStyles from "../popUpContainer/pop-up-container.module.scss
 import { useStore, structureProps, Popups } from "@/contexts/Store";
 import { useRouter } from "next/navigation";
 
-type deleteUserResponse = {
+type deletePopupResponse = {
   success: boolean;
   data: string | { status: string };
   message?: string;
 };
 
-export function DeletePopup({ type }: { type: string }) {
-  const { structure, url, deletePopup, setDeletePopup } = useStore();
+export function DeletePopup() {
+  const {
+    structure,
+    url,
+    deletePopup,
+    setDeletePopup,
+    getUserDashboardData,
+    setLoggedInChecked,
+  } = useStore();
 
   const [generalError, setGeneralError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   async function deleteFunction(
-    structure: structureProps
-  ): Promise<deleteUserResponse | void> {
+    structure: structureProps,
+    project_id?: number,
+    alternative_id?: number
+  ): Promise<deletePopupResponse | void> {
     setLoading(true);
     try {
-      const response = await fetch(`${url}/${type}`, {
+      const response = await fetch(`${url}/${deletePopup.type}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
+        body: JSON.stringify({
+          ...(project_id && { project_id }),
+          ...(alternative_id && {
+            alternative_id,
+          }),
+        }),
       });
 
       const data = await response.json();
@@ -39,13 +54,16 @@ export function DeletePopup({ type }: { type: string }) {
         setLoading(false);
 
         if (data.success) {
-          setDeletePopup("");
+          setDeletePopup({ type: "" });
           setGeneralError("");
 
-          if (type === "delete-user") {
+          if (deletePopup.type === "delete-user") {
+            setLoggedInChecked(false);
             router.push(
               `/tool/0/0/${structure.questionnaire.content[1]["chapter-slug"]}/1/1`
             );
+          } else {
+            getUserDashboardData(structure);
           }
         } else {
           if (data.message) {
@@ -60,69 +78,68 @@ export function DeletePopup({ type }: { type: string }) {
 
   const onSubmit = async (structure: structureProps) => {
     if (structure) {
-      deleteFunction(structure);
+      deleteFunction(
+        structure,
+        deletePopup.project_id,
+        deletePopup.alternative_id
+      );
     }
   };
 
-  if (deletePopup === "" || !structure) return <div>Loading...</div>;
+  if (deletePopup.type === "" || !structure) return null;
 
   return (
     <PopUpContainer
-      headline={structure["user-dashboard"]["pop-ups"]["delete-user"].title}
-      closeButton={() => setDeletePopup("false")}
-    >
+      headline={structure["user-dashboard"]["pop-ups"][deletePopup.type].title}
+      closeButton={() => setDeletePopup({ type: "" })}>
       <p
         className={clsx(
           popUpContainerStyles["description-text"],
           "paragraph_20"
-        )}
-      >
-        {structure["user-dashboard"]["pop-ups"][type].description}
+        )}>
+        {structure["user-dashboard"]["pop-ups"][deletePopup.type].description}
       </p>
       <div className={popUpContainerStyles["buttons"]}>
-        {structure["user-dashboard"]["pop-ups"][type]["buttons-copy"].map(
-          (button, index) => {
-            if (index === 1) {
-              // Submit  button
-              return (
-                <button
-                  key={button}
-                  className={clsx(
-                    formStyles["submit-button"],
-                    "solid",
-                    "basic-button",
-                    "warning",
-                    loading && "loading"
-                  )}
-                  type="button"
-                  onClick={() => onSubmit(structure)}
-                >
-                  {button}
-                </button>
-              );
-            } else {
-              // Close button
-              return (
-                <button
-                  key={button}
-                  className="basic-button outline warning"
-                  type="button"
-                  onClick={() => setDeletePopup("")}
-                >
-                  {button}
-                </button>
-              );
-            }
+        {structure["user-dashboard"]["pop-ups"][deletePopup.type][
+          "buttons-copy"
+        ].map((button, index) => {
+          if (index === 1) {
+            // Submit  button
+            return (
+              <button
+                key={button}
+                className={clsx(
+                  formStyles["submit-button"],
+                  "solid",
+                  "basic-button",
+                  "warning",
+                  loading && "loading"
+                )}
+                type="button"
+                onClick={() => onSubmit(structure)}>
+                {button}
+              </button>
+            );
+          } else {
+            // Close button
+            return (
+              <button
+                key={button}
+                className="basic-button outline warning"
+                type="button"
+                onClick={() => setDeletePopup({ type: "" })}>
+                {button}
+              </button>
+            );
           }
-        )}
+        })}
       </div>
       {generalError && (
         <div
           className={clsx(
             formStyles["error-message"],
             formStyles["general-error"]
-          )}
-        >
+          )}>
           {generalError}
         </div>
       )}

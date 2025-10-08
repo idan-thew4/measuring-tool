@@ -5,6 +5,7 @@ import {
   totalCompleted,
   ProjectDetails,
   RegistrationStep,
+  structureProps,
 } from "../../../contexts/Store";
 import { useEffect, useState } from "react";
 import { ProgressBar } from "@/app/tool/[project_id]/[alternative_id]/components/progress-bar/progress-bar";
@@ -135,7 +136,10 @@ export function RegistrationPopup() {
     }
   }
 
-  async function createProject(ProjectDetails: ProjectDetails) {
+  async function createProject(
+    ProjectDetails: ProjectDetails,
+    structure: structureProps
+  ) {
     setLoading(true);
 
     const ProjectDetailsForSend = Object.entries(ProjectDetails).reduce(
@@ -174,7 +178,7 @@ export function RegistrationPopup() {
         setRegistrationPopup("");
         setSelfAssessmentPopup(true);
         router.push(
-          `/tool/${data.data.project_id}/${data.data.alternative_id}/${chapter}/${subChapter}/${principle}`
+          `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure?.questionnaire.content[0]["chapter-title"]}/${subChapter}/${principle}`
         );
       } else {
         if (data.message) {
@@ -328,8 +332,10 @@ export function RegistrationPopup() {
         return newSteps;
       });
     } else {
-      createProject(updatedProjectDetails);
-      setRegistrationPopup("");
+      if (structure) {
+        createProject(updatedProjectDetails, structure);
+        setRegistrationPopup("");
+      }
     }
   };
   if (!registrationPopup) return null;
@@ -355,8 +361,7 @@ export function RegistrationPopup() {
             return newSteps;
           });
         }
-      }}
-    >
+      }}>
       {completedSteps && (
         <ProgressBar completed={completedSteps} indicator={true} />
       )}
@@ -366,8 +371,7 @@ export function RegistrationPopup() {
             className={clsx(
               "headline_medium-small bold",
               formStyles["headline"]
-            )}
-          >
+            )}>
             {steps.single.title}
           </h3>
           <p className="paragraph_16">{steps.single.description}</p>
@@ -377,8 +381,7 @@ export function RegistrationPopup() {
         </div>
         <form
           style={{ pointerEvents: loading ? "none" : "auto" }}
-          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}
-        >
+          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}>
           {steps.single["input-fields"].map((field, index) => (
             <div
               className={clsx(
@@ -389,8 +392,7 @@ export function RegistrationPopup() {
                   ? formStyles["input"]
                   : formStyles["checkbox"]
               )}
-              key={index}
-            >
+              key={index}>
               {field["dropdown-options"] ? (
                 <Controller
                   name={field.name}
@@ -525,8 +527,7 @@ export function RegistrationPopup() {
               loading && "loading"
             )}
             type="submit"
-            disabled={Object.keys(errors).length > 0}
-          >
+            disabled={Object.keys(errors).length > 0}>
             {structure.registration["nav-buttons"][currentStep]}
           </button>
           {generalError && (
@@ -534,8 +535,7 @@ export function RegistrationPopup() {
               className={clsx(
                 formStyles["error-message"],
                 formStyles["general-error"]
-              )}
-            >
+              )}>
               {generalError}
             </div>
           )}

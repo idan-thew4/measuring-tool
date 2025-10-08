@@ -2,7 +2,7 @@ import clsx from "clsx";
 import styles from "./summary-header.module.scss";
 import { structureProps, ScoreType } from "@/contexts/Store";
 
-function formatDate(timestamp: number) {
+export function formatDate(timestamp: number) {
   const date = new Date(timestamp);
   const day = date.getDate();
   const month = date.getMonth() + 1;

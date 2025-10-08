@@ -2,66 +2,25 @@
 
 import clsx from "clsx";
 import styles from "./user-dashboard.module.scss";
-import { useStore, structureProps } from "@/contexts/Store";
+import { useStore, structureProps, ProjectType } from "@/contexts/Store";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Project } from "./project/project";
 
-type project = {
-  project_name: string;
-  project_id: number;
-  alternatives: alternativeType[];
-};
-
-export type alternativeType = {
-  alternative_id: number;
-  alternative_name: string;
-};
-
-type getUserDashboardDataResponse = {
-  user_id: number;
-  email: string;
-  projects: project[];
-};
-
 export default function userDashboard() {
-  const { structure, url, setRegistrationPopup, setChangePasswordPopup } =
-    useStore();
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [projects, setProjects] = useState<project[]>([]);
+  const {
+    structure,
+    url,
+    setRegistrationPopup,
+    setChangePasswordPopup,
+    setDeletePopup,
+    projects,
+    userEmail,
+    getUserDashboardData,
+    loader,
+  } = useStore();
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
-
-  async function getUserDashboardData(
-    structure: structureProps
-  ): Promise<getUserDashboardDataResponse | void> {
-    try {
-      const response = await fetch(`${url}/get-user-data-dashboard`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-
-      const data = await response.json();
-
-      if (data.projects) {
-        setLoading(false);
-        setUserEmail(data.email);
-        setProjects(data.projects);
-      } else {
-        router.push(
-          `/tool/0/0/${structure?.questionnaire.content[1]["chapter-slug"]}/1/1`
-        );
-      }
-    } catch (error) {
-      router.push(
-        `/tool/0/0/${structure?.questionnaire.content[1]["chapter-slug"]}/1/1`
-      );
-      //   console.error("Failed to validate token:", error);
-    }
-  }
 
   useEffect(() => {
     if (structure) {
@@ -69,7 +28,7 @@ export default function userDashboard() {
     }
   }, [structure]);
 
-  if (!structure || loading) {
+  if (!structure || loader) {
     return <div>Loading...</div>;
   }
 
@@ -81,7 +40,7 @@ export default function userDashboard() {
       <div className={styles["top-section"]}>
         <div className={styles["user-row"]}>
           <h2 className={clsx(styles["small-title"], "medium-small bold")}>
-            {structure["user-dashboard"]["top-section"]["info-captions"][0]}
+            {userEmail}
           </h2>
           <div className={styles["buttons"]}>
             {structure["user-dashboard"]["top-section"]["buttons-copy"].map(
@@ -96,9 +55,9 @@ export default function userDashboard() {
                     if (index === 0) {
                       setChangePasswordPopup(true);
                     } else {
+                      setDeletePopup({ type: "delete-user" });
                     }
-                  }}
-                >
+                  }}>
                   {button}
                 </button>
               )
@@ -113,8 +72,7 @@ export default function userDashboard() {
           </h2>
           <button
             className="basic-button outline with-icon add"
-            onClick={() => setRegistrationPopup("new-project")}
-          >
+            onClick={() => setRegistrationPopup("new-project")}>
             {
               structure["user-dashboard"]["bottom-section"]["projects"][
                 "buttons-copy"

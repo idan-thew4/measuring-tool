@@ -750,12 +750,22 @@
             "format-error": "הסיסמה חייבת להכיל לפחות 8 תווים, אותיות ומספרים",
             "placeholder": "סיסמא חדשה",
             "name": "newPassword"
+          },
+          {
+            "label": "אימות סיסמא חדשה",
+            "mandatory": true,
+            "type": "password",
+            "row": 1,
+            "validation-error": "יש להזין סיסמה חדשה",
+            "format-error": "הסיסמה חייבת להכיל לפחות 8 תווים, אותיות ומספרים",
+            "placeholder": "אימות סיסמא חדשה",
+            "name": "confirmNewPassword"
           }
         ],
         "buttons-copy": ["שמור", "בטל"]
       },
       "delete-project": {
-        "title": "מחיקת פרןיקט",
+        "title": "מחיקת פרויקט",
         "description": "כדאי לשים לב, במידה ויאושר חלון זה. הפרויקט ימחק. אין אפשרות לשחזר אותו ואת המידע מחשבון שנמחק",
         "buttons-copy": ["ביטול", "מחק פרויקט"]
       },
@@ -769,7 +779,7 @@
         "description": "כדאי לשים לב, במידה ויאושר חלון זה. המשתמש ימחק. אין אפשרות לשחזר אותו ואת המידע מחשבון שנמחק",
         "buttons-copy": ["ביטול", "מחק חשבון"]
       },
-      "change-project-name": {
+      "rename-project": {
         "title": "עריכת שם הפרויקט",
         "input-fields": [
           {
@@ -784,7 +794,7 @@
         ],
         "buttons-copy": ["שמור", "בטל"]
       },
-      "change-alternative-name": {
+      "rename-alternative": {
         "title": "עריכת שם החלופה",
         "input-fields": [
           {
@@ -799,7 +809,7 @@
         ],
         "buttons-copy": ["שמור", "בטל"]
       },
-      "create-new-alternative": {
+      "add-alternative": {
         "title": "יצירת חלופה חדשה",
         "input-fields": [
           {
@@ -809,7 +819,7 @@
             "row": 1,
             "validation-error": "יש להזין שם חלופה",
             "placeholder": "שם חלופה",
-            "name": "alternativeName"
+            "name": "addAlternative"
           }
         ],
         "buttons-copy": ["יצירת חלופה", "בטל"]

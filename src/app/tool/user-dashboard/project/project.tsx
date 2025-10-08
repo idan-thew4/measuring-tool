@@ -1,8 +1,8 @@
-import { alternativeType } from "../page";
-import { useStore } from "@/contexts/Store";
+import { useStore, alternativeType } from "@/contexts/Store";
 import styles from "./project.module.scss";
 import clsx from "clsx";
 import Link from "next/link";
+import { formatDate } from "../../../tool/[project_id]/[alternative_id]/components/summary-header/summaryHeader";
 
 export function Project({
   project_name,
@@ -13,16 +13,24 @@ export function Project({
   alternatives: alternativeType[];
   project_id: number;
 }) {
-  const { structure, url } = useStore();
+  const { structure, setDeletePopup, setAddRenamePopup } = useStore();
 
   return (
     <ul className={styles["project-table"]}>
       <li className={clsx(styles["row"], styles["row-head"])} key={0}>
         <div className={styles["project-name"]}>
-          <h3 className={clsx("headline_small", styles["project-name"])}>
+          <h3 className={clsx("headline_small bold", styles["project-name"])}>
             {project_name}
           </h3>
-          <button className="paragraph_15 link white with-icon edit">
+          <button
+            className="paragraph_15 link white with-icon edit"
+            onClick={() => {
+              setAddRenamePopup({
+                type: "rename-project",
+                project_id: project_id,
+                project_name: project_name,
+              });
+            }}>
             {structure
               ? structure["user-dashboard"]["bottom-section"]["projects"][
                   "buttons-copy-project"
@@ -36,7 +44,9 @@ export function Project({
             "basic-button outline with-icon delete",
             styles["delete-button"]
           )}
-        >
+          onClick={() =>
+            setDeletePopup({ type: "delete-project", project_id: project_id })
+          }>
           {structure
             ? structure["user-dashboard"]["bottom-section"]["projects"][
                 "buttons-copy-project"
@@ -49,18 +59,28 @@ export function Project({
           key={key + 1}
           className={clsx(
             styles["row"],
-            styles["row-alternative"],
-            key === 0 && styles["no-border"]
-          )}
-        >
+            styles["row-alternative"]
+            // key === 0 && styles["no-border"]
+          )}>
           <div className={styles["alternative-name"]}>
             <Link
               href={`/tool/${project_id}/${alternative.alternative_id}/${structure?.questionnaire.content[1]["chapter-slug"]}/1/1`}
-              className={clsx("paragraph_15", styles["alternative-link"])}
-            >
-              {alternative.alternative_name}
+              className={clsx("paragraph_15", styles["alternative-link"])}>
+              {alternative.alternative_name},
+              <span className={styles["date"]}>
+                {formatDate(alternative.alternative_created_date_timestamp)}
+              </span>
             </Link>
-            <button className="paragraph_15 link black with-icon edit">
+            <button
+              className="paragraph_15 link black with-icon edit"
+              onClick={() => {
+                setAddRenamePopup({
+                  type: "rename-alternative",
+                  project_id: project_id,
+                  alternative_id: alternative.alternative_id,
+                  alternative_name: alternative.alternative_name,
+                });
+              }}>
               {
                 structure?.["user-dashboard"]["bottom-section"]["projects"][
                   "buttons-copy-alternative"
@@ -72,18 +92,34 @@ export function Project({
             "buttons-copy-alternative"
           ].map(
             (button, index) =>
-              index !== 0 && (
+              index !== 0 &&
+              (index !== 3 || alternatives.length > 1) && (
                 <button
                   key={index}
                   className={clsx(
                     "basic-button outline with-icon",
-                    index === 1 && "add-new-alternative",
+                    index === 1 && "add-alternative",
                     index === 2 && "download",
                     index === 3 && "delete",
-
                     styles["project-button"]
                   )}
-                >
+                  onClick={() => {
+                    switch (index) {
+                      case 1:
+                        setAddRenamePopup({
+                          type: "add-alternative",
+                          project_id: project_id,
+                          alternative_id: alternative.alternative_id,
+                        });
+                        break;
+
+                      case 3:
+                        setDeletePopup({
+                          type: "delete-alternative",
+                          alternative_id: alternative.alternative_id,
+                        });
+                    }
+                  }}>
                   {button}
                 </button>
               )
