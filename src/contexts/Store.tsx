@@ -417,7 +417,7 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [sideMenu, setSideMenu] = useState<string>("");
-  const [loggedInChecked, setLoggedInChecked] = useState(false);
+  const [loggedInChecked, setLoggedInChecked] = useState();
   const pathname = usePathname();
   const [selfAssessmentIsLoaded, setSelfAssessmentIsLoaded] = useState(false);
   const isMounted = useRef(false);

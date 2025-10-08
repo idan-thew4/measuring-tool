@@ -63,6 +63,7 @@ export function DeletePopup() {
               `/tool/0/0/${structure.questionnaire.content[1]["chapter-slug"]}/1/1`
             );
           } else {
+            setLoggedInChecked(true);
             getUserDashboardData(structure);
           }
         } else {

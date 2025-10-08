@@ -168,7 +168,42 @@ export function RegistrationPopup() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ ProjectDetailsForSend }),
+        body: JSON.stringify({
+          projectName: "השולחן של עידן",
+          localAuthority: "חברון ",
+          projectType: {
+            value: "urban-development",
+            label: "פיתוח עירוני",
+          },
+          projectSubType: {
+            value: "neighborhood",
+            label: "שכונה",
+          },
+          projectStatus: {
+            value: "execution",
+            label: "ביצוע",
+          },
+          projectStartYear: "2023",
+          projectEndYear: "2025",
+          yearsOfExperience: "4",
+          education: {
+            value: "BA",
+            label: "תואר ראשון",
+          },
+          gender: {
+            value: "gender-male",
+            label: "זכר",
+          },
+          professionalTraining: {
+            value: "architect",
+            label: "אדריכל",
+          },
+          contactPerson: "עידן",
+          contactEmail: "idan@thew4.co",
+          contactPhone: "0542043934",
+          projectArea: "4343",
+          planningTeamRole: "נסיך",
+        }),
       });
 
       const data = await response.json();

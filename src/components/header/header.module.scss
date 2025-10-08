@@ -20,9 +20,13 @@
     font-size: 1.9rem;
   }
 
-  .user-options {
+  .flex-h-align {
     display: flex;
     gap: 4rem;
-    direction: ltr;
+    align-items: center;
+
+    &.right-side {
+      gap: 8rem;
+    }
   }
 }

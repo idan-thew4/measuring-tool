@@ -2,19 +2,57 @@
 
 import styles from "./header.module.scss";
 import Image from "next/image";
-import { useStore } from "../../contexts/Store";
+import { structureProps, useStore } from "../../contexts/Store";
 import Link from "next/link";
+import clsx from "clsx";
+import { useRouter } from "next/navigation";
+
+type logOutResponse = {
+  success: boolean;
+  data: string;
+};
 
 export function Header() {
-  const { structure, loggedInChecked, setLoginPopup } = useStore();
+  const {
+    structure,
+    loggedInChecked,
+    setLoginPopup,
+    projects,
+    url,
+    setLoggedInChecked,
+  } = useStore();
+  const router = useRouter();
 
-  async function logOut() {}
+  async function logOut(
+    structure: structureProps
+  ): Promise<logOutResponse | void> {
+    try {
+      const response = await fetch(`${url}/log-out`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
-  if (!structure) return null;
+      const data = await response.json();
+
+      if (data.success) {
+        setLoggedInChecked(false);
+        router.push(
+          `/tool/0/0/${structure.questionnaire.content[1]["chapter-slug"]}/1/1`
+        );
+      }
+    } catch (error) {
+      console.error("Error creating new user:", error);
+    }
+  }
+
+  console.log(loggedInChecked);
 
   return (
     <header className={styles["header-container"]}>
-      <div className={styles["user-options"]}>
+      <div className={clsx(styles["right-side"], styles["flex-h-align"])}>
         <Image
           alt="Slil logo"
           src="/logo.svg"
@@ -22,21 +60,27 @@ export function Header() {
           height={60}
           className={styles["logo"]}
         />
+
         {loggedInChecked ? (
-          <>
-            <button onClick={() => logOut()}>
-              {structure?.header.user[2]}
+          loggedInChecked ? (
+            <div className={styles["flex-h-align"]}>
+              <Link href={"/tool/user-dashboard"}>
+                {structure?.header.user[1]}
+              </Link>
+              <button onClick={() => logOut(structure)}>
+                {structure?.header.user[2]}
+              </button>
+            </div>
+          ) : (
+            <button onClick={() => setLoginPopup(true)}>
+              {structure?.header.user[0]}
             </button>
-            <Link href={"/tool/user-dashboard"}>
-              {structure?.header.user[1]}
-            </Link>
-          </>
-        ) : (
-          <button onClick={() => setLoginPopup(true)}>
-            {structure?.header.user[0]}
-          </button>
-        )}
+          )
+        ) : null}
       </div>
+      {loggedInChecked !== undefined && loggedInChecked && (
+        <div className={styles["left-side"]}></div>
+      )}
     </header>
   );
 }

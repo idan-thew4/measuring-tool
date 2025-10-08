@@ -101,6 +101,7 @@ export default function ChapterPage() {
         getContent().then((structure) => {
           if (data.code === "missing_token") {
             router.push(`/tool/0/0/${chapter}/${subChapter}/${principle}`);
+            setLoggedInChecked(false);
           }
 
           if (data.success) {
