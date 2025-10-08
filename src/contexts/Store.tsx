@@ -113,6 +113,10 @@ export type structureProps = {
   "self-assessment": SelfAssessment;
   login: Login;
   "user-dashboard": UserDashboard;
+  header: {
+    user: string[];
+    options: string[];
+  };
 };
 
 type UserDashboard = {
@@ -724,6 +728,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         setLoader(false);
         setUserEmail(data.user_email);
         setProjects(data.projects);
+        setLoggedInChecked(true);
       } else {
         router.push(
           `/tool/0/0/${structure?.questionnaire.content[1]["chapter-slug"]}/1/1`

@@ -168,7 +168,7 @@ export function RegistrationPopup() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ ProjectDetails: ProjectDetailsForSend }),
+        body: JSON.stringify({ ProjectDetailsForSend }),
       });
 
       const data = await response.json();

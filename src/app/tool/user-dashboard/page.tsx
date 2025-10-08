@@ -10,7 +10,6 @@ import { Project } from "./project/project";
 export default function userDashboard() {
   const {
     structure,
-    url,
     setRegistrationPopup,
     setChangePasswordPopup,
     setDeletePopup,
