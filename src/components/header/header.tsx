@@ -7,10 +7,16 @@ import Link from "next/link";
 import clsx from "clsx";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Select from "react-select";
 
 type logOutResponse = {
   success: boolean;
   data: string;
+};
+
+type AlternativeOption = {
+  value: number;
+  label: string;
 };
 
 export function Header() {
@@ -25,13 +31,12 @@ export function Header() {
   } = useStore();
   const router = useRouter();
   const params = useParams();
+  const [chapter, subChapter, principle] = params?.chapters || [];
+
   const [currentProject, setCurrentProject] = useState<ProjectType | null>(
     null
   );
-
-  useEffect(() => {
-    console.log("projects changed", projects);
-  }, [projects]);
+  const [alternatives, setAlternatives] = useState<AlternativeOption[]>([]);
 
   useEffect(() => {
     if (!projects && structure && loggedInChecked) {
@@ -39,17 +44,30 @@ export function Header() {
     }
   }, [projects, structure, loggedInChecked]);
 
-  // useEffect(() => {
-  //   if (params.project_id) {
-  //     const project = projects.find(
-  //       (p) => p.project_id === Number(params.project_id)
-  //     );
+  useEffect(() => {
+    if (projects) {
+      if (params.project_id) {
+        const project = projects.find(
+          (p) => p.project_id === Number(params.project_id)
+        );
 
-  //     if (project) {
-  //       setCurrentProject(project);
-  //     }
-  //   }
-  // }, [projects, params]);
+        if (project) {
+          setCurrentProject(project);
+
+          let alternativesTemp: AlternativeOption[] = [];
+
+          project.alternatives.forEach((alternative) => {
+            alternativesTemp.push({
+              label: alternative.alternative_name,
+              value: alternative.alternative_id,
+            });
+          });
+
+          setAlternatives(alternativesTemp);
+        }
+      }
+    }
+  }, [projects, params]);
 
   async function logOut(
     structure: structureProps
@@ -107,7 +125,31 @@ export function Header() {
       {loggedInChecked !== undefined &&
         loggedInChecked &&
         params?.chapters &&
-        currentProject && <div className={styles["left-side"]}>{}</div>}
+        currentProject && (
+          <div className={styles["left-side"]}>
+            {projects && (
+              <div>
+                <Select
+                  className="dropdown paragraph_18"
+                  classNamePrefix="dropdown"
+                  isClearable={true}
+                  isSearchable={true}
+                  value={alternatives[0]}
+                  // isDisabled={alternatives.length >= 1}
+                  // menuIsOpen={true}
+                  options={alternatives}
+                  onChange={(option) => {
+                    if (structure) {
+                      router.push(
+                        `/tool/${currentProject.project_id}/${option?.value}/${chapter}/${subChapter}/${principle}`
+                      );
+                    }
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        )}
     </header>
   );
 }

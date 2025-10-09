@@ -84,7 +84,8 @@ export default function userDashboard() {
             }
           </button>
         </div>
-        {projects.length > 0 &&
+        {projects &&
+          projects.length > 0 &&
           projects.map((project, index) => (
             <Project
               key={index}

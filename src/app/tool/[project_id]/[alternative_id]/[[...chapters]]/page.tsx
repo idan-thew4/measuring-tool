@@ -82,7 +82,7 @@ export default function ChapterPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const pageChanged = isPageChanged("questionnaire");
+    const pageChanged = Boolean(isPageChanged("questionnaire"));
 
     if (pageChanged) {
       if (
@@ -101,10 +101,6 @@ export default function ChapterPage() {
         );
       }
     }
-
-    // if (structure) {
-    //   getUserDashboardData(structure);
-    // }
   }, [structure]);
 
   async function validateToken() {

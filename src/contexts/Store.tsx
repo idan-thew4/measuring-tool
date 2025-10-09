@@ -305,8 +305,8 @@ type ApiContextType = {
   isTokenChecked: boolean;
   sideMenu: string;
   setSideMenu: React.Dispatch<React.SetStateAction<string>>;
-  loggedInChecked: boolean;
-  setLoggedInChecked: React.Dispatch<React.SetStateAction<boolean>>;
+  loggedInChecked: boolean | undefined;
+  setLoggedInChecked: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   setSelfAssessmentPopup: React.Dispatch<React.SetStateAction<boolean>>;
   selfAssessmentPopup: boolean;
   selfAssessmentIsLoaded: boolean;
@@ -344,8 +344,8 @@ type ApiContextType = {
       alternative_name?: string;
     }>
   >;
-  projects: ProjectType[];
-  setProjects: React.Dispatch<React.SetStateAction<ProjectType[]>>;
+  projects: ProjectType[] | null;
+  setProjects: React.Dispatch<React.SetStateAction<ProjectType[] | null>>;
   userEmail: string | null;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
   getUserDashboardData: (
@@ -422,7 +422,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   }>({ previousPage: "", currentPage: "" });
   const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [sideMenu, setSideMenu] = useState<string>("");
-  const [loggedInChecked, setLoggedInChecked] = useState<boolean>();
+  const [loggedInChecked, setLoggedInChecked] = useState<boolean | undefined>();
   const pathname = usePathname();
   const [selfAssessmentIsLoaded, setSelfAssessmentIsLoaded] = useState(false);
   const isMounted = useRef(false);
@@ -718,8 +718,6 @@ function Store({ children }: PropsWithChildren<{}>) {
   async function getUserDashboardData(
     structure: structureProps
   ): Promise<getUserDashboardDataResponse | void> {
-    console.log("go");
-
     try {
       const response = await fetch(`${url}/get-user-data-dashboard`, {
         method: "GET",
@@ -849,8 +847,6 @@ function Store({ children }: PropsWithChildren<{}>) {
         userEmail,
         setUserEmail,
         getUserDashboardData,
-        pages,
-        setPages,
         isPageChanged,
       }}
     >
