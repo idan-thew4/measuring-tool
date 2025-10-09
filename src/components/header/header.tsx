@@ -2,10 +2,11 @@
 
 import styles from "./header.module.scss";
 import Image from "next/image";
-import { structureProps, useStore } from "../../contexts/Store";
+import { structureProps, useStore, ProjectType } from "../../contexts/Store";
 import Link from "next/link";
 import clsx from "clsx";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type logOutResponse = {
   success: boolean;
@@ -20,10 +21,35 @@ export function Header() {
     projects,
     url,
     setLoggedInChecked,
+    getUserDashboardData,
   } = useStore();
   const router = useRouter();
   const params = useParams();
-  const [chapter, subChapter, principle] = params?.chapters || [];
+  const [currentProject, setCurrentProject] = useState<ProjectType | null>(
+    null
+  );
+
+  useEffect(() => {
+    console.log("projects changed", projects);
+  }, [projects]);
+
+  useEffect(() => {
+    if (!projects && structure && loggedInChecked) {
+      getUserDashboardData(structure);
+    }
+  }, [projects, structure, loggedInChecked]);
+
+  // useEffect(() => {
+  //   if (params.project_id) {
+  //     const project = projects.find(
+  //       (p) => p.project_id === Number(params.project_id)
+  //     );
+
+  //     if (project) {
+  //       setCurrentProject(project);
+  //     }
+  //   }
+  // }, [projects, params]);
 
   async function logOut(
     structure: structureProps
@@ -78,9 +104,10 @@ export function Header() {
           )
         ) : null}
       </div>
-      {loggedInChecked !== undefined && loggedInChecked && params?.chapters && (
-        <div className={styles["left-side"]}>tets</div>
-      )}
+      {loggedInChecked !== undefined &&
+        loggedInChecked &&
+        params?.chapters &&
+        currentProject && <div className={styles["left-side"]}>{}</div>}
     </header>
   );
 }

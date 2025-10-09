@@ -23,6 +23,7 @@ export default function SummaryReport() {
     calculateScores,
     getAlternativeQuestionnaireData,
     loader,
+    isPageChanged,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -36,6 +37,7 @@ export default function SummaryReport() {
   const params = useParams();
 
   useEffect(() => {
+    isPageChanged("summary");
     getAlternativeQuestionnaireData(
       params.project_id as string,
       params.alternative_id as string
