@@ -17,11 +17,14 @@ export default function userDashboard() {
     userEmail,
     getUserDashboardData,
     loader,
+    isPageChanged,
   } = useStore();
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
+    isPageChanged("user-dashboard");
+    // console.log("is page changed?", isPageChanged("user-dashboard"));
     if (structure) {
       getUserDashboardData(structure);
     }
@@ -56,7 +59,8 @@ export default function userDashboard() {
                     } else {
                       setDeletePopup({ type: "delete-user" });
                     }
-                  }}>
+                  }}
+                >
                   {button}
                 </button>
               )
@@ -71,7 +75,8 @@ export default function userDashboard() {
           </h2>
           <button
             className="basic-button outline with-icon add"
-            onClick={() => setRegistrationPopup("new-project")}>
+            onClick={() => setRegistrationPopup("new-project")}
+          >
             {
               structure["user-dashboard"]["bottom-section"]["projects"][
                 "buttons-copy"

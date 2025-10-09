@@ -31,6 +31,7 @@ export default function SelfAssessment() {
     setScoreObject,
     selfAssessmentIsLoaded,
     setSelfAssessmentIsLoaded,
+    isPageChanged,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -169,6 +170,8 @@ export default function SelfAssessment() {
   }, [scoreObject, structure]);
 
   useEffect(() => {
+    isPageChanged("self-assessment");
+
     if (params.project_id) {
       getSelfAssessmentData(String(params.project_id));
     }

@@ -2,10 +2,11 @@
 
 import styles from "./header.module.scss";
 import Image from "next/image";
-import { structureProps, useStore } from "../../contexts/Store";
+import { structureProps, useStore, ProjectType } from "../../contexts/Store";
 import Link from "next/link";
 import clsx from "clsx";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type logOutResponse = {
   success: boolean;
@@ -20,8 +21,35 @@ export function Header() {
     projects,
     url,
     setLoggedInChecked,
+    getUserDashboardData,
   } = useStore();
   const router = useRouter();
+  const params = useParams();
+  const [currentProject, setCurrentProject] = useState<ProjectType | null>(
+    null
+  );
+
+  useEffect(() => {
+    console.log("projects changed", projects);
+  }, [projects]);
+
+  useEffect(() => {
+    if (!projects && structure && loggedInChecked) {
+      getUserDashboardData(structure);
+    }
+  }, [projects, structure, loggedInChecked]);
+
+  // useEffect(() => {
+  //   if (params.project_id) {
+  //     const project = projects.find(
+  //       (p) => p.project_id === Number(params.project_id)
+  //     );
+
+  //     if (project) {
+  //       setCurrentProject(project);
+  //     }
+  //   }
+  // }, [projects, params]);
 
   async function logOut(
     structure: structureProps
@@ -48,8 +76,6 @@ export function Header() {
     }
   }
 
-  console.log(loggedInChecked);
-
   return (
     <header className={styles["header-container"]}>
       <div className={clsx(styles["right-side"], styles["flex-h-align"])}>
@@ -67,7 +93,7 @@ export function Header() {
               <Link href={"/tool/user-dashboard"}>
                 {structure?.header.user[1]}
               </Link>
-              <button onClick={() => logOut(structure)}>
+              <button onClick={() => structure && logOut(structure)}>
                 {structure?.header.user[2]}
               </button>
             </div>
@@ -78,9 +104,10 @@ export function Header() {
           )
         ) : null}
       </div>
-      {loggedInChecked !== undefined && loggedInChecked && (
-        <div className={styles["left-side"]}></div>
-      )}
+      {loggedInChecked !== undefined &&
+        loggedInChecked &&
+        params?.chapters &&
+        currentProject && <div className={styles["left-side"]}>{}</div>}
     </header>
   );
 }

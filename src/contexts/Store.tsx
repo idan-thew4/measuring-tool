@@ -10,6 +10,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
+import { set } from "react-hook-form";
 
 const ApiContext = createContext<ApiContextType | undefined>(undefined);
 
@@ -350,6 +351,7 @@ type ApiContextType = {
   getUserDashboardData: (
     structure: structureProps
   ) => Promise<getUserDashboardDataResponse | void>;
+  isPageChanged: (currentPage: string) => void;
 };
 
 // const url = "http://localhost:3000/";
@@ -412,12 +414,15 @@ function Store({ children }: PropsWithChildren<{}>) {
     project_name?: string;
     alternative_name?: string;
   }>({ type: "" });
-  const [projects, setProjects] = useState<ProjectType[]>([]);
+  const [projects, setProjects] = useState<ProjectType[] | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
-
+  const [pages, setPages] = useState<{
+    previousPage: string;
+    currentPage: string;
+  }>({ previousPage: "", currentPage: "" });
   const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [sideMenu, setSideMenu] = useState<string>("");
-  const [loggedInChecked, setLoggedInChecked] = useState();
+  const [loggedInChecked, setLoggedInChecked] = useState<boolean>();
   const pathname = usePathname();
   const [selfAssessmentIsLoaded, setSelfAssessmentIsLoaded] = useState(false);
   const isMounted = useRef(false);
@@ -713,6 +718,8 @@ function Store({ children }: PropsWithChildren<{}>) {
   async function getUserDashboardData(
     structure: structureProps
   ): Promise<getUserDashboardDataResponse | void> {
+    console.log("go");
+
     try {
       const response = await fetch(`${url}/get-user-data-dashboard`, {
         method: "GET",
@@ -741,6 +748,31 @@ function Store({ children }: PropsWithChildren<{}>) {
       //   console.error("Failed to validate token:", error);
     }
   }
+
+  function isPageChanged(page: string): boolean {
+    if (pages.previousPage !== page) {
+      setPages((prev) => ({
+        previousPage: prev.currentPage,
+        currentPage: page,
+      }));
+      return true;
+    }
+
+    return false;
+  }
+
+  // useEffect(() => {
+
+  //   if(pathname === '/tool/user-dashboard'){
+
+  //     set
+
+  //   }
+
+  //   console.log("pathname", pathname);
+  //   console.log("pathname", params);
+
+  // }, [pathname, params]);
 
   useEffect(() => {
     setPreviousChapter([chapter, subChapter, principle]);
@@ -817,7 +849,11 @@ function Store({ children }: PropsWithChildren<{}>) {
         userEmail,
         setUserEmail,
         getUserDashboardData,
-      }}>
+        pages,
+        setPages,
+        isPageChanged,
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );
