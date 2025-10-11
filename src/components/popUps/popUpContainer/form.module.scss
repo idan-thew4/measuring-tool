@@ -1,4 +1,5 @@
 @use "../../../styles/variables" as *;
+@use "./dropdown.scss";
 
 .form-container {
   display: flex;
@@ -145,76 +146,6 @@
           border: solid white;
           border-width: 0 0.2rem 0.2rem 0;
           transform: rotate(45deg);
-        }
-      }
-    }
-
-    //Dropdown//
-
-    :global(.dropdown__indicator-separator) {
-      display: none;
-    }
-
-    :global(.dropdown__clear-indicator) {
-      display: none;
-    }
-
-    :global(.dropdown__indicator) {
-      svg {
-        display: none;
-      }
-
-      &:after {
-        content: "";
-        width: 1.5rem;
-        height: 1.5rem;
-        background-size: 1.5rem !important;
-        content: "";
-        background: url("../../../../public/icons/arrow-down.svg") no-repeat
-          center;
-        rotate: 0deg;
-        transition: 0.3s all;
-      }
-    }
-
-    :global(.dropdown__control--menu-is-open) {
-      :global(.dropdown__indicator) {
-        &:after {
-          rotate: 180deg;
-        }
-      }
-    }
-
-    :global(.dropdown) {
-      height: 100%;
-      :global(.dropdown__menu) {
-        box-shadow: 0 0 20px 0px hsla(0, 0%, 0%, 0.1),
-          0 4px 11px hsla(0, 0%, 0%, 0.1);
-        z-index: 2;
-        top: 3.7rem;
-
-        :global(.dropdown__menu-list) {
-          @include scroll-bar;
-          max-height: 14rem;
-        }
-
-        :global(.dropdown__option) {
-          transition: 0.3s all;
-          padding-top: 1rem;
-          padding-bottom: 1rem;
-          color: $dark-forest-green;
-        }
-
-        :global(.dropdown__option--is-focused),
-        :global(.dropdown__option--is-selected) {
-          background-color: transparent;
-          color: $blue;
-        }
-      }
-
-      &:global(.bottom-dropdown) {
-        :global(.dropdown__menu) {
-          // top: -14rem;
         }
       }
     }

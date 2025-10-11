@@ -1,9 +1,11 @@
 @use "../../../../../../../styles/variables" as *;
 
 .container {
-  background-color: white;
-  padding: 4rem 5rem;
-  border-radius: 4rem;
+  &:not(.preview) {
+    background-color: white;
+    padding: 4rem 5rem;
+    border-radius: 4rem;
+  }
 
   .title {
     margin-bottom: 3rem;

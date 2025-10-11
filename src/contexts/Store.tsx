@@ -352,6 +352,21 @@ type ApiContextType = {
     structure: structureProps
   ) => Promise<getUserDashboardDataResponse | void>;
   isPageChanged: (currentPage: string) => void;
+  getChaptersScores: (
+    questionnaireParams: CalcParameters[],
+    structure: structureProps,
+    hasAssessment: boolean,
+    scoreObject: ScoreType
+  ) => ScoreData[];
+
+  pages: { previousPage: string; currentPage: string };
+};
+
+export type ScoreData = {
+  subject?: string;
+  name?: string;
+} & {
+  [key: string]: number | string | null | boolean;
 };
 
 // const url = "http://localhost:3000/";
@@ -759,18 +774,34 @@ function Store({ children }: PropsWithChildren<{}>) {
     return false;
   }
 
-  // useEffect(() => {
+  function getChaptersScores(
+    questionnaireParams: CalcParameters[],
+    structure: structureProps,
+    hasAssessment: boolean,
+    scoreObject: ScoreType
+  ) {
+    return questionnaireParams.map((chapter, index) => {
+      const subject =
+        structure?.questionnaire.content?.[index]?.["chapter-title"] ?? "";
 
-  //   if(pathname === '/tool/user-dashboard'){
+      const questionnaire = Math.round(
+        (chapter["general-score"] / chapter["net-zero-impact"]) * 100
+      );
 
-  //     set
+      const assessment =
+        hasAssessment && scoreObject.data.assessment[index]["chapter-score"];
 
-  //   }
-
-  //   console.log("pathname", pathname);
-  //   console.log("pathname", params);
-
-  // }, [pathname, params]);
+      return {
+        subject,
+        questionnaire,
+        ...(hasAssessment
+          ? {
+              assessment: assessment,
+            }
+          : {}),
+      };
+    });
+  }
 
   useEffect(() => {
     setPreviousChapter([chapter, subChapter, principle]);
@@ -848,6 +879,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         setUserEmail,
         getUserDashboardData,
         isPageChanged,
+        getChaptersScores,
+        pages,
       }}
     >
       {children}

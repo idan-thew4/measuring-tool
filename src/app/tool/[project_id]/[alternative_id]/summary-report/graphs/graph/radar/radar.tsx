@@ -17,12 +17,18 @@ export function RadarGraph({
   filters,
   structure,
   imageGridURL,
+  labels = true,
+  preview = false,
+  legend = true,
 }: {
   parameters: ScoreData[];
   headline?: string;
   filters?: string[];
   structure: structureProps;
   imageGridURL: string;
+  labels?: boolean;
+  preview?: boolean;
+  legend?: boolean;
 }) {
   const colors = ["#79C5D8", "#979797"];
   const legendColors = ["#00A9FF", "#0089CE", "#00679B", "#577686"];
@@ -83,7 +89,8 @@ export function RadarGraph({
     <Graph
       headline={headline}
       structure={structure}
-      legend={["17%-0%", "33%-18%", "100%-34%", "100%<"]}
+      legend={legend ? ["17%-0%", "33%-18%", "100%-34%", "100%<"] : false}
+      preview={preview}
     >
       {filters && (
         <ul className={graphStyles["filters"]}>
@@ -120,14 +127,14 @@ export function RadarGraph({
           <Image
             src={imageGridURL}
             alt=""
-            width={590}
-            height={590}
+            width={!preview ? 590 : 80}
+            height={!preview ? 590 : 80}
             className={styles["radar-grid"]}
           />
           <RadarChart
-            outerRadius={284}
-            width={600}
-            height={600}
+            outerRadius={!preview ? 284 : 15}
+            width={!preview ? 600 : 40}
+            height={!preview ? 600 : 40}
             data={parameters}
             className={styles["radar"]}
           >
@@ -136,7 +143,7 @@ export function RadarGraph({
               tick={false}
               domain={typeof maxValue === "number" ? [0, maxValue] : undefined}
             />
-            <PolarGrid radialLines={true} />
+            <PolarGrid radialLines={!preview ? true : false} />
             {dataKeys &&
               dataKeys.map((dataKey, index) => {
                 if (filtersStatus[dataKey]) {
@@ -150,47 +157,49 @@ export function RadarGraph({
                       strokeWidth={2}
                       fill={colors[index]}
                       fillOpacity={0.6}
-                      label={({
-                        value,
-                        x,
-                        y,
-                      }: {
-                        value: number | string;
-                        x: number;
-                        y: number;
-                      }) => (
-                        <g>
-                          <rect
-                            x={
-                              x -
-                              (Math.abs(Number(value)).toString().length > 2
-                                ? 22
-                                : 18)
-                            }
-                            y={y - 20}
-                            width={
-                              Math.abs(Number(value)).toString().length > 2
-                                ? "45"
-                                : "35"
-                            }
-                            height="17"
-                            fill={getDataLabelColor(value, dataKeys[index])}
-                            strokeWidth="2"
-                            rx="8"
-                          />
-                          <text
-                            x={x}
-                            y={y - 10}
-                            fill={"white"}
-                            fontSize={12}
-                            textAnchor="middle"
-                            dominantBaseline="central"
-                            className={styles["data-label"]}
-                          >
-                            {value}%
-                          </text>
-                        </g>
-                      )}
+                      {...(labels && {
+                        label: ({
+                          value,
+                          x,
+                          y,
+                        }: {
+                          value: number | string;
+                          x: number;
+                          y: number;
+                        }) => (
+                          <g>
+                            <rect
+                              x={
+                                x -
+                                (Math.abs(Number(value)).toString().length > 2
+                                  ? 22
+                                  : 18)
+                              }
+                              y={y - 20}
+                              width={
+                                Math.abs(Number(value)).toString().length > 2
+                                  ? "45"
+                                  : "35"
+                              }
+                              height="17"
+                              fill={getDataLabelColor(value, dataKeys[index])}
+                              strokeWidth="2"
+                              rx="8"
+                            />
+                            <text
+                              x={x}
+                              y={y - 10}
+                              fill={"white"}
+                              fontSize={12}
+                              textAnchor="middle"
+                              dominantBaseline="central"
+                              className={styles["data-label"]}
+                            >
+                              {value}%
+                            </text>
+                          </g>
+                        ),
+                      })}
                     />
                   );
                 }
