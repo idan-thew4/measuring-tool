@@ -305,8 +305,8 @@ type ApiContextType = {
   isTokenChecked: boolean;
   sideMenu: string;
   setSideMenu: React.Dispatch<React.SetStateAction<string>>;
-  loggedInChecked: boolean;
-  setLoggedInChecked: React.Dispatch<React.SetStateAction<boolean>>;
+  loggedInChecked: boolean | undefined;
+  setLoggedInChecked: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   setSelfAssessmentPopup: React.Dispatch<React.SetStateAction<boolean>>;
   selfAssessmentPopup: boolean;
   selfAssessmentIsLoaded: boolean;
@@ -344,14 +344,29 @@ type ApiContextType = {
       alternative_name?: string;
     }>
   >;
-  projects: ProjectType[];
-  setProjects: React.Dispatch<React.SetStateAction<ProjectType[]>>;
+  projects: ProjectType[] | null;
+  setProjects: React.Dispatch<React.SetStateAction<ProjectType[] | null>>;
   userEmail: string | null;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
   getUserDashboardData: (
     structure: structureProps
   ) => Promise<getUserDashboardDataResponse | void>;
   isPageChanged: (currentPage: string) => void;
+  getChaptersScores: (
+    questionnaireParams: CalcParameters[],
+    structure: structureProps,
+    hasAssessment: boolean,
+    scoreObject: ScoreType
+  ) => { subject: string; questionnaire: number }[];
+
+  pages: { previousPage: string; currentPage: string };
+};
+
+export type ScoreData = {
+  subject?: string;
+  name?: string;
+} & {
+  [key: string]: number | string | null | boolean;
 };
 
 // const url = "http://localhost:3000/";
@@ -422,7 +437,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   }>({ previousPage: "", currentPage: "" });
   const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [sideMenu, setSideMenu] = useState<string>("");
-  const [loggedInChecked, setLoggedInChecked] = useState<boolean>();
+  const [loggedInChecked, setLoggedInChecked] = useState<boolean | undefined>();
   const pathname = usePathname();
   const [selfAssessmentIsLoaded, setSelfAssessmentIsLoaded] = useState(false);
   const isMounted = useRef(false);
@@ -718,8 +733,6 @@ function Store({ children }: PropsWithChildren<{}>) {
   async function getUserDashboardData(
     structure: structureProps
   ): Promise<getUserDashboardDataResponse | void> {
-    console.log("go");
-
     try {
       const response = await fetch(`${url}/get-user-data-dashboard`, {
         method: "GET",
@@ -761,18 +774,34 @@ function Store({ children }: PropsWithChildren<{}>) {
     return false;
   }
 
-  // useEffect(() => {
+  function getChaptersScores(
+    questionnaireParams: CalcParameters[],
+    structure: structureProps,
+    hasAssessment: boolean,
+    scoreObject: ScoreType
+  ) {
+    return questionnaireParams.map((chapter, index) => {
+      const subject =
+        structure?.questionnaire.content?.[index]?.["chapter-title"] ?? "";
 
-  //   if(pathname === '/tool/user-dashboard'){
+      const questionnaire = Math.round(
+        (chapter["general-score"] / chapter["net-zero-impact"]) * 100
+      );
 
-  //     set
+      const assessment =
+        hasAssessment && scoreObject.data.assessment[index]["chapter-score"];
 
-  //   }
-
-  //   console.log("pathname", pathname);
-  //   console.log("pathname", params);
-
-  // }, [pathname, params]);
+      return {
+        subject,
+        questionnaire,
+        ...(hasAssessment
+          ? {
+              assessment: assessment,
+            }
+          : {}),
+      };
+    });
+  }
 
   useEffect(() => {
     setPreviousChapter([chapter, subChapter, principle]);
@@ -849,11 +878,10 @@ function Store({ children }: PropsWithChildren<{}>) {
         userEmail,
         setUserEmail,
         getUserDashboardData,
-        pages,
-        setPages,
         isPageChanged,
-      }}
-    >
+        getChaptersScores,
+        pages,
+      }}>
       {children}
     </ApiContext.Provider>
   );

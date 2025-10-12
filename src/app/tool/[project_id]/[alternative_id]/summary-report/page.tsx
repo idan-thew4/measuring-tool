@@ -24,6 +24,7 @@ export default function SummaryReport() {
     getAlternativeQuestionnaireData,
     loader,
     isPageChanged,
+    getChaptersScores,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -45,8 +46,6 @@ export default function SummaryReport() {
   }, []);
 
   useEffect(() => {
-    console.log("scoreObject", scoreObject);
-
     const hasAssessment =
       Array.isArray(scoreObject.data.assessment) &&
       !scoreObject.data.assessment.every(
@@ -63,29 +62,14 @@ export default function SummaryReport() {
       "questionnaire"
     );
 
-    const chaptersScoresTemp: ScoreData[] = questionnaireParams.map(
-      (chapter, index) => {
-        const subject =
-          structure?.questionnaire.content?.[index]?.["chapter-title"] ?? "";
-
-        const questionnaire = Math.round(
-          (chapter["general-score"] / chapter["net-zero-impact"]) * 100
-        );
-
-        const assessment =
-          hasAssessment && scoreObject.data.assessment[index]["chapter-score"];
-
-        return {
-          subject,
-          questionnaire,
-          ...(hasAssessment
-            ? {
-                assessment: assessment,
-              }
-            : {}),
-        };
-      }
-    );
+    const chaptersScoresTemp: ScoreData[] = structure
+      ? getChaptersScores(
+          questionnaireParams,
+          structure,
+          hasAssessment,
+          scoreObject
+        )
+      : [];
 
     // second-chapters //
 
@@ -117,6 +101,7 @@ export default function SummaryReport() {
         );
 
         const assessment =
+          hasAssessment &&
           scoreObject.data.assessment[1]?.["sub-chapters"]?.[subChapterIndex]?.[
             "sub-chapter-score"
           ];
