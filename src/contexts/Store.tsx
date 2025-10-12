@@ -357,7 +357,7 @@ type ApiContextType = {
     structure: structureProps,
     hasAssessment: boolean,
     scoreObject: ScoreType
-  ) => ScoreData[];
+  ) => { subject: string; questionnaire: number }[];
 
   pages: { previousPage: string; currentPage: string };
 };
@@ -881,8 +881,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         isPageChanged,
         getChaptersScores,
         pages,
-      }}
-    >
+      }}>
       {children}
     </ApiContext.Provider>
   );

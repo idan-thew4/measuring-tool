@@ -11,17 +11,24 @@ export function Graph({
   children,
   legend,
   preview = false,
+  negative = false,
 }: {
   headline?: string;
   structure: structureProps;
   children: React.ReactNode;
   legend: string[] | false;
   preview?: boolean;
+  negative?: boolean;
 }) {
   const legendColors = ["#577686", "#00679B", "#0089CE", "#00A9FF"];
 
   return (
-    <div className={clsx(styles["container"], preview && styles["preview"])}>
+    <div
+      className={clsx(
+        styles["container"],
+        preview && styles["preview"],
+        negative && styles["negative"]
+      )}>
       {headline && (
         <h2 className={clsx("medium-small", styles["title"])}>{headline}</h2>
       )}
@@ -35,8 +42,7 @@ export function Graph({
                 <p className={clsx("paragraph_14", styles["text"])}>{option}</p>
                 <p
                   style={{ backgroundColor: legendColors[index - 1] }}
-                  className={clsx("paragraph_12", styles["percentage"])}
-                >
+                  className={clsx("paragraph_12", styles["percentage"])}>
                   {legend[index - 1]}
                 </p>
               </li>

@@ -20,6 +20,7 @@ export function RadarGraph({
   labels = true,
   preview = false,
   legend = true,
+  negative = false,
 }: {
   parameters: ScoreData[];
   headline?: string;
@@ -29,6 +30,7 @@ export function RadarGraph({
   labels?: boolean;
   preview?: boolean;
   legend?: boolean;
+  negative?: boolean;
 }) {
   const colors = ["#79C5D8", "#979797"];
   const legendColors = ["#00A9FF", "#0089CE", "#00679B", "#577686"];
@@ -91,20 +93,18 @@ export function RadarGraph({
       structure={structure}
       legend={legend ? ["17%-0%", "33%-18%", "100%-34%", "100%<"] : false}
       preview={preview}
-    >
+      negative={negative}>
       {filters && (
         <ul className={graphStyles["filters"]}>
           {dataKeys?.slice().map((filter, index) => (
             <li key={index} className={graphStyles["filter-item"]}>
               <label
-                className={clsx("paragraph_14", graphStyles["filter-label"])}
-              >
+                className={clsx("paragraph_14", graphStyles["filter-label"])}>
                 <div
                   className={graphStyles["filter-color"]}
                   style={{
                     backgroundColor: colors[index],
-                  }}
-                ></div>
+                  }}></div>
                 <input
                   type="checkbox"
                   checked={filtersStatus[filter] || false}
@@ -136,14 +136,13 @@ export function RadarGraph({
             width={!preview ? 600 : 40}
             height={!preview ? 600 : 40}
             data={parameters}
-            className={styles["radar"]}
-          >
+            className={styles["radar"]}>
             <PolarRadiusAxis
               axisLine={false}
               tick={false}
               domain={typeof maxValue === "number" ? [0, maxValue] : undefined}
             />
-            <PolarGrid radialLines={!preview ? true : false} />
+            <PolarGrid radialLines={false} />
             {dataKeys &&
               dataKeys.map((dataKey, index) => {
                 if (filtersStatus[dataKey]) {
@@ -193,8 +192,7 @@ export function RadarGraph({
                               fontSize={12}
                               textAnchor="middle"
                               dominantBaseline="central"
-                              className={styles["data-label"]}
-                            >
+                              className={styles["data-label"]}>
                               {value}%
                             </text>
                           </g>

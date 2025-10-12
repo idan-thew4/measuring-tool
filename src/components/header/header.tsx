@@ -27,6 +27,8 @@ type AlternativeOption = {
   label: string;
 };
 
+type ChapterScoreType = { subject: string; questionnaire: number };
+
 export function Header() {
   const {
     structure,
@@ -45,12 +47,13 @@ export function Header() {
   const router = useRouter();
   const params = useParams();
   const [chapter, subChapter, principle] = params?.chapters || [];
-
+  const [chapterScores, setChapterScores] = useState<ChapterScoreType[]>([]);
   const [current, setCurrent] = useState<{
     project: ProjectType;
     alternative: alternativeType;
   } | null>(null);
   const [alternatives, setAlternatives] = useState<AlternativeOption[]>([]);
+  const [graphIsOpen, setGraphIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (!projects && structure && loggedInChecked) {
@@ -86,7 +89,7 @@ export function Header() {
     }
   }, [projects, params]);
 
-  function getScores(scoreObject: ScoreType, structure: structureProps) {
+  useEffect(() => {
     let questionnaireParams = [] as CalcParameters[];
 
     questionnaireParams = calculateScores(
@@ -95,15 +98,19 @@ export function Header() {
       "questionnaire"
     );
 
-    const scores = getChaptersScores(
-      questionnaireParams,
-      structure,
-      false,
-      scoreObject
-    );
+    let chapterScoreTemp: ChapterScoreType[] = [];
 
-    return scores;
-  }
+    if (structure) {
+      chapterScoreTemp = getChaptersScores(
+        questionnaireParams,
+        structure,
+        false,
+        scoreObject
+      );
+
+      setChapterScores(chapterScoreTemp);
+    }
+  }, [scoreObject, structure]);
 
   async function logOut(
     structure: structureProps
@@ -168,14 +175,12 @@ export function Header() {
                 className={clsx(
                   styles["flex-h-align"],
                   styles["project-options"]
-                )}
-              >
+                )}>
                 <div
                   className={clsx(
                     styles["flex-h-align"],
                     styles["project-select"]
-                  )}
-                >
+                  )}>
                   <p className="bold">{current?.project.project_name}, </p>
                   <Select
                     className="dropdown paragraph_18"
@@ -210,18 +215,19 @@ export function Header() {
                       project_id: current?.project.project_id,
                       alternative_id: current?.alternative.alternative_id,
                     });
-                  }}
-                >
+                  }}>
                   {structure?.header.options[1]}
                 </button>
               </div>
             )}
-            <button className={clsx(styles["flex-h-align"], styles["summary"])}>
+            <button
+              onClick={() => setGraphIsOpen(!graphIsOpen)}
+              className={clsx(styles["flex-h-align"], styles["summary"])}>
               <p>{structure?.header.options[2]}</p>
-              {structure && scoreObject && (
+              {structure && (
                 <RadarGraph
                   structure={structure}
-                  parameters={getScores(scoreObject, structure)}
+                  parameters={chapterScores}
                   imageGridURL={`/pages/graphs/radar_grid_preview.svg`}
                   labels={false}
                   preview={true}
@@ -229,6 +235,20 @@ export function Header() {
                 />
               )}
             </button>
+
+            {graphIsOpen && (
+              <div className={styles["dropdown"]}>
+                {structure && (
+                  <RadarGraph
+                    headline={structure["summary-report"]["graphs"][1].title}
+                    structure={structure}
+                    parameters={chapterScores}
+                    imageGridURL={`/pages/graphs/radar_grid_chapters_negative.svg`}
+                    negative={true}
+                  />
+                )}
+              </div>
+            )}
           </div>
         )}
     </header>
