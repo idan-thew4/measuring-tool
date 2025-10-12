@@ -1,6 +1,6 @@
 "use client";
 
-import { useStore, AssessmentProps } from "@/contexts/Store";
+import { useStore, AssessmentProps, CalcParameters } from "@/contexts/Store";
 import styles from "./self-assessment.module.scss";
 import clsx from "clsx";
 import { SummaryHeader } from "../components/summary-header/summaryHeader";
@@ -25,8 +25,14 @@ type storeSelfAssessmentResponse = {
 };
 
 export default function SelfAssessment() {
-  const { structure, scoreObject, url, loader, setLoader, isPageChanged } =
-    useStore();
+  const {
+    structure,
+    scoreObject,
+    url,
+    setLoader,
+    isPageChanged,
+    calculateScores,
+  } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
     secondChapter: ScoreData[];
@@ -36,6 +42,7 @@ export default function SelfAssessment() {
   });
   const params = useParams();
   const router = useRouter();
+  const [maxValue, setMaxValue] = useState<number>();
 
   async function getSelfAssessmentData(
     project_id: string
@@ -106,6 +113,31 @@ export default function SelfAssessment() {
 
   useEffect(() => {
     if (scoreObject && structure) {
+      //Max Value Calculation//
+      let questionnaireParams = [] as CalcParameters[];
+
+      questionnaireParams = [];
+
+      questionnaireParams = calculateScores(
+        scoreObject.data.questionnaire ?? [],
+        "subchapters",
+        "questionnaire"
+      );
+
+      const maxScores: number[] = [];
+
+      questionnaireParams.forEach((score) => {
+        const maxValue = Math.round(
+          (score["max-score"] / score["net-zero-impact"]) * 100
+        );
+
+        maxScores.push(maxValue);
+      });
+
+      const avgMaxScore =
+        maxScores.reduce((sum, value) => sum + value, 0) / maxScores.length;
+
+      setMaxValue(avgMaxScore);
       //Chapters //
       const chaptersScoresTemp: ScoreData[] = scoreObject.data.assessment.map(
         (chapter, index) => {
@@ -214,6 +246,7 @@ export default function SelfAssessment() {
                       }
                       structure={structure}
                       imageGridURL={`/pages/graphs/radar_grid_${graph.data}.svg`}
+                      maxScore={maxValue}
                     />
                   );
                   break;

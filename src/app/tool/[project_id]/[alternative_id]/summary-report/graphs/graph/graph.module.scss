@@ -5,6 +5,7 @@
     background-color: white;
     padding: 4rem 5rem;
     border-radius: 4rem;
+    overflow: hidden;
   }
 
   &.preview {
@@ -90,7 +91,7 @@ ul.legend {
 
   .percentage {
     color: white;
-    padding: 0.7rem 1rem 0.2rem 1rem;
+    padding: 0.4rem 1rem 0.2rem;
     border-radius: 2rem;
     width: fit-content;
   }

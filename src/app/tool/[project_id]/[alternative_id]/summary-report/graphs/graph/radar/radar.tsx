@@ -10,6 +10,7 @@ import React from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import { Graph } from "../graph";
+import { useStore } from "@/contexts/Store";
 
 export function RadarGraph({
   parameters,
@@ -21,6 +22,7 @@ export function RadarGraph({
   preview = false,
   legend = true,
   negative = false,
+  maxScore,
 }: {
   parameters: ScoreData[];
   headline?: string;
@@ -31,9 +33,9 @@ export function RadarGraph({
   preview?: boolean;
   legend?: boolean;
   negative?: boolean;
+  maxScore?: number;
 }) {
   const colors = ["#79C5D8", "#979797"];
-  const legendColors = ["#00A9FF", "#0089CE", "#00679B", "#577686"];
   const [dataKeys, setDataKeys] = useState<string[]>();
   const [filtersStatus, setFiltersStatus] = useState<{
     [key: string]: boolean;
@@ -41,10 +43,11 @@ export function RadarGraph({
     questionnaire: true,
     assessment: false,
   });
-  const [maxValue, setMaxValue] = useState<number>();
+  const { legendColors } = useStore();
 
   useEffect(() => {
     const tempDataKeys: string[] = [];
+
     if (parameters.length > 0) {
       parameters.forEach((parameter) => {
         Object.keys(parameter).forEach((key) => {
@@ -55,19 +58,12 @@ export function RadarGraph({
       });
     }
 
-    const maxValue = Math.max(
-      ...parameters.flatMap((param) =>
-        Object.entries(param)
-          .filter(
-            ([key, value]) => key !== "subject" && typeof value === "number"
-          )
-          .map(([key, value]) => value as number)
-      )
-    );
-
-    setMaxValue(maxValue);
     setDataKeys(tempDataKeys);
   }, [parameters]);
+
+  useEffect(() => {
+    console.log(dataKeys);
+  }, [dataKeys]);
 
   function getDataLabelColor(value: string | number, type: string) {
     switch (type) {
@@ -76,13 +72,13 @@ export function RadarGraph({
         break;
       case "questionnaire":
         if (Number(value) > 100) {
-          return legendColors[0];
-        } else if (Number(value) <= 100 && Number(value) >= 33) {
-          return legendColors[1];
-        } else if (Number(value) <= 34 && Number(value) >= 18) {
-          return legendColors[2];
-        } else {
           return legendColors[3];
+        } else if (Number(value) <= 100 && Number(value) >= 34) {
+          return legendColors[2];
+        } else if (Number(value) <= 35 && Number(value) >= 18) {
+          return legendColors[1];
+        } else {
+          return legendColors[0];
         }
     }
   }
@@ -140,7 +136,7 @@ export function RadarGraph({
             <PolarRadiusAxis
               axisLine={false}
               tick={false}
-              domain={typeof maxValue === "number" ? [0, maxValue] : undefined}
+              domain={typeof maxScore === "number" ? [0, maxScore] : undefined}
             />
             <PolarGrid radialLines={false} />
             {dataKeys &&

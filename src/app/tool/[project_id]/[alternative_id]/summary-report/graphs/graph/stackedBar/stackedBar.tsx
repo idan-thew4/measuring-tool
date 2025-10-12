@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { ScoreData } from "../../../page";
 import { Graph } from "../graph";
-import { structureProps } from "@/contexts/Store";
+import { structureProps, useStore } from "@/contexts/Store";
 import styles from "./stackedBar.module.scss";
 import graphStyles from "../graph.module.scss";
 import clsx from "clsx";
@@ -115,10 +115,10 @@ export function StackedBar({
 }) {
   const [filtersStatus, setFiltersStatus] = useState<boolean>(true);
   const [maxValue, setMaxValue] = useState<number>();
-  const [legend, setLegend] = useState<string[]>([]);
   const [barData, setBarData] =
     useState<{ chapter: string; subChapters: number }[]>();
   const [gridColumns, setGridColumns] = useState<{ gridColumn: string }[]>();
+  const { legendColors } = useStore();
 
   useEffect(() => {
     const maxValue = Math.max(
@@ -160,23 +160,6 @@ export function StackedBar({
 
     const avgs = sums.map((sum, idx) => (counts[idx] ? sum / counts[idx] : 0));
 
-    let legendTemp: string[] = [];
-    let increase = 0;
-
-    avgs.forEach((avgScore, index) => {
-      if (increase > 1) {
-        increase = 1;
-      }
-      if (index === 0) return;
-      if (index === avgs.length - 1) {
-        legendTemp.push(`${avgs[index]}<`);
-      } else {
-        legendTemp.push(`${avgs[index] + increase} - ${avgs[index + 1]}`);
-      }
-
-      increase++;
-    });
-
     let start = 1;
     const gridColumnsTemp = barDataTemp.map((bar) => {
       const end = start + bar.subChapters;
@@ -185,20 +168,28 @@ export function StackedBar({
       return style;
     });
 
-    setLegend(legendTemp);
     setBarData(barDataTemp);
     setGridColumns(gridColumnsTemp);
   }, []);
 
   function getBarColor(value: number) {
-    if (value >= 10) return "#00A9FF";
-    if (value >= 6) return "#0089CE";
-    if (value >= 2) return "#00679B";
-    return "#577686";
+    if (value > 100) {
+      return legendColors[3];
+    } else if (Number(value) <= 100 && Number(value) >= 34) {
+      return legendColors[2];
+    } else if (Number(value) <= 35 && Number(value) >= 18) {
+      return legendColors[1];
+    } else {
+      return legendColors[0];
+    }
   }
 
   return (
-    <Graph headline={headline} structure={structure} legend={legend}>
+    <Graph
+      headline={headline}
+      structure={structure}
+      legend={structure.questionnaire.options.slice(1)}
+      literalLegend={true}>
       <ul className={graphStyles["filters"]}>
         <li key={0} className={graphStyles["filter-item"]}>
           <label className={clsx("paragraph_14", graphStyles["filter-label"])}>
@@ -262,12 +253,20 @@ export function StackedBar({
                 {value}
               </text>
             )}>
-            {parameters.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={getBarColor(Number(entry.generalScore))}
-              />
-            ))}
+            {parameters.map((entry, index) => {
+              return (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={getBarColor(
+                    Math.round(
+                      (Number(entry.generalScore) /
+                        Number(entry.possibleScore)) *
+                        100
+                    )
+                  )}
+                />
+              );
+            })}
           </Bar>
           {filtersStatus && (
             <Bar

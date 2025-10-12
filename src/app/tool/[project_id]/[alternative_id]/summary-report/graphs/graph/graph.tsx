@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./graph.module.scss";
-import { structureProps } from "@/contexts/Store";
+import { structureProps, useStore } from "@/contexts/Store";
 import React from "react";
 import clsx from "clsx";
 
@@ -12,6 +12,7 @@ export function Graph({
   legend,
   preview = false,
   negative = false,
+  literalLegend = false,
 }: {
   headline?: string;
   structure: structureProps;
@@ -19,8 +20,9 @@ export function Graph({
   legend: string[] | false;
   preview?: boolean;
   negative?: boolean;
+  literalLegend?: boolean;
 }) {
-  const legendColors = ["#577686", "#00679B", "#0089CE", "#00A9FF"];
+  const { legendColors } = useStore();
 
   return (
     <div
@@ -39,7 +41,11 @@ export function Graph({
             if (index === 0) return null;
             return (
               <li key={index} className={styles["legend-item"]}>
-                <p className={clsx("paragraph_14", styles["text"])}>{option}</p>
+                {!literalLegend && (
+                  <p className={clsx("paragraph_14", styles["text"])}>
+                    {option}
+                  </p>
+                )}
                 <p
                   style={{ backgroundColor: legendColors[index - 1] }}
                   className={clsx("paragraph_12", styles["percentage"])}>

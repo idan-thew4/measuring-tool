@@ -37,6 +37,7 @@ export default function SummaryReport() {
     subChapters: [],
   });
   const params = useParams();
+  const [maxValue, setMaxValue] = useState<number>();
 
   useEffect(() => {
     isPageChanged("summary");
@@ -81,6 +82,21 @@ export default function SummaryReport() {
       "subchapters",
       "questionnaire"
     );
+
+    const maxScores: number[] = [];
+
+    questionnaireParams.forEach((score) => {
+      const maxValue = Math.round(
+        (score["max-score"] / score["net-zero-impact"]) * 100
+      );
+
+      maxScores.push(maxValue);
+    });
+
+    const avgMaxScore =
+      maxScores.reduce((sum, value) => sum + value, 0) / maxScores.length;
+
+    setMaxValue(avgMaxScore);
 
     const filteredQuestionnaireParams = questionnaireParams.filter(
       (chapter) => chapter["chapter"] === 1
@@ -180,6 +196,7 @@ export default function SummaryReport() {
                       filters={graph.filters}
                       structure={structure}
                       imageGridURL={`/pages/graphs/radar_grid_${graph.data}.svg`}
+                      maxScore={maxValue}
                     />
                   );
                   break;

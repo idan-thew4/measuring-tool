@@ -360,6 +360,7 @@ type ApiContextType = {
   ) => { subject: string; questionnaire: number }[];
 
   pages: { previousPage: string; currentPage: string };
+  legendColors: string[];
 };
 
 export type ScoreData = {
@@ -443,6 +444,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   const isMounted = useRef(false);
   const [loader, setLoader] = useState(true);
   const router = useRouter();
+  const legendColors = ["#577686", "#00679B", "#0089CE", " #00A9FF"];
 
   async function getContent() {
     try {
@@ -881,6 +883,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         isPageChanged,
         getChaptersScores,
         pages,
+        legendColors,
       }}>
       {children}
     </ApiContext.Provider>
