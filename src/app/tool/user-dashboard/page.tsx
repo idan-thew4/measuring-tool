@@ -6,6 +6,7 @@ import { useStore, structureProps, ProjectType } from "@/contexts/Store";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Project } from "./project/project";
+import { Loader } from "@/components/loader/loader";
 
 export default function userDashboard() {
   const {
@@ -19,7 +20,6 @@ export default function userDashboard() {
     loader,
     isPageChanged,
   } = useStore();
-  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function userDashboard() {
   }, [structure]);
 
   if (!structure || loader) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (
@@ -59,8 +59,7 @@ export default function userDashboard() {
                     } else {
                       setDeletePopup({ type: "delete-user" });
                     }
-                  }}
-                >
+                  }}>
                   {button}
                 </button>
               )
@@ -75,8 +74,7 @@ export default function userDashboard() {
           </h2>
           <button
             className="basic-button outline with-icon add"
-            onClick={() => setRegistrationPopup("new-project")}
-          >
+            onClick={() => setRegistrationPopup("new-project")}>
             {
               structure["user-dashboard"]["bottom-section"]["projects"][
                 "buttons-copy"

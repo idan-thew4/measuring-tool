@@ -2,6 +2,7 @@
 import { SideMenu } from "./components/side-menu/side-menu";
 import { useStore } from "../../../../contexts/Store";
 import { useParams } from "next/navigation";
+import { Loader } from "../../../../components/loader/loader";
 
 export default function ToolLayout({
   children,
@@ -14,7 +15,7 @@ export default function ToolLayout({
   const { structure, sideMenu } = useStore();
 
   if (!structure) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (

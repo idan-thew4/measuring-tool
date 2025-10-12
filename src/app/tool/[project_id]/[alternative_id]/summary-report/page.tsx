@@ -8,6 +8,7 @@ import styles from "./summary-report.module.scss";
 import { SummaryHeader } from "../components/summary-header/summaryHeader";
 import clsx from "clsx";
 import { useParams } from "next/navigation";
+import { Loader } from "@/components/loader/loader";
 
 export type ScoreData = {
   subject?: string;
@@ -149,8 +150,8 @@ export default function SummaryReport() {
     });
   }, [structure, scoreObject]);
 
-  if (loader) {
-    return <div>Loading..</div>;
+  if (!structure) {
+    return <Loader />;
   }
 
   return (

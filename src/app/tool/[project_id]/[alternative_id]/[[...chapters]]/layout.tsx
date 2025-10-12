@@ -2,6 +2,7 @@
 import { useParams } from "next/navigation";
 import { useStore } from "../../../../../contexts/Store";
 import { Questionnaire } from "./questionnaire/questionnaire";
+import { Loader } from "../../../../../components/loader/loader";
 
 export default function ChapterLayout({
   children,
@@ -13,7 +14,7 @@ export default function ChapterLayout({
   const { structure } = useStore();
 
   if (!structure) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (

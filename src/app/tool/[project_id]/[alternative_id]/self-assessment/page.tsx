@@ -8,6 +8,7 @@ import { RadarGraph } from "../summary-report/graphs/graph/radar/radar";
 import { useEffect, useState } from "react";
 import { ScoreData } from "../summary-report/page";
 import { useParams, useRouter } from "next/navigation";
+import { Loader } from "@/components/loader/loader";
 
 type getSelfAssessmentResponse = {
   success: boolean;
@@ -24,15 +25,8 @@ type storeSelfAssessmentResponse = {
 };
 
 export default function SelfAssessment() {
-  const {
-    structure,
-    scoreObject,
-    url,
-    setScoreObject,
-    selfAssessmentIsLoaded,
-    setSelfAssessmentIsLoaded,
-    isPageChanged,
-  } = useStore();
+  const { structure, scoreObject, url, loader, setLoader, isPageChanged } =
+    useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
     secondChapter: ScoreData[];
@@ -46,7 +40,7 @@ export default function SelfAssessment() {
   async function getSelfAssessmentData(
     project_id: string
   ): Promise<getSelfAssessmentResponse | void> {
-    setSelfAssessmentIsLoaded(true);
+    setLoader(true);
 
     try {
       const response = await fetch(`${url}/get-self-assessment-data`, {
@@ -62,7 +56,7 @@ export default function SelfAssessment() {
 
       if (data.success) {
         if (data.data === 0) {
-          setSelfAssessmentIsLoaded(false);
+          setLoader(false);
           // router.push(
           //   `/tool/${params.project_id}/${params.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
           // );
@@ -71,7 +65,7 @@ export default function SelfAssessment() {
         router.push(
           `/tool/0/0/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
         );
-        setSelfAssessmentIsLoaded(false);
+        setLoader(false);
       }
     } catch (error) {
       console.error("Error creating new user:", error);
@@ -82,7 +76,7 @@ export default function SelfAssessment() {
     project_id: string,
     assessment_data: AssessmentProps[]
   ): Promise<storeSelfAssessmentResponse | void> {
-    setSelfAssessmentIsLoaded(true);
+    setLoader(true);
     try {
       const response = await fetch(`${url}/store-self-assessment-data`, {
         method: "PUT",
@@ -99,7 +93,7 @@ export default function SelfAssessment() {
       const data = await response.json();
 
       if (data.success) {
-        setSelfAssessmentIsLoaded(false);
+        setLoader(false);
 
         router.push(
           `/tool/${params.project_id}/${params.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
@@ -177,8 +171,8 @@ export default function SelfAssessment() {
     }
   }, [params.project_id]);
 
-  if (selfAssessmentIsLoaded) {
-    return <div>Loading...</div>;
+  if (!structure) {
+    return <Loader />;
   }
 
   return (
@@ -188,8 +182,7 @@ export default function SelfAssessment() {
           <SummaryHeader
             title={structure?.["self-assessment"]["summary-title"]}
             structure={structure}
-            scoreObject={scoreObject}
-          >
+            scoreObject={scoreObject}>
             {/* TO DO: update button copy from structure */}
             <button
               className="basic-button outline"
@@ -198,8 +191,7 @@ export default function SelfAssessment() {
                   params.project_id as string,
                   scoreObject.data.assessment
                 )
-              }
-            >
+              }>
               המשך לשאלון
             </button>
           </SummaryHeader>
