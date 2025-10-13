@@ -40,8 +40,8 @@ export function RadarGraph({
   const [filtersStatus, setFiltersStatus] = useState<{
     [key: string]: boolean;
   }>({
-    questionnaire: true,
     assessment: false,
+    questionnaire: true,
   });
   const { legendColors } = useStore();
 
@@ -61,9 +61,9 @@ export function RadarGraph({
     setDataKeys(tempDataKeys);
   }, [parameters]);
 
-  useEffect(() => {
-    console.log(dataKeys);
-  }, [dataKeys]);
+  // useEffect(() => {
+  //   console.log("dataKey", dataKeys);
+  // }, [dataKeys]);
 
   function getDataLabelColor(value: string | number, type: string) {
     switch (type) {
@@ -89,18 +89,21 @@ export function RadarGraph({
       structure={structure}
       legend={legend ? ["17%-0%", "33%-18%", "100%-34%", "100%<"] : false}
       preview={preview}
-      negative={negative}>
+      negative={negative}
+    >
       {filters && (
         <ul className={graphStyles["filters"]}>
           {dataKeys?.slice().map((filter, index) => (
             <li key={index} className={graphStyles["filter-item"]}>
               <label
-                className={clsx("paragraph_14", graphStyles["filter-label"])}>
+                className={clsx("paragraph_14", graphStyles["filter-label"])}
+              >
                 <div
                   className={graphStyles["filter-color"]}
                   style={{
                     backgroundColor: colors[index],
-                  }}></div>
+                  }}
+                ></div>
                 <input
                   type="checkbox"
                   checked={filtersStatus[filter] || false}
@@ -132,7 +135,8 @@ export function RadarGraph({
             width={!preview ? 600 : 40}
             height={!preview ? 600 : 40}
             data={parameters}
-            className={styles["radar"]}>
+            className={styles["radar"]}
+          >
             <PolarRadiusAxis
               axisLine={false}
               tick={false}
@@ -188,7 +192,8 @@ export function RadarGraph({
                               fontSize={12}
                               textAnchor="middle"
                               dominantBaseline="central"
-                              className={styles["data-label"]}>
+                              className={styles["data-label"]}
+                            >
                               {value}%
                             </text>
                           </g>

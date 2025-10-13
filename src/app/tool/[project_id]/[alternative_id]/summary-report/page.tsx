@@ -48,6 +48,7 @@ export default function SummaryReport() {
   }, []);
 
   useEffect(() => {
+    console.log("scoreObject", scoreObject);
     const hasAssessment =
       Array.isArray(scoreObject.data.assessment) &&
       !scoreObject.data.assessment.every(
