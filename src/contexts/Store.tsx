@@ -45,6 +45,73 @@ function useStore() {
   return context;
 }
 
+export function getScoreLabel(
+  structure: structureProps | undefined,
+  value: number
+) {
+  const scoreLabels = structure?.questionnaire.options ?? [];
+
+  if (value > 100) {
+    return scoreLabels[4];
+  } else if (value <= 100 && Number(value) >= 33) {
+    return scoreLabels[3];
+  } else if (value <= 34 && Number(value) >= 18) {
+    return scoreLabels[2];
+  } else {
+    return scoreLabels[1];
+  }
+}
+
+export function getPercentageLabel(
+  scores: ScoreData[] | ScoreData,
+  indexOrGetScoreLabel: number | ((value: number) => string),
+  structure: structureProps | undefined,
+  getScoreLabel?: (
+    structure: structureProps | undefined,
+    value: number
+  ) => string
+): string {
+  if (Array.isArray(scores)) {
+    const index = indexOrGetScoreLabel as number;
+    if (scores[index] && Number(scores[index].percentage) > 0) {
+      return (
+        getScoreLabel?.(
+          structure,
+          Number(
+            scores[index].percentage != null ? scores[index].percentage : 0
+          )
+        ) ?? ""
+      );
+    }
+  } else if (scores && Number(scores.percentage) > 0) {
+    const labelFunction = indexOrGetScoreLabel as (value: number) => string;
+    return labelFunction(
+      Number(scores.percentage != null ? scores.percentage : 0)
+    );
+  }
+  return "";
+}
+
+export function getScoreValue(
+  scores: ScoreData[] | ScoreData,
+  key: "generalScore" | "percentage",
+  indexOrGetScoreLabel?: number
+): string | number {
+  if (Array.isArray(scores)) {
+    const index = indexOrGetScoreLabel as number;
+    if (
+      scores[index] &&
+      typeof scores[index][key] === "number" &&
+      scores[index][key] > 0
+    ) {
+      return scores[index][key];
+    }
+  } else if (scores && typeof scores[key] === "number" && scores[key] > 0) {
+    return scores[key];
+  }
+  return "";
+}
+
 //Score Object types//
 
 export type ScoreType = {
@@ -267,6 +334,7 @@ export type CalcParameters = {
 export type ProjectType = {
   project_name: string;
   project_id: number;
+  project_created_date_timestamp: number;
   alternatives: alternativeType[];
 };
 
@@ -358,9 +426,15 @@ type ApiContextType = {
     hasAssessment: boolean,
     scoreObject: ScoreType
   ) => { subject: string; questionnaire: number }[];
-
   pages: { previousPage: string; currentPage: string };
   legendColors: string[];
+  current: { project: ProjectType; alternative: alternativeType } | null;
+  setCurrent: React.Dispatch<
+    React.SetStateAction<{
+      project: ProjectType;
+      alternative: alternativeType;
+    } | null>
+  >;
 };
 
 export type ScoreData = {
@@ -445,7 +519,10 @@ function Store({ children }: PropsWithChildren<{}>) {
   const [loader, setLoader] = useState(true);
   const router = useRouter();
   const legendColors = ["#577686", "#00679B", "#0089CE", " #00A9FF"];
-
+  const [current, setCurrent] = useState<{
+    project: ProjectType;
+    alternative: alternativeType;
+  } | null>(null);
   async function getContent() {
     try {
       const response = await fetch(`${url}/structure`);
@@ -884,7 +961,10 @@ function Store({ children }: PropsWithChildren<{}>) {
         getChaptersScores,
         pages,
         legendColors,
-      }}>
+        current,
+        setCurrent,
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );

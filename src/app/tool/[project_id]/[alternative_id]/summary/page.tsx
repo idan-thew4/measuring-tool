@@ -2,9 +2,13 @@
 
 import {
   CalcParameters,
+  ProjectType,
   ScoreType,
   structureProps,
   useStore,
+  SubChapter,
+  getPercentageLabel,
+  getScoreLabel,
 } from "@/contexts/Store";
 import { SummaryHeader } from "../components/summary-header/summaryHeader";
 import { Table } from "./table/table";
@@ -22,9 +26,10 @@ import {
   StyleSheet,
   Font,
   PDFViewer,
+  Image,
 } from "@react-pdf/renderer";
 import { useParams } from "next/navigation";
-import { Loader } from "@/components/loader/loader";
+import { withRouter } from "next/router";
 
 function formatDate(timestamp: number) {
   const date = new Date(timestamp);
@@ -188,15 +193,15 @@ function downloadAllCSV(structure: structureProps, scoreObject: ScoreType) {
 // PDF Document
 
 Font.register({
-  family: "SimplerPro",
-  src: "/fonts/SimplerPro-Regular.otf",
+  family: "Assistant-Regular",
+  src: "/fonts/assistant-hebrew-400-normal.ttf",
   fontStyle: "normal",
   fontWeight: "normal",
 });
 
 Font.register({
-  family: "SimplerPro-Bold",
-  src: "/fonts/SimplerPro-Bold.otf",
+  family: "Assistant-Bold",
+  src: "/fonts/assistant-hebrew-700-normal.ttf",
   fontStyle: "normal",
   fontWeight: "bold",
 });
@@ -205,7 +210,7 @@ const PDFstyles = StyleSheet.create({
   page: {
     flexDirection: "row",
     backgroundColor: "#f3f9ed",
-    fontFamily: "SimplerPro",
+    fontFamily: "Assistant-Regular",
     direction: "rtl",
   },
   section: {
@@ -213,103 +218,204 @@ const PDFstyles = StyleSheet.create({
     padding: 20,
     flexGrow: 1,
   },
+  header: {
+    display: "flex",
+    flexDirection: "row-reverse",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    fontFamily: "Assistant-Regular",
+  },
+  summaryHeader: {
+    display: "flex",
+    flexDirection: "row-reverse",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 20,
+    paddingBottom: 5,
+    borderBottom: "2px solid #000",
+  },
+
+  columnsHeader: {
+    borderBottom: "1px solid #000",
+  },
+
+  columns: {
+    display: "flex",
+    flexDirection: "row-reverse",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+  pointsBubble: {
+    color: "white",
+    backgroundColor: "#5B6771",
+    padding: "2px",
+    fontSize: 9,
+    borderRadius: "12px",
+    marginTop: "4px",
+    textAlign: "center",
+  },
 });
 
 const PdfTable = ({
-  columns,
-  rows,
+  number,
+  title,
+  chapter,
+  chapterScore,
+  structure,
 }: {
-  columns: string[];
-  rows: SummaryRow[];
+  number: number;
+  title: string;
+  chapter: SubChapter[];
+  chapterScore: ScoreData;
+  structure: structureProps | undefined;
 }) => (
-  <View style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-    {/* Table Header */}
-    <View
-      style={{
-        flexDirection: "row",
-        backgroundColor: "#7ab51d",
-        borderTopLeftRadius: "200px",
-        borderTopRightRadius: "200px",
-        padding: 4,
-      }}>
-      {columns.map((col, idx) => (
-        <Text
-          key={col}
-          style={{
-            flex: 1,
-            fontWeight: "bold",
-            padding: 4,
-            fontSize: 10,
-            // borderRight:
-            //   idx < columns.length - 1 ? "1px solid #000" : undefined,
-            textAlign: "right",
-            direction: "rtl",
-            paddingTop: 12,
-            paddingBottom: 12,
-            paddingRight: 10,
-            paddingLeft: 10,
-            fontFamily: "SimplerPro-Bold",
-          }}>
-          {col}
-        </Text>
-      ))}
+  <View>
+    <View style={PDFstyles.columns}>
+      <Text style={{ flex: 3, fontFamily: "Assistant-Bold" }}>{title}</Text>
+      <Text>
+        {getPercentageLabel(
+          chapterScore,
+          (value: number) => getScoreLabel(structure, value),
+          structure,
+          getScoreLabel
+        )}
+      </Text>
     </View>
-    {/* Table Rows */}
-    {rows.map((row, rowIdx) => (
-      <View
-        key={rowIdx}
-        style={{ flexDirection: "row", borderBottom: "1px solid #ccc" }}>
-        {columns.map((col, colIdx) => (
-          <Text
-            key={colIdx}
-            style={{
-              flex: 1,
-              padding: 4,
-              fontSize: 10,
-              // borderRight:
-              //   colIdx < columns.length - 1 ? "1px solid #ccc" : undefined,
-              textAlign: "right",
-              direction: "rtl",
-              paddingTop: 12,
-              paddingBottom: 12,
-              backgroundColor: "white",
-              paddingRight: 10,
-              paddingLeft: 10,
-            }}>
-            {String(row[col] ?? "")}
-          </Text>
-        ))}
-      </View>
-    ))}
   </View>
 );
 
 const MyDocument = ({
   structure,
   scoreObject,
+  project,
+  scores,
 }: {
   structure: structureProps;
   scoreObject: ScoreType;
+  project: ProjectType | null;
+  scores: {
+    chapters: ScoreData[];
+    subChapters: { [key: string]: ScoreData[] };
+  };
 }) => {
-  const columns = ["הערות", "ציון", "רמת ביצוע", "קרטריון", "תת-פרק", "פרק"];
   const rows = flattenAllTables(structure, scoreObject);
+  const summaryColumnsHeader = [
+    "עקרון קיימות להערכה",
+    "רמת הישג",
+    "נקודות",
+    "הערות",
+  ];
 
   return (
     <Document>
       <Page size="A4" style={PDFstyles.page}>
         <View style={PDFstyles.section}>
-          <Text
-            style={{
-              fontSize: 16,
-              marginBottom: 10,
-              textAlign: "right",
-              direction: "rtl",
-            }}>
-            {`${scoreObject["project-details"].projectName}-${formatDate(
-              Date.now()
-            )}`}
-          </Text>
-          <PdfTable columns={columns} rows={rows} />
+          <View style={PDFstyles.header}>
+            <Image
+              src="/logo.png"
+              style={{
+                width: 196.43,
+                height: 50,
+              }}
+            />
+            <View>
+              <Text
+                style={{
+                  fontSize: 9,
+                }}
+                render={({ pageNumber, totalPages }) =>
+                  ` ${pageNumber} / ${totalPages}`
+                }
+              />
+            </View>
+          </View>
+
+          <View style={{ ...PDFstyles.summaryHeader, ...PDFstyles.columns }}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row-reverse",
+                alignItems: "center",
+                gap: 100,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: "Assistant-Bold",
+                  textAlign: "right",
+                  direction: "rtl",
+                }}
+              >
+                סיכום
+              </Text>
+              <View
+                style={{
+                  fontSize: 12,
+                  display: "flex",
+                  flexDirection: "row-reverse",
+                  gap: 2,
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "Assistant-Bold",
+                  }}
+                >
+                  ,שם המיזם
+                </Text>
+
+                <Text
+                  style={{
+                    fontFamily: "Assistant-Regular",
+                  }}
+                >
+                  {project?.project_name}
+                </Text>
+              </View>
+            </View>
+            <Text
+              style={{
+                fontSize: 12,
+              }}
+            >
+              {`${formatDate(project?.project_created_date_timestamp ?? 0)}`}
+            </Text>
+          </View>
+          <View style={{ ...PDFstyles.columnsHeader, ...PDFstyles.columns }}>
+            {structure?.summary?.table?.columns.map((col, idx) => (
+              <View
+                key={idx}
+                style={{
+                  flex: idx === 0 || idx === 3 ? 3 : 1,
+                  padding: 4,
+                  fontSize: 11,
+                  textAlign: idx === 2 ? "center" : "right",
+                  paddingTop: 12,
+                  paddingBottom: 12,
+                  fontFamily: "Assistant-Bold",
+                  paddingRight: idx === 3 ? 20 : 0,
+                }}
+              >
+                <Text>{col.title}</Text>
+
+                {idx === 2 && (
+                  <Text style={PDFstyles.pointsBubble}>אחוזי הצלחה</Text>
+                )}
+              </View>
+            ))}
+          </View>
+
+          {structure?.questionnaire.content.map((chapter, chapterIdx) => (
+            <PdfTable
+              key={chapter["chapter-number"]}
+              number={chapter["chapter-number"]}
+              title={chapter["chapter-title"]}
+              chapter={chapter["chapter-content"]}
+              chapterScore={scores.chapters[chapterIdx]}
+              structure={structure}
+            />
+          ))}
         </View>
       </Page>
     </Document>
@@ -323,6 +429,7 @@ export default function Summary() {
     calculateScores,
     getAlternativeQuestionnaireData,
     isPageChanged,
+    current,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -332,6 +439,8 @@ export default function Summary() {
     subChapters: {},
   });
   const params = useParams();
+
+  console.log("project", current);
 
   useEffect(() => {
     isPageChanged("summary");
@@ -428,10 +537,12 @@ export default function Summary() {
         <SummaryHeader
           title={structure?.summary.header.title}
           structure={structure}
-          scoreObject={scoreObject}>
+          scoreObject={scoreObject}
+        >
           <button
             className={clsx("download", "basic-button with-icon outline")}
-            onClick={() => downloadAllCSV(structure, scoreObject)}>
+            onClick={() => downloadAllCSV(structure, scoreObject)}
+          >
             {structure?.summary.header["buttons-copy"][0]}
           </button>
           {/* <PDFDownloadLink
@@ -441,20 +552,32 @@ export default function Summary() {
             fileName={`${
               scoreObject["project-details"].projectName
             }-${formatDate(Date.now())}.pdf`}
-            className={clsx("print", "basic-button with-icon outline")}>
+            className={clsx("print", "basic-button with-icon outline")}
+          >
             {structure?.summary.header["buttons-copy"][1]}
           </PDFDownloadLink> */}
         </SummaryHeader>
       )}
 
       <div className={styles["tables-container"]}>
+        {structure && current && (
+          <PDFViewer width="100%" height="800px">
+            <MyDocument
+              structure={structure}
+              scoreObject={scoreObject}
+              project={current?.project}
+              scores={scores}
+            />
+          </PDFViewer>
+        )}
         <div
           className={clsx(
             tableStyles["row"],
             "paragraph_15 bold",
             tableStyles["row-titles"],
             tableStyles["row-titles-sticky"]
-          )}>
+          )}
+        >
           {structure?.summary?.table?.columns.map(
             (
               column: {
@@ -470,7 +593,8 @@ export default function Summary() {
                 className={clsx(
                   column["sub-title"] && tableStyles["score-points"],
                   "paragraph_15 bold"
-                )}>
+                )}
+              >
                 {column.title}
                 {column["sub-title"] && (
                   <span className={tableStyles["percentage-bubble"]}>

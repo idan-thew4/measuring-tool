@@ -1,4 +1,11 @@
-import { SubChapter, useStore } from "@/contexts/Store";
+import {
+  structureProps,
+  SubChapter,
+  useStore,
+  getScoreLabel,
+  getPercentageLabel,
+  getScoreValue,
+} from "@/contexts/Store";
 import styles from "./table.module.scss";
 import React, { JSX, useState, useRef, useEffect } from "react";
 import clsx from "clsx";
@@ -83,64 +90,64 @@ export function Table({
     return formattedComment;
   }
 
-  function getScoreLabel(value: number) {
-    const scoreLabels = structure?.questionnaire.options ?? [];
+  // function getScoreLabel(structure: structureProps | undefined, value: number) {
+  //   const scoreLabels = structure?.questionnaire.options ?? [];
 
-    if (value > 100) {
-      return scoreLabels[4];
-    } else if (value <= 100 && Number(value) >= 33) {
-      return scoreLabels[3];
-    } else if (value <= 34 && Number(value) >= 18) {
-      return scoreLabels[2];
-    } else {
-      return scoreLabels[1];
-    }
-  }
+  //   if (value > 100) {
+  //     return scoreLabels[4];
+  //   } else if (value <= 100 && Number(value) >= 33) {
+  //     return scoreLabels[3];
+  //   } else if (value <= 34 && Number(value) >= 18) {
+  //     return scoreLabels[2];
+  //   } else {
+  //     return scoreLabels[1];
+  //   }
+  // }
 
-  function getPercentageLabel(
-    scores: ScoreData[] | ScoreData,
-    indexOrGetScoreLabel: number | ((value: number) => string),
-    getScoreLabel?: (value: number) => string
-  ): string {
-    if (Array.isArray(scores)) {
-      const index = indexOrGetScoreLabel as number;
-      if (scores[index] && Number(scores[index].percentage) > 0) {
-        return (
-          getScoreLabel?.(
-            Number(
-              scores[index].percentage != null ? scores[index].percentage : 0
-            )
-          ) ?? ""
-        );
-      }
-    } else if (scores && Number(scores.percentage) > 0) {
-      const labelFunction = indexOrGetScoreLabel as (value: number) => string;
-      return labelFunction(
-        Number(scores.percentage != null ? scores.percentage : 0)
-      );
-    }
-    return "";
-  }
+  // function getPercentageLabel(
+  //   scores: ScoreData[] | ScoreData,
+  //   indexOrGetScoreLabel: number | ((value: number) => string),
+  //   getScoreLabel?: (value: number) => string
+  // ): string {
+  //   if (Array.isArray(scores)) {
+  //     const index = indexOrGetScoreLabel as number;
+  //     if (scores[index] && Number(scores[index].percentage) > 0) {
+  //       return (
+  //         getScoreLabel?.(
+  //           Number(
+  //             scores[index].percentage != null ? scores[index].percentage : 0
+  //           )
+  //         ) ?? ""
+  //       );
+  //     }
+  //   } else if (scores && Number(scores.percentage) > 0) {
+  //     const labelFunction = indexOrGetScoreLabel as (value: number) => string;
+  //     return labelFunction(
+  //       Number(scores.percentage != null ? scores.percentage : 0)
+  //     );
+  //   }
+  //   return "";
+  // }
 
-  function getScoreValue(
-    scores: ScoreData[] | ScoreData,
-    key: "generalScore" | "percentage",
-    indexOrGetScoreLabel?: number
-  ): string | number {
-    if (Array.isArray(scores)) {
-      const index = indexOrGetScoreLabel as number;
-      if (
-        scores[index] &&
-        typeof scores[index][key] === "number" &&
-        scores[index][key] > 0
-      ) {
-        return scores[index][key];
-      }
-    } else if (scores && typeof scores[key] === "number" && scores[key] > 0) {
-      return scores[key];
-    }
-    return "";
-  }
+  // function getScoreValue(
+  //   scores: ScoreData[] | ScoreData,
+  //   key: "generalScore" | "percentage",
+  //   indexOrGetScoreLabel?: number
+  // ): string | number {
+  //   if (Array.isArray(scores)) {
+  //     const index = indexOrGetScoreLabel as number;
+  //     if (
+  //       scores[index] &&
+  //       typeof scores[index][key] === "number" &&
+  //       scores[index][key] > 0
+  //     ) {
+  //       return scores[index][key];
+  //     }
+  //   } else if (scores && typeof scores[key] === "number" && scores[key] > 0) {
+  //     return scores[key];
+  //   }
+  //   return "";
+  // }
 
   return (
     <div
@@ -163,7 +170,12 @@ export function Table({
           className={clsx(styles["table-title"], "headline_small bold")}
         >{`${chapterNumber}. ${title}`}</h2>
         <p className="paragraph_18">
-          {getPercentageLabel(chapterScore, getScoreLabel)}
+          {getPercentageLabel(
+            chapterScore,
+            (value: number) => getScoreLabel(structure, value),
+            structure,
+            getScoreLabel
+          )}
         </p>
         <p className={clsx(styles["score-points"], "paragraph_18")}>
           {getScoreValue(chapterScore, "generalScore") && (
@@ -199,6 +211,7 @@ export function Table({
                 {getPercentageLabel(
                   subChaptersScores,
                   subChapterIndex,
+                  structure,
                   getScoreLabel
                 )}
               </p>
