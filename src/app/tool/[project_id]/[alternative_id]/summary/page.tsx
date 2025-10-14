@@ -9,6 +9,7 @@ import {
   SubChapter,
   getPercentageLabel,
   getScoreLabel,
+  getScoreValue,
 } from "@/contexts/Store";
 import { SummaryHeader } from "../components/summary-header/summaryHeader";
 import { Table } from "./table/table";
@@ -135,6 +136,7 @@ function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
           contact: scoreObject["project-details"].contactPerson,
           email: scoreObject["project-details"].contactEmail,
           tel: scoreObject["project-details"].contactPhone,
+
           criteria_no: principleCount,
           chapter: `${chapter["chapter-number"]}. ${chapter["chapter-title"]}`,
           sub_chapter: `.${subChapterIdx + 1}. ${
@@ -193,29 +195,31 @@ function downloadAllCSV(structure: structureProps, scoreObject: ScoreType) {
 // PDF Document
 
 Font.register({
-  family: "Assistant-Regular",
-  src: "/fonts/assistant-hebrew-400-normal.ttf",
+  family: "Noto Sane Hebrew Regular",
+  src: "/fonts/NotoSansHebrew-Regular.ttf",
   fontStyle: "normal",
   fontWeight: "normal",
 });
 
 Font.register({
-  family: "Assistant-Bold",
-  src: "/fonts/assistant-hebrew-700-normal.ttf",
+  family: "Noto Sane Hebrew Bold",
+  src: "/fonts/NotoSansHebrew-Bold.ttf",
   fontStyle: "normal",
   fontWeight: "bold",
 });
 
 const PDFstyles = StyleSheet.create({
   page: {
-    flexDirection: "row",
-    backgroundColor: "#f3f9ed",
-    fontFamily: "Assistant-Regular",
+    fontFamily: "Noto Sane Hebrew Regular",
     direction: "rtl",
+    display: "flex",
   },
   section: {
-    margin: 20,
-    padding: 20,
+    // margin: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
     flexGrow: 1,
   },
   header: {
@@ -223,7 +227,7 @@ const PDFstyles = StyleSheet.create({
     flexDirection: "row-reverse",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    fontFamily: "Assistant-Regular",
+    fontFamily: "Noto Sane Hebrew Regular",
   },
   summaryHeader: {
     display: "flex",
@@ -244,35 +248,157 @@ const PDFstyles = StyleSheet.create({
     flexDirection: "row-reverse",
     justifyContent: "space-between",
     alignItems: "flex-start",
+    textAlign: "right",
+    gap: 3,
   },
   pointsBubble: {
     color: "white",
     backgroundColor: "#5B6771",
-    padding: "2px",
+    padding: "2px 4px 2px 4px",
     fontSize: 9,
     borderRadius: "12px",
-    marginTop: "4px",
-    textAlign: "center",
+    margin: "4px auto auto auto",
+    textAlign: "left",
+    width: "auto",
   },
 });
 
+function encodeHTML(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+type PdfHeaderProps = {
+  structure: structureProps;
+  project: ProjectType | null;
+  PDFstyles: ReturnType<typeof StyleSheet.create>;
+};
+
+const PdfHeader = ({ structure, project, PDFstyles }: PdfHeaderProps) => (
+  <View style={PDFstyles.section} fixed>
+    <View style={PDFstyles.header}>
+      <Image
+        src="/logo.png"
+        style={{
+          width: 196.43,
+          height: 50,
+        }}
+      />
+      <View>
+        <Text
+          style={{
+            fontSize: 9,
+          }}
+          render={({ pageNumber, totalPages }) =>
+            ` ${pageNumber} / ${totalPages}`
+          }
+        />
+      </View>
+    </View>
+    <View style={{ ...PDFstyles.summaryHeader, ...PDFstyles.columns }}>
+      <View
+        style={{
+          flexDirection: "row-reverse",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "Noto Sane Hebrew Bold",
+            textAlign: "right",
+            direction: "rtl",
+            paddingLeft: 50,
+          }}
+        >
+          סיכום
+        </Text>
+        <View
+          style={{
+            fontSize: 12,
+            flexDirection: "row-reverse",
+            gap: 1,
+          }}
+        >
+          <Text style={{ fontFamily: "Noto Sane Hebrew Bold", paddingLeft: 2 }}>
+            ,שם המיזם
+          </Text>
+          <Text style={{ fontFamily: "Noto Sane Hebrew Regular" }}>
+            {project?.project_name}
+          </Text>
+        </View>
+      </View>
+      <Text style={{ fontSize: 12 }}>
+        {project?.project_created_date_timestamp
+          ? formatDate(project.project_created_date_timestamp)
+          : ""}
+      </Text>
+    </View>
+    <View style={{ ...PDFstyles.columnsHeader, ...PDFstyles.columns }}>
+      {structure?.summary?.table?.columns.map((col, idx) => (
+        <View
+          key={idx}
+          style={{
+            padding: 4,
+            fontSize: 11,
+            paddingTop: 12,
+            flex: idx === 0 || idx === 3 ? 3 : 1,
+            textAlign: idx === 2 ? "center" : "right",
+            fontFamily: "Noto Sane Hebrew Bold",
+            paddingRight: idx === 3 ? 20 : 4,
+          }}
+        >
+          <Text>{col.title}</Text>
+          {idx === 2 && <Text style={PDFstyles.pointsBubble}>אחוזי הצלחה</Text>}
+        </View>
+      ))}
+    </View>
+  </View>
+);
+
 const PdfTable = ({
-  number,
+  chapterNumber,
   title,
   chapter,
   chapterScore,
   structure,
+  subChaptersScores,
+  scoreObject,
 }: {
-  number: number;
+  chapterNumber: number;
   title: string;
   chapter: SubChapter[];
   chapterScore: ScoreData;
   structure: structureProps | undefined;
+  subChaptersScores: ScoreData[];
+  scoreObject: ScoreType;
 }) => (
   <View>
-    <View style={PDFstyles.columns}>
-      <Text style={{ flex: 3, fontFamily: "Assistant-Bold" }}>{title}</Text>
-      <Text>
+    {/* header */}
+    <View style={{ ...PDFstyles.columns }}>
+      <Text
+        style={{
+          flex: 3,
+          fontFamily: "Noto Sane Hebrew Bold",
+          fontSize: 14,
+          padding: 4,
+        }}
+      >
+        {title}
+      </Text>
+      <Text
+        style={{
+          flex: 1,
+          fontSize: 11,
+          textAlign: "right",
+          padding: 4,
+          height: 35,
+        }}
+      >
         {getPercentageLabel(
           chapterScore,
           (value: number) => getScoreLabel(structure, value),
@@ -280,7 +406,259 @@ const PdfTable = ({
           getScoreLabel
         )}
       </Text>
+      <View style={{ flex: 1, padding: 4, textAlign: "right" }}>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row-reverse",
+            textAlign: "right",
+            gap: 0,
+            margin: "auto",
+            alignItems: "flex-start",
+          }}
+        >
+          <Text style={{ flex: 1, fontSize: 11, textAlign: "left" }}>
+            {getScoreValue(chapterScore, "generalScore")}
+          </Text>
+          <View>
+            {getScoreValue(chapterScore, "generalScore") && (
+              <Text
+                style={{
+                  flex: 1,
+                  fontSize: 11,
+                  fontFamily: "Noto Sane Hebrew Regular",
+                  textAlign: "left",
+                  paddingRight: 2,
+                }}
+              >
+                <Text>{structure?.summary?.table?.columns[2]?.title}</Text>
+              </Text>
+            )}
+          </View>
+        </View>
+        {getScoreValue(chapterScore, "percentage") && (
+          <Text style={PDFstyles.pointsBubble}>
+            {getScoreValue(chapterScore, "percentage")}%
+          </Text>
+        )}
+      </View>
+      <Text
+        style={{
+          flex: 3,
+          fontSize: 11,
+          textAlign: "right",
+          padding: 4,
+          paddingRight: 20,
+        }}
+      ></Text>
     </View>
+    {structure?.questionnaire.content.map((chapterItem, chapterIdx) => (
+      <View
+        key={chapterIdx}
+        style={{
+          border: "2px solid #D5D8D7",
+          borderRadius: 15,
+          overflow: "hidden",
+          marginBottom: 20,
+        }}
+      >
+        {chapterItem["chapter-content"].map((subChapter, subChapterIdx) => (
+          <View key={`${chapterIdx}-${subChapterIdx}`}>
+            <View
+              style={{
+                ...PDFstyles.columns,
+                backgroundColor: "#5B6771",
+                color: "white",
+                height: 42,
+                borderTopLeftRadius: subChapterIdx === 0 ? 13 : 0,
+                borderTopRightRadius: subChapterIdx === 0 ? 13 : 0,
+                paddingLeft: 20,
+                paddingRight: 20,
+                fontSize: 11,
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row-reverse",
+                  gap: 3,
+                  flex: 3,
+                }}
+              >
+                <Text>.{`${chapterIdx + 1}.${subChapterIdx + 1}`}</Text>
+                <Text style={{ fontFamily: "Noto Sane Hebrew Bold" }}>
+                  {subChapter["sub-chapter-title"]}
+                </Text>
+              </View>
+              <Text
+                style={{
+                  color: "white",
+                  flex: 1,
+                }}
+              >
+                {getPercentageLabel(
+                  subChaptersScores,
+                  subChapterIdx,
+                  structure,
+                  getScoreLabel
+                )}
+              </Text>
+              <View style={{ flex: 1, padding: 4, textAlign: "right" }}>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row-reverse",
+                    textAlign: "right",
+                    gap: 0,
+                    margin: "auto",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <Text style={{ flex: 1, fontSize: 11, textAlign: "left" }}>
+                    {getScoreValue(
+                      subChaptersScores,
+                      "generalScore",
+                      subChapterIdx
+                    )}
+                  </Text>
+                  <View>
+                    {getScoreValue(
+                      subChaptersScores,
+                      "generalScore",
+                      subChapterIdx
+                    ) && (
+                      <Text
+                        style={{
+                          flex: 1,
+                          fontSize: 11,
+                          fontFamily: "Noto Sane Hebrew Regular",
+                          textAlign: "left",
+                          paddingRight: 2,
+                        }}
+                      >
+                        <Text>
+                          {structure?.summary?.table?.columns[2]?.title}
+                        </Text>
+                      </Text>
+                    )}
+                  </View>
+                </View>
+                {getScoreValue(
+                  subChaptersScores,
+                  "percentage",
+                  subChapterIdx
+                ) && (
+                  <Text
+                    style={{
+                      ...PDFstyles.pointsBubble,
+                      backgroundColor: "white",
+                      color: "#5B6771",
+                    }}
+                  >
+                    {getScoreValue(
+                      subChaptersScores,
+                      "percentage",
+                      subChapterIdx
+                    )}
+                    %
+                  </Text>
+                )}
+              </View>
+              <View style={{ flex: 3 }}></View>
+            </View>
+            {/* Render principles here if needed */}
+            {subChapter.principles.map((principle, principleIndex) => {
+              const inputNumber =
+                scoreObject.data?.questionnaire?.[chapterNumber - 1]?.[
+                  "chapter-data"
+                ]?.[subChapterIdx]?.["principles"]?.[principleIndex]?.choice;
+              let score: number | undefined;
+
+              if (inputNumber) {
+                score =
+                  structure?.questionnaire.content[chapterNumber - 1][
+                    "chapter-content"
+                  ][subChapterIdx]["principles"][principleIndex]["choices"][
+                    inputNumber - 1
+                  ]?.score;
+              }
+              return (
+                <View
+                  key={principleIndex}
+                  style={{
+                    ...PDFstyles.columns,
+                    color: "black",
+                    paddingTop: 10,
+                    paddingBottom: 8,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    fontSize: 11,
+                    alignItems: "flex-start",
+                    borderBottom:
+                      principleIndex === subChapter.principles.length - 1
+                        ? "none"
+                        : "solid",
+                    borderBottomColor: "#D5D8D7",
+                    borderBottomWidth: 1,
+                  }}
+                >
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "row-reverse",
+                      gap: 3,
+                      flex: 3,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        textDecoration:
+                          inputNumber === -1 ? "line-through" : "none",
+                        color: inputNumber === undefined ? "#A0A0A0" : "black",
+                      }}
+                    >
+                      .
+                      {`${chapterNumber}.${subChapterIdx + 1}.${
+                        principleIndex + 1
+                      }`}
+                    </Text>
+                    <Text
+                      style={{
+                        textDecoration:
+                          inputNumber === -1 ? "line-through" : "none",
+                        color: inputNumber === undefined ? "#A0A0A0" : "black",
+                        width: 148,
+                      }}
+                    >
+                      {encodeHTML(principle["title"])}
+                    </Text>
+                  </View>
+                  <Text
+                    style={{
+                      flex: 1,
+                    }}
+                  >
+                    {inputNumber &&
+                      structure?.questionnaire?.options?.[inputNumber - 1]}
+                  </Text>
+                  <Text style={{ flex: 1, padding: 4, textAlign: "center" }}>
+                    {score}
+                  </Text>
+                  <Text style={{ flex: 3 }}>
+                    {scoreObject.data?.questionnaire?.[chapterNumber - 1]?.[
+                      "chapter-data"
+                    ]?.[subChapterIdx]?.["principles"]?.[principleIndex]
+                      ?.comment ?? ""}
+                    {inputNumber === -1 ? "דילגת על עיקרון זה" : ""}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+        ))}
+      </View>
+    ))}
   </View>
 );
 
@@ -299,121 +677,27 @@ const MyDocument = ({
   };
 }) => {
   const rows = flattenAllTables(structure, scoreObject);
-  const summaryColumnsHeader = [
-    "עקרון קיימות להערכה",
-    "רמת הישג",
-    "נקודות",
-    "הערות",
-  ];
 
   return (
     <Document>
       <Page size="A4" style={PDFstyles.page}>
+        <PdfHeader
+          structure={structure}
+          project={project}
+          PDFstyles={PDFstyles}
+        />
+
         <View style={PDFstyles.section}>
-          <View style={PDFstyles.header}>
-            <Image
-              src="/logo.png"
-              style={{
-                width: 196.43,
-                height: 50,
-              }}
-            />
-            <View>
-              <Text
-                style={{
-                  fontSize: 9,
-                }}
-                render={({ pageNumber, totalPages }) =>
-                  ` ${pageNumber} / ${totalPages}`
-                }
-              />
-            </View>
-          </View>
-
-          <View style={{ ...PDFstyles.summaryHeader, ...PDFstyles.columns }}>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row-reverse",
-                alignItems: "center",
-                gap: 100,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: "Assistant-Bold",
-                  textAlign: "right",
-                  direction: "rtl",
-                }}
-              >
-                סיכום
-              </Text>
-              <View
-                style={{
-                  fontSize: 12,
-                  display: "flex",
-                  flexDirection: "row-reverse",
-                  gap: 2,
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: "Assistant-Bold",
-                  }}
-                >
-                  ,שם המיזם
-                </Text>
-
-                <Text
-                  style={{
-                    fontFamily: "Assistant-Regular",
-                  }}
-                >
-                  {project?.project_name}
-                </Text>
-              </View>
-            </View>
-            <Text
-              style={{
-                fontSize: 12,
-              }}
-            >
-              {`${formatDate(project?.project_created_date_timestamp ?? 0)}`}
-            </Text>
-          </View>
-          <View style={{ ...PDFstyles.columnsHeader, ...PDFstyles.columns }}>
-            {structure?.summary?.table?.columns.map((col, idx) => (
-              <View
-                key={idx}
-                style={{
-                  flex: idx === 0 || idx === 3 ? 3 : 1,
-                  padding: 4,
-                  fontSize: 11,
-                  textAlign: idx === 2 ? "center" : "right",
-                  paddingTop: 12,
-                  paddingBottom: 12,
-                  fontFamily: "Assistant-Bold",
-                  paddingRight: idx === 3 ? 20 : 0,
-                }}
-              >
-                <Text>{col.title}</Text>
-
-                {idx === 2 && (
-                  <Text style={PDFstyles.pointsBubble}>אחוזי הצלחה</Text>
-                )}
-              </View>
-            ))}
-          </View>
-
           {structure?.questionnaire.content.map((chapter, chapterIdx) => (
             <PdfTable
-              key={chapter["chapter-number"]}
-              number={chapter["chapter-number"]}
+              key={chapterIdx}
+              chapterNumber={chapter["chapter-number"]}
               title={chapter["chapter-title"]}
               chapter={chapter["chapter-content"]}
               chapterScore={scores.chapters[chapterIdx]}
+              subChaptersScores={scores.subChapters[chapterIdx + 1]}
               structure={structure}
+              scoreObject={scoreObject}
             />
           ))}
         </View>
@@ -439,8 +723,6 @@ export default function Summary() {
     subChapters: {},
   });
   const params = useParams();
-
-  console.log("project", current);
 
   useEffect(() => {
     isPageChanged("summary");
