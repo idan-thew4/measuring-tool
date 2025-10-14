@@ -254,23 +254,18 @@ const PDFstyles = StyleSheet.create({
   pointsBubble: {
     color: "white",
     backgroundColor: "#5B6771",
-    padding: "2px 4px 2px 4px",
+    paddingBottom: 2,
+    paddingTop: 2,
+    paddingLeft: 4,
+    paddingRight: 4,
     fontSize: 9,
     borderRadius: "12px",
     margin: "4px auto auto auto",
-    textAlign: "left",
-    width: "auto",
+    textAlign: "center",
+    width: "50%",
+    alignItems: "center",
   },
 });
-
-function encodeHTML(text: string): string {
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
 
 type PdfHeaderProps = {
   structure: structureProps;
@@ -353,7 +348,11 @@ const PdfHeader = ({ structure, project, PDFstyles }: PdfHeaderProps) => (
           }}
         >
           <Text>{col.title}</Text>
-          {idx === 2 && <Text style={PDFstyles.pointsBubble}>אחוזי הצלחה</Text>}
+          {idx === 2 && (
+            <Text style={{ ...PDFstyles.pointsBubble, width: "100%" }}>
+              אחוזי הצלחה
+            </Text>
+          )}
         </View>
       ))}
     </View>
