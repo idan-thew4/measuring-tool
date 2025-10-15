@@ -124,7 +124,8 @@
     &.skipped {
       .principle {
         &-title,
-        &-number {
+        &-number,
+        &-comment {
           text-decoration: line-through;
         }
       }

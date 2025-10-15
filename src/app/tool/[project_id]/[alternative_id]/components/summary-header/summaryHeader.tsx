@@ -1,14 +1,7 @@
 import clsx from "clsx";
 import styles from "./summary-header.module.scss";
 import { structureProps, ScoreType } from "@/contexts/Store";
-
-export function formatDate(timestamp: number) {
-  const date = new Date(timestamp);
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
-}
+import { useStore, formatDate } from "@/contexts/Store";
 
 export function SummaryHeader({
   title,
@@ -21,6 +14,7 @@ export function SummaryHeader({
   scoreObject: ScoreType;
   children?: React.ReactNode;
 }) {
+  const { current } = useStore();
   return (
     <div className={styles["summary-header"]}>
       <h1 className={clsx(styles["title"], "headline_small")}>{title}</h1>
@@ -30,20 +24,21 @@ export function SummaryHeader({
             <span className="bold">
               {`${structure?.summary.header["summary-details"][0]}: `}
             </span>
-            {`${
-              scoreObject["project-details"].projectCreationDate &&
-              formatDate(scoreObject["project-details"].projectCreationDate)
-            }`}
+            {formatDate(current?.project.project_created_date_timestamp ?? 0)}
           </p>
           <p className="paragraph_15">
             <span className="bold">
               {`${structure?.summary.header["summary-details"][1]}: `}
             </span>
-            {scoreObject["project-details"].projectName}
+            {`${current?.project.project_name ?? 0}, ${
+              current?.alternative.alternative_name ?? 0
+            }`}
           </p>
         </div>
 
-        <div className={styles["summary-buttons"]}>{children}</div>
+        <div className={clsx(styles["summary-buttons"], "paragraph_18")}>
+          {children}
+        </div>
       </div>
     </div>
   );

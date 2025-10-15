@@ -1,8 +1,7 @@
-import { useStore, alternativeType } from "@/contexts/Store";
+import { useStore, alternativeType, formatDate } from "@/contexts/Store";
 import styles from "./project.module.scss";
 import clsx from "clsx";
 import Link from "next/link";
-import { formatDate } from "../../../tool/[project_id]/[alternative_id]/components/summary-header/summaryHeader";
 
 export function Project({
   project_name,
@@ -65,9 +64,10 @@ export function Project({
           <div className={styles["alternative-name"]}>
             <Link
               href={`/tool/${project_id}/${alternative.alternative_id}/${structure?.questionnaire.content[1]["chapter-slug"]}/1/1`}
-              className={clsx("paragraph_15", styles["alternative-link"])}>
+              className={clsx("paragraph_20", styles["alternative-link"])}>
               {alternative.alternative_name},
-              <span className={styles["date"]}>
+              <span className={clsx(styles["date"], "paragraph_15")}>
+                &nbsp;
                 {formatDate(alternative.alternative_created_date_timestamp)}
               </span>
             </Link>

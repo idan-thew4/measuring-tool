@@ -48,7 +48,6 @@ export default function SummaryReport() {
   }, []);
 
   useEffect(() => {
-    console.log("scoreObject", scoreObject);
     const hasAssessment =
       Array.isArray(scoreObject.data.assessment) &&
       !scoreObject.data.assessment.every(
@@ -86,11 +85,15 @@ export default function SummaryReport() {
 
     const maxScores: number[] = [];
 
-    questionnaireParams.forEach((score) => {
-      const maxValue = Math.round(
-        (score["max-score"] / score["net-zero-impact"]) * 100
-      );
+    structure?.questionnaire.content;
 
+    structure?.questionnaire.content.forEach((chapter, index) => {
+      let maxValue = 0;
+      chapter?.["chapter-content"]?.forEach((subChapter) => {
+        subChapter?.principles?.forEach((principle) => {
+          maxValue += principle.choices[4].score;
+        });
+      });
       maxScores.push(maxValue);
     });
 

@@ -11,6 +11,7 @@ import {
   getScoreLabel,
   getScoreValue,
   alternativeType,
+  formatDate,
 } from "@/contexts/Store";
 import { SummaryHeader } from "../components/summary-header/summaryHeader";
 import { Table } from "./table/table";
@@ -29,16 +30,10 @@ import {
   Font,
   PDFViewer,
   Image,
+  pdf,
 } from "@react-pdf/renderer";
 import { useParams } from "next/navigation";
-
-function formatDate(timestamp: number) {
-  const date = new Date(timestamp);
-  const day = date.getDate();
-  const month = date.getMonth() + 1; // Months are zero-based
-  const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
-}
+import { saveAs } from "file-saver";
 
 //CSV//
 
@@ -630,7 +625,7 @@ const PdfTable = ({
                       "chapter-data"
                     ]?.[subChapterIdx]?.["principles"]?.[principleIndex]
                       ?.comment ?? ""}
-                    {inputNumber === -1 ? "דילגת על עיקרון זה" : ""}
+                    {/* {inputNumber === -1 ? "דילגת על עיקרון זה" : ""} */}
                   </Text>
                 </View>
               );
@@ -703,6 +698,8 @@ export default function Summary() {
     subChapters: {},
   });
   const params = useParams();
+
+  const [generatePDF, setGeneratePDF] = useState(false); // State to track PDF generation
 
   useEffect(() => {
     isPageChanged("summary");
@@ -793,6 +790,22 @@ export default function Summary() {
     });
   }, [scoreObject]);
 
+  const handleDownload = async () => {
+    const blob = await pdf(
+      <MyDocument
+        structure={structure as structureProps}
+        scoreObject={scoreObject}
+        current={current}
+        scores={scores}
+      />
+    ).toBlob();
+    saveAs(blob, "example.pdf");
+
+    console.log(blob);
+    // Replace <MyDocument /> with your actual document component
+    // saveAs(blob, "example.pdf"); // Trigger the download with the desired filename
+  };
+
   return (
     <div className={clsx(styles["summary"], "main-container")}>
       {structure && current && (
@@ -800,24 +813,15 @@ export default function Summary() {
           title={structure?.summary.header.title}
           structure={structure}
           scoreObject={scoreObject}>
-          {/* <button
+          <button
             className={clsx("download", "basic-button with-icon outline")}
-            onClick={() => downloadAllCSV(structure, scoreObject)}>
-            {structure?.summary.header["buttons-copy"][0]}
-          </button> */}
-          <PDFDownloadLink
-            document={
-              <MyDocument
-                structure={structure}
-                scoreObject={scoreObject}
-                current={current}
-                scores={scores}
-              />
-            }
-            fileName={`${current?.project?.project_name}, ${current.alternative.alternative_name}.pdf`}
-            className={clsx("print", "basic-button with-icon outline")}>
+            onClick={() => setGeneratePDF(true)} // Trigger PDF generation
+          >
             {structure?.summary.header["buttons-copy"][1]}
-          </PDFDownloadLink>
+          </button>
+          <button onClick={handleDownload} className="basic-button">
+            Download PDF
+          </button>
         </SummaryHeader>
       )}
 

@@ -45,6 +45,14 @@ function useStore() {
   return context;
 }
 
+export function formatDate(timestamp: number) {
+  const date = new Date(timestamp * 1000);
+  const day = date.getDate();
+  const month = date.getMonth() + 1; // Months are zero-based
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`;
+}
+
 export function getScoreLabel(
   structure: structureProps | undefined,
   value: number
@@ -774,6 +782,9 @@ function Store({ children }: PropsWithChildren<{}>) {
                 calcParameters[index]["net-zero-impact"] +=
                   netZeroImpactScore?.score ?? 0;
                 calcParameters[index]["max-score"] += maxScore?.score ?? 0;
+
+                console.log("maxscore" + calcParameters[index]["max-score"]);
+                //console.log("index" + index);
               } else if (
                 graph === "subchapters" &&
                 subChapterObj &&
@@ -785,19 +796,19 @@ function Store({ children }: PropsWithChildren<{}>) {
                 subChapterObj["max-score"] += maxScore?.score ?? 0;
               }
             }
-          } else {
-            const netZeroImpactScore = structurePrinciple?.choices?.[3];
-            const maxScore = structurePrinciple?.choices?.[4];
+            // } else {
+            //   const netZeroImpactScore = structurePrinciple?.choices?.[3];
+            //   const maxScore = structurePrinciple?.choices?.[4];
 
-            if (graph === "chapters") {
-              calcParameters[index]["max-score"] += maxScore?.score ?? 0;
-              calcParameters[index]["net-zero-impact"] +=
-                netZeroImpactScore?.score ?? 0;
-            } else if (graph === "subchapters") {
-              subChapterObj["max-score"] += maxScore?.score ?? 0;
-              subChapterObj["net-zero-impact"] +=
-                netZeroImpactScore?.score ?? 0;
-            }
+            //   if (graph === "chapters") {
+            //     calcParameters[index]["max-score"] += maxScore?.score ?? 0;
+            //     calcParameters[index]["net-zero-impact"] +=
+            //       netZeroImpactScore?.score ?? 0;
+            //   } else if (graph === "subchapters") {
+            //     subChapterObj["max-score"] += maxScore?.score ?? 0;
+            //     subChapterObj["net-zero-impact"] +=
+            //       netZeroImpactScore?.score ?? 0;
+            //   }
           }
         });
         if (graph === "subchapters") {
@@ -863,9 +874,12 @@ function Store({ children }: PropsWithChildren<{}>) {
       const subject =
         structure?.questionnaire.content?.[index]?.["chapter-title"] ?? "";
 
-      const questionnaire = Math.round(
+      const questionnaireRaw = Math.round(
         (chapter["general-score"] / chapter["net-zero-impact"]) * 100
       );
+      const questionnaire = Number.isNaN(questionnaireRaw)
+        ? 0
+        : questionnaireRaw;
 
       const assessment =
         hasAssessment && scoreObject.data.assessment[index]["chapter-score"];
@@ -906,7 +920,6 @@ function Store({ children }: PropsWithChildren<{}>) {
       scoreObject.data.questionnaire &&
       scoreObject.data.questionnaire.length > 0
     ) {
-      setRegistrationPopup("");
       const jsonCookie = JSON.stringify(scoreObject);
       setCookie(
         `${scoreObject["project-details"].contactEmail}`,
@@ -963,8 +976,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         legendColors,
         current,
         setCurrent,
-      }}
-    >
+      }}>
       {children}
     </ApiContext.Provider>
   );

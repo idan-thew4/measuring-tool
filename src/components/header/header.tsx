@@ -16,6 +16,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import { RadarGraph } from "@/app/tool/[project_id]/[alternative_id]/summary-report/graphs/graph/radar/radar";
+import { set } from "react-hook-form";
 
 type logOutResponse = {
   success: boolean;
@@ -44,6 +45,7 @@ export function Header() {
     calculateScores,
     scoreObject,
     current,
+    setLoader,
     setCurrent,
   } = useStore();
   const router = useRouter();
@@ -114,6 +116,7 @@ export function Header() {
   async function logOut(
     structure: structureProps
   ): Promise<logOutResponse | void> {
+    setLoader(true);
     try {
       const response = await fetch(`${url}/log-out`, {
         method: "POST",
@@ -126,6 +129,8 @@ export function Header() {
       const data = await response.json();
 
       if (data.success) {
+        setLoader(false);
+
         setLoggedInChecked(false);
         router.push(
           `/tool/0/0/${structure.questionnaire.content[1]["chapter-slug"]}/1/1`
@@ -174,14 +179,12 @@ export function Header() {
                 className={clsx(
                   styles["flex-h-align"],
                   styles["project-options"]
-                )}
-              >
+                )}>
                 <div
                   className={clsx(
                     styles["flex-h-align"],
                     styles["project-select"]
-                  )}
-                >
+                  )}>
                   <p className="bold">{current?.project.project_name}, </p>
                   <Select
                     className="dropdown paragraph_18"
@@ -216,16 +219,14 @@ export function Header() {
                       project_id: current?.project.project_id,
                       alternative_id: current?.alternative.alternative_id,
                     });
-                  }}
-                >
+                  }}>
                   {structure?.header.options[1]}
                 </button>
               </div>
             )}
             <button
               onClick={() => setGraphIsOpen(!graphIsOpen)}
-              className={clsx(styles["flex-h-align"], styles["summary"])}
-            >
+              className={clsx(styles["flex-h-align"], styles["summary"])}>
               <p>{structure?.header.options[2]}</p>
               {structure && (
                 <RadarGraph

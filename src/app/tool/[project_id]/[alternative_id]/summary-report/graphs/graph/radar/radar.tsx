@@ -11,6 +11,8 @@ import Image from "next/image";
 import clsx from "clsx";
 import { Graph } from "../graph";
 import { useStore } from "@/contexts/Store";
+import { toPng } from "html-to-image";
+import { useRef } from "react";
 
 export function RadarGraph({
   parameters,
@@ -62,7 +64,7 @@ export function RadarGraph({
   }, [parameters]);
 
   // useEffect(() => {
-  //   console.log("dataKey", dataKeys);
+  //   console.log(dataKeys);
   // }, [dataKeys]);
 
   function getDataLabelColor(value: string | number, type: string) {
@@ -83,6 +85,16 @@ export function RadarGraph({
     }
   }
 
+  const radarRef = useRef<HTMLDivElement>(null);
+
+  const captureRadarGraph = async () => {
+    if (radarRef.current) {
+      const dataUrl = await toPng(radarRef.current);
+      console.log(dataUrl); // This is the base64 image URL
+      return dataUrl;
+    }
+  };
+
   return (
     <Graph
       headline={headline}
@@ -90,20 +102,18 @@ export function RadarGraph({
       legend={legend ? ["17%-0%", "33%-18%", "100%-34%", "100%<"] : false}
       preview={preview}
       negative={negative}
-    >
+      radarRef={radarRef}>
       {filters && (
         <ul className={graphStyles["filters"]}>
           {dataKeys?.slice().map((filter, index) => (
             <li key={index} className={graphStyles["filter-item"]}>
               <label
-                className={clsx("paragraph_14", graphStyles["filter-label"])}
-              >
+                className={clsx("paragraph_14", graphStyles["filter-label"])}>
                 <div
                   className={graphStyles["filter-color"]}
                   style={{
                     backgroundColor: colors[index],
-                  }}
-                ></div>
+                  }}></div>
                 <input
                   type="checkbox"
                   checked={filtersStatus[filter] || false}
@@ -135,8 +145,8 @@ export function RadarGraph({
             width={!preview ? 600 : 40}
             height={!preview ? 600 : 40}
             data={parameters}
-            className={styles["radar"]}
-          >
+            className={styles["radar"]}>
+            <PolarGrid gridType="circle" radialLines={false} />
             <PolarRadiusAxis
               axisLine={false}
               tick={false}
@@ -192,8 +202,7 @@ export function RadarGraph({
                               fontSize={12}
                               textAnchor="middle"
                               dominantBaseline="central"
-                              className={styles["data-label"]}
-                            >
+                              className={styles["data-label"]}>
                               {value}%
                             </text>
                           </g>
@@ -208,6 +217,7 @@ export function RadarGraph({
           </RadarChart>
         </div>
       </div>
+      {/* <button onClick={captureRadarGraph}>Capture Radar Graph</button> */}
     </Graph>
   );
 }

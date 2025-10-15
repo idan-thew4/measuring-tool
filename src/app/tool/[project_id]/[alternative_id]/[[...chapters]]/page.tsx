@@ -45,6 +45,7 @@ export default function ChapterPage() {
     isMounted,
     getAlternativeQuestionnaireData,
     isPageChanged,
+    setLoader,
   } = useStore();
   const [currentChapter, setCurrentChapter] =
     useState<currentChapterType | null>(null);
@@ -117,6 +118,7 @@ export default function ChapterPage() {
 
       if (data) {
         setLoginPopup(false);
+        setLoader(false);
 
         getContent().then((structure) => {
           if (data.code === "missing_token") {
@@ -401,6 +403,9 @@ export default function ChapterPage() {
           value={comment}
           placeholder={structure?.questionnaire["text-area-placeholder"]}
           onChange={(e) => {
+            setComment(e.target.value);
+          }}
+          onBlur={(e) => {
             setScoreObject((prev) =>
               updateScoreObject(
                 prev,
@@ -412,7 +417,6 @@ export default function ChapterPage() {
                 e.target.value
               )
             );
-            setComment(e.target.value);
           }}
         />
       </div>

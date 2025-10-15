@@ -13,6 +13,7 @@ export function Graph({
   preview = false,
   negative = false,
   literalLegend = false,
+  radarRef,
 }: {
   headline?: string;
   structure: structureProps;
@@ -21,6 +22,7 @@ export function Graph({
   preview?: boolean;
   negative?: boolean;
   literalLegend?: boolean;
+  radarRef: React.RefObject<HTMLDivElement>;
 }) {
   const { legendColors } = useStore();
 
@@ -30,7 +32,8 @@ export function Graph({
         styles["container"],
         preview && styles["preview"],
         negative && styles["negative"]
-      )}>
+      )}
+      ref={radarRef}>
       {headline && (
         <h2 className={clsx("medium-small", styles["title"])}>{headline}</h2>
       )}
