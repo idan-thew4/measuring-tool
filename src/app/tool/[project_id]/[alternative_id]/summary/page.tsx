@@ -10,6 +10,7 @@ import {
   getPercentageLabel,
   getScoreLabel,
   getScoreValue,
+  alternativeType,
 } from "@/contexts/Store";
 import { SummaryHeader } from "../components/summary-header/summaryHeader";
 import { Table } from "./table/table";
@@ -30,7 +31,6 @@ import {
   Image,
 } from "@react-pdf/renderer";
 import { useParams } from "next/navigation";
-import { withRouter } from "next/router";
 
 function formatDate(timestamp: number) {
   const date = new Date(timestamp);
@@ -42,155 +42,155 @@ function formatDate(timestamp: number) {
 
 //CSV//
 
-function getFormattedTimestamp() {
-  const date = new Date();
+// function getFormattedTimestamp() {
+//   const date = new Date();
 
-  // Get the timezone offset in minutes and convert to hours and minutes
-  const timezoneOffset = -date.getTimezoneOffset(); // Negative because getTimezoneOffset returns the opposite sign
-  const offsetHours = String(
-    Math.floor(Math.abs(timezoneOffset) / 60)
-  ).padStart(2, "0");
-  const offsetMinutes = String(Math.abs(timezoneOffset) % 60).padStart(2, "0");
-  const offsetSign = timezoneOffset >= 0 ? "+" : "-";
+//   // Get the timezone offset in minutes and convert to hours and minutes
+//   const timezoneOffset = -date.getTimezoneOffset(); // Negative because getTimezoneOffset returns the opposite sign
+//   const offsetHours = String(
+//     Math.floor(Math.abs(timezoneOffset) / 60)
+//   ).padStart(2, "0");
+//   const offsetMinutes = String(Math.abs(timezoneOffset) % 60).padStart(2, "0");
+//   const offsetSign = timezoneOffset >= 0 ? "+" : "-";
 
-  // Format the date as ISO string and append the timezone offset
-  const isoString = date.toISOString(); // Example: "2022-03-05T13:55:09.123Z"
-  const formattedTimestamp = `${isoString.slice(
-    0,
-    -1
-  )}${offsetSign}${offsetHours}:${offsetMinutes}`;
+//   // Format the date as ISO string and append the timezone offset
+//   const isoString = date.toISOString(); // Example: "2022-03-05T13:55:09.123Z"
+//   const formattedTimestamp = `${isoString.slice(
+//     0,
+//     -1
+//   )}${offsetSign}${offsetHours}:${offsetMinutes}`;
 
-  return formattedTimestamp;
-}
+//   return formattedTimestamp;
+// }
 
-type SummaryRow = {
-  [key: string]: string | number | boolean | { [key: string]: string };
-};
+// type SummaryRow = {
+//   [key: string]: string | number | boolean | { [key: string]: string };
+// };
 
-function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
-  const rows: SummaryRow[] = [];
-  let principleCount = 0;
-  structure?.questionnaire.content.forEach((chapter, chapterIdx) => {
-    chapter["chapter-content"].forEach((subChapter, subChapterIdx) => {
-      subChapter.principles.forEach((principle, principleIdx) => {
-        const inputNumber =
-          scoreObject.data.questionnaire?.[chapterIdx]?.["chapter-data"]?.[
-            subChapterIdx
-          ]?.["principles"]?.[principleIdx]?.choice;
+// function flattenAllTables(structure: structureProps, scoreObject: ScoreType) {
+//   const rows: SummaryRow[] = [];
+//   let principleCount = 0;
+//   structure?.questionnaire.content.forEach((chapter, chapterIdx) => {
+//     chapter["chapter-content"].forEach((subChapter, subChapterIdx) => {
+//       subChapter.principles.forEach((principle, principleIdx) => {
+//         const inputNumber =
+//           scoreObject.data.questionnaire?.[chapterIdx]?.["chapter-data"]?.[
+//             subChapterIdx
+//           ]?.["principles"]?.[principleIdx]?.choice;
 
-        let score: number | string | undefined = undefined;
-        let max_score: number | undefined = undefined;
-        let zero_impact_score: number | undefined = undefined;
-        let achievement_level: string | undefined = undefined;
-        principleCount++;
+//         let score: number | string | undefined = undefined;
+//         let max_score: number | undefined = undefined;
+//         let zero_impact_score: number | undefined = undefined;
+//         let achievement_level: string | undefined = undefined;
+//         principleCount++;
 
-        if (inputNumber) {
-          if (inputNumber === -1) {
-            score = "N/A";
-            achievement_level = "N/A";
-          } else {
-            score =
-              structure?.questionnaire.content[chapterIdx]["chapter-content"][
-                subChapterIdx
-              ]["principles"][principleIdx]["choices"][inputNumber - 1]?.score;
-            achievement_level =
-              structure?.questionnaire?.options?.[inputNumber - 1];
-          }
-        }
+//         if (inputNumber) {
+//           if (inputNumber === -1) {
+//             score = "N/A";
+//             achievement_level = "N/A";
+//           } else {
+//             score =
+//               structure?.questionnaire.content[chapterIdx]["chapter-content"][
+//                 subChapterIdx
+//               ]["principles"][principleIdx]["choices"][inputNumber - 1]?.score;
+//             achievement_level =
+//               structure?.questionnaire?.options?.[inputNumber - 1];
+//           }
+//         }
 
-        max_score =
-          structure?.questionnaire.content[chapterIdx]["chapter-content"][
-            subChapterIdx
-          ]["principles"][principleIdx]["choices"][4]?.score;
-        zero_impact_score =
-          structure?.questionnaire.content[chapterIdx]["chapter-content"][
-            subChapterIdx
-          ]["principles"][principleIdx]["choices"][3]?.score;
+//         max_score =
+//           structure?.questionnaire.content[chapterIdx]["chapter-content"][
+//             subChapterIdx
+//           ]["principles"][principleIdx]["choices"][4]?.score;
+//         zero_impact_score =
+//           structure?.questionnaire.content[chapterIdx]["chapter-content"][
+//             subChapterIdx
+//           ]["principles"][principleIdx]["choices"][3]?.score;
 
-        const comment =
-          scoreObject.data?.questionnaire?.[chapterIdx]?.["chapter-data"]?.[
-            subChapterIdx
-          ]?.["principles"]?.[principleIdx]?.comment ?? "";
+//         const comment =
+//           scoreObject.data?.questionnaire?.[chapterIdx]?.["chapter-data"]?.[
+//             subChapterIdx
+//           ]?.["principles"]?.[principleIdx]?.comment ?? "";
 
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1;
+//         const date = new Date();
+//         const year = date.getFullYear();
+//         const month = date.getMonth() + 1;
 
-        // TO DO: user real ID here//
+//         // TO DO: user real ID here//
 
-        const eval_id = `${year}_${month}_1`;
+//         const eval_id = `${year}_${month}_1`;
 
-        // if (inputNumber) {
-        rows.push({
-          eval_id: eval_id,
-          project_name: scoreObject["project-details"].projectName,
-          version_name: "",
-          region: scoreObject["project-details"].localAuthority,
-          project_type: scoreObject["project-details"].projectType,
-          sub_type: scoreObject["project-details"].projectSubType,
-          proj_area: scoreObject["project-details"].projectArea,
-          proj_status: scoreObject["project-details"].projectStatus,
-          year_start: scoreObject["project-details"].projectStartYear,
-          year_comp: scoreObject["project-details"].projectEndYear,
-          approve_contact: scoreObject["project-details"].contactPerson,
-          contact: scoreObject["project-details"].contactPerson,
-          email: scoreObject["project-details"].contactEmail,
-          tel: scoreObject["project-details"].contactPhone,
+//         // if (inputNumber) {
+//         rows.push({
+//           eval_id: eval_id,
+//           project_name: scoreObject["project-details"].projectName,
+//           version_name: "",
+//           region: scoreObject["project-details"].localAuthority,
+//           project_type: scoreObject["project-details"].projectType,
+//           sub_type: scoreObject["project-details"].projectSubType,
+//           proj_area: scoreObject["project-details"].projectArea,
+//           proj_status: scoreObject["project-details"].projectStatus,
+//           year_start: scoreObject["project-details"].projectStartYear,
+//           year_comp: scoreObject["project-details"].projectEndYear,
+//           approve_contact: scoreObject["project-details"].contactPerson,
+//           contact: scoreObject["project-details"].contactPerson,
+//           email: scoreObject["project-details"].contactEmail,
+//           tel: scoreObject["project-details"].contactPhone,
 
-          criteria_no: principleCount,
-          chapter: `${chapter["chapter-number"]}. ${chapter["chapter-title"]}`,
-          sub_chapter: `.${subChapterIdx + 1}. ${
-            subChapter["sub-chapter-title"]
-          }`,
-          full_criteria_name: `${chapter["chapter-number"]}.${
-            subChapterIdx + 1
-          }.${principleIdx + 1}. ${principle["title"]}`,
-          score: score ?? "",
-          max_score: max_score ?? "",
-          zero_impact_score: zero_impact_score ?? "",
-          achievement_level: achievement_level ?? "",
-          comments: comment,
-          eval_timestamp: getFormattedTimestamp(),
-        });
-        // }
-      });
-    });
-  });
-  return rows;
-}
+//           criteria_no: principleCount,
+//           chapter: `${chapter["chapter-number"]}. ${chapter["chapter-title"]}`,
+//           sub_chapter: `.${subChapterIdx + 1}. ${
+//             subChapter["sub-chapter-title"]
+//           }`,
+//           full_criteria_name: `${chapter["chapter-number"]}.${
+//             subChapterIdx + 1
+//           }.${principleIdx + 1}. ${principle["title"]}`,
+//           score: score ?? "",
+//           max_score: max_score ?? "",
+//           zero_impact_score: zero_impact_score ?? "",
+//           achievement_level: achievement_level ?? "",
+//           comments: comment,
+//           eval_timestamp: getFormattedTimestamp(),
+//         });
+//         // }
+//       });
+//     });
+//   });
+//   return rows;
+// }
 
-function downloadAllCSV(structure: structureProps, scoreObject: ScoreType) {
-  const rows = flattenAllTables(structure, scoreObject);
-  const columns = rows.length > 0 ? Object.keys(rows[0]) : [];
-  const csv =
-    columns.join(",") +
-    "\n" +
-    rows
-      .map((row) =>
-        columns
-          .map((col) =>
-            String(row[col] ?? "")
-              .replace(/"/g, '""')
-              .replace(/\n/g, " ")
-          )
-          .map((cell) => `"${cell}"`)
-          .join(",")
-      )
-      .join("\n");
-  const BOM = "\uFEFF";
-  const blob = new Blob([BOM + csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
+// function downloadAllCSV(structure: structureProps, scoreObject: ScoreType) {
+//   const rows = flattenAllTables(structure, scoreObject);
+//   const columns = rows.length > 0 ? Object.keys(rows[0]) : [];
+//   const csv =
+//     columns.join(",") +
+//     "\n" +
+//     rows
+//       .map((row) =>
+//         columns
+//           .map((col) =>
+//             String(row[col] ?? "")
+//               .replace(/"/g, '""')
+//               .replace(/\n/g, " ")
+//           )
+//           .map((cell) => `"${cell}"`)
+//           .join(",")
+//       )
+//       .join("\n");
+//   const BOM = "\uFEFF";
+//   const blob = new Blob([BOM + csv], { type: "text/csv" });
+//   const url = URL.createObjectURL(blob);
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${scoreObject["project-details"].projectName}-${formatDate(
-    Date.now()
-  )}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
+//   const a = document.createElement("a");
+//   a.href = url;
+//   a.download = `${scoreObject["project-details"].projectName}-${formatDate(
+//     Date.now()
+//   )}.csv`;
+//   document.body.appendChild(a);
+//   a.click();
+//   document.body.removeChild(a);
+//   URL.revokeObjectURL(url);
+// }
 
 // PDF Document
 
@@ -262,18 +262,20 @@ const PDFstyles = StyleSheet.create({
     borderRadius: "12px",
     margin: "4px auto auto auto",
     textAlign: "center",
-    width: "50%",
+    width: "60%",
     alignItems: "center",
   },
 });
 
-type PdfHeaderProps = {
+const PdfHeader = ({
+  structure,
+  current,
+  PDFstyles,
+}: {
   structure: structureProps;
-  project: ProjectType | null;
+  current: { project: ProjectType; alternative: alternativeType } | null;
   PDFstyles: ReturnType<typeof StyleSheet.create>;
-};
-
-const PdfHeader = ({ structure, project, PDFstyles }: PdfHeaderProps) => (
+}) => (
   <View style={PDFstyles.section} fixed>
     <View style={PDFstyles.header}>
       <Image
@@ -299,8 +301,7 @@ const PdfHeader = ({ structure, project, PDFstyles }: PdfHeaderProps) => (
         style={{
           flexDirection: "row-reverse",
           alignItems: "center",
-        }}
-      >
+        }}>
         <Text
           style={{
             fontSize: 16,
@@ -308,8 +309,7 @@ const PdfHeader = ({ structure, project, PDFstyles }: PdfHeaderProps) => (
             textAlign: "right",
             direction: "rtl",
             paddingLeft: 50,
-          }}
-        >
+          }}>
           סיכום
         </Text>
         <View
@@ -317,19 +317,19 @@ const PdfHeader = ({ structure, project, PDFstyles }: PdfHeaderProps) => (
             fontSize: 12,
             flexDirection: "row-reverse",
             gap: 1,
-          }}
-        >
+          }}>
           <Text style={{ fontFamily: "Noto Sane Hebrew Bold", paddingLeft: 2 }}>
             ,שם המיזם
           </Text>
           <Text style={{ fontFamily: "Noto Sane Hebrew Regular" }}>
-            {project?.project_name}
+            {current?.project.project_name ?? ""} |{" "}
+            {current?.alternative.alternative_name ?? ""}
           </Text>
         </View>
       </View>
       <Text style={{ fontSize: 12 }}>
-        {project?.project_created_date_timestamp
-          ? formatDate(project.project_created_date_timestamp)
+        {current?.project.project_created_date_timestamp
+          ? formatDate(current?.project.project_created_date_timestamp)
           : ""}
       </Text>
     </View>
@@ -345,8 +345,7 @@ const PdfHeader = ({ structure, project, PDFstyles }: PdfHeaderProps) => (
             textAlign: idx === 2 ? "center" : "right",
             fontFamily: "Noto Sane Hebrew Bold",
             paddingRight: idx === 3 ? 20 : 4,
-          }}
-        >
+          }}>
           <Text>{col.title}</Text>
           {idx === 2 && (
             <Text style={{ ...PDFstyles.pointsBubble, width: "100%" }}>
@@ -385,8 +384,7 @@ const PdfTable = ({
           fontFamily: "Noto Sane Hebrew Bold",
           fontSize: 14,
           padding: 4,
-        }}
-      >
+        }}>
         {title}
       </Text>
       <Text
@@ -396,8 +394,7 @@ const PdfTable = ({
           textAlign: "right",
           padding: 4,
           height: 35,
-        }}
-      >
+        }}>
         {getPercentageLabel(
           chapterScore,
           (value: number) => getScoreLabel(structure, value),
@@ -414,8 +411,7 @@ const PdfTable = ({
             gap: 0,
             margin: "auto",
             alignItems: "flex-start",
-          }}
-        >
+          }}>
           <Text style={{ flex: 1, fontSize: 11, textAlign: "left" }}>
             {getScoreValue(chapterScore, "generalScore")}
           </Text>
@@ -428,8 +424,7 @@ const PdfTable = ({
                   fontFamily: "Noto Sane Hebrew Regular",
                   textAlign: "left",
                   paddingRight: 2,
-                }}
-              >
+                }}>
                 <Text>{structure?.summary?.table?.columns[2]?.title}</Text>
               </Text>
             )}
@@ -448,8 +443,7 @@ const PdfTable = ({
           textAlign: "right",
           padding: 4,
           paddingRight: 20,
-        }}
-      ></Text>
+        }}></Text>
     </View>
     {structure?.questionnaire.content.map((chapterItem, chapterIdx) => (
       <View
@@ -459,8 +453,7 @@ const PdfTable = ({
           borderRadius: 15,
           overflow: "hidden",
           marginBottom: 20,
-        }}
-      >
+        }}>
         {chapterItem["chapter-content"].map((subChapter, subChapterIdx) => (
           <View key={`${chapterIdx}-${subChapterIdx}`}>
             <View
@@ -475,17 +468,17 @@ const PdfTable = ({
                 paddingRight: 20,
                 fontSize: 11,
                 alignItems: "center",
-              }}
-            >
+              }}>
               <View
                 style={{
                   display: "flex",
                   flexDirection: "row-reverse",
                   gap: 3,
                   flex: 3,
-                }}
-              >
-                <Text>.{`${chapterIdx + 1}.${subChapterIdx + 1}`}</Text>
+                }}>
+                <Text style={{ fontFamily: "Noto Sane Hebrew Bold" }}>
+                  .{`${chapterIdx + 1}.${subChapterIdx + 1}`}
+                </Text>
                 <Text style={{ fontFamily: "Noto Sane Hebrew Bold" }}>
                   {subChapter["sub-chapter-title"]}
                 </Text>
@@ -494,8 +487,7 @@ const PdfTable = ({
                 style={{
                   color: "white",
                   flex: 1,
-                }}
-              >
+                }}>
                 {getPercentageLabel(
                   subChaptersScores,
                   subChapterIdx,
@@ -512,8 +504,7 @@ const PdfTable = ({
                     gap: 0,
                     margin: "auto",
                     alignItems: "flex-start",
-                  }}
-                >
+                  }}>
                   <Text style={{ flex: 1, fontSize: 11, textAlign: "left" }}>
                     {getScoreValue(
                       subChaptersScores,
@@ -534,8 +525,7 @@ const PdfTable = ({
                           fontFamily: "Noto Sane Hebrew Regular",
                           textAlign: "left",
                           paddingRight: 2,
-                        }}
-                      >
+                        }}>
                         <Text>
                           {structure?.summary?.table?.columns[2]?.title}
                         </Text>
@@ -553,8 +543,7 @@ const PdfTable = ({
                       ...PDFstyles.pointsBubble,
                       backgroundColor: "white",
                       color: "#5B6771",
-                    }}
-                  >
+                    }}>
                     {getScoreValue(
                       subChaptersScores,
                       "percentage",
@@ -566,7 +555,6 @@ const PdfTable = ({
               </View>
               <View style={{ flex: 3 }}></View>
             </View>
-            {/* Render principles here if needed */}
             {subChapter.principles.map((principle, principleIndex) => {
               const inputNumber =
                 scoreObject.data?.questionnaire?.[chapterNumber - 1]?.[
@@ -590,33 +578,28 @@ const PdfTable = ({
                     color: "black",
                     paddingTop: 10,
                     paddingBottom: 8,
-                    paddingLeft: 20,
-                    paddingRight: 20,
+                    marginLeft: 20,
+                    marginRight: 20,
                     fontSize: 11,
                     alignItems: "flex-start",
                     borderBottom:
-                      principleIndex === subChapter.principles.length - 1
-                        ? "none"
-                        : "solid",
-                    borderBottomColor: "#D5D8D7",
-                    borderBottomWidth: 1,
-                  }}
-                >
+                      principleIndex !== subChapter.principles.length - 1
+                        ? "1px solid #D5D8D7"
+                        : undefined,
+                  }}>
                   <View
                     style={{
                       display: "flex",
                       flexDirection: "row-reverse",
                       gap: 3,
                       flex: 3,
-                    }}
-                  >
+                    }}>
                     <Text
                       style={{
                         textDecoration:
                           inputNumber === -1 ? "line-through" : "none",
                         color: inputNumber === undefined ? "#A0A0A0" : "black",
-                      }}
-                    >
+                      }}>
                       .
                       {`${chapterNumber}.${subChapterIdx + 1}.${
                         principleIndex + 1
@@ -628,16 +611,14 @@ const PdfTable = ({
                           inputNumber === -1 ? "line-through" : "none",
                         color: inputNumber === undefined ? "#A0A0A0" : "black",
                         width: 148,
-                      }}
-                    >
-                      {encodeHTML(principle["title"])}
+                      }}>
+                      {principle["title"]}
                     </Text>
                   </View>
                   <Text
                     style={{
                       flex: 1,
-                    }}
-                  >
+                    }}>
                     {inputNumber &&
                       structure?.questionnaire?.options?.[inputNumber - 1]}
                   </Text>
@@ -664,25 +645,25 @@ const PdfTable = ({
 const MyDocument = ({
   structure,
   scoreObject,
-  project,
+  current,
   scores,
 }: {
   structure: structureProps;
   scoreObject: ScoreType;
-  project: ProjectType | null;
+  current: { project: ProjectType; alternative: alternativeType } | null;
   scores: {
     chapters: ScoreData[];
     subChapters: { [key: string]: ScoreData[] };
   };
 }) => {
-  const rows = flattenAllTables(structure, scoreObject);
+  // const rows = flattenAllTables(structure, scoreObject);
 
   return (
     <Document>
       <Page size="A4" style={PDFstyles.page}>
         <PdfHeader
           structure={structure}
-          project={project}
+          current={current}
           PDFstyles={PDFstyles}
         />
 
@@ -814,51 +795,40 @@ export default function Summary() {
 
   return (
     <div className={clsx(styles["summary"], "main-container")}>
-      {structure && (
+      {structure && current && (
         <SummaryHeader
           title={structure?.summary.header.title}
           structure={structure}
-          scoreObject={scoreObject}
-        >
-          <button
+          scoreObject={scoreObject}>
+          {/* <button
             className={clsx("download", "basic-button with-icon outline")}
-            onClick={() => downloadAllCSV(structure, scoreObject)}
-          >
+            onClick={() => downloadAllCSV(structure, scoreObject)}>
             {structure?.summary.header["buttons-copy"][0]}
-          </button>
-          {/* <PDFDownloadLink
+          </button> */}
+          <PDFDownloadLink
             document={
-              <MyDocument structure={structure} scoreObject={scoreObject} />
+              <MyDocument
+                structure={structure}
+                scoreObject={scoreObject}
+                current={current}
+                scores={scores}
+              />
             }
-            fileName={`${
-              scoreObject["project-details"].projectName
-            }-${formatDate(Date.now())}.pdf`}
-            className={clsx("print", "basic-button with-icon outline")}
-          >
+            fileName={`${current?.project?.project_name}, ${current.alternative.alternative_name}.pdf`}
+            className={clsx("print", "basic-button with-icon outline")}>
             {structure?.summary.header["buttons-copy"][1]}
-          </PDFDownloadLink> */}
+          </PDFDownloadLink>
         </SummaryHeader>
       )}
 
       <div className={styles["tables-container"]}>
-        {structure && current && (
-          <PDFViewer width="100%" height="800px">
-            <MyDocument
-              structure={structure}
-              scoreObject={scoreObject}
-              project={current?.project}
-              scores={scores}
-            />
-          </PDFViewer>
-        )}
         <div
           className={clsx(
             tableStyles["row"],
             "paragraph_15 bold",
             tableStyles["row-titles"],
             tableStyles["row-titles-sticky"]
-          )}
-        >
+          )}>
           {structure?.summary?.table?.columns.map(
             (
               column: {
@@ -874,8 +844,7 @@ export default function Summary() {
                 className={clsx(
                   column["sub-title"] && tableStyles["score-points"],
                   "paragraph_15 bold"
-                )}
-              >
+                )}>
                 {column.title}
                 {column["sub-title"] && (
                   <span className={tableStyles["percentage-bubble"]}>
