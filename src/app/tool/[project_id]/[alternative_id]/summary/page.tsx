@@ -689,6 +689,7 @@ export default function Summary() {
     getAlternativeQuestionnaireData,
     isPageChanged,
     current,
+    setLoader,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -791,19 +792,26 @@ export default function Summary() {
   }, [scoreObject]);
 
   const handleDownload = async () => {
-    const blob = await pdf(
-      <MyDocument
-        structure={structure as structureProps}
-        scoreObject={scoreObject}
-        current={current}
-        scores={scores}
-      />
-    ).toBlob();
-    saveAs(blob, "example.pdf");
-
-    console.log(blob);
-    // Replace <MyDocument /> with your actual document component
-    // saveAs(blob, "example.pdf"); // Trigger the download with the desired filename
+    setLoader(true);
+    try {
+      const blob = await pdf(
+        <MyDocument
+          structure={structure as structureProps}
+          scoreObject={scoreObject}
+          current={current}
+          scores={scores}
+        />
+      ).toBlob();
+      saveAs(
+        blob,
+        `${current?.project.project_name}, ${current?.alternative.alternative_name}.pdf`
+      );
+      console.log(blob);
+    } catch (error) {
+      console.error("Error generating or downloading the PDF:", error);
+    } finally {
+      setLoader(false); // Ensure the loader is reset
+    }
   };
 
   return (
@@ -813,14 +821,16 @@ export default function Summary() {
           title={structure?.summary.header.title}
           structure={structure}
           scoreObject={scoreObject}>
-          <button
+          {/* <button
             className={clsx("download", "basic-button with-icon outline")}
             onClick={() => setGeneratePDF(true)} // Trigger PDF generation
           >
             {structure?.summary.header["buttons-copy"][1]}
-          </button>
-          <button onClick={handleDownload} className="basic-button">
-            Download PDF
+          </button> */}
+          <button
+            onClick={handleDownload}
+            className="basic-button print with-icon outline">
+            {structure?.summary.header["buttons-copy"][0]}
           </button>
         </SummaryHeader>
       )}
