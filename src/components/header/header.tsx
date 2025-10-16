@@ -16,7 +16,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import { RadarGraph } from "@/app/tool/[project_id]/[alternative_id]/summary-report/graphs/graph/radar/radar";
-import { set } from "react-hook-form";
+import "../../components/popUps/popUpContainer/dropdown.scss";
 
 type logOutResponse = {
   success: boolean;
@@ -47,12 +47,12 @@ export function Header() {
     current,
     setLoader,
     setCurrent,
+    getAlternativeQuestionnaireData,
   } = useStore();
   const router = useRouter();
   const params = useParams();
   const [chapter, subChapter, principle] = params?.chapters || [];
   const [chapterScores, setChapterScores] = useState<ChapterScoreType[]>([]);
-
   const [alternatives, setAlternatives] = useState<AlternativeOption[]>([]);
   const [graphIsOpen, setGraphIsOpen] = useState<boolean>(false);
 
@@ -83,6 +83,8 @@ export function Header() {
               value: alternative.alternative_id,
             });
           });
+
+          console.log("alternativesTemp", alternativesTemp);
 
           setAlternatives(alternativesTemp);
         }
@@ -140,6 +142,12 @@ export function Header() {
       console.error("Error creating new user:", error);
     }
   }
+
+  useEffect(() => {
+    console.log("loggedInChecked", loggedInChecked);
+    console.log("current", current);
+    console.log("params.project_id", params.project_id);
+  }, [loggedInChecked, current, params.project_id]);
 
   return (
     <header className={styles["header-container"]}>
@@ -199,6 +207,10 @@ export function Header() {
                     options={alternatives}
                     onChange={(option) => {
                       if (structure) {
+                        getAlternativeQuestionnaireData(
+                          String(current?.project.project_id),
+                          String(option?.value)
+                        );
                         router.push(
                           `/tool/${current?.project.project_id}/${
                             option?.value

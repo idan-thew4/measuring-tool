@@ -111,6 +111,7 @@ export function DeletePopup() {
                 key={button}
                 className={clsx(
                   formStyles["submit-button"],
+                  popUpContainerStyles["submit-button"],
                   "solid",
                   "basic-button",
                   "warning",

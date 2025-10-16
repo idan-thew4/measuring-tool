@@ -143,6 +143,7 @@ export function ChangePasswordPopup() {
                     key={button}
                     className={clsx(
                       formStyles["submit-button"],
+                      popUpContainerStyles["submit-button"],
                       "solid",
                       "basic-button",
                       loading && "loading"

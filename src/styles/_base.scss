@@ -131,15 +131,16 @@ a.with-icon {
   }
 
   &.download {
-    &:after {
-      background: url("../../public/icons/download_icon.svg") no-repeat center;
-    }
-    &:hover {
-      &:after {
-        background: url("../../public/icons/download_icon_white.svg") no-repeat
-          center;
-      }
-    }
+    // &:after {
+    //   background: url("../../public/icons/download_icon.svg") no-repeat center;
+    // }
+    // &:hover {
+    //   &:after {
+    //     background: url("../../public/icons/download_icon_white.svg") no-repeat
+    //       center;
+    //   }
+    // }
+    display: none;
   }
 
   &.print {

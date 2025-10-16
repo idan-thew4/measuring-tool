@@ -14,6 +14,7 @@ import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import { PopUpContainer } from "../popUpContainer/popUpContainer";
 import { useRouter, useParams } from "next/navigation";
+import "../../../components/popUps/popUpContainer/dropdown.scss";
 
 type Inputs = {
   [key: string]: string | { value: string; label: string } | boolean | number;
@@ -42,6 +43,8 @@ export function RegistrationPopup() {
     setRegistrationPopup,
     setSelfAssessmentPopup,
     url,
+    setLoggedInChecked,
+    getUserDashboardData,
   } = useStore();
   const [completedSteps, setCompletedSteps] = useState<totalCompleted>();
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -61,6 +64,7 @@ export function RegistrationPopup() {
     setValue,
     control,
     watch,
+    reset,
 
     formState: { errors },
   } = useForm<Inputs>();
@@ -177,8 +181,11 @@ export function RegistrationPopup() {
         setLoading(false);
         setRegistrationPopup("");
         setSelfAssessmentPopup(true);
+        setLoggedInChecked(true);
+        getUserDashboardData(structure);
+
         router.push(
-          `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/${subChapter}/${principle}`
+          `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
         );
       } else {
         if (data.message) {
@@ -335,6 +342,9 @@ export function RegistrationPopup() {
       if (structure) {
         createProject(updatedProjectDetails, structure);
         setRegistrationPopup("");
+        setCompletedSteps(undefined);
+        setCurrentStep(0);
+        reset();
       }
     }
   };
@@ -394,7 +404,8 @@ export function RegistrationPopup() {
                 formStyles[`row-${field.row}`],
                 field.type !== "checkbox"
                   ? formStyles["input"]
-                  : formStyles["checkbox"]
+                  : formStyles["checkbox"],
+                `input`
               )}
               key={index}>
               {field["dropdown-options"] ? (

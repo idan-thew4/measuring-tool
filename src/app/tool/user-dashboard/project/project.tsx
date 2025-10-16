@@ -63,7 +63,7 @@ export function Project({
           )}>
           <div className={styles["alternative-name"]}>
             <Link
-              href={`/tool/${project_id}/${alternative.alternative_id}/${structure?.questionnaire.content[1]["chapter-slug"]}/1/1`}
+              href={`/tool/${project_id}/${alternative.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`}
               className={clsx("paragraph_20", styles["alternative-link"])}>
               {alternative.alternative_name},
               <span className={clsx(styles["date"], "paragraph_15")}>
@@ -98,6 +98,9 @@ export function Project({
                   key={index}
                   className={clsx(
                     "basic-button outline with-icon",
+                    alternatives.length > 1
+                      ? styles["multiple-alternative"]
+                      : styles["single-alternative"],
                     index === 1 && "add-alternative",
                     index === 2 && "download",
                     index === 3 && "delete",

@@ -1,116 +1,125 @@
 @use "../../../styles/variables" as *;
 
-:global(.dropdown__control--is-disabled) {
-  background-color: transparent;
-  opacity: 0.5;
-}
-
-:global(.dropdown__control) {
-  cursor: pointer !important;
-  &,
-  &:focus {
-    width: 100%;
-    border: none;
-    border-bottom: 0.1rem solid $basic-grey;
-    outline: none;
-    font-family: $font-main;
-    padding: 0;
-    height: 100%;
-    transition: 0.3s all;
-    border-radius: 0;
-    box-shadow: none;
-    direction: rtl;
-
-    * {
-      padding: 0;
-      color: $dark-forest-green;
-    }
-
-    &::placeholder {
-      color: $dark-forest-green;
-    }
-  }
-
-  &:-webkit-autofill,
-  &:-webkit-autofill:focus,
-  &:-webkit-autofill:hover,
-  &:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 1000px #fff inset !important; // or your desired bg color
-    box-shadow: 0 0 0 1000px #fff inset !important;
-    -webkit-text-fill-color: #000 !important; // or your desired text color
-    transition: background-color 5000s ease-in-out 0s;
-  }
-}
-
-:global(.dropdown__control--is-disabled) {
-  background-color: transparent;
-  opacity: 0.5;
-}
-
-:global(.dropdown__indicator-separator) {
-  display: none;
-}
-
-:global(.dropdown__clear-indicator) {
-  display: none !important;
-}
-
-:global(.dropdown__dropdown-indicator) {
-  svg {
-    display: none;
-  }
-
-  &:after {
-    content: "";
-    width: 1.5rem;
-    height: 1.5rem;
-    background-size: 1.5rem !important;
-    content: "";
-    background: url("../../../../public/icons/arrow-down.svg") no-repeat center;
-    rotate: 0deg;
-    transition: 0.3s all;
-  }
-}
-
-:global(.dropdown__control--menu-is-open) {
-  :global(.dropdown__indicator) {
-    &:after {
-      rotate: 180deg;
-    }
-  }
-}
-
-:global(.dropdown) {
+.dropdown {
   height: 100%;
-  :global(.dropdown__menu) {
+  .dropdown__menu {
     box-shadow: 0 0 20px 0px hsla(0, 0%, 0%, 0.1),
       0 4px 11px hsla(0, 0%, 0%, 0.1);
     z-index: 11;
     top: 3.7rem;
 
-    :global(.dropdown__menu-list) {
+    .dropdown__menu-list {
       @include scroll-bar;
       max-height: 25rem;
     }
 
-    :global(.dropdown__option) {
+    .dropdown__option {
       transition: 0.3s all;
       padding-top: 1rem;
       padding-bottom: 1rem;
       color: $dark-forest-green;
     }
 
-    :global(.dropdown__option--is-focused),
-    :global(.dropdown__option--is-selected) {
+    .dropdown__option--is-focused,
+    .dropdown__option--is-selected {
       background-color: transparent;
       color: $blue;
       cursor: pointer;
     }
   }
 
-  &:global(.bottom-dropdown) {
-    :global(.dropdown__menu) {
+  &.bottom-dropdown {
+    .dropdown__menu {
       // top: -14rem;
+    }
+  }
+
+  .dropdown__control--is-disabled {
+    background-color: transparent;
+    opacity: 0.5;
+  }
+
+  .dropdown__control {
+    cursor: pointer !important;
+    &,
+    &:focus {
+      width: 100%;
+      border: none;
+      border-bottom: 0.1rem solid $basic-grey;
+      outline: none;
+      font-family: $font-main;
+      padding: 0;
+      height: 100%;
+      transition: 0.3s all;
+      border-radius: 0;
+      box-shadow: none;
+      direction: rtl;
+
+      * {
+        padding: 0;
+        color: $dark-forest-green;
+      }
+
+      &::placeholder {
+        color: $dark-forest-green;
+      }
+    }
+
+    &:-webkit-autofill,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 1000px #fff inset !important; // or your desired bg color
+      box-shadow: 0 0 0 1000px #fff inset !important;
+      -webkit-text-fill-color: #000 !important; // or your desired text color
+      transition: background-color 5000s ease-in-out 0s;
+    }
+  }
+
+  .dropdown__control--is-disabled {
+    background-color: transparent;
+    opacity: 0.5;
+  }
+
+  .dropdown__indicator-separator {
+    display: none;
+  }
+
+  .dropdown__clear-indicator {
+    display: none !important;
+  }
+
+  .dropdown__dropdown-indicator {
+    svg {
+      display: none;
+    }
+
+    &:after {
+      content: "";
+      width: 1.5rem;
+      height: 1.5rem;
+      background-size: 1.5rem !important;
+      content: "";
+      background: url("../../../../public/icons/arrow-down.svg") no-repeat
+        center;
+      rotate: 0deg;
+      transition: 0.3s all;
+    }
+  }
+
+  .dropdown__control--menu-is-open {
+    .dropdown__indicator {
+      &:after {
+        rotate: 180deg;
+      }
+    }
+  }
+}
+
+form {
+  .input:nth-last-child(-n + 4) {
+    .dropdown__menu {
+      top: -26rem;
     }
   }
 }
