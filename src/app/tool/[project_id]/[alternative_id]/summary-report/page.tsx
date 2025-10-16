@@ -26,6 +26,8 @@ export default function SummaryReport() {
     loader,
     isPageChanged,
     getChaptersScores,
+    maxValue,
+    setMaxValue,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -37,7 +39,6 @@ export default function SummaryReport() {
     subChapters: [],
   });
   const params = useParams();
-  const [maxValue, setMaxValue] = useState<number>();
 
   useEffect(() => {
     isPageChanged("summary");
@@ -82,25 +83,6 @@ export default function SummaryReport() {
       "subchapters",
       "questionnaire"
     );
-
-    const maxScores: number[] = [];
-
-    structure?.questionnaire.content;
-
-    structure?.questionnaire.content.forEach((chapter, index) => {
-      let maxValue = 0;
-      chapter?.["chapter-content"]?.forEach((subChapter) => {
-        subChapter?.principles?.forEach((principle) => {
-          maxValue += principle.choices[4].score;
-        });
-      });
-      maxScores.push(maxValue);
-    });
-
-    const avgMaxScore =
-      maxScores.reduce((sum, value) => sum + value, 0) / maxScores.length;
-
-    setMaxValue(avgMaxScore);
 
     const filteredQuestionnaireParams = questionnaireParams.filter(
       (chapter) => chapter["chapter"] === 1

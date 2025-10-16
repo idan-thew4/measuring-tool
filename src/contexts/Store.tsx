@@ -443,6 +443,9 @@ type ApiContextType = {
       alternative: alternativeType;
     } | null>
   >;
+  maxValue: number | undefined;
+  setMaxValue: React.Dispatch<React.SetStateAction<number | undefined>>;
+  initialScoreObject: ScoreType;
 };
 
 export type ScoreData = {
@@ -531,6 +534,9 @@ function Store({ children }: PropsWithChildren<{}>) {
     project: ProjectType;
     alternative: alternativeType;
   } | null>(null);
+  const [maxValue, setMaxValue] = useState<number>();
+  const [initialScoreObject, setInitialScoreObject] = useState<ScoreType>();
+
   async function getContent() {
     try {
       const response = await fetch(`${url}/structure`);
@@ -619,6 +625,7 @@ function Store({ children }: PropsWithChildren<{}>) {
     }
 
     setScoreObject(scoreObjectTemp);
+    setInitialScoreObject(scoreObjectTemp);
     getCompletedChapters(scoreObjectTemp);
   }
 
@@ -929,6 +936,35 @@ function Store({ children }: PropsWithChildren<{}>) {
     }
   }, [scoreObject]);
 
+  useEffect(() => {
+    const maxScores: number[] = [];
+    const maxZeroImpactValue: number[] = [];
+
+    structure?.questionnaire.content;
+
+    structure?.questionnaire.content.forEach((chapter, index) => {
+      let maxValue = 0;
+      let zeroImpactValue = 0;
+      chapter?.["chapter-content"]?.forEach((subChapter) => {
+        subChapter?.principles?.forEach((principle) => {
+          maxValue += principle.choices[4].score;
+          zeroImpactValue += principle.choices[3].score;
+        });
+      });
+      maxScores.push(maxValue);
+      maxZeroImpactValue.push(zeroImpactValue);
+    });
+
+    const avgMaxScore =
+      maxScores.reduce((sum, value) => sum + value, 0) / maxScores.length;
+
+    const avgZeroImpactScore =
+      maxZeroImpactValue.reduce((sum, value) => sum + value, 0) /
+      maxZeroImpactValue.length;
+
+    setMaxValue(Math.round((avgMaxScore / avgZeroImpactScore) * 100));
+  }, [scoreObject, structure]);
+
   return (
     <ApiContext.Provider
       value={{
@@ -976,6 +1012,9 @@ function Store({ children }: PropsWithChildren<{}>) {
         legendColors,
         current,
         setCurrent,
+        maxValue,
+        setMaxValue,
+        initialScoreObject,
       }}>
       {children}
     </ApiContext.Provider>

@@ -32,6 +32,7 @@ export default function SelfAssessment() {
     setLoader,
     isPageChanged,
     calculateScores,
+    maxValue,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -42,7 +43,6 @@ export default function SelfAssessment() {
   });
   const params = useParams();
   const router = useRouter();
-  const [maxValue, setMaxValue] = useState<number>();
 
   async function getSelfAssessmentData(
     project_id: string
@@ -60,10 +60,10 @@ export default function SelfAssessment() {
       });
 
       const data = await response.json();
+      setLoader(false);
 
       if (data.success) {
         if (data.data === 0) {
-          setLoader(false);
           // router.push(
           //   `/tool/${params.project_id}/${params.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
           // );
@@ -72,7 +72,6 @@ export default function SelfAssessment() {
         router.push(
           `/tool/0/0/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
         );
-        setLoader(false);
       }
     } catch (error) {
       console.error("Error creating new user:", error);
@@ -124,20 +123,6 @@ export default function SelfAssessment() {
         "questionnaire"
       );
 
-      const maxScores: number[] = [];
-
-      questionnaireParams.forEach((score) => {
-        const maxValue = Math.round(
-          (score["max-score"] / score["net-zero-impact"]) * 100
-        );
-
-        maxScores.push(maxValue);
-      });
-
-      const avgMaxScore =
-        maxScores.reduce((sum, value) => sum + value, 0) / maxScores.length;
-
-      setMaxValue(avgMaxScore);
       //Chapters //
       const chaptersScoresTemp: ScoreData[] = scoreObject.data.assessment.map(
         (chapter, index) => {

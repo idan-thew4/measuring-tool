@@ -153,10 +153,7 @@ export function Menu({
     loader,
     isMounted,
   } = useStore();
-  const [maxScores, setMaxScores] = useState<{
-    chapters: number[];
-    secondChapter: number[];
-  }>({ chapters: [], secondChapter: [] });
+  const [maxScore, setMaxScore] = useState<number>();
   const [sliderValue, setSliderValue] = useState<{
     chapter: number[];
     subChapter: number[];
@@ -203,54 +200,30 @@ export function Menu({
         subChapter: TempSubChapterScoreValue,
       });
 
-      let questionnaireParams = [] as CalcParameters[];
+      const maxScores: number[] = [];
+      const maxZeroImpactValue: number[] = [];
 
-      questionnaireParams = calculateScores(
-        scoreObject.data.questionnaire ?? [],
-        "chapters",
-        "questionnaire",
-        true
-      );
-
-      const maxScoresChapterTemp: number[] = [];
-
-      questionnaireParams.map((chapter, index) => {
-        const maxScore = Math.round(
-          (chapter["max-score"] / chapter["net-zero-impact"]) * 100
-        );
-
-        maxScoresChapterTemp.push(maxScore);
+      structure?.questionnaire.content.forEach((chapter, index) => {
+        let maxValue = 0;
+        let zeroImpactValue = 0;
+        chapter?.["chapter-content"]?.forEach((subChapter) => {
+          subChapter?.principles?.forEach((principle) => {
+            maxValue += principle.choices[4].score;
+            zeroImpactValue += principle.choices[3].score;
+          });
+        });
+        maxScores.push(maxValue);
+        maxZeroImpactValue.push(zeroImpactValue);
       });
 
-      // secondChapter //
+      const avgMaxScore =
+        maxScores.reduce((sum, value) => sum + value, 0) / maxScores.length;
 
-      questionnaireParams = [];
+      const avgZeroImpactScore =
+        maxZeroImpactValue.reduce((sum, value) => sum + value, 0) /
+        maxZeroImpactValue.length;
 
-      const maxScoresSecondChapterTemp: number[] = [];
-
-      questionnaireParams = calculateScores(
-        scoreObject.data.questionnaire ?? [],
-        "subchapters",
-        "questionnaire",
-        true
-      );
-
-      const filteredQuestionnaireParams = questionnaireParams.filter(
-        (chapter) => chapter["chapter"] === 1
-      );
-
-      filteredQuestionnaireParams.map((subChapter, index) => {
-        const maxScore = Math.round(
-          (subChapter["max-score"] / subChapter["net-zero-impact"]) * 100
-        );
-
-        maxScoresSecondChapterTemp.push(maxScore);
-      });
-
-      setMaxScores({
-        chapters: maxScoresChapterTemp,
-        secondChapter: maxScoresSecondChapterTemp,
-      });
+      setMaxScore(Math.round((avgMaxScore / avgZeroImpactScore) * 100));
     }
   }, [type]);
 
@@ -385,7 +358,7 @@ export function Menu({
                   id={chapter["chapter-title"]}
                   name="chapter"
                   value={sliderValue.chapter[chapterIndex]}
-                  max={maxScores.chapters[chapterIndex]}
+                  max={maxScore ? maxScore : 0}
                   onChange={(e) =>
                     setSliderValue((prev) => {
                       const updatedChapter = prev.chapter.slice();
@@ -486,7 +459,7 @@ export function Menu({
                           id={chapter["chapter-title"]}
                           name="chapter"
                           value={sliderValue.subChapter[subIndex]}
-                          max={maxScores.secondChapter[subIndex]}
+                          max={maxScore ? maxScore : 0}
                           onChange={(e) =>
                             setSliderValue((prev) => {
                               const updatedSubChapter = prev.subChapter.slice();

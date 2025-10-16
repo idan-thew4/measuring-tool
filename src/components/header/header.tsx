@@ -48,6 +48,9 @@ export function Header() {
     setLoader,
     setCurrent,
     getAlternativeQuestionnaireData,
+    maxValue,
+    initialScoreObject,
+    setScoreObject,
   } = useStore();
   const router = useRouter();
   const params = useParams();
@@ -83,8 +86,6 @@ export function Header() {
               value: alternative.alternative_id,
             });
           });
-
-          console.log("alternativesTemp", alternativesTemp);
 
           setAlternatives(alternativesTemp);
         }
@@ -132,10 +133,10 @@ export function Header() {
 
       if (data.success) {
         setLoader(false);
-
         setLoggedInChecked(false);
+        setScoreObject(initialScoreObject);
         router.push(
-          `/tool/0/0/${structure.questionnaire.content[1]["chapter-slug"]}/1/1`
+          `/tool/0/0/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`
         );
       }
     } catch (error) {
@@ -261,6 +262,7 @@ export function Header() {
                     parameters={chapterScores}
                     imageGridURL={`/pages/graphs/radar_grid_chapters_negative.svg`}
                     negative={true}
+                    maxScore={maxValue}
                   />
                 )}
               </div>

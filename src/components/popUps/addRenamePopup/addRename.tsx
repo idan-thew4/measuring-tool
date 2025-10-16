@@ -92,6 +92,10 @@ export function AddRenamePopup() {
             router.push(
               `/tool/${data.data.project_id}/${data.data.alternative_id}/${chapter}/${subChapter}/${principle}`
             );
+          } else {
+            router.push(
+              `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`
+            );
           }
         } else {
           if (data.message) {

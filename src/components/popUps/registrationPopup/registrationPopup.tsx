@@ -7,7 +7,7 @@ import {
   RegistrationStep,
   structureProps,
 } from "../../../contexts/Store";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ProgressBar } from "@/app/tool/[project_id]/[alternative_id]/components/progress-bar/progress-bar";
 import clsx from "clsx";
 import { useForm, Controller } from "react-hook-form";
@@ -45,6 +45,7 @@ export function RegistrationPopup() {
     url,
     setLoggedInChecked,
     getUserDashboardData,
+    initialScoreObject,
   } = useStore();
   const [completedSteps, setCompletedSteps] = useState<totalCompleted>();
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -56,7 +57,6 @@ export function RegistrationPopup() {
     end: { value: string; label: string }[];
   }>({ start: [], end: [] });
   const params = useParams();
-  const [chapter, subChapter, principle] = params?.chapters || [];
 
   const {
     register,
@@ -345,6 +345,7 @@ export function RegistrationPopup() {
         setCompletedSteps(undefined);
         setCurrentStep(0);
         reset();
+        setScoreObject(initialScoreObject);
       }
     }
   };
@@ -419,6 +420,7 @@ export function RegistrationPopup() {
                   }}
                   render={({ field: controllerField }) => (
                     <Select
+                      // menuPlacement="auto"
                       className={`dropdown paragraph_18 ${
                         field.name === "projectStartYear" ||
                         field.name === "projectEndYear"
