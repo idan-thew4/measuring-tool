@@ -22,7 +22,7 @@
     .chapter-subtitle {
       margin: 4rem 0 2rem 0;
       top: 2rem;
-      position: sticky;
+      // position: sticky;
 
       .number {
         padding-left: 1rem;
@@ -65,8 +65,8 @@
     .description {
       overflow: hidden;
       transition: 0.3s all;
-      position: sticky;
-      top: 10rem;
+      // position: sticky;
+      // top: 10rem;
     }
   }
 }

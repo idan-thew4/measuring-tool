@@ -110,7 +110,12 @@ export function RegistrationPopup() {
     }
   }, [structure, registrationPopup, currentStep]);
 
-  async function createNewUser(email: string, password: string) {
+  async function createNewUser(
+    email: string,
+    password: string,
+    commercialAgreement: boolean,
+    researchAgreement: boolean
+  ) {
     setLoading(true);
     try {
       const response = await fetch(`${url}/create-new-user`, {
@@ -119,7 +124,12 @@ export function RegistrationPopup() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email,
+          password,
+          commercialAgreement,
+          researchAgreement,
+        }),
       });
 
       const data = await response.json();
@@ -320,9 +330,12 @@ export function RegistrationPopup() {
 
     if (completedSteps && index !== completedSteps.length - 1) {
       if (index === 0 && registrationPopup === "register") {
+        console.log(stepData);
         const userCreated = await createNewUser(
           stepData["email"] as string,
-          stepData["password"] as string
+          stepData["password"] as string,
+          stepData["commercial-agreement"] as boolean,
+          stepData["research-agreement"] as boolean
         );
         if (!userCreated) {
           return;
@@ -361,7 +374,12 @@ export function RegistrationPopup() {
   return (
     <PopUpContainer
       headline={steps.array ? steps.array[currentStep].title : ""}
-      closeButton={() => setRegistrationPopup("")}
+      closeButton={() => {
+        setRegistrationPopup("");
+        setCompletedSteps(undefined);
+        setCurrentStep(0);
+        reset();
+      }}
       navArrows={currentStep}
       goToPrevSlide={() => {
         if (currentStep > 0) {

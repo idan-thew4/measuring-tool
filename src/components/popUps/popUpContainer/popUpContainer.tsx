@@ -19,14 +19,12 @@ export function PopUpContainer({
       <div className={styles["pop-up"]}>
         <button
           className={styles["close-button"]}
-          onClick={closeButton}
-        ></button>
+          onClick={closeButton}></button>
         <div className={styles["headline-container"]}>
-          {navArrows !== undefined && navArrows > 0 && goToPrevSlide && (
+          {navArrows !== undefined && navArrows > 1 && goToPrevSlide && (
             <button
               onClick={() => goToPrevSlide && goToPrevSlide()}
-              className={styles["nav-arrow"]}
-            ></button>
+              className={styles["nav-arrow"]}></button>
           )}
           <h2 className="headline_medium-big">{headline}</h2>
         </div>
