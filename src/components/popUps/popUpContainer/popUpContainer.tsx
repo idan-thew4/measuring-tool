@@ -15,8 +15,8 @@ export function PopUpContainer({
   goToPrevSlide?: () => void;
 }) {
   return (
-    <div className={styles["pop-up-container"]}>
-      <div className={styles["pop-up"]}>
+    <div className={styles["pop-up-container"]} onClick={closeButton}>
+      <div className={styles["pop-up"]} onClick={(e) => e.stopPropagation()}>
         <button
           className={styles["close-button"]}
           onClick={closeButton}></button>

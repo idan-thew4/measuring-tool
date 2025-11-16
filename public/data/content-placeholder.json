@@ -44,6 +44,14 @@
         "title": "הרשמה למערכת",
         "input-fields": [
           {
+            "label": "שם מלא",
+            "mandatory": true,
+            "row": 1,
+            "validation-error": "יש להזין שם מלא",
+            "placeholder": "שם מלא",
+            "name": "fullName"
+          },
+          {
             "label": "דוא״ל",
             "mandatory": true,
             "type": "email",
@@ -64,7 +72,27 @@
             "name": "password"
           },
           {
-            "label": "אני מאשר קבלת חומר פרסומי",
+            "label": "משרד מתכנן",
+            "mandatory": true,
+            "row": 1,
+            "validation-error": "יש להזין משרד מתכנן",
+            "format-error": "יש להזין משרד מתכנן",
+            "placeholder": "משרד מתכנן",
+            "name": "planningOffice",
+            "type": "text"
+          },
+          {
+            "label": "ליצירת קשר טלפון",
+            "mandatory": true,
+            "row": 1,
+            "validation-error": "יש להזין מספר טלפון",
+            "format-error": "יש להזין טלפון תקין",
+            "placeholder": "טלפון",
+            "name": "contactPhone",
+            "type": "tel"
+          },
+          {
+            "label": "אני מאשר קבלת חומר פרסומי של האיגוד הישראלי של אדריכלי נוף",
             "type": "checkbox",
             "mandatory": false,
             "validation-error": "יש לבחור את תיבת הסימון",
@@ -87,42 +115,7 @@
         ]
       },
       {
-        "headline": "פתיחת פרויקט",
-        "title": "מידע כללי על הפרויקט",
-        "description": "המידע נשמר בצורה אנונימית, לצרכי תפעול הכלי. ולא משותף עם צד שלישי ",
-        "input-fields": [
-          {
-            "label": "איש קשר",
-            "mandatory": true,
-            "row": 1,
-            "validation-error": "יש להזין איש קשר",
-            "placeholder": "איש קשר",
-            "name": "contactPerson"
-          },
-          {
-            "label": "דוא״ל",
-            "mandatory": true,
-            "type": "email",
-            "row": 1,
-            "validation-error": "יש להזין כתובת דוא״ל ",
-            "format-error": "יש להזין דוא״ל תקין",
-            "placeholder": "דוא״ל",
-            "name": "contactEmail"
-          },
-          {
-            "label": "טלפון",
-            "mandatory": true,
-            "row": 1,
-            "validation-error": "יש להזין מספר טלפון",
-            "format-error": "יש להזין טלפון תקין",
-            "placeholder": "טלפון",
-            "name": "contactPhone",
-            "type": "tel"
-          }
-        ]
-      },
-      {
-        "title": "מידע כללי על הפרויקט",
+        "title": "מידע כללי על המיזם",
         "description": "המידע נשמר בצורה אנונימית, לצרכי תפעול הכלי. ולא משותף עם צד שלישי ",
         "input-fields": [
           {
@@ -175,6 +168,7 @@
               { "value": "drainage", "label": "ניקוז" },
               { "value": "stream", "label": "נחל" },
               { "value": "nature-reserve", "label": "שמורת טבע" },
+              { "value": "railway", "label": "מסילה" },
               { "value": "other", "label": "אחר" }
             ]
           },
@@ -187,11 +181,11 @@
             "name": "projectArea "
           },
           {
-            "label": "שלב / סטטוס הפרויקט",
+            "label": "שלב / סטטוס המיזם",
             "mandatory": true,
             "row": 0.5,
-            "validation-error": "יש להזין שלב / סטטוס הפרויקט",
-            "placeholder": "שלב / סטטוס הפרויקט",
+            "validation-error": "יש להזין שלב / סטטוס המיזם",
+            "placeholder": "שלב / סטטוס המיזם",
             "name": "projectStatus",
             "dropdown-options": [
               { "value": "planning", "label": "תכנון" },
@@ -266,7 +260,8 @@
               { "value": "professional-degree", "label": "תואר מקצועי" },
               { "value": "BA", "label": "תואר ראשון" },
               { "value": "MA", "label": "תואר שני" },
-              { "value": "PHD", "label": "דוקטורט" }
+              { "value": "PHD", "label": "דוקטורט" },
+              { "value": "other", "label": "אחר" }
             ]
           },
           {
@@ -366,7 +361,7 @@
 
                   {
                     "title": "איזון בצריכת מים",
-                    "text": "ה. הפתרונות לניהול משאב המים מפחיתים את כמויות המים המיובאים לתחום הפרויקט לשימושים השונים.ו.  למיזם אין השפעה שלילית על מערכות מים טבעיות: ומים עיליים ומי תהום.",
+                    "text": "ה. הפתרונות לניהול משאב המים מפחיתים את כמויות המים המיובאים לתחום המיזם לשימושים השונים.ו.  למיזם אין השפעה שלילית על מערכות מים טבעיות: ומים עיליים ומי תהום.",
                     "score": 6
                   },
                   {
@@ -399,7 +394,7 @@
                   },
                   {
                     "title": "מים מהמיזם תורמים לסביבתם",
-                    "text": "ח. המיזם תורם מים באיכות המתאימה לשימושים חברתיים וסביבתיים המעשירים את חווית המשתמשים והאקולוגיה המקומית בפרויקט ומחוצה לו .כדוגמת, אחו לח, בריכות נוי, מתקני מים, השקיית גינון ציבורי. ",
+                    "text": "ח. המיזם תורם מים באיכות המתאימה לשימושים חברתיים וסביבתיים המעשירים את חווית המשתמשים והאקולוגיה המקומית במיזם ומחוצה לו .כדוגמת, אחו לח, בריכות נוי, מתקני מים, השקיית גינון ציבורי. ",
                     "score": 10
                   }
                 ]
@@ -715,11 +710,11 @@
       "buttons-copy": ["שינוי סיסמא", "מחיקת משתמש"]
     },
     "bottom-section": {
-      "title": "הפרויקטים שלי",
+      "title": "המיזםים שלי",
       "projects": {
         "header": "המיזמים שלי",
-        "buttons-copy": "פרויקט חדש",
-        "buttons-copy-project": ["עריכת שם הפרויקט", "מחק פרויקט"],
+        "buttons-copy": "מיזם חדש",
+        "buttons-copy-project": ["עריכת שם המיזם", "מחק מיזם"],
         "buttons-copy-alternative": [
           "עריכת שם החלופה",
           "צור חלופה חדשה",
@@ -766,9 +761,9 @@
         "buttons-copy": ["שמור", "בטל"]
       },
       "delete-project": {
-        "title": "מחיקת פרויקט",
-        "description": "כדאי לשים לב, במידה ויאושר חלון זה. הפרויקט ימחק. אין אפשרות לשחזר אותו ואת המידע מחשבון שנמחק",
-        "buttons-copy": ["ביטול", "מחק פרויקט"]
+        "title": "מחיקת מיזם",
+        "description": "כדאי לשים לב, במידה ויאושר חלון זה. המיזם ימחק. אין אפשרות לשחזר אותו ואת המידע מחשבון שנמחק",
+        "buttons-copy": ["ביטול", "מחק מיזם"]
       },
       "delete-alternative": {
         "title": "מחיקת חלופה",
@@ -781,15 +776,15 @@
         "buttons-copy": ["ביטול", "מחק חשבון"]
       },
       "rename-project": {
-        "title": "עריכת שם הפרויקט",
+        "title": "עריכת שם המיזם",
         "input-fields": [
           {
-            "label": "שם הפרויקט",
+            "label": "שם המיזם",
             "mandatory": true,
             "type": "text",
             "row": 1,
-            "validation-error": "יש להזין שם פרויקט",
-            "placeholder": "שם הפרויקט",
+            "validation-error": "יש להזין שם מיזם",
+            "placeholder": "שם המיזם",
             "name": "projectName"
           }
         ],
