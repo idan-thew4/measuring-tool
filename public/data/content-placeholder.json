@@ -136,7 +136,28 @@
             "validation-error": "יש להזין איזור בארץ",
             "placeholder": "איזור בארץ",
             "name": "localAuthority",
-            "dropdown-options": []
+            "dropdown-options": [
+              { "value": "mediterranean-coast", "label": "חוף הים התיכון" },
+              { "value": "galilee", "label": "הגליל" },
+              {
+                "value": "northern-hills-and-valleys",
+                "label": "רמות ההר והעמקים הצפוניים"
+              },
+              { "value": "golan-and-hermon", "label": "הגולן והחרמון" },
+              {
+                "value": "samaria-and-judean-hills",
+                "label": "הרי השומרון ויהודה"
+              },
+              { "value": "shephelah", "label": "השפלה" },
+              { "value": "judean-desert", "label": "מדבר יהודה" },
+              { "value": "negev", "label": "הנגב" },
+              { "value": "jordan-valley", "label": "בקעת הירדן" },
+              {
+                "value": "arava-and-eilat-mountains",
+                "label": "הערבה והרי אילת"
+              },
+              { "value": "other", "label": "אחר" }
+            ]
           },
           {
             "label": "סוג המיזם",

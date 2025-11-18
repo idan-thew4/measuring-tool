@@ -282,7 +282,8 @@ export default function ChapterPage() {
         className={clsx(
           styles["chapter-box"],
           currentChapter?.score === -1 && styles["skip"]
-        )}>
+        )}
+      >
         <div className={styles["chapter-headline-container"]}>
           <div className={styles["headline"]}>
             <h2 className={clsx("headline_small bold", styles["title"])}>
@@ -309,7 +310,8 @@ export default function ChapterPage() {
                       toggle ? undefined : -1
                     )
                   );
-                }}></button>
+                }}
+              ></button>
             </div>
           </div>
           <p className={clsx("paragraph_19", styles["description"])}>
@@ -323,7 +325,8 @@ export default function ChapterPage() {
               className={clsx(
                 styles["option"],
                 currentChapter?.score === index + 1 ? styles["selected"] : ""
-              )}>
+              )}
+            >
               <div className={clsx(styles["option-selection"], "paragraph_19")}>
                 <input
                   type="radio"
@@ -345,10 +348,12 @@ export default function ChapterPage() {
                     } else {
                       setLoginPopup(true);
                     }
-                  }}></input>
+                  }}
+                ></input>
                 <label
                   className="paragraph_19 bold"
-                  htmlFor={`option-${index + 1}`}>
+                  htmlFor={`option-${index + 1}`}
+                >
                   {option}
                 </label>
 
@@ -369,7 +374,8 @@ export default function ChapterPage() {
                             : item
                         )
                       )
-                    }>
+                    }
+                  >
                     {currentChapter.choices[index]?.title && (
                       <>{currentChapter.choices[index].title}</>
                     )}
@@ -389,7 +395,8 @@ export default function ChapterPage() {
                     )?.state
                       ? "1.5rem"
                       : "0",
-                  }}>
+                  }}
+                >
                   {currentChapter?.choices[index]?.text && (
                     <>{currentChapter.choices[index].text}</>
                   )}
@@ -399,7 +406,7 @@ export default function ChapterPage() {
           ))}
         </ul>
         <textarea
-          className="paragraph_16"
+          className="paragraph_19"
           value={comment}
           placeholder={structure?.questionnaire["text-area-placeholder"]}
           onChange={(e) => {

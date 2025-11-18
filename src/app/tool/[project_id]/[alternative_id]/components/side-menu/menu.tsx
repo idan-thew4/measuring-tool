@@ -120,7 +120,8 @@ function RangeSlider({
       />
       <div
         className={styles["range-slider-progress"]}
-        style={{ width: `${percent}%` }}></div>
+        style={{ width: `${percent}%` }}
+      ></div>
       <div
         className={styles["range-slider-value"]}
         style={{
@@ -131,7 +132,8 @@ function RangeSlider({
               ? "2%"
               : `calc(${percent}% - ${percent > 99 ? "4.5" : "1.5"}rem)`
           }`,
-        }}>
+        }}
+      >
         {value}%
       </div>
     </div>
@@ -165,6 +167,41 @@ export function Menu({
   const [toggleList, setToggleSetToggleList] = useState<
     { chapterIdx: number; state: boolean }[]
   >([]);
+  const [activeChapters, setActiveChapters] = useState<string[]>([]);
+  const [activeSubChapters, setActiveSubChapters] = useState<string[]>([]);
+  const [activePrinciples, setActivePrinciples] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Chapter: use the slug as the unique key
+    if (currentChapter[0] && !activeChapters.includes(currentChapter[0])) {
+      setActiveChapters((prev) => [...prev, currentChapter[0]]);
+    }
+    // Sub-chapter: use a unique key, e.g., `${chapterSlug}-${subIndex+1}`
+    if (
+      currentChapter[0] &&
+      currentChapter[1] &&
+      !activeSubChapters.includes(`${currentChapter[0]}-${currentChapter[1]}`)
+    ) {
+      setActiveSubChapters((prev) => [
+        ...prev,
+        `${currentChapter[0]}-${currentChapter[1]}`,
+      ]);
+    }
+    // Principle: use a unique key, e.g., `${chapterSlug}-${subIndex+1}-${choiceIndex+1}`
+    if (
+      currentChapter[0] &&
+      currentChapter[1] &&
+      currentChapter[2] &&
+      !activePrinciples.includes(
+        `${currentChapter[0]}-${currentChapter[1]}-${currentChapter[2]}`
+      )
+    ) {
+      setActivePrinciples((prev) => [
+        ...prev,
+        `${currentChapter[0]}-${currentChapter[1]}-${currentChapter[2]}`,
+      ]);
+    }
+  }, [currentChapter]);
 
   useEffect(() => {
     let tempToggleList: { chapterIdx: number; state: boolean }[] = [];
@@ -310,7 +347,8 @@ export function Menu({
       className={clsx(
         styles["menu"],
         type === "self-assessment" && styles["self-assessment"]
-      )}>
+      )}
+    >
       {type !== "self-assessment" ? (
         <ProgressBar completed={completedChapters} structure={structure} />
       ) : (
@@ -329,11 +367,12 @@ export function Menu({
             className={clsx(
               chapterIndex === 1 &&
                 type === "self-assessment" &&
-                styles["active"],
+                styles["opened"],
               styles["chapter"],
-              chapter["chapter-slug"] === currentChapter[0]
-                ? styles["active"]
+              activeChapters.includes(chapter["chapter-slug"])
+                ? styles["opened"]
                 : "",
+              chapter["chapter-slug"] === currentChapter[0] && styles["active"],
               type !== "self-assessment" &&
                 styles[
                   isChapterCompleted(
@@ -343,14 +382,14 @@ export function Menu({
                   ) || ""
                 ]
             )}
-            key={chapterIndex}>
+            key={chapterIndex}
+          >
             <div
-              className={clsx(
-                "nav-side-text__chapter",
-                styles["chapter-text"]
-              )}>
+              className={clsx("nav-side-text__chapter", styles["chapter-text"])}
+            >
               <Link
-                href={`/tool/${project_id}/${alternative_id}/${chapter["chapter-slug"]}/1/1`}>
+                href={`/tool/${project_id}/${alternative_id}/${chapter["chapter-slug"]}/1/1`}
+              >
                 {`${chapterIndex + 1}. ${chapter["chapter-title"]}`}
               </Link>
               {type === "self-assessment" && chapterIndex !== 1 && (
@@ -410,7 +449,8 @@ export function Menu({
                               : item
                           )
                         );
-                      }}></button>
+                      }}
+                    ></button>
                   </div>
                   <p>
                     {`${
@@ -425,9 +465,16 @@ export function Menu({
               (type === "self-assessment" && chapterIndex === 1)) && (
               <ul className={styles["chapter-content"]}>
                 {chapter["chapter-content"].map((subChapter, subIndex) => {
+                  const subChapterKey = `${chapter["chapter-slug"]}-${
+                    subIndex + 1
+                  }`;
+
                   const isActiveSubChapter =
                     chapter["chapter-slug"] === currentChapter[0] &&
                     subIndex + 1 === parseInt(currentChapter[1]);
+                  const isPersistentlyActiveSubChapter =
+                    isActiveSubChapter ||
+                    activeSubChapters.includes(subChapterKey);
                   const subChapterCompleted = isSubChapterCompleted(
                     scoreObject,
                     chapterIndex,
@@ -440,16 +487,19 @@ export function Menu({
                       className={clsx(
                         chapterIndex === 1 &&
                           type === "self-assessment" &&
-                          styles["active"],
+                          styles["opened"],
+                        isPersistentlyActiveSubChapter && styles["opened"],
                         isActiveSubChapter && styles["active"],
                         type !== "self-assessment" &&
                           styles[subChapterCompleted || ""]
-                      )}>
+                      )}
+                    >
                       <Link
                         className="nav-side-text__sub-chapter"
                         href={`/tool/${project_id}/${alternative_id}/${
                           chapter["chapter-slug"]
-                        }/${subIndex + 1}/1`}>
+                        }/${subIndex + 1}/1`}
+                      >
                         {`${chapterIndex + 1}.${subIndex + 1} ${
                           subChapter["sub-chapter-title"]
                         }`}
@@ -486,10 +536,16 @@ export function Menu({
                         <ul className={styles["principles"]}>
                           {subChapter["principles"].map(
                             (subChoices, subChoicesIndex) => {
+                              const principleKey = `${
+                                chapter["chapter-slug"]
+                              }-${subIndex + 1}-${subChoicesIndex + 1}`;
                               const isActiveChoice =
                                 isActiveSubChapter &&
                                 subChoicesIndex + 1 ===
                                   parseInt(currentChapter[2]);
+                              const isPersistentlyActiveChoice =
+                                isActiveChoice ||
+                                activePrinciples.includes(principleKey);
                               const choiceCompleted = isChoiceCompleted(
                                 scoreObject,
                                 chapterIndex,
@@ -500,14 +556,18 @@ export function Menu({
                                 <li
                                   key={subChoicesIndex}
                                   className={clsx(
+                                    isPersistentlyActiveChoice &&
+                                      styles["opened"],
                                     isActiveChoice && styles["active"],
                                     styles[choiceCompleted || ""]
-                                  )}>
+                                  )}
+                                >
                                   <Link
                                     className="nav-side-text__sub-chapter-choice"
                                     href={`/tool/${project_id}/${alternative_id}/${
                                       chapter["chapter-slug"]
-                                    }/${subIndex + 1}/${subChoicesIndex + 1}`}>
+                                    }/${subIndex + 1}/${subChoicesIndex + 1}`}
+                                  >
                                     {`${subChoicesIndex + 1}. ${
                                       subChoices.title
                                     }`}
@@ -539,7 +599,8 @@ export function Menu({
                 <li key={index}>
                   <Link
                     className="paragraph_18 bold"
-                    href={`/tool/${project_id}/${alternative_id}/${links[index]}`}>
+                    href={`/tool/${project_id}/${alternative_id}/${links[index]}`}
+                  >
                     {option}
                   </Link>
                 </li>

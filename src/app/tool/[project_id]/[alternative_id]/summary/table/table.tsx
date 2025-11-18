@@ -59,12 +59,13 @@ export function Table({
       formattedComment = (
         <div className={styles["comment-container"]}>
           <div className={styles["comment-header"]}>
-            <p className="paragraph_18">
+            <p className={clsx("paragraph_18", styles["preview"])}>
               {`${comment.split(" ").slice(0, 2).join(" ")}...`}
             </p>
             <button
               className={styles["comment-button"]}
-              onClick={() => setExpandedKey(isExpanded ? null : String(key))}>
+              onClick={() => setExpandedKey(isExpanded ? null : String(key))}
+            >
               {isExpanded
                 ? structure?.summary.table["buttons-copy"][1]
                 : structure?.summary.table["buttons-copy"][0]}
@@ -74,7 +75,8 @@ export function Table({
             className={clsx(
               isExpanded ? styles["expanded"] : "",
               styles["comment-read-more"]
-            )}>
+            )}
+          >
             {comment}
           </span>
         </div>
@@ -158,16 +160,16 @@ export function Table({
         height: tableDropdown
           ? `${tableDropdownHeights.opened}rem`
           : `${tableDropdownHeights.closed}rem`,
-      }}>
+      }}
+    >
       <div
         className={clsx(styles["row"], styles["row-headline"])}
-        onClick={() => setTableDropdown(!tableDropdown)}>
+        onClick={() => setTableDropdown(!tableDropdown)}
+      >
         <h2
-          className={clsx(
-            styles["table-title"],
-            "headline_small bold"
-          )}>{`${chapterNumber}. ${title}`}</h2>
-        <p className="paragraph_18">
+          className={clsx(styles["table-title"], "headline_small bold")}
+        >{`${chapterNumber}. ${title}`}</h2>
+        <p className={clsx("paragraph_18", styles["preview"])}>
           {getPercentageLabel(
             chapterScore,
             (value: number) => getScoreLabel(structure, value),
@@ -194,16 +196,18 @@ export function Table({
       <div key={chapterNumber} className={styles["table"]}>
         {content.map((subChapter: SubChapter, subChapterIndex) => (
           <React.Fragment
-            key={subChapter["sub-chapter-title"] ?? subChapterIndex}>
+            key={subChapter["sub-chapter-title"] ?? subChapterIndex}
+          >
             <div
               className={clsx(
                 styles["row"],
                 styles["row-title"],
                 "paragraph_18 "
-              )}>
+              )}
+            >
               <p>{`${chapterNumber}.${subChapterIndex + 1}.`}</p>
               <h3 className="paragraph_18 bold">{`${subChapter["sub-chapter-title"]}`}</h3>
-              <p>
+              <p className={styles["preview"]}>
                 {getPercentageLabel(
                   subChaptersScores,
                   subChapterIndex,
@@ -271,20 +275,20 @@ export function Table({
                     styles["row"],
                     inputNumber === -1 && styles["skipped"],
                     inputNumber === undefined && styles["not-answered"]
-                  )}>
+                  )}
+                >
                   <p
                     className={clsx(
                       styles["paragraph_18"],
                       styles["principle-number"]
-                    )}>{`${chapterNumber}.${subChapterIndex + 1}.${
+                    )}
+                  >{`${chapterNumber}.${subChapterIndex + 1}.${
                     principleIndex + 1
                   }.`}</p>
                   <h4
-                    className={clsx(
-                      styles["principle-title"],
-                      "paragraph_18"
-                    )}>{`${principle["title"]}`}</h4>
-                  <p className="paragraph_18">
+                    className={clsx(styles["principle-title"], "paragraph_18")}
+                  >{`${principle["title"]}`}</h4>
+                  <p className={clsx("paragraph_18", styles["preview"])}>
                     {inputNumber !== undefined
                       ? structure?.questionnaire?.options?.[inputNumber - 1]
                       : ""}

@@ -49,9 +49,9 @@ export function RegistrationPopup() {
   } = useStore();
   const [completedSteps, setCompletedSteps] = useState<totalCompleted>();
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [townsList, setTownsList] = useState<
-    { value: string; label: string }[]
-  >([]);
+  // const [townsList, setTownsList] = useState<
+  //   { value: string; label: string }[]
+  // >([]);
   const [yearsList, setYearsList] = useState<{
     start: { value: string; label: string }[];
     end: { value: string; label: string }[];
@@ -111,8 +111,11 @@ export function RegistrationPopup() {
   }, [structure, registrationPopup, currentStep]);
 
   async function createNewUser(
+    fullName: string,
     email: string,
     password: string,
+    planningOffice: string,
+    contactPhone: string,
     commercialAgreement: boolean,
     researchAgreement: boolean
   ) {
@@ -125,8 +128,11 @@ export function RegistrationPopup() {
         },
         credentials: "include",
         body: JSON.stringify({
+          fullName,
           email,
           password,
+          planningOffice,
+          contactPhone,
           commercialAgreement,
           researchAgreement,
         }),
@@ -207,33 +213,33 @@ export function RegistrationPopup() {
     }
   }
 
-  async function getTownList() {
-    try {
-      const response = await fetch(
-        "https://data.gov.il/api/3/action/datastore_search?resource_id=5c78e9fa-c2e2-4771-93ff-7f400a12f7ba"
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  // async function getTownList() {
+  //   try {
+  //     const response = await fetch(
+  //       "https://data.gov.il/api/3/action/datastore_search?resource_id=5c78e9fa-c2e2-4771-93ff-7f400a12f7ba"
+  //     );
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
 
-      const data = await response.json();
+  //     const data = await response.json();
 
-      let TownsListTemp: { value: string; label: string }[] = [];
+  //     let TownsListTemp: { value: string; label: string }[] = [];
 
-      data.result.records.forEach((record: TownRecord, index: number) => {
-        if (index !== 0) {
-          TownsListTemp.push({
-            value: record.שם_ישוב,
-            label: record.שם_ישוב,
-          });
-        }
-      });
+  //     data.result.records.forEach((record: TownRecord, index: number) => {
+  //       if (index !== 0) {
+  //         TownsListTemp.push({
+  //           value: record.שם_ישוב,
+  //           label: record.שם_ישוב,
+  //         });
+  //       }
+  //     });
 
-      setTownsList(TownsListTemp);
-    } catch (error) {
-      console.error("Failed to fetch content:", error);
-    }
-  }
+  //     setTownsList(TownsListTemp);
+  //   } catch (error) {
+  //     console.error("Failed to fetch content:", error);
+  //   }
+  // }
 
   function getYearsList() {
     let currentYear = new Date().getFullYear();
@@ -294,7 +300,7 @@ export function RegistrationPopup() {
   }
 
   useEffect(() => {
-    getTownList();
+    // getTownList();
     getYearsList();
   }, []);
 
@@ -330,10 +336,12 @@ export function RegistrationPopup() {
 
     if (completedSteps && index !== completedSteps.length - 1) {
       if (index === 0 && registrationPopup === "register") {
-        console.log(stepData);
         const userCreated = await createNewUser(
+          stepData["fullName"] as string,
           stepData["email"] as string,
           stepData["password"] as string,
+          stepData["planningOffice"] as string,
+          stepData["contactPhone"] as string,
           stepData["commercial-agreement"] as boolean,
           stepData["research-agreement"] as boolean
         );
@@ -342,6 +350,7 @@ export function RegistrationPopup() {
         }
       }
       setCurrentStep(index + 1);
+      setGeneralError("");
       setCompletedSteps((prev) => {
         if (!prev) return prev;
         const newSteps = [...prev];
@@ -363,9 +372,7 @@ export function RegistrationPopup() {
     }
   };
 
-  useEffect(() => {
-    console.log("registrationPopup", registrationPopup);
-  }, [registrationPopup]);
+  useEffect(() => {}, [registrationPopup]);
   if (!registrationPopup) return null;
   if (!structure || !steps.single) return <div>Loading...</div>;
 
@@ -394,7 +401,8 @@ export function RegistrationPopup() {
             return newSteps;
           });
         }
-      }}>
+      }}
+    >
       {completedSteps && (
         <ProgressBar completed={completedSteps} indicator={true} />
       )}
@@ -404,7 +412,8 @@ export function RegistrationPopup() {
             className={clsx(
               "headline_medium-small bold",
               formStyles["headline"]
-            )}>
+            )}
+          >
             {steps.single.title}
           </h3>
           <p className="paragraph_16">{steps.single.description}</p>
@@ -414,7 +423,8 @@ export function RegistrationPopup() {
         </div>
         <form
           style={{ pointerEvents: loading ? "none" : "auto" }}
-          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}>
+          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}
+        >
           {steps.single["input-fields"].map((field, index) => (
             <div
               className={clsx(
@@ -426,7 +436,8 @@ export function RegistrationPopup() {
                   : formStyles["checkbox"],
                 `input`
               )}
-              key={index}>
+              key={index}
+            >
               {field["dropdown-options"] ? (
                 <Controller
                   name={field.name}
@@ -458,9 +469,10 @@ export function RegistrationPopup() {
                       }
                       // menuIsOpen={true}
                       options={
-                        field.name === "localAuthority"
-                          ? townsList
-                          : field.name === "projectStartYear"
+                        // field.name === "localAuthority"
+                        //   ? townsList
+                        //   :
+                        field.name === "projectStartYear"
                           ? yearsList.start
                           : field.name === "projectEndYear"
                           ? yearsList.end
@@ -562,7 +574,8 @@ export function RegistrationPopup() {
               loading && "loading"
             )}
             type="submit"
-            disabled={Object.keys(errors).length > 0}>
+            disabled={Object.keys(errors).length > 0}
+          >
             {structure.registration["nav-buttons"][currentStep]}
           </button>
           {generalError && (
@@ -570,7 +583,8 @@ export function RegistrationPopup() {
               className={clsx(
                 formStyles["error-message"],
                 formStyles["general-error"]
-              )}>
+              )}
+            >
               {generalError}
             </div>
           )}

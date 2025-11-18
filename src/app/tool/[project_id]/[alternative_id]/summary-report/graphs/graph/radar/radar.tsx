@@ -37,13 +37,13 @@ export function RadarGraph({
   negative?: boolean;
   maxScore?: number;
 }) {
-  const colors = ["#79C5D8", "#979797"];
+  const colors = ["#979797", "#79C5D8"];
   const [dataKeys, setDataKeys] = useState<string[]>();
   const [filtersStatus, setFiltersStatus] = useState<{
     [key: string]: boolean;
   }>({
-    assessment: false,
     questionnaire: true,
+    assessment: false,
   });
   const { legendColors } = useStore();
 
@@ -60,12 +60,12 @@ export function RadarGraph({
       });
     }
 
+    tempDataKeys.sort((a, b) =>
+      a === "questionnaire" ? 1 : b === "questionnaire" ? -1 : 0
+    );
+
     setDataKeys(tempDataKeys);
   }, [parameters]);
-
-  // useEffect(() => {
-  //   console.log(dataKeys);
-  // }, [dataKeys]);
 
   function getDataLabelColor(value: string | number, type: string) {
     switch (type) {
@@ -85,15 +85,9 @@ export function RadarGraph({
     }
   }
 
-  const radarRef = useRef<HTMLDivElement>(null);
-
-  const captureRadarGraph = async () => {
-    if (radarRef.current) {
-      const dataUrl = await toPng(radarRef.current);
-      console.log(dataUrl); // This is the base64 image URL
-      return dataUrl;
-    }
-  };
+  const radarRef = useRef<HTMLDivElement>(
+    null
+  ) as React.RefObject<HTMLDivElement>;
 
   return (
     <Graph
@@ -102,18 +96,21 @@ export function RadarGraph({
       legend={legend ? ["17%-0%", "33%-18%", "100%-34%", "100%<"] : false}
       preview={preview}
       negative={negative}
-      radarRef={radarRef}>
+      radarRef={radarRef}
+    >
       {filters && (
         <ul className={graphStyles["filters"]}>
           {dataKeys?.slice().map((filter, index) => (
             <li key={index} className={graphStyles["filter-item"]}>
               <label
-                className={clsx("paragraph_14", graphStyles["filter-label"])}>
+                className={clsx("paragraph_14", graphStyles["filter-label"])}
+              >
                 <div
                   className={graphStyles["filter-color"]}
                   style={{
                     backgroundColor: colors[index],
-                  }}></div>
+                  }}
+                ></div>
                 <input
                   type="checkbox"
                   checked={filtersStatus[filter] || false}
@@ -124,7 +121,7 @@ export function RadarGraph({
                     }));
                   }}
                 />
-                {(filters ?? [])[index]}
+                {(filters ?? [])[filters.length - 1 - index]}{" "}
               </label>
             </li>
           ))}
@@ -145,7 +142,8 @@ export function RadarGraph({
             width={!preview ? 600 : 40}
             height={!preview ? 600 : 40}
             data={parameters}
-            className={styles["radar"]}>
+            className={styles["radar"]}
+          >
             <PolarGrid gridType="circle" radialLines={false} />
             <PolarRadiusAxis
               axisLine={false}
@@ -202,7 +200,8 @@ export function RadarGraph({
                               fontSize={12}
                               textAnchor="middle"
                               dominantBaseline="central"
-                              className={styles["data-label"]}>
+                              className={styles["data-label"]}
+                            >
                               {value}%
                             </text>
                           </g>

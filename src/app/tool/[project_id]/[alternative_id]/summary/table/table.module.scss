@@ -153,6 +153,11 @@
   }
 }
 
+.preview {
+  white-space: nowrap;
+  line-height: 2rem;
+}
+
 .comment {
   &-container {
     position: relative;
@@ -162,6 +167,8 @@
     display: flex;
     gap: 1rem;
     align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0;
   }
 
   &-button {
@@ -184,13 +191,13 @@
     transition: 0.3s all;
     top: 0;
     z-index: 9;
-    width: 20rem;
+    width: 40rem;
     left: 0;
 
     &.expanded {
       visibility: visible;
       opacity: 1;
-      top: 2rem;
+      top: 5rem;
     }
   }
 }
