@@ -10,6 +10,13 @@
   height: 100%;
   position: relative;
   background-color: white;
+  transform: translate(100%, 0);
+  transition: transform 0.3s ease;
+
+  &.side-menu--active {
+    transform: translate(0, 0);
+  }
+
   a {
     color: $basic-grey;
     transition: 0.3s all;

@@ -35,10 +35,6 @@
   width: 100% !important;
   height: 100% !important;
 }
-.radar :global(.recharts-wrapper) :global(.recharts-polar-grid-concentric) {
-  display: none;
-}
-
 .data-label {
   background-color: red;
 }/*# sourceMappingURL=radar.module.css.map */

@@ -1,7 +1,7 @@
 import styles from "./sideMenu.module.scss";
 import { structureProps } from "../../../../../../contexts/Store";
 import { Menu } from "./menu";
-import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export function SideMenu({
   structure,
@@ -16,10 +16,18 @@ export function SideMenu({
   alternative_id: number;
   type?: string;
 }) {
-  const pathname = usePathname();
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    // Trigger the animation when the component mounts
+    setActive(true);
+  }, []);
 
   return (
-    <aside className={styles["side-menu"]}>
+    <aside
+      className={`${styles["side-menu"]} ${
+        active ? styles["side-menu--active"] : ""
+      }`}>
       <Menu
         structure={structure}
         currentChapter={currentChapter}
