@@ -5,7 +5,7 @@ import styles from "./radar.module.scss";
 import graphStyles from "../graph.module.scss";
 import { ScoreData } from "../../../page";
 import { structureProps } from "@/contexts/Store";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import React from "react";
 import Image from "next/image";
 import clsx from "clsx";
@@ -13,6 +13,7 @@ import { Graph } from "../graph";
 import { useStore } from "@/contexts/Store";
 import { toPng } from "html-to-image";
 import { useRef } from "react";
+import { set } from "react-hook-form";
 
 export function RadarGraph({
   parameters,
@@ -25,6 +26,7 @@ export function RadarGraph({
   legend = true,
   negative = false,
   maxScore,
+  imageKey,
 }: {
   parameters: ScoreData[];
   headline?: string;
@@ -36,6 +38,7 @@ export function RadarGraph({
   legend?: boolean;
   negative?: boolean;
   maxScore?: number;
+  imageKey?: string;
 }) {
   const colors = ["#979797", "#79C5D8"];
   const [dataKeys, setDataKeys] = useState<string[]>();
@@ -45,7 +48,7 @@ export function RadarGraph({
     questionnaire: true,
     assessment: false,
   });
-  const { legendColors } = useStore();
+  const { legendColors, PNGexports, setPNGexports } = useStore();
 
   useEffect(() => {
     const tempDataKeys: string[] = [];
@@ -89,16 +92,21 @@ export function RadarGraph({
     null
   ) as React.RefObject<HTMLDivElement>;
 
-  const handleExport = async () => {
-    if (radarRef.current) {
-      const dataUrl = await toPng(radarRef.current);
-      // You can now use dataUrl, e.g. download or show the image
-      const link = document.createElement("a");
-      link.download = "radar-chart.png";
-      link.href = dataUrl;
-      link.click();
-    }
+  const getExportedGraph = async () => {
+    const dataUrl = await toPng(radarRef.current);
+
+    setPNGexports((prev) => {
+      // Only add if not already present
+      if (prev.some((item) => item.name === imageKey)) {
+        return prev;
+      }
+      return [...prev, { name: imageKey ?? "", path: dataUrl }];
+    });
   };
+
+  useEffect(() => {
+    getExportedGraph();
+  }, [radarRef.current]);
 
   return (
     <Graph
@@ -222,7 +230,6 @@ export function RadarGraph({
           </RadarChart>
         </div>
       </div>
-      {/* <button onClick={handleExport}>Export as PNG</button>{" "} */}
     </Graph>
   );
 }

@@ -2,6 +2,7 @@ import styles from "./sideMenu.module.scss";
 import { structureProps } from "../../../../../../contexts/Store";
 import { Menu } from "./menu";
 import { useEffect, useState } from "react";
+import { useStore } from "../../../../../../contexts/Store";
 
 export function SideMenu({
   structure,
@@ -17,11 +18,16 @@ export function SideMenu({
   type?: string;
 }) {
   const [active, setActive] = useState(false);
+  const { pages } = useStore();
 
   useEffect(() => {
-    // Trigger the animation when the component mounts
-    setActive(true);
-  }, []);
+    console.log("pages in side menu", pages);
+    if (pages.currentPage === "questionnaire") {
+      setActive(true);
+    } else {
+      setActive(true);
+    }
+  }, [pages]);
 
   return (
     <aside

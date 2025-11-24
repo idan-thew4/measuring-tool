@@ -178,6 +178,7 @@ export default function SummaryReport() {
                           : scores.secondChapter
                       }
                       key={index}
+                      imageKey={`radar-${index}`}
                       headline={graph.title}
                       filters={graph.filters}
                       structure={structure}

@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { set } from "react-hook-form";
+5;
 
 const ApiContext = createContext<ApiContextType | undefined>(undefined);
 
@@ -445,7 +445,11 @@ type ApiContextType = {
   >;
   maxValue: number | undefined;
   setMaxValue: React.Dispatch<React.SetStateAction<number | undefined>>;
-  initialScoreObject: ScoreType;
+  initialScoreObject: ScoreType | undefined;
+  PNGexports: { name: string; path: string }[];
+  setPNGexports: React.Dispatch<
+    React.SetStateAction<{ name: string; path: string }[]>
+  >;
 };
 
 export type ScoreData = {
@@ -536,7 +540,9 @@ function Store({ children }: PropsWithChildren<{}>) {
   } | null>(null);
   const [maxValue, setMaxValue] = useState<number>();
   const [initialScoreObject, setInitialScoreObject] = useState<ScoreType>();
-
+  const [PNGexports, setPNGexports] = useState<
+    { name: string; path: string }[]
+  >([]);
   async function getContent() {
     try {
       const response = await fetch(`${url}/structure`);
@@ -790,7 +796,6 @@ function Store({ children }: PropsWithChildren<{}>) {
                   netZeroImpactScore?.score ?? 0;
                 calcParameters[index]["max-score"] += maxScore?.score ?? 0;
 
-                console.log("maxscore" + calcParameters[index]["max-score"]);
                 //console.log("index" + index);
               } else if (
                 graph === "subchapters" &&
@@ -1015,6 +1020,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         maxValue,
         setMaxValue,
         initialScoreObject,
+        PNGexports,
+        setPNGexports,
       }}>
       {children}
     </ApiContext.Provider>
