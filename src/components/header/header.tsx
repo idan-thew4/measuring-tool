@@ -144,12 +144,6 @@ export function Header() {
     }
   }
 
-  useEffect(() => {
-    console.log("loggedInChecked", loggedInChecked);
-    console.log("current", current);
-    console.log("params.project_id", params.project_id);
-  }, [loggedInChecked, current, params.project_id]);
-
   return (
     <header className={styles["header-container"]}>
       <div className={clsx(styles["right-side"], styles["flex-h-align"])}>
@@ -188,12 +182,14 @@ export function Header() {
                 className={clsx(
                   styles["flex-h-align"],
                   styles["project-options"]
-                )}>
+                )}
+              >
                 <div
                   className={clsx(
                     styles["flex-h-align"],
                     styles["project-select"]
-                  )}>
+                  )}
+                >
                   <p className="bold">{current?.project.project_name}, </p>
                   <Select
                     className="dropdown paragraph_18"
@@ -232,14 +228,16 @@ export function Header() {
                       project_id: current?.project.project_id,
                       alternative_id: current?.alternative.alternative_id,
                     });
-                  }}>
+                  }}
+                >
                   {structure?.header.options[1]}
                 </button>
               </div>
             )}
             <button
               onClick={() => setGraphIsOpen(!graphIsOpen)}
-              className={clsx(styles["flex-h-align"], styles["summary"])}>
+              className={clsx(styles["flex-h-align"], styles["summary"])}
+            >
               <p>{structure?.header.options[2]}</p>
               {structure && (
                 <RadarGraph

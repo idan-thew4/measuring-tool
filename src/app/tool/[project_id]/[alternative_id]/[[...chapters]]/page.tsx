@@ -46,6 +46,7 @@ export default function ChapterPage() {
     getAlternativeQuestionnaireData,
     isPageChanged,
     setLoader,
+    setActiveSideMenu,
   } = useStore();
   const [currentChapter, setCurrentChapter] =
     useState<currentChapterType | null>(null);
@@ -275,6 +276,10 @@ export default function ChapterPage() {
       console.error("Error creating new user:", error);
     }
   }
+
+  useEffect(() => {
+    setActiveSideMenu(true);
+  }, []);
 
   return (
     <div className={styles["chapters-slider-container"]}>

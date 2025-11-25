@@ -17,23 +17,15 @@ export function SideMenu({
   alternative_id: number;
   type?: string;
 }) {
-  const [active, setActive] = useState(false);
-  const { pages } = useStore();
+  const { pages, activeSideMenu, setActiveSideMenu } = useStore();
 
-  useEffect(() => {
-    console.log("pages in side menu", pages);
-    if (pages.currentPage === "questionnaire") {
-      setActive(true);
-    } else {
-      setActive(true);
-    }
-  }, [pages]);
-
+  type;
   return (
     <aside
       className={`${styles["side-menu"]} ${
-        active ? styles["side-menu--active"] : ""
-      }`}>
+        activeSideMenu ? styles["side-menu--active"] : ""
+      }`}
+    >
       <Menu
         structure={structure}
         currentChapter={currentChapter}

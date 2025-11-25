@@ -29,7 +29,7 @@ export function Questionnaire({
   project_id: number;
   alternative_id: number;
 }) {
-  const { scoreObject, getCurrentChapter } = useStore();
+  const { scoreObject, getCurrentChapter, setActiveSideMenu } = useStore();
   const [chapterProgress, setChapterProgress] = useState<totalCompleted>();
   const [dropdownState, setDropdownState] = useState<
     {
@@ -98,6 +98,10 @@ export function Questionnaire({
     }
   }, [scoreObject, getCurrentChapter, currentChapter]);
 
+  useEffect(() => {
+    setActiveSideMenu(true);
+  }, []);
+
   return (
     <div className={clsx(styles["questionnaire-container"], "main-container")}>
       <div className={styles["questionnaire-header"]}>
@@ -118,7 +122,8 @@ export function Questionnaire({
                   : item
               )
             )
-          }>
+          }
+        >
           <p className="paragraph_20">{currentChapterHeaders?.title}</p>
         </button>
         <p
@@ -129,7 +134,8 @@ export function Questionnaire({
             )?.state
               ? "auto"
               : "0",
-          }}>
+          }}
+        >
           {currentChapterHeaders?.titleDescription}
         </p>
 
@@ -150,13 +156,15 @@ export function Questionnaire({
                   : item
               )
             )
-          }>
+          }
+        >
           <h1 className="headline_medium-big bold">
             <span
               className={clsx(
                 "number headline_medium-small bold",
                 styles["number"]
-              )}>
+              )}
+            >
               {currentChapterHeaders?.subtitleNumber}
             </span>
             {`${
@@ -179,7 +187,8 @@ export function Questionnaire({
             )?.state
               ? "4rem"
               : "0",
-          }}>
+          }}
+        >
           {currentChapterHeaders?.subtitleDescription}
         </p>
 

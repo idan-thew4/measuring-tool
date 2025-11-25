@@ -445,11 +445,13 @@ type ApiContextType = {
   >;
   maxValue: number | undefined;
   setMaxValue: React.Dispatch<React.SetStateAction<number | undefined>>;
-  initialScoreObject: ScoreType | undefined;
+  initialScoreObject: ScoreType;
   PNGexports: { name: string; path: string }[];
   setPNGexports: React.Dispatch<
     React.SetStateAction<{ name: string; path: string }[]>
   >;
+  activeSideMenu: boolean;
+  setActiveSideMenu: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type ScoreData = {
@@ -539,10 +541,37 @@ function Store({ children }: PropsWithChildren<{}>) {
     alternative: alternativeType;
   } | null>(null);
   const [maxValue, setMaxValue] = useState<number>();
-  const [initialScoreObject, setInitialScoreObject] = useState<ScoreType>();
+  const [initialScoreObject, setInitialScoreObject] = useState<ScoreType>({
+    "project-details": {
+      projectName: "",
+      projectCreationDate: 0,
+      alternativeName: "",
+      localAuthority: { value: "", label: "" },
+      projectType: { value: "", label: "" },
+      projectSubType: { value: "", label: "" },
+      projectStatus: { value: "", label: "" },
+      projectStartYear: { value: "", label: "" },
+      projectEndYear: { value: "", label: "" },
+      yearsOfExperience: "",
+      education: { value: "", label: "" },
+      gender: { value: "", label: "" },
+      professionalTraining: { value: "", label: "" },
+      contactPerson: "",
+      contactEmail: "",
+      contactPhone: "",
+      projectArea: "",
+      planningTeamRole: "",
+    },
+    data: {
+      questionnaire: [],
+      assessment: [],
+    },
+  });
   const [PNGexports, setPNGexports] = useState<
     { name: string; path: string }[]
   >([]);
+  const [activeSideMenu, setActiveSideMenu] = useState(false);
+
   async function getContent() {
     try {
       const response = await fetch(`${url}/structure`);
@@ -917,10 +946,15 @@ function Store({ children }: PropsWithChildren<{}>) {
   }, []);
 
   useEffect(() => {
+    console.log("pathname", pathname);
+    console.log("params", params.chapters?.[0]);
+
     if (pathname.includes("self-assessment")) {
       setSideMenu("self-assessment");
     } else if (pathname.includes(params.chapters?.[0] || "")) {
       setSideMenu("questionnaire");
+    } else {
+      setSideMenu("");
     }
   }, [pathname]);
 
@@ -1022,7 +1056,10 @@ function Store({ children }: PropsWithChildren<{}>) {
         initialScoreObject,
         PNGexports,
         setPNGexports,
-      }}>
+        activeSideMenu,
+        setActiveSideMenu,
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );
