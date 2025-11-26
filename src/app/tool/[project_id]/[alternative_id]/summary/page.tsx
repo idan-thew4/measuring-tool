@@ -33,7 +33,7 @@ import {
 } from "@react-pdf/renderer";
 import { useParams } from "next/navigation";
 import { saveAs } from "file-saver";
-import { PDFheader } from "../components/summary-header/pdfHeader";
+import { PDFheader, PDFstyles } from "../components/summary-header/pdfHeader";
 
 //CSV//
 
@@ -201,65 +201,6 @@ Font.register({
   src: "/fonts/NotoSansHebrew-Bold.ttf",
   fontStyle: "normal",
   fontWeight: "bold",
-});
-
-const PDFstyles = StyleSheet.create({
-  page: {
-    fontFamily: "Noto Sane Hebrew Regular",
-    direction: "rtl",
-    display: "flex",
-  },
-  section: {
-    // margin: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
-    flexGrow: 1,
-  },
-  header: {
-    display: "flex",
-    flexDirection: "row-reverse",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    fontFamily: "Noto Sane Hebrew Regular",
-  },
-  summaryHeader: {
-    display: "flex",
-    flexDirection: "row-reverse",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 20,
-    paddingBottom: 5,
-    borderBottom: "2px solid #000",
-  },
-
-  columnsHeader: {
-    borderBottom: "1px solid #000",
-  },
-
-  columns: {
-    display: "flex",
-    flexDirection: "row-reverse",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    textAlign: "right",
-    gap: 3,
-  },
-  pointsBubble: {
-    color: "white",
-    backgroundColor: "#5B6771",
-    paddingBottom: 2,
-    paddingTop: 2,
-    paddingLeft: 4,
-    paddingRight: 4,
-    fontSize: 9,
-    borderRadius: "12px",
-    margin: "4px auto auto auto",
-    textAlign: "center",
-    width: "60%",
-    alignItems: "center",
-  },
 });
 
 const PdfTable = ({
@@ -568,8 +509,30 @@ const MyDocument = ({
         <PDFheader
           structure={structure}
           current={current}
-          PDFstyles={PDFstyles}
-        />
+          PDFstyles={PDFstyles}>
+          <View style={{ ...PDFstyles.columnsHeader, ...PDFstyles.columns }}>
+            {structure?.summary?.table?.columns.map((col, idx) => (
+              <View
+                key={idx}
+                style={{
+                  padding: 4,
+                  fontSize: 11,
+                  paddingTop: 12,
+                  flex: idx === 0 || idx === 3 ? 3 : 1,
+                  textAlign: idx === 2 ? "center" : "right",
+                  fontFamily: "Noto Sane Hebrew Bold",
+                  paddingRight: idx === 3 ? 20 : 4,
+                }}>
+                <Text>{col.title}</Text>
+                {idx === 2 && (
+                  <Text style={{ ...PDFstyles.pointsBubble, width: "100%" }}>
+                    אחוזי הצלחה
+                  </Text>
+                )}
+              </View>
+            ))}
+          </View>
+        </PDFheader>
 
         <View style={PDFstyles.section}>
           {structure?.questionnaire.content.map((chapter, chapterIdx) => (

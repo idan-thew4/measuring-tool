@@ -1,6 +1,12 @@
 "use client";
 
-import { useStore, CalcParameters } from "@/contexts/Store";
+import {
+  ProjectType,
+  ScoreType,
+  structureProps,
+  useStore,
+  alternativeType,
+} from "@/contexts/Store";
 import { RadarGraph } from "./graphs/graph/radar/radar";
 import { StackedBar } from "./graphs/graph/stackedBar/stackedBar";
 import { useEffect, useState } from "react";
@@ -9,6 +15,17 @@ import { SummaryHeader } from "../components/summary-header/summaryHeader";
 import clsx from "clsx";
 import { useParams } from "next/navigation";
 import { Loader } from "@/components/loader/loader";
+import { PDFheader, PDFstyles } from "../components/summary-header/pdfHeader";
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  Image,
+  Font,
+  pdf,
+} from "@react-pdf/renderer";
+import { saveAs } from "file-saver";
 
 export type ScoreData = {
   subject?: string;
@@ -23,11 +40,16 @@ export default function SummaryReport() {
     scoreObject,
     calculateScores,
     getAlternativeQuestionnaireData,
-    loader,
     isPageChanged,
     getChaptersScores,
     maxValue,
-    setMaxValue,
+    setLoader,
+    current,
+    PNGexports,
+    setGetGraphsImages,
+    getGraphsImages,
+    setPNGexports,
+    loader,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -152,6 +174,82 @@ export default function SummaryReport() {
     });
   }, [structure, scoreObject]);
 
+  // PDF Document
+
+  Font.register({
+    family: "Noto Sane Hebrew Regular",
+    src: "/fonts/NotoSansHebrew-Regular.ttf",
+    fontStyle: "normal",
+    fontWeight: "normal",
+  });
+
+  Font.register({
+    family: "Noto Sane Hebrew Bold",
+    src: "/fonts/NotoSansHebrew-Bold.ttf",
+    fontStyle: "normal",
+    fontWeight: "bold",
+  });
+
+  const MyDocument = ({
+    structure,
+    current,
+    graphs,
+  }: {
+    structure: structureProps;
+    current: { project: ProjectType; alternative: alternativeType } | null;
+    graphs: { name: string; path: string }[];
+  }) => {
+    // const rows = flattenAllTables(structure, scoreObject);
+
+    return (
+      <Document>
+        {graphs.map((graph, index) => (
+          <Page size="A4" style={PDFstyles.page} key={index}>
+            <PDFheader
+              structure={structure}
+              current={current}
+              PDFstyles={PDFstyles}></PDFheader>
+
+            <View style={PDFstyles.section}>
+              <Image
+                src={graph.path}
+                style={{ width: "auto", height: "auto" }}
+              />
+            </View>
+          </Page>
+        ))}
+      </Document>
+    );
+  };
+
+  const handleDownload = async () => {
+    try {
+      const blob = await pdf(
+        <MyDocument
+          structure={structure as structureProps}
+          current={current}
+          graphs={PNGexports}
+        />
+      ).toBlob();
+      saveAs(
+        blob,
+        `${current?.project.project_name}, ${current?.alternative.alternative_name}.pdf`
+      );
+      setGetGraphsImages("");
+      setPNGexports([]);
+      setLoader(false);
+    } catch (error) {
+      console.error("Error generating or downloading the PDF:", error);
+    } finally {
+    }
+  };
+
+  useEffect(() => {
+    if (PNGexports.length === 2 && getGraphsImages === "getting-images") {
+      handleDownload();
+    }
+  }, [getGraphsImages, PNGexports]);
+
   if (!structure) {
     return <Loader />;
   }
@@ -163,8 +261,18 @@ export default function SummaryReport() {
           <SummaryHeader
             title={structure?.summary.header.title}
             structure={structure}
-            scoreObject={scoreObject}
-          />
+            scoreObject={scoreObject}>
+            <button
+              type="button"
+              onClick={() => {
+                // console.log("hi");
+                // setLoader(true);
+                setGetGraphsImages("getting-images");
+              }}
+              className="basic-button print with-icon outline">
+              {structure?.summary.header["buttons-copy"][0]}
+            </button>
+          </SummaryHeader>
 
           <div className={styles["graphs"]}>
             {structure["summary-report"].graphs.map((graph, index) => {

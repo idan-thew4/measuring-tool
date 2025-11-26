@@ -452,6 +452,8 @@ type ApiContextType = {
   >;
   activeSideMenu: boolean;
   setActiveSideMenu: React.Dispatch<React.SetStateAction<boolean>>;
+  getGraphsImages: string;
+  setGetGraphsImages: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export type ScoreData = {
@@ -570,6 +572,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   const [PNGexports, setPNGexports] = useState<
     { name: string; path: string }[]
   >([]);
+  const [getGraphsImages, setGetGraphsImages] = useState<string>("");
   const [activeSideMenu, setActiveSideMenu] = useState(false);
 
   async function getContent() {
@@ -946,9 +949,6 @@ function Store({ children }: PropsWithChildren<{}>) {
   }, []);
 
   useEffect(() => {
-    console.log("pathname", pathname);
-    console.log("params", params.chapters?.[0]);
-
     if (pathname.includes("self-assessment")) {
       setSideMenu("self-assessment");
     } else if (pathname.includes(params.chapters?.[0] || "")) {
@@ -1058,8 +1058,9 @@ function Store({ children }: PropsWithChildren<{}>) {
         setPNGexports,
         activeSideMenu,
         setActiveSideMenu,
-      }}
-    >
+        getGraphsImages,
+        setGetGraphsImages,
+      }}>
       {children}
     </ApiContext.Provider>
   );

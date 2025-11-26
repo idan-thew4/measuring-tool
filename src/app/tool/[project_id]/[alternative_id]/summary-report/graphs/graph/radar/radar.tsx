@@ -13,7 +13,6 @@ import { Graph } from "../graph";
 import { useStore } from "@/contexts/Store";
 import { toPng } from "html-to-image";
 import { useRef } from "react";
-import { set } from "react-hook-form";
 
 export function RadarGraph({
   parameters,
@@ -40,7 +39,7 @@ export function RadarGraph({
   maxScore?: number;
   imageKey?: string;
 }) {
-  const colors = ["#979797", "#79C5D8"];
+  const colors = ["#79C5D8", "#979797"];
   const [dataKeys, setDataKeys] = useState<string[]>();
   const [filtersStatus, setFiltersStatus] = useState<{
     [key: string]: boolean;
@@ -48,7 +47,14 @@ export function RadarGraph({
     questionnaire: true,
     assessment: false,
   });
-  const { legendColors, PNGexports, setPNGexports } = useStore();
+  const {
+    legendColors,
+    PNGexports,
+    setPNGexports,
+    loader,
+    setGetGraphsImages,
+    getGraphsImages,
+  } = useStore();
 
   useEffect(() => {
     const tempDataKeys: string[] = [];
@@ -63,9 +69,9 @@ export function RadarGraph({
       });
     }
 
-    tempDataKeys.sort((a, b) =>
-      a === "questionnaire" ? 1 : b === "questionnaire" ? -1 : 0
-    );
+    // tempDataKeys.sort((a, b) =>
+    //   a === "questionnaire" ? 1 : b === "questionnaire" ? -1 : 0
+    // );
 
     setDataKeys(tempDataKeys);
   }, [parameters]);
@@ -93,20 +99,25 @@ export function RadarGraph({
   ) as React.RefObject<HTMLDivElement>;
 
   const getExportedGraph = async () => {
-    const dataUrl = await toPng(radarRef.current);
-
+    const dataUrl = await toPng(radarRef.current, { pixelRatio: 2 });
     setPNGexports((prev) => {
-      // Only add if not already present
-      if (prev.some((item) => item.name === imageKey)) {
+      // Only add if imageKey exists and is not already present
+      if (!imageKey || prev.some((item) => item.name === imageKey)) {
         return prev;
       }
-      return [...prev, { name: imageKey ?? "", path: dataUrl }];
+      return [...prev, { name: imageKey, path: dataUrl }];
     });
+
+    // }
   };
 
-  useEffect(() => {
-    getExportedGraph();
-  }, [radarRef.current]);
+  // useEffect(() => {
+  //   if (getGraphsImages === "getting-images") {
+  //     // setTimeout(() => {
+  //     // getExportedGraph();
+  //     // }, 500);
+  //   }
+  // }, [getGraphsImages, radarRef]);
 
   return (
     <Graph
@@ -137,7 +148,8 @@ export function RadarGraph({
                     }));
                   }}
                 />
-                {(filters ?? [])[filters.length - 1 - index]}{" "}
+                {/* {(filters ?? [])[filters.length - 1 - index]}{" "} */}
+                {filters[index]}
               </label>
             </li>
           ))}
