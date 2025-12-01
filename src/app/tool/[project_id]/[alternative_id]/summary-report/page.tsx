@@ -6,10 +6,11 @@ import {
   structureProps,
   useStore,
   alternativeType,
+  CalcParameters,
 } from "@/contexts/Store";
 import { RadarGraph } from "./graphs/graph/radar/radar";
 import { StackedBar } from "./graphs/graph/stackedBar/stackedBar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import styles from "./summary-report.module.scss";
 import { SummaryHeader } from "../components/summary-header/summaryHeader";
 import clsx from "clsx";
@@ -25,7 +26,7 @@ import {
   Font,
   pdf,
 } from "@react-pdf/renderer";
-import { saveAs } from "file-saver";
+// import { saveAs } from "file-saver";
 
 export type ScoreData = {
   subject?: string;
@@ -61,6 +62,11 @@ export default function SummaryReport() {
     subChapters: [],
   });
   const params = useParams();
+  const graphRefs = useRef<Array<{ capture: () => void } | null>>([]);
+
+  const handleClick = () => {
+    graphRefs.current.forEach((ref) => ref?.capture());
+  };
 
   useEffect(() => {
     isPageChanged("summary");
@@ -199,8 +205,6 @@ export default function SummaryReport() {
     current: { project: ProjectType; alternative: alternativeType } | null;
     graphs: { name: string; path: string }[];
   }) => {
-    // const rows = flattenAllTables(structure, scoreObject);
-
     return (
       <Document>
         {graphs.map((graph, index) => (
@@ -222,33 +226,33 @@ export default function SummaryReport() {
     );
   };
 
-  const handleDownload = async () => {
-    try {
-      const blob = await pdf(
-        <MyDocument
-          structure={structure as structureProps}
-          current={current}
-          graphs={PNGexports}
-        />
-      ).toBlob();
-      saveAs(
-        blob,
-        `${current?.project.project_name}, ${current?.alternative.alternative_name}.pdf`
-      );
-      setGetGraphsImages("");
-      setPNGexports([]);
-      setLoader(false);
-    } catch (error) {
-      console.error("Error generating or downloading the PDF:", error);
-    } finally {
-    }
-  };
+  // const handleDownload = async () => {
+  //   try {
+  //     const blob = await pdf(
+  //       <MyDocument
+  //         structure={structure as structureProps}
+  //         current={current}
+  //         graphs={PNGexports}
+  //       />
+  //     ).toBlob();
+  //     saveAs(
+  //       blob,
+  //       `${current?.project.project_name}, ${current?.alternative.alternative_name}.pdf`
+  //     );
+  //     setGetGraphsImages("");
+  //     setPNGexports([]);
+  //     setLoader(false);
+  //   } catch (error) {
+  //     console.error("Error generating or downloading the PDF:", error);
+  //   } finally {
+  //   }
+  // };
 
-  useEffect(() => {
-    if (PNGexports.length === 2 && getGraphsImages === "getting-images") {
-      handleDownload();
-    }
-  }, [getGraphsImages, PNGexports]);
+  // useEffect(() => {
+  //   if (PNGexports.length === 2 && getGraphsImages === "getting-images") {
+  //     handleDownload();
+  //   }
+  // }, [getGraphsImages, PNGexports]);
 
   if (!structure) {
     return <Loader />;
@@ -267,7 +271,8 @@ export default function SummaryReport() {
               onClick={() => {
                 // console.log("hi");
                 // setLoader(true);
-                setGetGraphsImages("getting-images");
+                // setGetGraphsImages("getting-images");
+                handleClick();
               }}
               className="basic-button print with-icon outline">
               {structure?.summary.header["buttons-copy"][0]}
@@ -292,6 +297,9 @@ export default function SummaryReport() {
                       structure={structure}
                       imageGridURL={`/pages/graphs/radar_grid_${graph.data}.svg`}
                       maxScore={maxValue}
+                      ref={(refObj) => {
+                        graphRefs.current[index] = refObj;
+                      }}
                     />
                   );
                   break;

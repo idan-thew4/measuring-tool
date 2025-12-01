@@ -116,7 +116,7 @@
       },
       {
         "title": "מידע כללי על המיזם",
-        "description": "המידע נשמר בצורה אנונימית, לצרכי תפעול הכלי. ולא משותף עם צד שלישי ",
+        "description": "המידע נשמר לצרכי תפעול הכלי ולא יפורסם ללא הסכמה",
         "input-fields": [
           {
             "label": "שם המיזם",
@@ -182,14 +182,24 @@
             "placeholder": "תת סוג המיזם",
             "name": "projectSubType",
             "dropdown-options": [
-              { "value": "park", "label": "פארק" },
-              { "value": "neighborhood", "label": "שכונה" },
-              { "value": "road", "label": "כביש" },
-              { "value": "communication", "label": "תקשורת" },
-              { "value": "drainage", "label": "ניקוז" },
-              { "value": "stream", "label": "נחל" },
+              { "value": "park/garden", "label": "פארק/גינה" },
+              { "value": "neighborhood/building", "label": "שכונה/מבנן" },
+              {
+                "value": "engineering-facility",
+                "label": "מתקן הנדסה (מת\"ש, תחנת חשמל...)"
+              },
+              { "value": "road/rail", "label": "כביש/מסילה" },
+              {
+                "value": "industrial/employment-area",
+                "label": "אזור תעשיה/תעסוקה"
+              },
+              {
+                "value": "nature-reserve/national-park",
+                "label": "שמורת טבע/גן לאומי"
+              },
               { "value": "nature-reserve", "label": "שמורת טבע" },
-              { "value": "railway", "label": "מסילה" },
+              { "value": "open-spaces", "label": "שטחים פתוחים" },
+              { "value": "river/drainage", "label": "נחל/ניקוז" },
               { "value": "other", "label": "אחר" }
             ]
           },
@@ -198,7 +208,7 @@
             "row": 0.5,
             "mandatory": true,
             "validation-error": "יש להזין שטח המיזם",
-            "placeholder": "שטח המיזם",
+            "placeholder": "שטח המיזם (דונם) ",
             "name": "projectArea "
           },
           {
@@ -212,7 +222,8 @@
               { "value": "planning", "label": "תכנון" },
               { "value": "execution", "label": "ביצוע" },
               { "value": "ongoing", "label": "מתמשך" },
-              { "value": "delivery", "label": "מסירה" }
+              { "value": "delivery/accommodation", "label": "מסירה/אכלוס" },
+              { "value": "maintenance/operation", "label": "תחזוקה/תפעול" }
             ]
           },
           {

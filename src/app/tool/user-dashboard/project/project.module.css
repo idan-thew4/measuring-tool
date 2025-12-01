@@ -1,0 +1,82 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.project-table {
+  border-radius: 2rem;
+  overflow: hidden;
+  background-color: white;
+  border: 0.1rem solid #d9d9d9;
+  margin-bottom: 4rem;
+}
+.project-table .row {
+  height: 6.7rem;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 1rem 2.4rem;
+  align-items: center;
+  gap: 1rem;
+  box-sizing: border-box;
+}
+.project-table .row button {
+  height: auto;
+}
+.project-table .row-head {
+  background-color: #5b6771;
+}
+.project-table .row-head .delete-button {
+  grid-column: 5/6;
+  background-color: white;
+}
+.project-table .row-head .project-name {
+  display: flex;
+  grid-column: 1/3;
+  gap: 2rem;
+  color: white;
+  align-items: center;
+}
+.project-table .row .project-button.multiple-alternative:first-of-type {
+  grid-column: 4/5;
+}
+.project-table .row .project-button.multiple-alternative:last-of-type {
+  grid-column: 5/6;
+}
+.project-table .row .project-button.single-alternative {
+  grid-column: 5/6;
+}
+.project-table .row:last-child {
+  border-bottom: none;
+}
+.project-table .row-alternative {
+  border-bottom: 0.1rem solid #d9d9d9;
+  padding: 1rem 0;
+  margin: 0 2.4rem;
+}
+.project-table .row-alternative .alternative-name {
+  display: flex;
+  grid-column: 1/3;
+  gap: 2rem;
+  align-items: baseline;
+}
+.project-table .row-alternative .alternative-link {
+  color: black;
+  display: flex;
+  align-items: baseline;
+}
+.project-table .row-alternative .alternative-link .date {
+  padding-right: 0.5 rem;
+}/*# sourceMappingURL=project.module.css.map */
