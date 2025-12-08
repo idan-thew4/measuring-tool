@@ -138,10 +138,12 @@ export default function SelfAssessment() {
               scoreObject.data.assessment[index]["sub-chapters"];
             const avg =
               subChapter && subChapter.length > 0
-                ? subChapter.reduce(
-                    (sum, sc) => sum + sc["sub-chapter-score"],
-                    0
-                  ) / subChapter.length
+                ? Math.round(
+                    subChapter.reduce(
+                      (sum, sc) => sum + sc["sub-chapter-score"],
+                      0
+                    ) / subChapter.length
+                  )
                 : 0;
 
             questionnaire = avg;
