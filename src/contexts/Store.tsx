@@ -103,20 +103,45 @@ export function getPercentageLabel(
 export function getScoreValue(
   scores: ScoreData[] | ScoreData,
   key: "generalScore" | "percentage",
-  indexOrGetScoreLabel?: number
+  indexOrGetScoreLabel?: number,
+  type?: "subChapter" | "chapter"
 ): string | number {
-  if (Array.isArray(scores)) {
-    const index = indexOrGetScoreLabel as number;
-    if (
-      scores[index] &&
-      typeof scores[index][key] === "number" &&
-      scores[index][key] > 0
-    ) {
-      return scores[index][key];
+  // console.log("scores", scores);
+
+  if (type) {
+    switch (type) {
+      case "subChapter":
+        let percentageTotal = 0;
+
+        if (Array.isArray(scores)) {
+          scores.forEach((scoreObj) => {
+            if (!isNaN(scoreObj.percentage as number)) {
+              percentageTotal += Number(scoreObj.percentage ?? 0);
+            }
+          });
+        }
+        return scores && Array.isArray(scores) && scores.length > 0
+          ? Math.floor(percentageTotal / Number(scores.length))
+          : 0;
+        break;
+      case "chapter":
+        console.log("chapter scores", scores);
     }
-  } else if (scores && typeof scores[key] === "number" && scores[key] > 0) {
-    return scores[key];
+  } else {
+    if (Array.isArray(scores)) {
+      const index = indexOrGetScoreLabel as number;
+      if (
+        scores[index] &&
+        typeof scores[index][key] === "number" &&
+        scores[index][key] > 0
+      ) {
+        return scores[index][key];
+      }
+    } else if (scores && typeof scores[key] === "number" && scores[key] > 0) {
+      return scores[key];
+    }
   }
+
   return "";
 }
 
@@ -827,6 +852,8 @@ function Store({ children }: PropsWithChildren<{}>) {
                 calcParameters[index]["net-zero-impact"] +=
                   netZeroImpactScore?.score ?? 0;
                 calcParameters[index]["max-score"] += maxScore?.score ?? 0;
+
+                // console.log("generalScore", generalScore);
 
                 //console.log("index" + index);
               } else if (
