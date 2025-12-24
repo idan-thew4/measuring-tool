@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import {
   BarChart,
   Bar,
@@ -14,6 +20,7 @@ import { structureProps, useStore } from "@/contexts/Store";
 import styles from "./stackedBar.module.scss";
 import graphStyles from "../graph.module.scss";
 import clsx from "clsx";
+import { toPng } from "html-to-image";
 
 interface CustomYAxisTickProps {
   y: number;
@@ -43,7 +50,8 @@ const CustomYAxisTick = (props: CustomYAxisTickProps) => {
                 ? "30"
                 : "20"
             }
-            height={10}></rect>
+            height={10}
+          ></rect>
           <text
             x={0}
             y={4}
@@ -51,7 +59,8 @@ const CustomYAxisTick = (props: CustomYAxisTickProps) => {
             textAnchor="middle"
             fill="#CFD3D1"
             fontWeight="bold"
-            fontSize={10}>
+            fontSize={10}
+          >
             {payload.value}
           </text>
         </g>
@@ -102,200 +111,237 @@ const CustomTopBar = (props: any) => {
   );
 };
 
-export function StackedBar({
-  parameters,
-  headline,
-  structure,
-  filters,
-}: {
+type RadarGraphProps = {
   parameters: ScoreData[];
   headline?: string;
-  structure: structureProps;
   filters?: string[];
-}) {
-  const [filtersStatus, setFiltersStatus] = useState<boolean>(true);
-  const [maxValue, setMaxValue] = useState<number>();
-  const [barData, setBarData] =
-    useState<{ chapter: string; subChapters: number }[]>();
-  const [gridColumns, setGridColumns] = useState<{ gridColumn: string }[]>();
-  const { legendColors } = useStore();
+  structure: structureProps;
+};
 
-  useEffect(() => {
-    const maxValue = Math.max(
-      ...parameters.map(
-        (item) =>
-          Number(item.generalScore ?? 0) + Number(item.possibleScore ?? 0)
-      )
-    );
+type RadarGraphHandle = { capture: () => void };
 
-    setMaxValue(maxValue);
-  }, [parameters]);
+const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
+  (props, ref) => {
+    const { parameters, headline, structure, filters } = props;
 
-  useEffect(() => {
-    const content = structure.questionnaire.content;
-    const sums = Array(content.length).fill(0);
-    const counts = Array(content.length).fill(0);
-    const barDataTemp: { chapter: string; subChapters: number }[] = [];
-    let previousSubChapters = "";
-    content.forEach((chapter) =>
-      chapter["chapter-content"].forEach((sub) => {
-        if (previousSubChapters !== chapter["chapter-title"]) {
-          barDataTemp.push({
-            chapter: chapter["chapter-title"],
-            subChapters: chapter["chapter-content"].length,
-          });
-        }
-        previousSubChapters = chapter["chapter-title"];
+    const [filtersStatus, setFiltersStatus] = useState<boolean>(true);
+    const [maxValue, setMaxValue] = useState<number>();
+    const [barData, setBarData] =
+      useState<{ chapter: string; subChapters: number }[]>();
+    const [gridColumns, setGridColumns] = useState<{ gridColumn: string }[]>();
+    const { legendColors } = useStore();
 
-        sub.principles.forEach((principle) =>
-          principle.choices.forEach((choice, idx) => {
-            if (typeof choice.score === "number") {
-              sums[idx] += choice.score;
-              counts[idx]++;
-            }
-          })
-        );
-      })
-    );
+    useEffect(() => {
+      const maxValue = Math.max(
+        ...parameters.map(
+          (item) =>
+            Number(item.generalScore ?? 0) + Number(item.possibleScore ?? 0)
+        )
+      );
 
-    const avgs = sums.map((sum, idx) => (counts[idx] ? sum / counts[idx] : 0));
+      setMaxValue(maxValue);
+    }, [parameters]);
 
-    let start = 1;
-    const gridColumnsTemp = barDataTemp.map((bar) => {
-      const end = start + bar.subChapters;
-      const style = { gridColumn: `${start}/${end}` };
-      start = end;
-      return style;
-    });
+    useEffect(() => {
+      const content = structure.questionnaire.content;
+      const sums = Array(content.length).fill(0);
+      const counts = Array(content.length).fill(0);
+      const barDataTemp: { chapter: string; subChapters: number }[] = [];
+      let previousSubChapters = "";
+      content.forEach((chapter) =>
+        chapter["chapter-content"].forEach((sub) => {
+          if (previousSubChapters !== chapter["chapter-title"]) {
+            barDataTemp.push({
+              chapter: chapter["chapter-title"],
+              subChapters: chapter["chapter-content"].length,
+            });
+          }
+          previousSubChapters = chapter["chapter-title"];
 
-    setBarData(barDataTemp);
-    setGridColumns(gridColumnsTemp);
-  }, []);
+          sub.principles.forEach((principle) =>
+            principle.choices.forEach((choice, idx) => {
+              if (typeof choice.score === "number") {
+                sums[idx] += choice.score;
+                counts[idx]++;
+              }
+            })
+          );
+        })
+      );
 
-  function getBarColor(value: number) {
-    if (value > 100) {
-      return legendColors[3];
-    } else if (Number(value) <= 100 && Number(value) >= 34) {
-      return legendColors[2];
-    } else if (Number(value) <= 35 && Number(value) >= 18) {
-      return legendColors[1];
-    } else {
-      return legendColors[0];
+      const avgs = sums.map((sum, idx) =>
+        counts[idx] ? sum / counts[idx] : 0
+      );
+
+      let start = 1;
+      const gridColumnsTemp = barDataTemp.map((bar) => {
+        const end = start + bar.subChapters;
+        const style = { gridColumn: `${start}/${end}` };
+        start = end;
+        return style;
+      });
+
+      setBarData(barDataTemp);
+      setGridColumns(gridColumnsTemp);
+    }, []);
+
+    function getBarColor(value: number) {
+      if (value > 100) {
+        return legendColors[3];
+      } else if (Number(value) <= 100 && Number(value) >= 34) {
+        return legendColors[2];
+      } else if (Number(value) <= 35 && Number(value) >= 18) {
+        return legendColors[1];
+      } else {
+        return legendColors[0];
+      }
     }
-  }
 
-  return (
-    <Graph
-      headline={headline}
-      structure={structure}
-      legend={structure.questionnaire.options.slice(1)}
-      literalLegend={true}>
-      <ul className={graphStyles["filters"]}>
-        <li key={0} className={graphStyles["filter-item"]}>
-          <label className={clsx("paragraph_14", graphStyles["filter-label"])}>
-            <input
-              type="checkbox"
-              checked={filtersStatus || false}
-              onChange={() => {
-                setFiltersStatus((prev) => !prev);
-              }}
-            />
-            {(filters ?? [])[0]}
-          </label>
-        </li>
-      </ul>
-      <ResponsiveContainer
-        width="100%"
-        height={200}
-        className={styles["responsive-container"]}>
-        <BarChart
-          className={styles["bar-chart"]}
-          data={parameters}
-          margin={{
-            top: 0,
-            right: 0,
-            left: -60,
-            bottom: 0,
-          }}>
-          <CartesianGrid vertical={false} />
-          <XAxis dataKey="subChapterNumber" axisLine={false} tickLine={false} />
-          <YAxis
-            axisLine={false}
-            tick={(props: CustomYAxisTickProps) => (
-              <CustomYAxisTick {...props} />
-            )}
-            tickLine={false}
-            domain={typeof maxValue === "number" ? [0, maxValue] : undefined}
-          />
+    const graphContainer = useRef<HTMLDivElement>(
+      null
+    ) as React.RefObject<HTMLDivElement>;
 
-          <Bar
-            radius={[10, 10, 0, 0]}
-            dataKey="generalScore"
-            stackId="a"
-            label={({
-              x,
-              y,
-              width,
-              value,
-            }: {
-              x?: number;
-              y?: number;
-              width?: number;
-              value?: string | number;
-            }) => (
-              <text
-                x={x !== undefined && width !== undefined ? x + width / 2 : 0}
-                y={y !== undefined ? y - 10 : 0}
-                textAnchor="middle"
-                fill="#black"
-                fontWeight="bold"
-                fontSize="1rem">
-                {value}
-              </text>
-            )}>
-            {parameters.map((entry, index) => {
-              return (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={getBarColor(
-                    Math.round(
-                      (Number(entry.generalScore) /
-                        Number(entry.possibleScore)) *
-                        100
-                    )
-                  )}
-                />
-              );
-            })}
-          </Bar>
-          {filtersStatus && (
-            <Bar
-              dataKey="possibleScore"
-              stackId="a"
-              fill="rgba(123, 133, 139, 0.06)"
-              shape={CustomTopBar}
-            />
-          )}
-        </BarChart>
-      </ResponsiveContainer>
+    // Expose a method to parent
 
-      {barData && barData.length > 0 && (
-        <ul
-          className={styles["data-bar"]}
-          style={{
-            display: "grid",
-            gridTemplateColumns: `repeat(${parameters.length}, 1fr)`,
-          }}>
-          {barData.map((bar, idx) => (
-            <li
-              className={clsx("paragraph_11", styles["data-bar-item"])}
-              key={bar.chapter}
-              style={gridColumns?.[idx] ?? {}}>
-              {bar.chapter}
-            </li>
-          ))}
+    useImperativeHandle(ref, () => ({
+      async capture() {
+        if (graphContainer.current) {
+          const dataUrl = await toPng(graphContainer.current);
+          return dataUrl;
+        }
+        return null;
+      },
+    }));
+
+    return (
+      <Graph
+        headline={headline}
+        structure={structure}
+        legend={structure.questionnaire.options.slice(1)}
+        literalLegend={true}
+        radarRef={graphContainer}
+      >
+        <ul className={graphStyles["filters"]}>
+          <li key={0} className={graphStyles["filter-item"]}>
+            <label
+              className={clsx("paragraph_14", graphStyles["filter-label"])}
+            >
+              <input
+                type="checkbox"
+                checked={filtersStatus || false}
+                onChange={() => {
+                  setFiltersStatus((prev) => !prev);
+                }}
+              />
+              {(filters ?? [])[0]}
+            </label>
+          </li>
         </ul>
-      )}
-    </Graph>
-  );
-}
+        <ResponsiveContainer
+          width="100%"
+          height={200}
+          className={styles["responsive-container"]}
+        >
+          <BarChart
+            className={styles["bar-chart"]}
+            data={parameters}
+            margin={{
+              top: 0,
+              right: 0,
+              left: -60,
+              bottom: 0,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="subChapterNumber"
+              axisLine={false}
+              tickLine={false}
+            />
+            <YAxis
+              axisLine={false}
+              tick={(props: CustomYAxisTickProps) => (
+                <CustomYAxisTick {...props} />
+              )}
+              tickLine={false}
+              domain={typeof maxValue === "number" ? [0, maxValue] : undefined}
+            />
+
+            <Bar
+              radius={[10, 10, 0, 0]}
+              dataKey="generalScore"
+              stackId="a"
+              label={({
+                x,
+                y,
+                width,
+                value,
+              }: {
+                x?: number;
+                y?: number;
+                width?: number;
+                value?: string | number;
+              }) => (
+                <text
+                  x={x !== undefined && width !== undefined ? x + width / 2 : 0}
+                  y={y !== undefined ? y - 10 : 0}
+                  textAnchor="middle"
+                  fill="#black"
+                  fontWeight="bold"
+                  fontSize="1rem"
+                >
+                  {value}
+                </text>
+              )}
+            >
+              {parameters.map((entry, index) => {
+                return (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={getBarColor(
+                      Math.round(
+                        (Number(entry.generalScore) /
+                          Number(entry.possibleScore)) *
+                          100
+                      )
+                    )}
+                  />
+                );
+              })}
+            </Bar>
+            {filtersStatus && (
+              <Bar
+                dataKey="possibleScore"
+                stackId="a"
+                fill="rgba(123, 133, 139, 0.06)"
+                shape={CustomTopBar}
+              />
+            )}
+          </BarChart>
+        </ResponsiveContainer>
+
+        {barData && barData.length > 0 && (
+          <ul
+            className={styles["data-bar"]}
+            style={{
+              display: "grid",
+              gridTemplateColumns: `repeat(${parameters.length}, 1fr)`,
+            }}
+          >
+            {barData.map((bar, idx) => (
+              <li
+                className={clsx("paragraph_11", styles["data-bar-item"])}
+                key={bar.chapter}
+                style={gridColumns?.[idx] ?? {}}
+              >
+                {bar.chapter}
+              </li>
+            ))}
+          </ul>
+        )}
+      </Graph>
+    );
+  }
+);
+
+export { StackedBar };

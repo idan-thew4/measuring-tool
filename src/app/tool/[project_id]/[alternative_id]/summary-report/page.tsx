@@ -26,7 +26,8 @@ import {
   Font,
   pdf,
 } from "@react-pdf/renderer";
-// import { saveAs } from "file-saver";
+import { toPng } from "html-to-image";
+import { saveAs } from "file-saver";
 
 export type ScoreData = {
   subject?: string;
@@ -62,11 +63,33 @@ export default function SummaryReport() {
     subChapters: [],
   });
   const params = useParams();
-  const graphRefs = useRef<Array<{ capture: () => void } | null>>([]);
+  const graphRefs = useRef<
+    Array<{ capture: () => Promise<string | undefined> } | null>
+  >([]);
 
-  const handleClick = () => {
-    graphRefs.current.forEach((ref) => ref?.capture());
+  const handleClick = async () => {
+    // Collect all PNG data URLs from the graph refs
+    const images: { name: string; path: string }[] = [];
+
+    for (let i = 0; i < graphRefs.current.length; i++) {
+      const ref = graphRefs.current[i];
+      if (ref && typeof ref.capture === "function") {
+        const dataUrl = await ref.capture();
+        if (typeof dataUrl === "string" && dataUrl) {
+          images.push({ name: `graph-${i}`, path: dataUrl });
+        }
+      }
+    }
+
+    setPNGexports(images);
   };
+
+  useEffect(() => {
+    if (PNGexports.length > 0) {
+      handleDownload();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [PNGexports]);
 
   useEffect(() => {
     isPageChanged("summary");
@@ -127,9 +150,12 @@ export default function SummaryReport() {
             "chapter-content"
           ]?.[subChapterIndex]?.["sub-chapter-title"] ?? "";
 
-        const questionnaire = Math.round(
+        const questionnaireValue = Math.round(
           (subChapter["general-score"] / subChapter["net-zero-impact"]) * 100
         );
+        const questionnaire = Number.isNaN(questionnaireValue)
+          ? 0
+          : questionnaireValue;
 
         const assessment =
           hasAssessment &&
@@ -212,12 +238,15 @@ export default function SummaryReport() {
             <PDFheader
               structure={structure}
               current={current}
-              PDFstyles={PDFstyles}></PDFheader>
-
+              PDFstyles={PDFstyles}
+            />
             <View style={PDFstyles.section}>
               <Image
                 src={graph.path}
-                style={{ width: "auto", height: "auto" }}
+                style={{
+                  width: 550,
+                  height: graph.name === "graph-2" ? 409 : 696,
+                }}
               />
             </View>
           </Page>
@@ -226,33 +255,24 @@ export default function SummaryReport() {
     );
   };
 
-  // const handleDownload = async () => {
-  //   try {
-  //     const blob = await pdf(
-  //       <MyDocument
-  //         structure={structure as structureProps}
-  //         current={current}
-  //         graphs={PNGexports}
-  //       />
-  //     ).toBlob();
-  //     saveAs(
-  //       blob,
-  //       `${current?.project.project_name}, ${current?.alternative.alternative_name}.pdf`
-  //     );
-  //     setGetGraphsImages("");
-  //     setPNGexports([]);
-  //     setLoader(false);
-  //   } catch (error) {
-  //     console.error("Error generating or downloading the PDF:", error);
-  //   } finally {
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (PNGexports.length === 2 && getGraphsImages === "getting-images") {
-  //     handleDownload();
-  //   }
-  // }, [getGraphsImages, PNGexports]);
+  const handleDownload = async () => {
+    try {
+      const blob = await pdf(
+        <MyDocument
+          structure={structure as structureProps}
+          current={current}
+          graphs={PNGexports}
+        />
+      ).toBlob();
+      saveAs(
+        blob,
+        `${current?.project.project_name}, ${current?.alternative.alternative_name}.pdf`
+      );
+    } catch (error) {
+      console.error("Error generating or downloading the PDF:", error);
+    } finally {
+    }
+  };
 
   if (!structure) {
     return <Loader />;
@@ -265,7 +285,8 @@ export default function SummaryReport() {
           <SummaryHeader
             title={structure?.summary.header.title}
             structure={structure}
-            scoreObject={scoreObject}>
+            scoreObject={scoreObject}
+          >
             <button
               type="button"
               onClick={() => {
@@ -274,7 +295,8 @@ export default function SummaryReport() {
                 // setGetGraphsImages("getting-images");
                 handleClick();
               }}
-              className="basic-button print with-icon outline">
+              className="basic-button print with-icon outline"
+            >
               {structure?.summary.header["buttons-copy"][0]}
             </button>
           </SummaryHeader>
@@ -291,7 +313,6 @@ export default function SummaryReport() {
                           : scores.secondChapter
                       }
                       key={index}
-                      imageKey={`radar-${index}`}
                       headline={graph.title}
                       filters={graph.filters}
                       structure={structure}
@@ -311,6 +332,9 @@ export default function SummaryReport() {
                       headline={graph.title}
                       structure={structure}
                       filters={graph.filters}
+                      ref={(refObj) => {
+                        graphRefs.current[index] = refObj;
+                      }}
                     />
                   );
               }
