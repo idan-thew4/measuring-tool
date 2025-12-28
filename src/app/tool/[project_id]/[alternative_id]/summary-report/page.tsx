@@ -125,8 +125,6 @@ export default function SummaryReport() {
         )
       : [];
 
-    console.log("scoreObject", scoreObject);
-
     // second-chapters //
 
     questionnaireParams = [];
@@ -287,8 +285,7 @@ export default function SummaryReport() {
           <SummaryHeader
             title={structure?.summary.header.title}
             structure={structure}
-            scoreObject={scoreObject}
-          >
+            scoreObject={scoreObject}>
             <button
               type="button"
               onClick={() => {
@@ -297,8 +294,7 @@ export default function SummaryReport() {
                 // setGetGraphsImages("getting-images");
                 handleClick();
               }}
-              className="basic-button print with-icon outline"
-            >
+              className="basic-button print with-icon outline">
               {structure?.summary.header["buttons-copy"][0]}
             </button>
           </SummaryHeader>

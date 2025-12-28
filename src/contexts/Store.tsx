@@ -100,56 +100,26 @@ export function getPercentageLabel(
   return "";
 }
 
-export function getScoreValue(
-  scores: ScoreData[] | ScoreData,
-  key: "generalScore" | "percentage",
-  indexOrGetScoreLabel?: number,
-  type?: "subChapter" | "chapter"
-): string | number {
-  // console.log("scores", scores);
+// export function getScoreValue(
+//   scores: ScoreData[] | ScoreData,
+//   key: "generalScore" | "percentage",
+//   indexOrGetScoreLabel?: number
+// ): string | number {
+//   if (Array.isArray(scores)) {
+//     const index = indexOrGetScoreLabel as number;
+//     if (
+//       scores[index] &&
+//       typeof scores[index][key] === "number" &&
+//       scores[index][key] > 0
+//     ) {
+//       return scores[index][key];
+//     }
+//   } else if (scores && typeof scores[key] === "number" && scores[key] > 0) {
+//     return scores[key];
+//   }
 
-  if (type) {
-    switch (type) {
-      case "subChapter":
-        if (
-          typeof indexOrGetScoreLabel === "number" &&
-          scores &&
-          Array.isArray(scores)
-        ) {
-          const value = scores[indexOrGetScoreLabel].percentage;
-          if (typeof value === "string" || typeof value === "number") {
-            return value;
-          }
-          return "";
-        }
-
-        break;
-      case "chapter":
-        if (!Array.isArray(scores)) {
-          const percentage = scores.percentage;
-          return typeof percentage === "number" ||
-            typeof percentage === "string"
-            ? percentage
-            : 0;
-        }
-    }
-  } else {
-    if (Array.isArray(scores)) {
-      const index = indexOrGetScoreLabel as number;
-      if (
-        scores[index] &&
-        typeof scores[index][key] === "number" &&
-        scores[index][key] > 0
-      ) {
-        return scores[index][key];
-      }
-    } else if (scores && typeof scores[key] === "number" && scores[key] > 0) {
-      return scores[key];
-    }
-  }
-
-  return "";
-}
+//   return "";
+// }
 
 //Score Object types//
 
@@ -1093,8 +1063,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         setActiveSideMenu,
         getGraphsImages,
         setGetGraphsImages,
-      }}
-    >
+      }}>
       {children}
     </ApiContext.Provider>
   );
