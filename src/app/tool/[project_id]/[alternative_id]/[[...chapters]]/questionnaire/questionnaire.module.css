@@ -37,7 +37,6 @@
 .questionnaire-container .questionnaire-header .chapter-subtitle {
   margin: 4rem 0 2rem 0;
   top: 2rem;
-  position: sticky;
 }
 .questionnaire-container .questionnaire-header .chapter-subtitle .number {
   padding-left: 1rem;
@@ -70,6 +69,4 @@
 .questionnaire-container .questionnaire-header .description {
   overflow: hidden;
   transition: 0.3s all;
-  position: sticky;
-  top: 10rem;
 }/*# sourceMappingURL=questionnaire.module.css.map */

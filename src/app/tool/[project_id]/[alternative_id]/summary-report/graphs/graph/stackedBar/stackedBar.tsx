@@ -50,8 +50,7 @@ const CustomYAxisTick = (props: CustomYAxisTickProps) => {
                 ? "30"
                 : "20"
             }
-            height={10}
-          ></rect>
+            height={10}></rect>
           <text
             x={0}
             y={4}
@@ -59,8 +58,7 @@ const CustomYAxisTick = (props: CustomYAxisTickProps) => {
             textAnchor="middle"
             fill="#CFD3D1"
             fontWeight="bold"
-            fontSize={10}
-          >
+            fontSize={10}>
             {payload.value}
           </text>
         </g>
@@ -219,13 +217,11 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
         structure={structure}
         legend={structure.questionnaire.options.slice(1)}
         literalLegend={true}
-        radarRef={graphContainer}
-      >
+        radarRef={graphContainer}>
         <ul className={graphStyles["filters"]}>
           <li key={0} className={graphStyles["filter-item"]}>
             <label
-              className={clsx("paragraph_14", graphStyles["filter-label"])}
-            >
+              className={clsx("paragraph_14", graphStyles["filter-label"])}>
               <input
                 type="checkbox"
                 checked={filtersStatus || false}
@@ -240,8 +236,7 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
         <ResponsiveContainer
           width="100%"
           height={200}
-          className={styles["responsive-container"]}
-        >
+          className={styles["responsive-container"]}>
           <BarChart
             className={styles["bar-chart"]}
             data={parameters}
@@ -250,8 +245,7 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
               right: 0,
               left: -60,
               bottom: 0,
-            }}
-          >
+            }}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="subChapterNumber"
@@ -281,19 +275,28 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
                 y?: number;
                 width?: number;
                 value?: string | number;
-              }) => (
-                <text
-                  x={x !== undefined && width !== undefined ? x + width / 2 : 0}
-                  y={y !== undefined ? y - 10 : 0}
-                  textAnchor="middle"
-                  fill="#black"
-                  fontWeight="bold"
-                  fontSize="1rem"
-                >
-                  {value}
-                </text>
-              )}
-            >
+              }) => {
+                // Calculate center
+                const cx =
+                  x !== undefined && width !== undefined ? x + width / 2 : 0;
+                const cy = y !== undefined ? y - 18 : 0; // Move up a bit more for circle
+                const r = 16; // radius of the circle
+                return (
+                  <g>
+                    <circle cx={cx} cy={cy + 12} r={r - 8} fill="black" />
+                    <text
+                      x={cx}
+                      y={cy + 12} // visually center text
+                      textAnchor="middle"
+                      fill="#fff"
+                      fontWeight="bold"
+                      fontSize="1rem"
+                      dominantBaseline="middle">
+                      {value}
+                    </text>
+                  </g>
+                );
+              }}>
               {parameters.map((entry, index) => {
                 return (
                   <Cell
@@ -326,14 +329,12 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
             style={{
               display: "grid",
               gridTemplateColumns: `repeat(${parameters.length}, 1fr)`,
-            }}
-          >
+            }}>
             {barData.map((bar, idx) => (
               <li
                 className={clsx("paragraph_11", styles["data-bar-item"])}
                 key={bar.chapter}
-                style={gridColumns?.[idx] ?? {}}
-              >
+                style={gridColumns?.[idx] ?? {}}>
                 {bar.chapter}
               </li>
             ))}

@@ -50,6 +50,7 @@
   height: 4.2rem;
   padding: 1rem 2rem;
   text-align: center;
+  white-space: nowrap;
 }
 .basic-button.outline {
   background-color: transparent;
@@ -75,7 +76,6 @@
 }
 .basic-button.solid.loading {
   color: transparent;
-  background-color: #00a6ce;
   pointer-events: none;
 }
 .basic-button.solid.loading:before {
@@ -88,6 +88,13 @@
   background: url("../../public/icons/spinner_white.svg") no-repeat center;
   background-size: 2rem !important;
 }
+.basic-button.solid.warning {
+  background-color: #ff001d;
+}
+.basic-button.solid.warning:hover {
+  background-color: rgb(204, 0, 23.2);
+  color: white;
+}
 .basic-button.with-icon {
   gap: 1.2rem;
 }
@@ -95,6 +102,28 @@
 .link {
   color: #00a6ce;
   padding-right: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.link:after {
+  content: "";
+  background-size: 1.6rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: block;
+}
+.link.white {
+  color: white;
+}
+.link.white:after {
+  background: url("../../public/icons/edit_icon_white.svg") no-repeat center;
+}
+.link.black {
+  color: black;
+}
+.link.black:after {
+  background: url("../../public/icons/edit_icon_black.svg") no-repeat center;
 }
 
 button.with-icon:after,
@@ -104,13 +133,9 @@ a.with-icon:after {
   height: 1.5rem;
   background-size: 1.5rem !important;
 }
-button.with-icon.download:after,
-a.with-icon.download:after {
-  background: url("../../public/icons/download_icon.svg") no-repeat center;
-}
-button.with-icon.download:hover:after,
-a.with-icon.download:hover:after {
-  background: url("../../public/icons/download_icon_white.svg") no-repeat center;
+button.with-icon.download,
+a.with-icon.download {
+  display: none;
 }
 button.with-icon.print:after,
 a.with-icon.print:after {
@@ -127,6 +152,22 @@ a.with-icon.delete:after {
 button.with-icon.delete:hover:after,
 a.with-icon.delete:hover:after {
   background: url("../../public/icons/trash_white.svg") no-repeat center;
+}
+button.with-icon.add:after,
+a.with-icon.add:after {
+  background: url("../../public/icons/add_icon.svg") no-repeat center;
+}
+button.with-icon.add:hover:after,
+a.with-icon.add:hover:after {
+  background: url("../../public/icons/add_icon_white.svg") no-repeat center;
+}
+button.with-icon.add-alternative:after,
+a.with-icon.add-alternative:after {
+  background: url("../../public/icons/add_alternative_icon.svg") no-repeat center;
+}
+button.with-icon.add-alternative:hover:after,
+a.with-icon.add-alternative:hover:after {
+  background: url("../../public/icons/add_alternative_icon_white.svg") no-repeat center;
 }
 
 .toggle-container {
@@ -217,7 +258,7 @@ ul {
   line-height: 200%;
 }
 .nav-side-text__sub-chapter-choice {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 400;
   line-height: 160%;
 }
@@ -235,6 +276,11 @@ ul {
   font-size: 2.6rem;
   font-weight: 400;
   line-height: 92.308%;
+}
+.headline_medium {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 113.333%;
 }
 .headline_medium-big {
   font-size: 3.4rem;

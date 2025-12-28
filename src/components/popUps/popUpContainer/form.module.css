@@ -147,57 +147,6 @@
   border-width: 0 0.2rem 0.2rem 0;
   transform: rotate(45deg);
 }
-.form-container form :global(.dropdown__indicator-separator) {
-  display: none;
-}
-.form-container form :global(.dropdown__clear-indicator) {
-  display: none;
-}
-.form-container form :global(.dropdown__indicator) svg {
-  display: none;
-}
-.form-container form :global(.dropdown__indicator):after {
-  content: "";
-  width: 1.5rem;
-  height: 1.5rem;
-  background-size: 1.5rem !important;
-  content: "";
-  background: url("../../../../public/icons/arrow-down.svg") no-repeat center;
-  rotate: 0deg;
-  transition: 0.3s all;
-}
-.form-container form :global(.dropdown__control--menu-is-open) :global(.dropdown__indicator):after {
-  rotate: 180deg;
-}
-.form-container form :global(.dropdown) {
-  height: 100%;
-}
-.form-container form :global(.dropdown) :global(.dropdown__menu) {
-  box-shadow: 0 0 20px 0px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
-  z-index: 2;
-  top: 3.7rem;
-}
-.form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__menu-list) {
-  max-height: 14rem;
-}
-.form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__menu-list)::-webkit-scrollbar {
-  width: 0.8rem;
-}
-.form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__menu-list)::-webkit-scrollbar-thumb {
-  background-color: #d9d9d9;
-  border-radius: 10rem;
-}
-.form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option) {
-  transition: 0.3s all;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  color: #0e2517;
-}
-.form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option--is-focused),
-.form-container form :global(.dropdown) :global(.dropdown__menu) :global(.dropdown__option--is-selected) {
-  background-color: transparent;
-  color: #00a6ce;
-}
 .form-container form .error-message {
   margin-top: 1rem;
   position: relative;
@@ -213,4 +162,5 @@
   margin-top: 0.5rem;
   position: sticky;
   bottom: 0;
+  z-index: 1;
 }/*# sourceMappingURL=form.module.css.map */

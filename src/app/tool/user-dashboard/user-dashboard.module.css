@@ -1,0 +1,49 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.head-title {
+  border-bottom: 0.1rem solid #5b6771;
+  width: 100%;
+  padding-bottom: 5rem;
+  margin-bottom: 5rem;
+  position: sticky;
+  top: -8rem;
+  background: #dfe5e6;
+  padding-top: 5rem;
+}
+
+.top-section .user-row {
+  display: flex;
+  justify-content: space-between;
+  align-self: center;
+  margin-bottom: 5rem;
+}
+.top-section .user-row .small-title {
+  margin-bottom: 2rem;
+}
+.top-section .user-row .buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.bottom-section .projects-headline-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}/*# sourceMappingURL=user-dashboard.module.css.map */

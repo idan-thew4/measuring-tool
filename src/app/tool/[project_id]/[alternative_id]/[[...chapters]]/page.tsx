@@ -287,11 +287,15 @@ export default function ChapterPage() {
         className={clsx(
           styles["chapter-box"],
           currentChapter?.score === -1 && styles["skip"]
-        )}
-      >
+        )}>
         <div className={styles["chapter-headline-container"]}>
           <div className={styles["headline"]}>
-            <h2 className={clsx("headline_small bold", styles["title"])}>
+            <h2 className={clsx("headline_medium bold", styles["title"])}>
+              {`${
+                getCurrentChapter(chapter)?.["chapter-number"] ?? 1
+                  ? getCurrentChapter(chapter)?.["chapter-number"] ?? 1
+                  : 0
+              }.${subChapter}.${principle}. `}
               {currentChapter?.title}
             </h2>
             <div className={"toggle-container"}>
@@ -315,8 +319,7 @@ export default function ChapterPage() {
                       toggle ? undefined : -1
                     )
                   );
-                }}
-              ></button>
+                }}></button>
             </div>
           </div>
           <p className={clsx("paragraph_19", styles["description"])}>
@@ -344,11 +347,9 @@ export default function ChapterPage() {
                 className={clsx(
                   styles["option"],
                   currentChapter?.score === index + 1 ? styles["selected"] : ""
-                )}
-              >
+                )}>
                 <div
-                  className={clsx(styles["option-selection"], "paragraph_19")}
-                >
+                  className={clsx(styles["option-selection"], "paragraph_19")}>
                   <input
                     type="radio"
                     id={`option-${index + 1}`}
@@ -369,12 +370,10 @@ export default function ChapterPage() {
                       } else {
                         setLoginPopup(true);
                       }
-                    }}
-                  ></input>
+                    }}></input>
                   <label
                     className="paragraph_19 bold"
-                    htmlFor={`option-${index + 1}`}
-                  >
+                    htmlFor={`option-${index + 1}`}>
                     {option}
                   </label>
 
@@ -396,8 +395,7 @@ export default function ChapterPage() {
                               : item
                           )
                         )
-                      }
-                    >
+                      }>
                       {currentChapter.choices[index]?.title && (
                         <>{currentChapter.choices[index].title}</>
                       )}
@@ -417,8 +415,7 @@ export default function ChapterPage() {
                       )?.state
                         ? "1.5rem"
                         : "0",
-                    }}
-                  >
+                    }}>
                     {currentChapter?.choices[index]?.text && (
                       <>{currentChapter.choices[index].text}</>
                     )}
