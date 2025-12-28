@@ -50,7 +50,7 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
       negative = false,
       maxScore,
     } = props;
-    const colors = ["#79C5D8", "#979797"];
+    const colors = ["#979797", "#79C5D8"];
     const [dataKeys, setDataKeys] = useState<string[]>();
     const [filtersStatus, setFiltersStatus] = useState<{
       [key: string]: boolean;
@@ -80,9 +80,9 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
         });
       }
 
-      // tempDataKeys.sort((a, b) =>
-      //   a === "questionnaire" ? 1 : b === "questionnaire" ? -1 : 0
-      // );
+      tempDataKeys.sort((a, b) =>
+        a === "questionnaire" ? 1 : b === "questionnaire" ? -1 : 0
+      );
 
       setDataKeys(tempDataKeys);
     }, [parameters]);
@@ -172,7 +172,7 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
                       }));
                     }}
                   />
-                  {filters[index]}
+                  {filters[filters.length - 1 - index]}{" "}
                 </label>
               </li>
             ))}
@@ -194,8 +194,8 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
               data={parameters}
               className={styles["radar"]}
             >
-              {/* <PolarGrid /> */}
-              {/* <PolarAngleAxis dataKey="subject" /> */}
+              {/* <PolarGrid />
+              <PolarAngleAxis dataKey="subject" /> */}
 
               <PolarRadiusAxis
                 axisLine={false}
@@ -206,65 +206,74 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
               />
 
               {dataKeys &&
-                dataKeys.map((dataKey, index) => {
-                  if (filtersStatus[dataKey]) {
-                    return (
-                      <Radar
-                        animationDuration={300}
-                        key={index}
-                        name={dataKeys[index]}
-                        dataKey={dataKeys[index]}
-                        stroke={colors[index]}
-                        strokeWidth={2}
-                        fill={colors[index]}
-                        fillOpacity={0.6}
-                        {...(labels && {
-                          label: ({
-                            value,
-                            x,
-                            y,
-                          }: {
-                            value: number | string;
-                            x: number;
-                            y: number;
-                          }) => (
-                            <g>
-                              <rect
-                                x={
-                                  x -
-                                  (Math.abs(Number(value)).toString().length > 2
-                                    ? 22
-                                    : 18)
-                                }
-                                y={y - 20}
-                                width={
-                                  Math.abs(Number(value)).toString().length > 2
-                                    ? "45"
-                                    : "35"
-                                }
-                                height="17"
-                                fill={getDataLabelColor(value, dataKeys[index])}
-                                strokeWidth="2"
-                                rx="8"
-                              />
-                              <text
-                                x={x}
-                                y={y - 10}
-                                fill={"white"}
-                                fontSize={12}
-                                textAnchor="middle"
-                                dominantBaseline="central"
-                                className={styles["data-label"]}
-                              >
-                                {value}%
-                              </text>
-                            </g>
-                          ),
-                        })}
-                      />
-                    );
-                  }
-                })}
+                [...dataKeys]
+                  .sort((a, b) =>
+                    a === "questionnaire" ? 1 : b === "questionnaire" ? -1 : 0
+                  )
+                  .map((dataKey, index) => {
+                    if (filtersStatus[dataKey]) {
+                      return (
+                        <Radar
+                          animationDuration={300}
+                          key={index}
+                          name={dataKeys[index]}
+                          dataKey={dataKeys[index]}
+                          stroke={colors[index]}
+                          strokeWidth={2}
+                          fill={colors[index]}
+                          fillOpacity={0.6}
+                          {...(labels && {
+                            label: ({
+                              value,
+                              x,
+                              y,
+                            }: {
+                              value: number | string;
+                              x: number;
+                              y: number;
+                            }) => (
+                              <g>
+                                <rect
+                                  x={
+                                    x -
+                                    (Math.abs(Number(value)).toString().length >
+                                    2
+                                      ? 22
+                                      : 18)
+                                  }
+                                  y={y - 20}
+                                  width={
+                                    Math.abs(Number(value)).toString().length >
+                                    2
+                                      ? "45"
+                                      : "35"
+                                  }
+                                  height="17"
+                                  fill={getDataLabelColor(
+                                    value,
+                                    dataKeys[index]
+                                  )}
+                                  strokeWidth="2"
+                                  rx="8"
+                                />
+                                <text
+                                  x={x}
+                                  y={y - 10}
+                                  fill={"white"}
+                                  fontSize={12}
+                                  textAnchor="middle"
+                                  dominantBaseline="central"
+                                  className={styles["data-label"]}
+                                >
+                                  {value}%
+                                </text>
+                              </g>
+                            ),
+                          })}
+                        />
+                      );
+                    }
+                  })}
             </RadarChart>
           </div>
         </div>

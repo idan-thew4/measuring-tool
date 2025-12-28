@@ -616,14 +616,11 @@ export default function Summary() {
 
     const chaptersScoresTemp: ScoreData[] = questionnaireParams.map(
       (chapter, index) => {
-        const generalScore = chapter["general-score"];
-
         const percentage = Math.round(
           (chapter["general-score"] / chapter["net-zero-impact"]) * 100
         );
 
         return {
-          generalScore,
           percentage,
         };
       }
@@ -639,8 +636,6 @@ export default function Summary() {
       "questionnaire"
     );
 
-    console.log("subchapter params", questionnaireParams);
-
     const subChaptersTemp: ScoreData[] = questionnaireParams.map(
       (subChapter, index) => {
         const subChapterIndex =
@@ -652,6 +647,7 @@ export default function Summary() {
         }`;
 
         const generalScore = subChapter["general-score"];
+        const zeroImpactScore = subChapter["net-zero-impact"];
 
         const percentage = Math.round(
           (subChapter["general-score"] / subChapter["net-zero-impact"]) * 100
@@ -661,6 +657,7 @@ export default function Summary() {
           subChapterNumber,
           generalScore,
           percentage,
+          zeroImpactScore,
         };
       }
     );
@@ -699,7 +696,6 @@ export default function Summary() {
         blob,
         `${current?.project.project_name}, ${current?.alternative.alternative_name}.pdf`
       );
-      console.log(blob);
     } catch (error) {
       console.error("Error generating or downloading the PDF:", error);
     } finally {

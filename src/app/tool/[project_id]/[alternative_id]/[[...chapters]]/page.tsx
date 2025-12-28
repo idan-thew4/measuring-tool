@@ -324,91 +324,109 @@ export default function ChapterPage() {
           </p>
         </div>
         <ul className={styles["chapter-options"]}>
-          {structure?.questionnaire.options.map((option, index) => (
-            <li
-              key={option}
-              className={clsx(
-                styles["option"],
-                currentChapter?.score === index + 1 ? styles["selected"] : ""
-              )}
-            >
-              <div className={clsx(styles["option-selection"], "paragraph_19")}>
-                <input
-                  type="radio"
-                  id={`option-${index + 1}`}
-                  value={option}
-                  checked={currentChapter?.score === index + 1}
-                  onChange={() => {
-                    if (loggedInChecked) {
-                      setScoreObject((prev) =>
-                        updateScoreObject(
-                          prev,
-                          chapter,
-                          subChapter,
-                          principle,
-                          getCurrentChapter,
-                          index + 1
-                        )
-                      );
-                    } else {
-                      setLoginPopup(true);
-                    }
-                  }}
-                ></input>
-                <label
-                  className="paragraph_19 bold"
-                  htmlFor={`option-${index + 1}`}
-                >
-                  {option}
-                </label>
+          {structure?.questionnaire.options.map((option, index) => {
+            const chapterIdx =
+              getCurrentChapter(chapter)?.["chapter-number"] ?? 1
+                ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1) - 1
+                : 0;
+            const subChapterIdx = Number(subChapter) - 1;
+            const choiceIdx = Number(principle) - 1;
+            const score =
+              structure?.questionnaire.content[chapterIdx]["chapter-content"][
+                subChapterIdx
+              ]["principles"][choiceIdx].choices[index].score;
 
-                {currentChapter?.choices[index]?.title && (
-                  <button
-                    className={clsx(
-                      dropdownState.find((item) => item.dropdown === index + 1)
-                        ?.state
-                        ? styles["open"]
-                        : "",
-                      "paragraph_19"
-                    )}
-                    onClick={() =>
-                      setDropdownState((prev) =>
-                        prev.map((item) =>
-                          item.dropdown === index + 1
-                            ? { ...item, state: !item.state }
-                            : item
-                        )
-                      )
-                    }
-                  >
-                    {currentChapter.choices[index]?.title && (
-                      <>{currentChapter.choices[index].title}</>
-                    )}
-                  </button>
+            if (index !== 0 && score === 0) return null;
+
+            return (
+              <li
+                key={option}
+                className={clsx(
+                  styles["option"],
+                  currentChapter?.score === index + 1 ? styles["selected"] : ""
                 )}
-
-                <p
-                  className={clsx("paragraph_19", styles["choice-text"])}
-                  style={{
-                    height: dropdownState.find(
-                      (item) => item.dropdown === index + 1
-                    )?.state
-                      ? "auto"
-                      : "0",
-                    paddingTop: dropdownState.find(
-                      (item) => item.dropdown === index + 1
-                    )?.state
-                      ? "1.5rem"
-                      : "0",
-                  }}
+              >
+                <div
+                  className={clsx(styles["option-selection"], "paragraph_19")}
                 >
-                  {currentChapter?.choices[index]?.text && (
-                    <>{currentChapter.choices[index].text}</>
+                  <input
+                    type="radio"
+                    id={`option-${index + 1}`}
+                    value={option}
+                    checked={currentChapter?.score === index + 1}
+                    onChange={() => {
+                      if (loggedInChecked) {
+                        setScoreObject((prev) =>
+                          updateScoreObject(
+                            prev,
+                            chapter,
+                            subChapter,
+                            principle,
+                            getCurrentChapter,
+                            index + 1
+                          )
+                        );
+                      } else {
+                        setLoginPopup(true);
+                      }
+                    }}
+                  ></input>
+                  <label
+                    className="paragraph_19 bold"
+                    htmlFor={`option-${index + 1}`}
+                  >
+                    {option}
+                  </label>
+
+                  {currentChapter?.choices[index]?.title && (
+                    <button
+                      className={clsx(
+                        dropdownState.find(
+                          (item) => item.dropdown === index + 1
+                        )?.state
+                          ? styles["open"]
+                          : "",
+                        "paragraph_19"
+                      )}
+                      onClick={() =>
+                        setDropdownState((prev) =>
+                          prev.map((item) =>
+                            item.dropdown === index + 1
+                              ? { ...item, state: !item.state }
+                              : item
+                          )
+                        )
+                      }
+                    >
+                      {currentChapter.choices[index]?.title && (
+                        <>{currentChapter.choices[index].title}</>
+                      )}
+                    </button>
                   )}
-                </p>
-              </div>
-            </li>
-          ))}
+
+                  <p
+                    className={clsx("paragraph_19", styles["choice-text"])}
+                    style={{
+                      height: dropdownState.find(
+                        (item) => item.dropdown === index + 1
+                      )?.state
+                        ? "auto"
+                        : "0",
+                      paddingTop: dropdownState.find(
+                        (item) => item.dropdown === index + 1
+                      )?.state
+                        ? "1.5rem"
+                        : "0",
+                    }}
+                  >
+                    {currentChapter?.choices[index]?.text && (
+                      <>{currentChapter.choices[index].text}</>
+                    )}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
         </ul>
         <textarea
           className="paragraph_19"

@@ -125,6 +125,8 @@ export default function SummaryReport() {
         )
       : [];
 
+    console.log("scoreObject", scoreObject);
+
     // second-chapters //
 
     questionnaireParams = [];

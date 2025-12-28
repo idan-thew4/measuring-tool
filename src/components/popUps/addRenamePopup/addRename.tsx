@@ -89,7 +89,7 @@ export function AddRenamePopup() {
           getUserDashboardData(structure);
 
           if (params.chapters) {
-            router.push(
+            window.open(
               `/tool/${data.data.project_id}/${data.data.alternative_id}/${chapter}/${subChapter}/${principle}`
             );
           } else {
@@ -134,11 +134,13 @@ export function AddRenamePopup() {
       headline={
         structure["user-dashboard"]["pop-ups"][addRenamePopup.type].title
       }
-      closeButton={() => setAddRenamePopup({ type: "" })}>
+      closeButton={() => setAddRenamePopup({ type: "" })}
+    >
       <div className={formStyles["form-container"]}>
         <form
           style={{ pointerEvents: loading ? "none" : "auto" }}
-          onSubmit={handleSubmit((data) => onSubmit(data))}>
+          onSubmit={handleSubmit((data) => onSubmit(data))}
+        >
           {structure["user-dashboard"]["pop-ups"][addRenamePopup.type][
             "input-fields"
           ]?.map((field, index) => {
@@ -150,7 +152,8 @@ export function AddRenamePopup() {
                   formStyles[`row-${field.row}`],
                   formStyles["input"]
                 )}
-                key={index}>
+                key={index}
+              >
                 <input
                   type={field.type}
                   placeholder={`${field.label}${field.mandatory ? " *" : ""}`}
@@ -191,7 +194,8 @@ export function AddRenamePopup() {
                       loading && "loading"
                     )}
                     type="submit"
-                    disabled={Object.keys(errors).length > 0}>
+                    disabled={Object.keys(errors).length > 0}
+                  >
                     {button}
                   </button>
                 );
@@ -202,7 +206,8 @@ export function AddRenamePopup() {
                     key={button}
                     className="basic-button outline"
                     type="button"
-                    onClick={() => setAddRenamePopup({ type: "" })}>
+                    onClick={() => setAddRenamePopup({ type: "" })}
+                  >
                     {button}
                   </button>
                 );
@@ -217,7 +222,8 @@ export function AddRenamePopup() {
           className={clsx(
             formStyles["error-message"],
             formStyles["general-error"]
-          )}>
+          )}
+        >
           {generalError}
         </div>
       )}

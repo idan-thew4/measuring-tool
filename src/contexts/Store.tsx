@@ -111,21 +111,27 @@ export function getScoreValue(
   if (type) {
     switch (type) {
       case "subChapter":
-        let percentageTotal = 0;
-
-        if (Array.isArray(scores)) {
-          scores.forEach((scoreObj) => {
-            if (!isNaN(scoreObj.percentage as number)) {
-              percentageTotal += Number(scoreObj.percentage ?? 0);
-            }
-          });
+        if (
+          typeof indexOrGetScoreLabel === "number" &&
+          scores &&
+          Array.isArray(scores)
+        ) {
+          const value = scores[indexOrGetScoreLabel].percentage;
+          if (typeof value === "string" || typeof value === "number") {
+            return value;
+          }
+          return "";
         }
-        return scores && Array.isArray(scores) && scores.length > 0
-          ? Math.floor(percentageTotal / Number(scores.length))
-          : 0;
+
         break;
       case "chapter":
-        console.log("chapter scores", scores);
+        if (!Array.isArray(scores)) {
+          const percentage = scores.percentage;
+          return typeof percentage === "number" ||
+            typeof percentage === "string"
+            ? percentage
+            : 0;
+        }
     }
   } else {
     if (Array.isArray(scores)) {
@@ -1087,7 +1093,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         setActiveSideMenu,
         getGraphsImages,
         setGetGraphsImages,
-      }}>
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );
