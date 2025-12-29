@@ -6,12 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { use, useEffect } from "react";
 
 export function SelfAssessmentPopup() {
-  const {
-    structure,
-    setSelfAssessmentPopup,
-    selfAssessmentPopup,
-    setActiveSideMenu,
-  } = useStore();
+  const { structure, setSelfAssessmentPopup, selfAssessmentPopup } = useStore();
   const params = useParams();
   const [chapter, subChapter, principle] = params?.chapters || [];
 
@@ -33,7 +28,6 @@ export function SelfAssessmentPopup() {
               key={index}
               onClick={() => {
                 setSelfAssessmentPopup(false);
-                setActiveSideMenu(false);
 
                 if (index === 0) {
                   router.push(

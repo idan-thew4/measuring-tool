@@ -14,7 +14,6 @@
   transition: transform 0.3s ease;
 
   //stays active until bug fixed//
-  transform: translate(0, 0);
 
   &.side-menu--active {
     transform: translate(0, 0);

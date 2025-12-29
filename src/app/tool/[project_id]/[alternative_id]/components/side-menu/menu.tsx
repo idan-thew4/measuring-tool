@@ -299,8 +299,6 @@ export function Menu({
             );
           }
 
-          console.log("updatedAssessment", updatedAssessment);
-
           return {
             ...prev,
             data: { ...prev.data, assessment: updatedAssessment },

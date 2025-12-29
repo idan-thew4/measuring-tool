@@ -46,6 +46,7 @@ export function RegistrationPopup() {
     setLoggedInChecked,
     getUserDashboardData,
     initialScoreObject,
+    setActiveSideMenu,
   } = useStore();
   const [completedSteps, setCompletedSteps] = useState<totalCompleted>();
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -401,7 +402,8 @@ export function RegistrationPopup() {
             return newSteps;
           });
         }
-      }}>
+      }}
+    >
       {completedSteps && (
         <ProgressBar completed={completedSteps} indicator={true} />
       )}
@@ -411,7 +413,8 @@ export function RegistrationPopup() {
             className={clsx(
               "headline_medium-small bold",
               formStyles["headline"]
-            )}>
+            )}
+          >
             {steps.single.title}
           </h3>
           <p className="paragraph_16">{steps.single.description}</p>
@@ -421,7 +424,8 @@ export function RegistrationPopup() {
         </div>
         <form
           style={{ pointerEvents: loading ? "none" : "auto" }}
-          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}>
+          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}
+        >
           {steps.single["input-fields"].map((field, index) => (
             <div
               className={clsx(
@@ -433,7 +437,8 @@ export function RegistrationPopup() {
                   : formStyles["checkbox"],
                 `input`
               )}
-              key={index}>
+              key={index}
+            >
               {field["dropdown-options"] ? (
                 <Controller
                   name={field.name}
@@ -569,7 +574,8 @@ export function RegistrationPopup() {
               loading && "loading"
             )}
             type="submit"
-            disabled={Object.keys(errors).length > 0}>
+            disabled={Object.keys(errors).length > 0}
+          >
             {structure.registration["nav-buttons"][currentStep]}
           </button>
           {generalError && (
@@ -577,7 +583,8 @@ export function RegistrationPopup() {
               className={clsx(
                 formStyles["error-message"],
                 formStyles["general-error"]
-              )}>
+              )}
+            >
               {generalError}
             </div>
           )}

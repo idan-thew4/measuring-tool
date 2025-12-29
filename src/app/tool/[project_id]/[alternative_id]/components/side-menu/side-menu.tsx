@@ -17,7 +17,33 @@ export function SideMenu({
   alternative_id: number;
   type?: string;
 }) {
-  const { pages, activeSideMenu, setActiveSideMenu } = useStore();
+  const { pages, activeSideMenu, setActiveSideMenu, sideMenu } = useStore();
+  const [prevSideMenu, setPrevSideMenu] = useState(sideMenu);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+
+    console.log("side menu changed:", sideMenu);
+
+    // If switching between self-assessment and questionnaire, pop out then in
+    if (
+      (prevSideMenu === "self-assessment" && sideMenu === "questionnaire") ||
+      (prevSideMenu === "questionnaire" && sideMenu === "self-assessment")
+    ) {
+      setActiveSideMenu(false);
+      timeout = setTimeout(() => {
+        setActiveSideMenu(true);
+      }, 300);
+    } else if (sideMenu === "") {
+      setActiveSideMenu(false);
+    } else {
+      setActiveSideMenu(true);
+    }
+
+    setPrevSideMenu(sideMenu);
+
+    return () => clearTimeout(timeout);
+  }, [sideMenu]);
 
   type;
   return (

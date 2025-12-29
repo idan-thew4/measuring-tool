@@ -33,8 +33,8 @@ export default function SelfAssessment() {
     isPageChanged,
     calculateScores,
     maxValue,
-    setSideMenu,
     setActiveSideMenu,
+    activeSideMenu,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -192,9 +192,15 @@ export default function SelfAssessment() {
     }
   }, [params.project_id]);
 
-  useEffect(() => {
-    setActiveSideMenu(true);
-  }, []);
+  // useEffect(() => {
+  //   setActiveSideMenu(true);
+  // }, []);
+
+  // useEffect(() => {
+  //   if (!activeSideMenu) {
+  //     setActiveSideMenu(true);
+  //   }
+  // }, [activeSideMenu]);
 
   if (!structure) {
     return <Loader />;
@@ -213,7 +219,6 @@ export default function SelfAssessment() {
             <button
               className="basic-button outline"
               onClick={() => {
-                setActiveSideMenu(false);
                 storeSelfAssessment(
                   params.project_id as string,
                   scoreObject.data.assessment
