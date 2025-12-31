@@ -51,6 +51,7 @@ export function Header() {
     maxValue,
     initialScoreObject,
     setScoreObject,
+    setSideMenu,
   } = useStore();
   const router = useRouter();
   const params = useParams();
@@ -158,7 +159,13 @@ export function Header() {
         {loggedInChecked ? (
           loggedInChecked ? (
             <div className={styles["flex-h-align"]}>
-              <Link href={"/tool/user-dashboard"}>
+              <Link
+                href={"/tool/user-dashboard"}
+                onClick={(e) => {
+                  // e.preventDefault();
+                  setSideMenu("");
+                }}
+              >
                 {structure?.header.user[1]}
               </Link>
               <button onClick={() => structure && logOut(structure)}>

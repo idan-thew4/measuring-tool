@@ -485,6 +485,10 @@ type ApiContextType = {
   setActiveSideMenu: React.Dispatch<React.SetStateAction<boolean>>;
   getGraphsImages: string;
   setGetGraphsImages: React.Dispatch<React.SetStateAction<string>>;
+  prevPrinciple: {
+    previous: number | null;
+    current: number | null;
+  };
 };
 
 export type ScoreData = {
@@ -605,7 +609,10 @@ function Store({ children }: PropsWithChildren<{}>) {
   >([]);
   const [getGraphsImages, setGetGraphsImages] = useState<string>("");
   const [activeSideMenu, setActiveSideMenu] = useState(false);
-
+  const [prevPrinciple, setPrevPrinciple] = useState<{
+    previous: number | null;
+    current: number | null;
+  }>({ previous: null, current: null });
   async function getContent() {
     try {
       const response = await fetch(`${url}/structure`);
@@ -984,12 +991,43 @@ function Store({ children }: PropsWithChildren<{}>) {
   useEffect(() => {
     if (pathname.includes("self-assessment")) {
       setSideMenu("self-assessment");
+      console.log("self-assessment");
     } else if (pathname.includes(params.chapters?.[0])) {
       setSideMenu("questionnaire");
-    } else {
-      console.log("");
+      console.log("questionnaire");
+    } else if (pathname.includes("user-dashboard")) {
+      setSideMenu("");
+      console.log("user-dashboard");
     }
   }, [pathname]);
+
+  const [prevSideMenu, setPrevSideMenu] = useState(sideMenu);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+
+    // If switching between self-assessment and questionnaire, pop out then in
+    if (
+      (prevSideMenu === "self-assessment" && sideMenu === "questionnaire") ||
+      (prevSideMenu === "questionnaire" && sideMenu === "self-assessment")
+    ) {
+      setActiveSideMenu(false);
+      timeout = setTimeout(() => {
+        setActiveSideMenu(true);
+      }, 300);
+    } else if (
+      (prevSideMenu === "" && sideMenu === "questionnaire") ||
+      sideMenu === "self-assessment"
+    ) {
+      setActiveSideMenu(true);
+    } else {
+      setActiveSideMenu(false);
+    }
+
+    setPrevSideMenu(sideMenu);
+
+    return () => clearTimeout(timeout);
+  }, [sideMenu]);
 
   useEffect(() => {
     const chapters = getCompletedChapters(scoreObject) ?? [];
@@ -1036,6 +1074,20 @@ function Store({ children }: PropsWithChildren<{}>) {
 
     setMaxValue(Math.round((avgMaxScore / avgZeroImpactScore) * 100));
   }, [scoreObject, structure]);
+
+  useEffect(() => {
+    const chapterNumber =
+      getCurrentChapter(chapter)?.["chapter-number"] ?? 1
+        ? getCurrentChapter(chapter)?.["chapter-number"] ?? 1
+        : 0;
+    const subChapterNumber = Number(subChapter) || 0;
+    const principleNumber = Number(principle) || 0;
+
+    setPrevPrinciple((prev) => ({
+      previous: prev.current,
+      current: Number(`${chapterNumber}${subChapterNumber}${principleNumber}`),
+    }));
+  }, [chapter, subChapter, principle]);
 
   return (
     <ApiContext.Provider
@@ -1093,6 +1145,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         setActiveSideMenu,
         getGraphsImages,
         setGetGraphsImages,
+        prevPrinciple,
       }}
     >
       {children}

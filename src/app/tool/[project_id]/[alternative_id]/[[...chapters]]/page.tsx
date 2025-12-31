@@ -46,6 +46,9 @@ export default function ChapterPage() {
     getAlternativeQuestionnaireData,
     isPageChanged,
     setLoader,
+    activeSideMenu,
+    prevPrinciple,
+    pages,
   } = useStore();
   const [currentChapter, setCurrentChapter] =
     useState<currentChapterType | null>(null);
@@ -79,6 +82,12 @@ export default function ChapterPage() {
   ]);
   const [comment, setComment] = useState("");
   const router = useRouter();
+  const prevIndices = useRef<{
+    chapter: number;
+    sub: number;
+    principle: number;
+  } | null>(null);
+  const hasMounted = useRef(false);
 
   useEffect(() => {
     const pageChanged = Boolean(isPageChanged("questionnaire"));
@@ -101,6 +110,10 @@ export default function ChapterPage() {
       }
     }
   }, [structure]);
+
+  useEffect(() => {
+    console.log("Pages changed:", pages);
+  }, [pages]);
 
   async function validateToken() {
     try {
@@ -276,12 +289,27 @@ export default function ChapterPage() {
     }
   }
 
+  useEffect(() => {
+    console.log("Prev principle:", prevPrinciple);
+  }, [prevPrinciple]);
+
   return (
-    <div className={styles["chapters-slider-container"]}>
+    <div
+      className={clsx(
+        styles["chapters-slider-container"],
+        activeSideMenu ? styles["chapters-slider-container--active"] : ""
+      )}
+    >
       <div
         className={clsx(
           styles["chapter-box"],
-          currentChapter?.score === -1 && styles["skip"]
+          currentChapter?.score === -1 && styles["skip"],
+          (prevPrinciple.previous ?? 0) < (prevPrinciple.current ?? 0)
+            ? styles["chapter-box--right"]
+            : "",
+          (prevPrinciple.previous ?? 0) > (prevPrinciple.current ?? 0)
+            ? styles["chapter-box--left"]
+            : ""
         )}
       >
         <div className={styles["chapter-headline-container"]}>

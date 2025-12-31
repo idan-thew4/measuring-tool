@@ -28,6 +28,13 @@
   margin-bottom: 3rem;
   background-color: #dfe5e6;
   z-index: 1;
+  opacity: 0;
+  transform: translateY(2rem);
+  transition: all 0.3s ease-in-out;
+}
+.questionnaire-container .questionnaire-header--active {
+  opacity: 1;
+  transform: translateY(0);
 }
 .questionnaire-container .questionnaire-header .chapter-title {
   border-bottom: 0.1rem solid black;

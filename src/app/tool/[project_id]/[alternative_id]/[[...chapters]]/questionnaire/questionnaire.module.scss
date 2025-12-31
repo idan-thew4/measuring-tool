@@ -12,6 +12,14 @@
     margin-bottom: 3rem;
     background-color: $light-blue;
     z-index: 1;
+    opacity: 0;
+    transform: translateY(2rem);
+    transition: all 0.3s ease-in-out;
+
+    &--active {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
     .chapter-title {
       border-bottom: 0.1rem solid black;

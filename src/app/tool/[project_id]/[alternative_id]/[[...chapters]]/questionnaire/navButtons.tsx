@@ -39,7 +39,7 @@ export function NavButtons({
       !Array.isArray(chapter["chapter-content"]) ||
       chapter["chapter-content"].length === 0
     ) {
-      chapter = contentPlaceHolder.questionnaire.content[chapterIdx];
+      chapter = structure.questionnaire.content[chapterIdx];
     }
 
     if (!chapter) return;

@@ -4,6 +4,15 @@
   grid-column: 1 / 10;
   display: grid;
   grid-template-columns: subgrid;
+  transform: translateY(2rem);
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+
+  &--active {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.1s;
+  }
 
   .chapter-box {
     background-color: white;
@@ -15,6 +24,36 @@
     transform: translateX(0);
     padding: 3rem 3.2rem 1rem 3.2rem;
     border-radius: 4rem;
+    // transform: translateX(0);
+
+    @keyframes chapter-box-slide {
+      0% {
+        transform: translateX(0);
+      }
+      50% {
+        transform: translateX(100vw);
+      }
+      60% {
+        opacity: 0;
+      }
+      52% {
+        transform: translateX(-100vw);
+      }
+      53% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+    &--right {
+      animation: chapter-box-slide 0.5s forwards;
+    }
+
+    &--left {
+      animation: chapter-box-slide 0.5s reverse forwards;
+    }
 
     .chapter-headline-container {
       color: $darker-blue;

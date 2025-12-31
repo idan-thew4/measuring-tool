@@ -29,7 +29,7 @@ export function Questionnaire({
   project_id: number;
   alternative_id: number;
 }) {
-  const { scoreObject, getCurrentChapter } = useStore();
+  const { scoreObject, getCurrentChapter, activeSideMenu } = useStore();
   const [chapterProgress, setChapterProgress] = useState<totalCompleted>();
   const [dropdownState, setDropdownState] = useState<
     {
@@ -100,7 +100,12 @@ export function Questionnaire({
 
   return (
     <div className={clsx(styles["questionnaire-container"], "main-container")}>
-      <div className={styles["questionnaire-header"]}>
+      <div
+        className={clsx(
+          styles["questionnaire-header"],
+          activeSideMenu ? styles["questionnaire-header--active"] : ""
+        )}
+      >
         <button
           className={clsx(
             styles["chapter-title"],
