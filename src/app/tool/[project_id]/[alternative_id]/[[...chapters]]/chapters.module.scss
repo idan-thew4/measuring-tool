@@ -30,16 +30,18 @@
       0% {
         transform: translateX(0);
       }
-      50% {
-        transform: translateX(100vw);
-      }
-      60% {
+
+      30% {
         opacity: 0;
       }
-      52% {
+      70% {
+        transform: translateX(100vw);
+      }
+
+      92% {
         transform: translateX(-100vw);
       }
-      53% {
+      93% {
         opacity: 1;
       }
       100% {
@@ -48,11 +50,11 @@
     }
 
     &--right {
-      animation: chapter-box-slide 0.5s forwards;
+      animation: chapter-box-slide 1s forwards;
     }
 
     &--left {
-      animation: chapter-box-slide 0.5s reverse forwards;
+      animation: chapter-box-slide 1s reverse forwards;
     }
 
     .chapter-headline-container {

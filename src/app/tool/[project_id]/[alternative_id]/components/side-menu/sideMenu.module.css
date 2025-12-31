@@ -40,8 +40,8 @@
   display: flex;
   flex-direction: column;
 }
-.side-menu .menu ul.nav-side-menu > li.active .chapter-text > a,
-.side-menu .menu ul.nav-side-menu > li.active .chapter-text p, .side-menu .menu ul.nav-side-menu > li:hover .chapter-text > a,
+.side-menu .menu ul.nav-side-menu > li.active .chapter-text > button,
+.side-menu .menu ul.nav-side-menu > li.active .chapter-text p, .side-menu .menu ul.nav-side-menu > li:hover .chapter-text > button,
 .side-menu .menu ul.nav-side-menu > li:hover .chapter-text p {
   color: #00a6ce;
 }
