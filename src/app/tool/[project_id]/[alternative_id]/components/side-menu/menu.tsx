@@ -8,6 +8,7 @@ import {
   structureProps,
 } from "../../../../../../contexts/Store";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export type structureAndChaptersProps = {
   structure: structureProps | undefined;
@@ -118,8 +119,7 @@ function RangeSlider({
       />
       <div
         className={styles["range-slider-progress"]}
-        style={{ width: `${percent}%` }}
-      ></div>
+        style={{ width: `${percent}%` }}></div>
       <div
         className={styles["range-slider-value"]}
         style={{
@@ -130,8 +130,7 @@ function RangeSlider({
               ? "2%"
               : `calc(${percent}% - ${percent > 99 ? "4.5" : "1.5"}rem)`
           }`,
-        }}
-      >
+        }}>
         {value}%
       </div>
     </div>
@@ -168,6 +167,7 @@ export function Menu({
   const [activeChapters, setActiveChapters] = useState<string[]>([]);
   const [activeSubChapters, setActiveSubChapters] = useState<string[]>([]);
   const [activePrinciples, setActivePrinciples] = useState<string[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     // Chapter: use the slug as the unique key
@@ -350,8 +350,7 @@ export function Menu({
       className={clsx(
         styles["menu"],
         type === "self-assessment" && styles["self-assessment"]
-      )}
-    >
+      )}>
       {type !== "self-assessment" ? (
         <ProgressBar completed={completedChapters} structure={structure} />
       ) : (
@@ -385,16 +384,22 @@ export function Menu({
                   ) || ""
                 ]
             )}
-            key={chapterIndex}
-          >
+            key={chapterIndex}>
             <div
-              className={clsx("nav-side-text__chapter", styles["chapter-text"])}
-            >
-              <Link
-                href={`/tool/${project_id}/${alternative_id}/${chapter["chapter-slug"]}/1/1`}
-              >
+              className={clsx(
+                "nav-side-text__chapter",
+                styles["chapter-text"]
+              )}>
+              <button
+                onClick={() => {
+                  setTimeout(() => {
+                    router.push(
+                      `/tool/${project_id}/${alternative_id}/${chapter["chapter-slug"]}/1/1`
+                    );
+                  }, 500);
+                }}>
                 {`${chapterIndex + 1}. ${chapter["chapter-title"]}`}
-              </Link>
+              </button>
               {type === "self-assessment" && chapterIndex !== 1 && (
                 <RangeSlider
                   id={chapter["chapter-title"]}
@@ -452,8 +457,7 @@ export function Menu({
                               : item
                           )
                         );
-                      }}
-                    ></button>
+                      }}></button>
                   </div>
                   <p>
                     {`${
@@ -495,18 +499,32 @@ export function Menu({
                         isActiveSubChapter && styles["active"],
                         type !== "self-assessment" &&
                           styles[subChapterCompleted || ""]
-                      )}
-                    >
-                      <Link
+                      )}>
+                      <button
+                        className="nav-side-text__sub-chapter"
+                        onClick={() => {
+                          setTimeout(() => {
+                            router.push(
+                              `/tool/${project_id}/${alternative_id}/${
+                                chapter["chapter-slug"]
+                              }/${subIndex + 1}/1`
+                            );
+                          }, 500);
+                        }}>
+                        {`${chapterIndex + 1}.${subIndex + 1} ${
+                          subChapter["sub-chapter-title"]
+                        }`}{" "}
+                      </button>
+
+                      {/* <Link
                         className="nav-side-text__sub-chapter"
                         href={`/tool/${project_id}/${alternative_id}/${
                           chapter["chapter-slug"]
-                        }/${subIndex + 1}/1`}
-                      >
+                        }/${subIndex + 1}/1`}>
                         {`${chapterIndex + 1}.${subIndex + 1} ${
                           subChapter["sub-chapter-title"]
                         }`}
-                      </Link>
+                      </Link> */}
                       {type === "self-assessment" && chapterIndex === 1 && (
                         <RangeSlider
                           id={chapter["chapter-title"]}
@@ -563,18 +581,24 @@ export function Menu({
                                       styles["opened"],
                                     isActiveChoice && styles["active"],
                                     styles[choiceCompleted || ""]
-                                  )}
-                                >
-                                  <Link
+                                  )}>
+                                  <button
                                     className="nav-side-text__sub-chapter-choice"
-                                    href={`/tool/${project_id}/${alternative_id}/${
-                                      chapter["chapter-slug"]
-                                    }/${subIndex + 1}/${subChoicesIndex + 1}`}
-                                  >
+                                    onClick={() => {
+                                      setTimeout(() => {
+                                        router.push(
+                                          `/tool/${project_id}/${alternative_id}/${
+                                            chapter["chapter-slug"]
+                                          }/${subIndex + 1}/${
+                                            subChoicesIndex + 1
+                                          }`
+                                        );
+                                      }, 500);
+                                    }}>
                                     {`${subChoicesIndex + 1}. ${
                                       subChoices.title
                                     }`}
-                                  </Link>
+                                  </button>
                                 </li>
                               );
                             }
@@ -602,8 +626,7 @@ export function Menu({
                 <li key={index}>
                   <Link
                     className="paragraph_18 bold"
-                    href={`/tool/${project_id}/${alternative_id}/${links[index]}`}
-                  >
+                    href={`/tool/${project_id}/${alternative_id}/${links[index]}`}>
                     {option}
                   </Link>
                 </li>

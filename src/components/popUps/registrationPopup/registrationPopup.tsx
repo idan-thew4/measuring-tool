@@ -7,7 +7,7 @@ import {
   RegistrationStep,
   structureProps,
 } from "../../../contexts/Store";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ProgressBar } from "@/app/tool/[project_id]/[alternative_id]/components/progress-bar/progress-bar";
 import clsx from "clsx";
 import { useForm, Controller } from "react-hook-form";

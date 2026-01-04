@@ -33,7 +33,7 @@
         &.active,
         &:hover {
           .chapter-text {
-            > a,
+            > button,
             p {
               color: $blue;
             }
