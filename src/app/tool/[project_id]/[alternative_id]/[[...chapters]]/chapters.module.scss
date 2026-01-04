@@ -29,28 +29,28 @@
     @keyframes chapter-box-slide {
       0% {
         transform: translateX(0);
+        opacity: 1;
       }
-
       30% {
+        opacity: 0;
+        transform: translateX(100vw);
+      }
+      31% {
+        transform: translateX(-100vw);
         opacity: 0;
       }
       70% {
-        transform: translateX(100vw);
-      }
+        transform: translateX(0);
 
-      92% {
-        transform: translateX(-100vw);
-      }
-      93% {
         opacity: 1;
       }
       100% {
-        transform: translateX(0);
+        opacity: 1;
       }
     }
 
     &--right {
-      animation: chapter-box-slide 1s forwards;
+      animation: chapter-box-slide 1.5s forwards;
     }
 
     &--left {

@@ -709,7 +709,7 @@
     "header": {
       "title": "סיכום",
       "summary-details": ["תאריך", "שם המיזם"],
-      "buttons-copy": ["הורדת קובץ", "הדפסה"]
+      "buttons-copy": ["הורדת PDF", "הורדת CSV", "הורדת EXCEL"]
     },
     "table": {
       "columns": [
