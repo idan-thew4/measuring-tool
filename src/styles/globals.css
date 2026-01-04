@@ -99,6 +99,11 @@
   gap: 1.2rem;
 }
 
+.link-button {
+  text-decoration: underline;
+  padding-right: 1rem;
+}
+
 .link {
   color: #00a6ce;
   padding-right: 0.5rem;

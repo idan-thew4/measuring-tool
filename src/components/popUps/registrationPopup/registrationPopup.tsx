@@ -15,6 +15,7 @@ import Select from "react-select";
 import { PopUpContainer } from "../popUpContainer/popUpContainer";
 import { useRouter, useParams } from "next/navigation";
 import "../../../components/popUps/popUpContainer/dropdown.scss";
+import { MuiOtpInput } from "mui-one-time-password-input";
 
 type Inputs = {
   [key: string]: string | { value: string; label: string } | boolean | number;
@@ -57,7 +58,8 @@ export function RegistrationPopup() {
     start: { value: string; label: string }[];
     end: { value: string; label: string }[];
   }>({ start: [], end: [] });
-  const params = useParams();
+  const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [resentAttempts, setResentAttempts] = useState<number>(0);
 
   const {
     register,
@@ -111,14 +113,50 @@ export function RegistrationPopup() {
     }
   }, [structure, registrationPopup, currentStep]);
 
+  async function otpRequest(phone: string) {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://wordpress-1080689-5737105.cloudwaysapps.com/wp-json/otp/v1/request`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            phone,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data) {
+        setLoading(false);
+
+        if (data.success) {
+          return data.otp;
+        } else {
+          if (data.message) {
+            setGeneralError(data.message);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error creating new user:", error);
+    }
+  }
+
   async function createNewUser(
     fullName: string,
     email: string,
     password: string,
-    planningOffice: string,
-    contactPhone: string,
-    commercialAgreement: boolean,
-    researchAgreement: boolean
+    officeName: string,
+    phone: string,
+    sendCommercialMaterial: boolean,
+    getInTouch: boolean,
+    otpCode: boolean
   ) {
     setLoading(true);
     try {
@@ -132,10 +170,13 @@ export function RegistrationPopup() {
           fullName,
           email,
           password,
-          planningOffice,
-          contactPhone,
-          commercialAgreement,
-          researchAgreement,
+          officeName,
+          phone,
+          sendCommercialMaterial: sendCommercialMaterial
+            ? sendCommercialMaterial
+            : false,
+          getInTouch: getInTouch ? getInTouch : false,
+          otpCode,
         }),
       });
 
@@ -336,7 +377,7 @@ export function RegistrationPopup() {
     }));
 
     if (completedSteps && index !== completedSteps.length - 1) {
-      if (index === 0 && registrationPopup === "register") {
+      if (index === 1 && registrationPopup === "register") {
         const userCreated = await createNewUser(
           stepData["fullName"] as string,
           stepData["email"] as string,
@@ -344,23 +385,44 @@ export function RegistrationPopup() {
           stepData["planningOffice"] as string,
           stepData["contactPhone"] as string,
           stepData["commercial-agreement"] as boolean,
-          stepData["research-agreement"] as boolean
+          stepData["research-agreement"] as boolean,
+          stepData["otp"] as boolean
         );
+
         if (!userCreated) {
           return;
         }
+
+        setCurrentStep(index + 1);
+        setGeneralError("");
+        setCompletedSteps((prev) => {
+          if (!prev) return prev;
+          const newSteps = [...prev];
+          newSteps[index + 1] = {
+            ...newSteps[index + 1],
+            completed: 1,
+          };
+          return newSteps;
+        });
+      } else if (index === 0 && registrationPopup === "register") {
+        const otpSent = await otpRequest(stepData["contactPhone"] as string);
+
+        setCurrentStep(index + 1);
+        setGeneralError("");
+        setCompletedSteps((prev) => {
+          if (!prev) return prev;
+          const newSteps = [...prev];
+          newSteps[index + 1] = {
+            ...newSteps[index + 1],
+            completed: 1,
+          };
+          return newSteps;
+        });
+
+        if (!otpSent) {
+          return;
+        }
       }
-      setCurrentStep(index + 1);
-      setGeneralError("");
-      setCompletedSteps((prev) => {
-        if (!prev) return prev;
-        const newSteps = [...prev];
-        newSteps[index + 1] = {
-          ...newSteps[index + 1],
-          completed: 1,
-        };
-        return newSteps;
-      });
     } else {
       if (structure) {
         createProject(updatedProjectDetails, structure);
@@ -373,11 +435,34 @@ export function RegistrationPopup() {
     }
   };
 
-  useEffect(() => {}, [registrationPopup]);
-  if (!registrationPopup) return null;
-  if (!structure || !steps.single) return <div>Loading...</div>;
+  function timer() {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }
+
+  useEffect(() => {
+    if (resentAttempts >= 3) {
+      setGeneralError("יותר מדי נסיונות. אנה נסזה שוב מאוחר יותר");
+    }
+  }, [timeLeft, resentAttempts]);
+
+  useEffect(() => {
+    if (watch("verificationCode") === "" && generalError !== "") {
+      setGeneralError("");
+    }
+  }, [watch("verificationCode")]);
 
   const password = watch("password");
+
+  if (!registrationPopup) return null;
+  if (!structure || !steps.single) return <div>Loading...</div>;
 
   return (
     <PopUpContainer
@@ -387,6 +472,8 @@ export function RegistrationPopup() {
         setCompletedSteps(undefined);
         setCurrentStep(0);
         reset();
+        setGeneralError("");
+        setResentAttempts(0);
       }}
       navArrows={currentStep}
       goToPrevSlide={() => {
@@ -417,10 +504,23 @@ export function RegistrationPopup() {
           >
             {steps.single.title}
           </h3>
-          <p className="paragraph_16">{steps.single.description}</p>
-          <p className={clsx(formStyles["validation"], "paragraph_16")}>
-            {structure.registration["validation-general-copy"]}
+          {steps.single["input-fields"][0].type === "otp" && (
+            <h4
+              className={clsx("headline_medium-small", formStyles["subtitle"])}
+            >
+              {steps.single.subtitle}
+            </h4>
+          )}
+          <p className="paragraph_16">
+            {steps.single.description}
+            {steps.single["input-fields"][0].type === "otp" &&
+              ` ${scoreObject["project-details"].contactPhone}`}
           </p>
+          {steps.single.type !== "otp" && (
+            <p className={clsx(formStyles["validation"], "paragraph_16")}>
+              {structure.registration["validation-general-copy"]}
+            </p>
+          )}
         </div>
         <form
           style={{ pointerEvents: loading ? "none" : "auto" }}
@@ -497,42 +597,95 @@ export function RegistrationPopup() {
                   )}
                 />
               ) : field.type !== "checkbox" ? (
-                <input
-                  type={field.type ? field.type : "text"}
-                  placeholder={`${field.label}${field.mandatory ? " *" : ""}`}
-                  className="paragraph_18"
-                  {...register(field.name, {
-                    required: field.mandatory
-                      ? field["validation-error"]
-                      : false,
-                    pattern:
-                      field.type === "email"
-                        ? {
-                            value:
-                              /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                            message: field["format-error"],
+                field.type === "otp" ? (
+                  <Controller
+                    name={field.name}
+                    control={control}
+                    rules={{
+                      required: false,
+                      // minLength: {
+                      //   value: 6,
+                      // message: "OTP must be 5 characters long",
+                      // },
+                    }}
+                    render={({ field }) => (
+                      <div data-testid="otp-input">
+                        <p
+                          className={clsx(
+                            "paragraph_18",
+                            formStyles["otp-label"]
+                          )}
+                        >
+                          {steps.single?.["input-fields"][0].label}
+                          {steps.single?.["input-fields"][0].mandatory
+                            ? " *"
+                            : ""}
+                        </p>
+                        <MuiOtpInput
+                          autoFocus
+                          value={
+                            typeof field.value === "string"
+                              ? field.value
+                              : field.value !== undefined &&
+                                field.value !== null
+                              ? String(field.value)
+                              : ""
                           }
-                        : field.type === "tel"
-                        ? {
-                            value: /^0\d{1,2}-?\d{7}$/,
-                            message: field["format-error"],
-                          }
-                        : field.type === "password"
-                        ? {
-                            value:
-                              /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
-                            message: field["format-error"],
-                          }
-                        : undefined,
-                    validate:
-                      field.name === "confirmPassword"
-                        ? (value) => value === password || field["format-error"]
-                        : undefined,
-                  })}
-                  onFocus={(e) => {
-                    setGeneralError("");
-                  }}
-                />
+                          onChange={field.onChange}
+                          sx={{
+                            gap: 3,
+                            direction: "ltr",
+                          }}
+                          length={6}
+                          TextFieldsProps={{
+                            inputMode: "numeric",
+                            type: "tel",
+                            autoComplete: "one-time-code",
+                          }}
+                          validateChar={(char: string) => /^[0-9]$/.test(char)}
+                        />
+                      </div>
+                    )}
+                  />
+                ) : (
+                  <input
+                    type={field.type ? field.type : "text"}
+                    placeholder={`${field.label}${field.mandatory ? " *" : ""}`}
+                    className="paragraph_18"
+                    {...register(field.name, {
+                      required: field.mandatory
+                        ? field["validation-error"]
+                        : false,
+                      pattern:
+                        field.type === "email"
+                          ? {
+                              value:
+                                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                              message: field["format-error"],
+                            }
+                          : field.type === "tel"
+                          ? {
+                              value: /^0\d{1,2}-?\d{7}$/,
+                              message: field["format-error"],
+                            }
+                          : field.type === "password"
+                          ? {
+                              value:
+                                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
+                              message: field["format-error"],
+                            }
+                          : undefined,
+                      validate:
+                        field.name === "confirmPassword"
+                          ? (value) =>
+                              value === password || field["format-error"]
+                          : undefined,
+                    })}
+                    onFocus={(e) => {
+                      setGeneralError("");
+                    }}
+                  />
+                )
               ) : (
                 <Controller
                   name={field.name}
@@ -574,10 +727,42 @@ export function RegistrationPopup() {
               loading && "loading"
             )}
             type="submit"
-            disabled={Object.keys(errors).length > 0}
+            disabled={Object.keys(errors).length > 0 || generalError !== ""}
           >
             {structure.registration["nav-buttons"][currentStep]}
           </button>
+          {steps.single["input-fields"][0].type === "otp" && (
+            <div className={formStyles["secondery-cta-wrapper"]}>
+              {resentAttempts < 3 &&
+                (timeLeft === 0 ? (
+                  <>
+                    <span className="paragraph_18">
+                      {steps.single?.["secondery-cta-copy"]?.text}
+                    </span>
+                    <button
+                      className="link-button"
+                      onClick={() => {
+                        otpRequest(
+                          scoreObject["project-details"].contactPhone as string
+                        );
+                        setTimeLeft(2);
+                        timer();
+                        setResentAttempts((prev) => prev + 1);
+                        setGeneralError("");
+                        reset({ verificationCode: "" });
+                      }}
+                    >
+                      {steps.single?.["secondery-cta-copy"]?.button}
+                    </button>
+                  </>
+                ) : (
+                  <p className="paragraph_18">{`00:${String(timeLeft).padStart(
+                    2,
+                    "0"
+                  )}`}</p>
+                ))}
+            </div>
+          )}
           {generalError && (
             <div
               className={clsx(

@@ -207,6 +207,7 @@ export type ProjectDetails = {
   contactPhone: string;
   projectArea: string;
   planningTeamRole: string;
+  otp: number;
 };
 
 //Structure types//
@@ -302,7 +303,11 @@ export type Registration = {
 
 export type RegistrationStep = {
   title: string;
+  subtitle?: string;
   description: string;
+  type: string;
+  "secondery-cta-copy"?: { text: string; button: string };
+  "cta-copy"?: string;
   "input-fields": RegistrationInputField[];
 };
 
@@ -524,6 +529,7 @@ function Store({ children }: PropsWithChildren<{}>) {
       contactPhone: "",
       projectArea: "",
       planningTeamRole: "",
+      otp: "",
     },
     data: {
       questionnaire: [],

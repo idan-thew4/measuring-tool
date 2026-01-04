@@ -28,6 +28,7 @@
   grid-template-rows: repeat(2, min-content);
   position: relative;
   max-height: 90vh;
+  transition: all 0.3s ease-in-out;
 }
 .pop-up-container {
   position: fixed;

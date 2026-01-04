@@ -115,6 +115,28 @@
         ]
       },
       {
+        "title": "אימות חשבון",
+        "subtitle": "שלחנו לך הודעת טקסט ",
+        "description": "בבקשה הכנס את הקוד שקיבלת בהודעה לטלפון מספר:",
+
+        "input-fields": [
+          {
+            "label": "קוד אימות",
+            "mandatory": true,
+            "row": 1,
+            "validation-error": "הקוד שגוי... נסה שוב",
+            "placeholder": "קוד אימות",
+            "name": "verficationCode",
+            "type": "otp"
+          }
+        ],
+        "cta-copy": "אישור",
+        "secondery-cta-copy": {
+          "text": "הקוד לא הגיע?",
+          "button": "שלח שוב"
+        }
+      },
+      {
         "title": "מידע כללי על המיזם",
         "description": "המידע נשמר לצרכי תפעול הכלי ולא יפורסם ללא הסכמה",
         "input-fields": [
