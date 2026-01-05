@@ -91,6 +91,10 @@
 .link-button {
   text-decoration: underline;
   padding-right: 1rem;
+
+  &.blue {
+    color: $blue;
+  }
 }
 
 .link {

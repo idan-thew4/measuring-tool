@@ -33,7 +33,45 @@
         "name": "password"
       }
     ],
-    "button-copy": "התחבר"
+    "button-copy": "התחבר",
+    "password-reset": {
+      "steps": [
+        {
+          "title": "איפוס סיסמא",
+          "input-fields": [
+            {
+              "label": "דוא״ל",
+              "mandatory": true,
+              "type": "email",
+              "row": 1,
+              "validation-error": "יש להזין כתובת דוא״ל ",
+              "format-error": "יש להזין דוא״ל תקין",
+              "placeholder": "דוא״ל",
+              "name": "email"
+            }
+          ],
+          "confimarion-message": "קישור לאיפוס סיסמא נשלח לכתובת הדוא״ל שלך",
+          "call-to-action": "שלח קישור לאיפוס סיסמא"
+        },
+        {
+          "title": "הכנס סיסמא חדשה",
+          "input-fields": [
+            {
+              "label": "סיסמה",
+              "mandatory": true,
+              "type": "password",
+              "row": 1,
+              "validation-error": "יש להזין סיסמה",
+              "format-error": "הסיסמה חייבת להכיל לפחות 8 תווים, אותיות ומספרים",
+              "placeholder": "סיסמה",
+              "name": "password"
+            }
+          ],
+          "confimarion-message": "הסיסמא עודכנה בהצלחה",
+          "call-to-action": "אפס סיסמא"
+        }
+      ]
+    }
   },
   "registration": {
     "validation-general-copy": "* שדות המסומנים בכוכבית הינם חובה",

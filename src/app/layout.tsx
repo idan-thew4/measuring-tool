@@ -9,6 +9,7 @@ import { SelfAssessmentPopup } from "@/components/popUps/selfAssessmentPopup/sel
 import { ChangePasswordPopup } from "@/components/popUps/changePasswordPopup/changePasswordPopup";
 import { DeletePopup } from "@/components/popUps/deletePopup/deletePopup";
 import { AddRenamePopup } from "@/components/popUps/addRenamePopup/addRename";
+import { ResetPasswordPopup } from "@/components/popUps/resetPasswordPopup/resetPasswordPopup";
 
 export const metadata: Metadata = {
   title: "Slil",
@@ -33,6 +34,7 @@ export default function RootLayout({
             <ChangePasswordPopup />
             <DeletePopup />
             <AddRenamePopup />
+            <ResetPasswordPopup />
           </Store>
         </div>
       </body>

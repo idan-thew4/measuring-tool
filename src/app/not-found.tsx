@@ -1,17 +1,24 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useStore } from "@/contexts/Store";
 
 export default function Custom404() {
   const router = useRouter();
-
-  console.log("404");
+  const searchParams = useSearchParams();
+  const keyValue = searchParams.get("key");
+  const loginValue = searchParams.get("login");
+  const { setResetPasswordPopup, setParamsValue } = useStore();
 
   useEffect(() => {
-    // Redirect to the desired page for non-existent URLs
+    if (keyValue || loginValue) {
+      setResetPasswordPopup(true);
+      setParamsValue({ keyValue, login: loginValue });
+    }
+
     router.replace("/tool/user-dashboard");
-  }, [router]);
+  }, [router, keyValue, loginValue]);
 
   return null; // Optionally, you can show a loading spinner or message
 }

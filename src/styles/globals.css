@@ -103,6 +103,9 @@
   text-decoration: underline;
   padding-right: 1rem;
 }
+.link-button.blue {
+  color: #00a6ce;
+}
 
 .link {
   color: #00a6ce;

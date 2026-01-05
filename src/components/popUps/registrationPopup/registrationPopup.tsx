@@ -6,6 +6,7 @@ import {
   ProjectDetails,
   RegistrationStep,
   structureProps,
+  ResetPasswordStep,
 } from "../../../contexts/Store";
 import { useEffect, useState } from "react";
 import { ProgressBar } from "@/app/tool/[project_id]/[alternative_id]/components/progress-bar/progress-bar";
@@ -47,7 +48,7 @@ export function RegistrationPopup() {
     setLoggedInChecked,
     getUserDashboardData,
     initialScoreObject,
-    setActiveSideMenu,
+    addConfirmPasswordToSteps,
   } = useStore();
   const [completedSteps, setCompletedSteps] = useState<totalCompleted>();
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -74,15 +75,15 @@ export function RegistrationPopup() {
   const [loading, setLoading] = useState<boolean>(false);
   const [generalError, setGeneralError] = useState<string>("");
   const [steps, setSteps] = useState<{
-    array: RegistrationStep[] | undefined;
-    single: RegistrationStep | undefined;
+    array: RegistrationStep[] | ResetPasswordStep[] | undefined;
+    single: RegistrationStep | ResetPasswordStep | undefined;
   }>({
     array: [],
     single: undefined,
   });
 
   useEffect(() => {
-    let stepsArray: RegistrationStep[] | undefined = [];
+    let stepsArray: RegistrationStep[] | ResetPasswordStep[] | undefined = [];
     switch (registrationPopup) {
       case "register":
         stepsArray = structure?.registration.steps;
@@ -314,32 +315,32 @@ export function RegistrationPopup() {
     }
   }
 
-  function addConfirmPasswordToSteps(
-    stepsArray: RegistrationStep[] | undefined
-  ): RegistrationStep[] | undefined {
-    if (!stepsArray) return stepsArray;
-    return stepsArray.map((step) => {
-      // Only add if password field exists and confirmPassword does not
-      const passwordIndex = step["input-fields"].findIndex(
-        (field) => field.name === "password"
-      );
-      const hasConfirm = step["input-fields"].some(
-        (field) => field.name === "confirmPassword"
-      );
-      if (passwordIndex !== -1 && !hasConfirm) {
-        const newFields = [...step["input-fields"]];
-        newFields.splice(passwordIndex + 1, 0, {
-          ...newFields[passwordIndex],
-          name: "confirmPassword",
-          label: "אישור סיסמא",
-          "validation-error": "יש להזין את הסיסמא שוב",
-          "format-error": "הסיסמא לא תואמת את הסיסמא שהוזנה",
-        });
-        return { ...step, ["input-fields"]: newFields };
-      }
-      return step;
-    });
-  }
+  // function addConfirmPasswordToSteps(
+  //   stepsArray: RegistrationStep[] | undefined
+  // ): RegistrationStep[] | undefined {
+  //   if (!stepsArray) return stepsArray;
+  //   return stepsArray.map((step) => {
+  //     // Only add if password field exists and confirmPassword does not
+  //     const passwordIndex = step["input-fields"].findIndex(
+  //       (field) => field.name === "password"
+  //     );
+  //     const hasConfirm = step["input-fields"].some(
+  //       (field) => field.name === "confirmPassword"
+  //     );
+  //     if (passwordIndex !== -1 && !hasConfirm) {
+  //       const newFields = [...step["input-fields"]];
+  //       newFields.splice(passwordIndex + 1, 0, {
+  //         ...newFields[passwordIndex],
+  //         name: "confirmPassword",
+  //         label: "אישור סיסמא",
+  //         "validation-error": "יש להזין את הסיסמא שוב",
+  //         "format-error": "הסיסמא לא תואמת את הסיסמא שהוזנה",
+  //       });
+  //       return { ...step, ["input-fields"]: newFields };
+  //     }
+  //     return step;
+  //   });
+  // }
 
   useEffect(() => {
     // getTownList();
@@ -489,8 +490,7 @@ export function RegistrationPopup() {
             return newSteps;
           });
         }
-      }}
-    >
+      }}>
       {completedSteps && (
         <ProgressBar completed={completedSteps} indicator={true} />
       )}
@@ -500,23 +500,21 @@ export function RegistrationPopup() {
             className={clsx(
               "headline_medium-small bold",
               formStyles["headline"]
-            )}
-          >
+            )}>
             {steps.single.title}
           </h3>
           {steps.single["input-fields"][0].type === "otp" && (
             <h4
-              className={clsx("headline_medium-small", formStyles["subtitle"])}
-            >
-              {steps.single.subtitle}
+              className={clsx("headline_medium-small", formStyles["subtitle"])}>
+              {"subtitle" in steps.single ? steps.single.subtitle : ""}
             </h4>
           )}
           <p className="paragraph_16">
-            {steps.single.description}
+            {"description" in steps.single ? steps.single.description : ""}
             {steps.single["input-fields"][0].type === "otp" &&
               ` ${scoreObject["project-details"].contactPhone}`}
           </p>
-          {steps.single.type !== "otp" && (
+          {steps.single["input-fields"][0].type !== "otp" && (
             <p className={clsx(formStyles["validation"], "paragraph_16")}>
               {structure.registration["validation-general-copy"]}
             </p>
@@ -524,8 +522,7 @@ export function RegistrationPopup() {
         </div>
         <form
           style={{ pointerEvents: loading ? "none" : "auto" }}
-          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}
-        >
+          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}>
           {steps.single["input-fields"].map((field, index) => (
             <div
               className={clsx(
@@ -537,8 +534,7 @@ export function RegistrationPopup() {
                   : formStyles["checkbox"],
                 `input`
               )}
-              key={index}
-            >
+              key={index}>
               {field["dropdown-options"] ? (
                 <Controller
                   name={field.name}
@@ -614,8 +610,7 @@ export function RegistrationPopup() {
                           className={clsx(
                             "paragraph_18",
                             formStyles["otp-label"]
-                          )}
-                        >
+                          )}>
                           {steps.single?.["input-fields"][0].label}
                           {steps.single?.["input-fields"][0].mandatory
                             ? " *"
@@ -727,8 +722,7 @@ export function RegistrationPopup() {
               loading && "loading"
             )}
             type="submit"
-            disabled={Object.keys(errors).length > 0 || generalError !== ""}
-          >
+            disabled={Object.keys(errors).length > 0 || generalError !== ""}>
             {structure.registration["nav-buttons"][currentStep]}
           </button>
           {steps.single["input-fields"][0].type === "otp" && (
@@ -750,8 +744,7 @@ export function RegistrationPopup() {
                         setResentAttempts((prev) => prev + 1);
                         setGeneralError("");
                         reset({ verificationCode: "" });
-                      }}
-                    >
+                      }}>
                       {steps.single?.["secondery-cta-copy"]?.button}
                     </button>
                   </>
@@ -768,8 +761,7 @@ export function RegistrationPopup() {
               className={clsx(
                 formStyles["error-message"],
                 formStyles["general-error"]
-              )}
-            >
+              )}>
               {generalError}
             </div>
           )}

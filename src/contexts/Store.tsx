@@ -207,7 +207,7 @@ export type ProjectDetails = {
   contactPhone: string;
   projectArea: string;
   planningTeamRole: string;
-  otp: number;
+  otp: string;
 };
 
 //Structure types//
@@ -258,6 +258,17 @@ type Login = {
   text: string[];
   "input-fields": RegistrationInputField[];
   "button-copy": string;
+  "password-reset": {
+    steps: ResetPasswordStep[];
+  };
+};
+
+export type ResetPasswordStep = {
+  title: string;
+  "input-fields": RegistrationInputField[];
+  "confimarion-message": string;
+  "call-to-action": string;
+  "secondery-cta-copy"?: { text: string; button: string };
 };
 
 type SelfAssessment = {
@@ -309,6 +320,8 @@ export type RegistrationStep = {
   "secondery-cta-copy"?: { text: string; button: string };
   "cta-copy"?: string;
   "input-fields": RegistrationInputField[];
+  "call-to-action"?: string;
+  "confimarion-message": string;
 };
 
 type RegistrationInputField = {
@@ -494,6 +507,15 @@ type ApiContextType = {
     previous: number | null;
     current: number | null;
   };
+  resetPasswordPopup: boolean;
+  setResetPasswordPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  addConfirmPasswordToSteps: (
+    stepsArray: ResetPasswordStep[] | RegistrationStep[] | undefined
+  ) => ResetPasswordStep[] | RegistrationStep[] | undefined;
+  paramsValue: { keyValue: string | null; login: string | null };
+  setParamsValue: React.Dispatch<
+    React.SetStateAction<{ keyValue: string | null; login: string | null }>
+  >;
 };
 
 export type ScoreData = {
@@ -564,6 +586,7 @@ function Store({ children }: PropsWithChildren<{}>) {
     project_name?: string;
     alternative_name?: string;
   }>({ type: "" });
+  const [resetPasswordPopup, setResetPasswordPopup] = useState<boolean>(false);
   const [projects, setProjects] = useState<ProjectType[] | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [pages, setPages] = useState<{
@@ -604,6 +627,7 @@ function Store({ children }: PropsWithChildren<{}>) {
       contactPhone: "",
       projectArea: "",
       planningTeamRole: "",
+      otp: "",
     },
     data: {
       questionnaire: [],
@@ -619,6 +643,11 @@ function Store({ children }: PropsWithChildren<{}>) {
     previous: number | null;
     current: number | null;
   }>({ previous: null, current: null });
+  const [paramsValue, setParamsValue] = useState<{
+    keyValue: string | null;
+    login: string | null;
+  }>({ keyValue: null, login: null });
+
   async function getContent() {
     try {
       const response = await fetch(`${url}/structure`);
@@ -668,6 +697,7 @@ function Store({ children }: PropsWithChildren<{}>) {
           contactPhone: "",
           projectArea: "",
           planningTeamRole: "",
+          otp: "",
         },
         data: {
           questionnaire: structureObject.questionnaire.content.map(
@@ -986,6 +1016,60 @@ function Store({ children }: PropsWithChildren<{}>) {
     });
   }
 
+  function addConfirmPasswordToSteps(
+    stepsArray: RegistrationStep[] | ResetPasswordStep[] | undefined
+  ): RegistrationStep[] | ResetPasswordStep[] | undefined {
+    if (!stepsArray) return stepsArray;
+    if (
+      stepsArray.length === 0 ||
+      ("description" in stepsArray[0] && "type" in stepsArray[0])
+    ) {
+      // RegistrationStep[]
+      return (stepsArray as RegistrationStep[]).map((step) => {
+        const passwordIndex = step["input-fields"].findIndex(
+          (field) => field.name === "password"
+        );
+        const hasConfirm = step["input-fields"].some(
+          (field) => field.name === "confirmPassword"
+        );
+        if (passwordIndex !== -1 && !hasConfirm) {
+          const newFields = [...step["input-fields"]];
+          newFields.splice(passwordIndex + 1, 0, {
+            ...newFields[passwordIndex],
+            name: "confirmPassword",
+            label: "אישור סיסמא",
+            "validation-error": "יש להזין את הסיסמא שוב",
+            "format-error": "הסיסמא לא תואמת את הסיסמא שהוזנה",
+          });
+          return { ...step, ["input-fields"]: newFields };
+        }
+        return step;
+      });
+    } else {
+      // ResetPasswordStep[]
+      return (stepsArray as ResetPasswordStep[]).map((step) => {
+        const passwordIndex = step["input-fields"].findIndex(
+          (field) => field.name === "password"
+        );
+        const hasConfirm = step["input-fields"].some(
+          (field) => field.name === "confirmPassword"
+        );
+        if (passwordIndex !== -1 && !hasConfirm) {
+          const newFields = [...step["input-fields"]];
+          newFields.splice(passwordIndex + 1, 0, {
+            ...newFields[passwordIndex],
+            name: "confirmPassword",
+            label: "אישור סיסמא",
+            "validation-error": "יש להזין את הסיסמא שוב",
+            "format-error": "הסיסמא לא תואמת את הסיסמא שהוזנה",
+          });
+          return { ...step, ["input-fields"]: newFields };
+        }
+        return step;
+      });
+    }
+  }
+
   useEffect(() => {
     setPreviousChapter([chapter, subChapter, principle]);
   }, [chapter, subChapter, principle]);
@@ -998,7 +1082,7 @@ function Store({ children }: PropsWithChildren<{}>) {
     if (pathname.includes("self-assessment")) {
       setSideMenu("self-assessment");
       console.log("self-assessment");
-    } else if (pathname.includes(params.chapters?.[0])) {
+    } else if (pathname.includes(params.chapters?.[0] || "")) {
       setSideMenu("questionnaire");
       console.log("questionnaire");
     } else if (pathname.includes("user-dashboard")) {
@@ -1152,8 +1236,12 @@ function Store({ children }: PropsWithChildren<{}>) {
         getGraphsImages,
         setGetGraphsImages,
         prevPrinciple,
-      }}
-    >
+        resetPasswordPopup,
+        setResetPasswordPopup,
+        addConfirmPasswordToSteps,
+        setParamsValue,
+        paramsValue,
+      }}>
       {children}
     </ApiContext.Provider>
   );
