@@ -49,14 +49,18 @@
   color: white;
   align-items: center;
 }
-.project-table .row .project-button.multiple-alternative:first-of-type {
-  grid-column: 4/5;
+.project-table .row .project-button.multiple-alternative:nth-child(1) {
+  grid-column: 3/5;
 }
 .project-table .row .project-button.multiple-alternative:last-of-type {
   grid-column: 5/6;
 }
 .project-table .row .project-button.single-alternative {
   grid-column: 5/6;
+}
+.project-table .row .project-button.single-alternative.download-button {
+  grid-column: 4/5;
+  grid-row: 1/1;
 }
 .project-table .row:last-child {
   border-bottom: none;

@@ -9,7 +9,6 @@ import {
   SubChapter,
   getPercentageLabel,
   getScoreLabel,
-  // getScoreValue,
   alternativeType,
 } from "@/contexts/Store";
 import { SummaryHeader } from "../components/summary-header/summaryHeader";
@@ -229,8 +228,7 @@ const PdfTable = ({
           fontFamily: "Noto Sane Hebrew Bold",
           fontSize: 14,
           padding: 4,
-        }}
-      >
+        }}>
         {title}
       </Text>
       <Text
@@ -240,8 +238,7 @@ const PdfTable = ({
           textAlign: "right",
           padding: 4,
           height: 35,
-        }}
-      >
+        }}>
         {getPercentageLabel(
           chapterScore,
           (value: number) => getScoreLabel(structure, value),
@@ -258,8 +255,7 @@ const PdfTable = ({
             gap: 0,
             margin: "auto",
             alignItems: "flex-start",
-          }}
-        >
+          }}>
           <Text style={{ flex: 1, fontSize: 11, textAlign: "left" }}>
             {chapterScore.generalScore}
           </Text>
@@ -272,8 +268,7 @@ const PdfTable = ({
                   fontFamily: "Noto Sane Hebrew Regular",
                   textAlign: "left",
                   paddingRight: 2,
-                }}
-              >
+                }}>
                 <Text>{structure?.summary?.table?.columns[2]?.title}</Text>
               </Text>
             )}
@@ -290,8 +285,7 @@ const PdfTable = ({
           textAlign: "right",
           padding: 4,
           paddingRight: 20,
-        }}
-      ></Text>
+        }}></Text>
     </View>
     {structure?.questionnaire.content.map((chapterItem, chapterIdx) => (
       <View
@@ -301,8 +295,7 @@ const PdfTable = ({
           borderRadius: 15,
           overflow: "hidden",
           marginBottom: 20,
-        }}
-      >
+        }}>
         {chapterItem["chapter-content"].map((subChapter, subChapterIdx) => (
           <View key={`${chapterIdx}-${subChapterIdx}`}>
             <View
@@ -317,16 +310,14 @@ const PdfTable = ({
                 paddingRight: 20,
                 fontSize: 11,
                 alignItems: "center",
-              }}
-            >
+              }}>
               <View
                 style={{
                   display: "flex",
                   flexDirection: "row-reverse",
                   gap: 3,
                   flex: 3,
-                }}
-              >
+                }}>
                 <Text style={{ fontFamily: "Noto Sane Hebrew Bold" }}>
                   .{`${chapterIdx + 1}.${subChapterIdx + 1}`}
                 </Text>
@@ -338,8 +329,7 @@ const PdfTable = ({
                 style={{
                   color: "white",
                   flex: 1,
-                }}
-              >
+                }}>
                 {getPercentageLabel(
                   subChaptersScores,
                   subChapterIdx,
@@ -356,8 +346,7 @@ const PdfTable = ({
                     gap: 0,
                     margin: "auto",
                     alignItems: "flex-start",
-                  }}
-                >
+                  }}>
                   <Text style={{ flex: 1, fontSize: 11, textAlign: "left" }}>
                     {subChaptersScores[subChapterIdx]?.generalScore}
                   </Text>
@@ -371,8 +360,7 @@ const PdfTable = ({
                             fontFamily: "Noto Sane Hebrew Regular",
                             textAlign: "left",
                             paddingRight: 2,
-                          }}
-                        >
+                          }}>
                           <Text>
                             {structure?.summary?.table?.columns[2]?.title}
                           </Text>
@@ -386,8 +374,7 @@ const PdfTable = ({
                       ...PDFstyles.pointsBubble,
                       backgroundColor: "white",
                       color: "#5B6771",
-                    }}
-                  >
+                    }}>
                     {subChaptersScores[subChapterIdx]?.percentage}%
                   </Text>
                 )}
@@ -425,23 +412,20 @@ const PdfTable = ({
                       principleIndex !== subChapter.principles.length - 1
                         ? "1px solid #D5D8D7"
                         : undefined,
-                  }}
-                >
+                  }}>
                   <View
                     style={{
                       display: "flex",
                       flexDirection: "row-reverse",
                       gap: 3,
                       flex: 3,
-                    }}
-                  >
+                    }}>
                     <Text
                       style={{
                         textDecoration:
                           inputNumber === -1 ? "line-through" : "none",
                         color: inputNumber === undefined ? "#A0A0A0" : "black",
-                      }}
-                    >
+                      }}>
                       .
                       {`${chapterNumber}.${subChapterIdx + 1}.${
                         principleIndex + 1
@@ -453,16 +437,14 @@ const PdfTable = ({
                           inputNumber === -1 ? "line-through" : "none",
                         color: inputNumber === undefined ? "#A0A0A0" : "black",
                         width: 148,
-                      }}
-                    >
+                      }}>
                       {principle["title"]}
                     </Text>
                   </View>
                   <Text
                     style={{
                       flex: 1,
-                    }}
-                  >
+                    }}>
                     {inputNumber &&
                       structure?.questionnaire?.options?.[inputNumber - 1]}
                   </Text>
@@ -508,8 +490,7 @@ const MyDocument = ({
         <PDFheader
           structure={structure}
           current={current}
-          PDFstyles={PDFstyles}
-        >
+          PDFstyles={PDFstyles}>
           <View style={{ ...PDFstyles.columnsHeader, ...PDFstyles.columns }}>
             {structure?.summary?.table?.columns.map((col, idx) => (
               <View
@@ -522,8 +503,7 @@ const MyDocument = ({
                   textAlign: idx === 2 ? "center" : "right",
                   fontFamily: "Noto Sane Hebrew Bold",
                   paddingRight: idx === 3 ? 20 : 4,
-                }}
-              >
+                }}>
                 <Text>{col.title}</Text>
                 {idx === 2 && (
                   <Text style={{ ...PDFstyles.pointsBubble, width: "100%" }}>
@@ -563,6 +543,7 @@ export default function Summary() {
     isPageChanged,
     current,
     setLoader,
+    url,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -602,6 +583,8 @@ export default function Summary() {
         const percentage = Math.round(
           (generalScore / chapter["max-score"]) * 100
         );
+
+        console.log("average-score", chapter["average-score"]);
 
         return {
           generalScore,
@@ -690,27 +673,26 @@ export default function Summary() {
   const getAlternativeCSV = async (alternative_id: string) => {
     setLoader(true);
     try {
-      const response = await fetch(
-        `/api/alternative/${params.project_id}/${params.alternative_id}/create-alternative-csv`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ alternative_id }),
-        }
-      );
+      const response = await fetch(`${url}/create-alternative-csv`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ alternative_id }),
+      });
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
 
-      const blob = await response.blob();
-      saveAs(
-        blob,
-        `${current?.project.project_name}, ${current?.alternative.alternative_name}.csv`
-      );
+      console.log(response);
+
+      // const blob = await response.blob();
+      // saveAs(
+      //   blob,
+      //   `${current?.project.project_name}, ${current?.alternative.alternative_name}.csv`
+      // );
     } catch (error) {
       console.error("Error downloading CSV:", error);
     } finally {
@@ -724,19 +706,16 @@ export default function Summary() {
         <SummaryHeader
           title={structure?.summary.header.title}
           structure={structure}
-          scoreObject={scoreObject}
-        >
+          scoreObject={scoreObject}>
           <button
             className={clsx("download", "basic-button with-icon outline")}
-            onClick={() => getAlternativeCSV(params.alternative_id as string)}
-          >
-            {structure?.summary.header["buttons-copy"][1]}
+            onClick={() => getAlternativeCSV(params.alternative_id as string)}>
+            {structure?.summary.header["buttons-copy"][0]}
           </button>
           <button
             onClick={handleDownload}
-            className="basic-button print with-icon outline"
-          >
-            {structure?.summary.header["buttons-copy"][0]}
+            className="basic-button print with-icon outline">
+            {structure?.summary.header["buttons-copy"][1]}
           </button>
         </SummaryHeader>
       )}
@@ -748,8 +727,7 @@ export default function Summary() {
             "paragraph_15 bold",
             tableStyles["row-titles"],
             tableStyles["row-titles-sticky"]
-          )}
-        >
+          )}>
           {structure?.summary?.table?.columns.map(
             (
               column: {
@@ -765,8 +743,7 @@ export default function Summary() {
                 className={clsx(
                   column["sub-title"] && tableStyles["score-points"],
                   "paragraph_15 bold"
-                )}
-              >
+                )}>
                 {column.title}
                 {column["sub-title"] && (
                   <span className={tableStyles["percentage-bubble"]}>

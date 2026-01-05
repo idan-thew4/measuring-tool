@@ -151,6 +151,7 @@ export function Menu({
     setScoreObject,
     isMounted,
     loggedInChecked,
+    setLoader,
   } = useStore();
   const [maxScore, setMaxScore] = useState<number>();
   const [sliderValue, setSliderValue] = useState<{
@@ -626,6 +627,7 @@ export function Menu({
                 <li key={index}>
                   <Link
                     className="paragraph_18 bold"
+                    onClick={() => setLoader(true)}
                     href={`/tool/${project_id}/${alternative_id}/${links[index]}`}>
                     {option}
                   </Link>

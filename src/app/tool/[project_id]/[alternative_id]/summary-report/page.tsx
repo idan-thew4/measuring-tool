@@ -125,6 +125,8 @@ export default function SummaryReport() {
         )
       : [];
 
+    console.log("chaptersScoresTemp", chaptersScoresTemp);
+
     // second-chapters //
 
     questionnaireParams = [];

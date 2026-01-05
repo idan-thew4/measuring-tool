@@ -39,15 +39,21 @@
 
     .project-button {
       &.multiple-alternative {
-        &:first-of-type {
-          grid-column: 4/5;
+        &:nth-child(1) {
+          grid-column: 3/5;
         }
         &:last-of-type {
           grid-column: 5/6;
         }
       }
+
       &.single-alternative {
         grid-column: 5/6;
+
+        &.download-button {
+          grid-column: 4 / 5;
+          grid-row: 1 / 1;
+        }
       }
     }
 

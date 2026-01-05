@@ -367,7 +367,7 @@ type Choice = {
   title: string;
   description: string;
   choices: { title: string; text: string; score: number }[];
-  comment?: string;
+  "average-score": number;
 };
 
 export type totalCompleted = {
@@ -386,6 +386,7 @@ export type CalcParameters = {
   "max-score": number;
   "net-zero-impact": number;
   type?: string;
+  "average-score": number;
 };
 
 export type ProjectType = {
@@ -867,9 +868,11 @@ function Store({ children }: PropsWithChildren<{}>) {
           "general-score": 0,
           "net-zero-impact": 0,
           "max-score": 0,
+          "average-score": 0,
           type: type,
         });
       }
+
       chapter["chapter-data"].forEach((subChapterData, subChapterIndex) => {
         if (graph === "subchapters") {
           index = subChapterIndex;
@@ -879,6 +882,7 @@ function Store({ children }: PropsWithChildren<{}>) {
             "general-score": 0,
             "max-score": 0,
             "net-zero-impact": 0,
+            "average-score": 0,
             type: type,
           };
         }
@@ -888,6 +892,15 @@ function Store({ children }: PropsWithChildren<{}>) {
             structure?.questionnaire.content?.[chapterIndex]?.[
               "chapter-content"
             ]?.[subChapterIndex]?.["principles"]?.[principleIndex];
+
+          // Always sum average-score for every structurePrinciple
+          if (graph === "chapters") {
+            calcParameters[index]["average-score"] +=
+              structurePrinciple?.["average-score"] ?? 0;
+          } else if (graph === "subchapters") {
+            subChapterObj["average-score"] +=
+              structurePrinciple?.["average-score"] ?? 0;
+          }
 
           if (typeof principle.choice === "number" && principle.choice >= 0) {
             const generalScore =
@@ -901,10 +914,6 @@ function Store({ children }: PropsWithChildren<{}>) {
                 calcParameters[index]["net-zero-impact"] +=
                   netZeroImpactScore?.score ?? 0;
                 calcParameters[index]["max-score"] += maxScore?.score ?? 0;
-
-                // console.log("generalScore", generalScore);
-
-                //console.log("index" + index);
               } else if (
                 graph === "subchapters" &&
                 subChapterObj &&
@@ -916,19 +925,6 @@ function Store({ children }: PropsWithChildren<{}>) {
                 subChapterObj["max-score"] += maxScore?.score ?? 0;
               }
             }
-            // } else {
-            //   const netZeroImpactScore = structurePrinciple?.choices?.[3];
-            //   const maxScore = structurePrinciple?.choices?.[4];
-
-            //   if (graph === "chapters") {
-            //     calcParameters[index]["max-score"] += maxScore?.score ?? 0;
-            //     calcParameters[index]["net-zero-impact"] +=
-            //       netZeroImpactScore?.score ?? 0;
-            //   } else if (graph === "subchapters") {
-            //     subChapterObj["max-score"] += maxScore?.score ?? 0;
-            //     subChapterObj["net-zero-impact"] +=
-            //       netZeroImpactScore?.score ?? 0;
-            //   }
           }
         });
         if (graph === "subchapters") {
@@ -991,6 +987,12 @@ function Store({ children }: PropsWithChildren<{}>) {
     scoreObject: ScoreType
   ) {
     return questionnaireParams.map((chapter, index) => {
+      const totalPrinciples = structure?.questionnaire.content?.[index][
+        "chapter-content"
+      ].reduce((sum, subChapter) => sum + subChapter.principles.length, 0);
+
+      console.log("totalPrinciples", totalPrinciples);
+
       const subject =
         structure?.questionnaire.content?.[index]?.["chapter-title"] ?? "";
 
@@ -1004,6 +1006,9 @@ function Store({ children }: PropsWithChildren<{}>) {
       const assessment =
         hasAssessment && scoreObject.data.assessment[index]["chapter-score"];
 
+      const averageScore =
+        Math.round(chapter["average-score"] / totalPrinciples) || 0;
+
       return {
         subject,
         questionnaire,
@@ -1012,6 +1017,7 @@ function Store({ children }: PropsWithChildren<{}>) {
               assessment: assessment,
             }
           : {}),
+        averageScore,
       };
     });
   }

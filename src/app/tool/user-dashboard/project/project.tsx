@@ -103,6 +103,7 @@ export function Project({
                       : styles["single-alternative"],
                     index === 1 && "add-alternative",
                     index === 2 && "download",
+                    index === 2 && styles["download-button"],
                     index === 3 && "delete",
                     styles["project-button"]
                   )}

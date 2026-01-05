@@ -155,8 +155,7 @@ const PdfTable = ({
         borderTopLeftRadius: "200px",
         borderTopRightRadius: "200px",
         padding: 4,
-      }}
-    >
+      }}>
       {columns.map((col, idx) => (
         <Text
           key={col}
@@ -174,8 +173,7 @@ const PdfTable = ({
             paddingRight: 10,
             paddingLeft: 10,
             fontFamily: "SimplerPro-Bold",
-          }}
-        >
+          }}>
           {col}
         </Text>
       ))}
@@ -184,8 +182,7 @@ const PdfTable = ({
     {rows.map((row, rowIdx) => (
       <View
         key={rowIdx}
-        style={{ flexDirection: "row", borderBottom: "1px solid #ccc" }}
-      >
+        style={{ flexDirection: "row", borderBottom: "1px solid #ccc" }}>
         {columns.map((col, colIdx) => (
           <Text
             key={colIdx}
@@ -202,8 +199,7 @@ const PdfTable = ({
               backgroundColor: "white",
               paddingRight: 10,
               paddingLeft: 10,
-            }}
-          >
+            }}>
             {String(row[col] ?? "")}
           </Text>
         ))}
@@ -232,8 +228,7 @@ const MyDocument = ({
               marginBottom: 10,
               textAlign: "right",
               direction: "rtl",
-            }}
-          >
+            }}>
             {`${scoreObject["project-details"].projectName}-${formatDate(
               Date.now()
             )}`}
@@ -256,8 +251,7 @@ export function SummaryTableHeader({
     <SummaryHeader title="dsds" structure={structure} scoreObject={scoreObject}>
       <button
         className={clsx(styles["download"], "basic-button with-icon outline")}
-        onClick={() => downloadAllCSV(structure, scoreObject)}
-      >
+        onClick={() => downloadAllCSV(structure, scoreObject)}>
         {structure?.summary.header["buttons-copy"][0]}
       </button>
       <PDFDownloadLink
@@ -267,8 +261,7 @@ export function SummaryTableHeader({
         fileName={`${scoreObject["project-details"].projectName}-${formatDate(
           Date.now()
         )}.pdf`}
-        className={clsx(styles["print"], "basic-button with-icon outline")}
-      >
+        className={clsx(styles["print"], "basic-button with-icon outline")}>
         {structure?.summary.header["buttons-copy"][1]}
       </PDFDownloadLink>
     </SummaryHeader>
