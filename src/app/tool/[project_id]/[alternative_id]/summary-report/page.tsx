@@ -26,7 +26,6 @@ import {
   Font,
   pdf,
 } from "@react-pdf/renderer";
-import { toPng } from "html-to-image";
 import { saveAs } from "file-saver";
 
 export type ScoreData = {
@@ -125,8 +124,6 @@ export default function SummaryReport() {
         )
       : [];
 
-    console.log("chaptersScoresTemp", chaptersScoresTemp);
-
     // second-chapters //
 
     questionnaireParams = [];
@@ -165,6 +162,17 @@ export default function SummaryReport() {
             "sub-chapter-score"
           ];
 
+        const averageScore =
+          subChapter["average-score"] !== undefined &&
+          subChapter["principles-count"] !== undefined &&
+          subChapter["principles-count"] !== 0
+            ? Math.round(
+                subChapter["average-score"] / subChapter["principles-count"]
+              )
+            : 0;
+
+        console.log("sub-averageScore", averageScore);
+
         return {
           subject,
           questionnaire,
@@ -173,6 +181,9 @@ export default function SummaryReport() {
                 assessment: assessment,
               }
             : {}),
+          ...(Number.isNaN(averageScore) || averageScore === 0
+            ? {}
+            : { averageScore }),
         };
       }
     );
@@ -287,7 +298,8 @@ export default function SummaryReport() {
           <SummaryHeader
             title={structure?.summary.header.title}
             structure={structure}
-            scoreObject={scoreObject}>
+            scoreObject={scoreObject}
+          >
             <button
               type="button"
               onClick={() => {
@@ -296,7 +308,8 @@ export default function SummaryReport() {
                 // setGetGraphsImages("getting-images");
                 handleClick();
               }}
-              className="basic-button print with-icon outline">
+              className="basic-button print with-icon outline"
+            >
               {structure?.summary.header["buttons-copy"][0]}
             </button>
           </SummaryHeader>

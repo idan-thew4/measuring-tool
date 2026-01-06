@@ -387,6 +387,7 @@ export type CalcParameters = {
   "net-zero-impact": number;
   type?: string;
   "average-score": number;
+  "principles-count"?: number;
 };
 
 export type ProjectType = {
@@ -884,6 +885,7 @@ function Store({ children }: PropsWithChildren<{}>) {
             "net-zero-impact": 0,
             "average-score": 0,
             type: type,
+            "principles-count": 0,
           };
         }
 
@@ -897,9 +899,11 @@ function Store({ children }: PropsWithChildren<{}>) {
           if (graph === "chapters") {
             calcParameters[index]["average-score"] +=
               structurePrinciple?.["average-score"] ?? 0;
+            calcParameters[index]["principles-count"]! += 1;
           } else if (graph === "subchapters") {
             subChapterObj["average-score"] +=
               structurePrinciple?.["average-score"] ?? 0;
+            subChapterObj["principles-count"]! += 1;
           }
 
           if (typeof principle.choice === "number" && principle.choice >= 0) {
@@ -991,8 +995,6 @@ function Store({ children }: PropsWithChildren<{}>) {
         "chapter-content"
       ].reduce((sum, subChapter) => sum + subChapter.principles.length, 0);
 
-      console.log("totalPrinciples", totalPrinciples);
-
       const subject =
         structure?.questionnaire.content?.[index]?.["chapter-title"] ?? "";
 
@@ -1017,7 +1019,9 @@ function Store({ children }: PropsWithChildren<{}>) {
               assessment: assessment,
             }
           : {}),
-        averageScore,
+        ...(Number.isNaN(averageScore) || averageScore === 0
+          ? {}
+          : { averageScore }),
       };
     });
   }
@@ -1087,13 +1091,10 @@ function Store({ children }: PropsWithChildren<{}>) {
   useEffect(() => {
     if (pathname.includes("self-assessment")) {
       setSideMenu("self-assessment");
-      console.log("self-assessment");
     } else if (pathname.includes(params.chapters?.[0] || "")) {
       setSideMenu("questionnaire");
-      console.log("questionnaire");
     } else if (pathname.includes("user-dashboard")) {
       setSideMenu("");
-      console.log("user-dashboard");
     }
   }, [pathname]);
 
@@ -1247,7 +1248,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         addConfirmPasswordToSteps,
         setParamsValue,
         paramsValue,
-      }}>
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );

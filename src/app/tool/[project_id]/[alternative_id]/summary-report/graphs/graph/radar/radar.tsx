@@ -50,7 +50,7 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
       negative = false,
       maxScore,
     } = props;
-    const colors = ["#979797", "#79C5D8"];
+    const colors = ["transparent", "#979797", "#79C5D8"];
     const [dataKeys, setDataKeys] = useState<string[]>();
     const [filtersStatus, setFiltersStatus] = useState<{
       [key: string]: boolean;
@@ -58,14 +58,7 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
       questionnaire: true,
       assessment: false,
     });
-    const {
-      legendColors,
-      PNGexports,
-      setPNGexports,
-      loader,
-      setGetGraphsImages,
-      getGraphsImages,
-    } = useStore();
+    const { legendColors } = useStore();
 
     useEffect(() => {
       const tempDataKeys: string[] = [];
@@ -80,17 +73,22 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
         });
       }
 
-      tempDataKeys.sort((a, b) =>
-        a === "questionnaire" ? 1 : b === "questionnaire" ? -1 : 0
-      );
-
-      setDataKeys(tempDataKeys);
+      if (tempDataKeys.includes("averageScore")) {
+        setDataKeys(["averageScore", "assessment", "questionnaire"]);
+      } else if (tempDataKeys.includes("assessment")) {
+        setDataKeys(["assessment", "questionnaire"]);
+      } else {
+        setDataKeys(["questionnaire"]);
+      }
     }, [parameters]);
 
     function getDataLabelColor(value: string | number, type: string) {
       switch (type) {
         case "assessment":
           return "#979797";
+          break;
+        case "averageScore":
+          return "white";
           break;
         case "questionnaire":
           if (Number(value) > 100) {
@@ -149,16 +147,36 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
         legend={legend ? ["17%-0%", "33%-18%", "100%-34%", "100%<"] : false}
         preview={preview}
         negative={negative}
-        radarRef={graphContainer}>
+        radarRef={graphContainer}
+      >
         {filters && (
           <ul className={graphStyles["filters"]}>
-            {dataKeys?.slice().map((filter, index) => (
+            {dataKeys?.map((filter, index) => (
               <li key={index} className={graphStyles["filter-item"]}>
                 <label
-                  className={clsx("paragraph_14", graphStyles["filter-label"])}>
+                  className={clsx("paragraph_14", graphStyles["filter-label"])}
+                >
                   <div
                     className={graphStyles["filter-color"]}
-                    style={{ backgroundColor: colors[index] }}></div>
+                    style={
+                      filter === "averageScore"
+                        ? {
+                            border: "0.1rem dashed black",
+                            width: "1.4rem",
+                            height: "1.4rem",
+                          }
+                        : {
+                            backgroundColor:
+                              colors[
+                                dataKeys.length === 3
+                                  ? index
+                                  : dataKeys.length === 2
+                                  ? index + 1
+                                  : index + 2
+                              ],
+                          }
+                    }
+                  ></div>
                   <input
                     type="checkbox"
                     checked={filtersStatus[filter] || false}
@@ -169,7 +187,16 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
                       }));
                     }}
                   />
-                  {filters[filters.length - 1 - index]}{" "}
+                  {
+                    filters[
+                      dataKeys.length === 3
+                        ? filters.length - 1 - index
+                        : dataKeys.length === 2
+                        ? filters.length - 2 - index
+                        : filters.length - 3 - index
+                    ]
+                  }
+                  {/* {filters[filters.length - 1 - index]} */}
                 </label>
               </li>
             ))}
@@ -189,7 +216,8 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
               width={!preview ? 600 : 40}
               height={!preview ? 600 : 40}
               data={parameters}
-              className={styles["radar"]}>
+              className={styles["radar"]}
+            >
               {/* <PolarGrid /> */}
               {/* <PolarAngleAxis dataKey="subject" /> */}
 
@@ -214,7 +242,12 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
                           key={index}
                           name={dataKeys[index]}
                           dataKey={dataKeys[index]}
-                          stroke={colors[index]}
+                          stroke={
+                            dataKey === "averageScore" ? "black" : colors[index]
+                          }
+                          strokeDasharray={
+                            dataKey === "averageScore" ? "6 6" : "none"
+                          }
                           strokeWidth={2}
                           fill={colors[index]}
                           fillOpacity={0.6}
@@ -249,17 +282,29 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
                                     value,
                                     dataKeys[index]
                                   )}
-                                  strokeWidth="2"
                                   rx="8"
+                                  stroke={
+                                    dataKey === "averageScore"
+                                      ? "black"
+                                      : "none"
+                                  }
+                                  strokeWidth={
+                                    dataKey === "averageScore" ? 1 : 0
+                                  }
                                 />
                                 <text
                                   x={x}
                                   y={y - 10}
-                                  fill={"white"}
+                                  fill={
+                                    dataKey === "averageScore"
+                                      ? "black"
+                                      : "white"
+                                  }
                                   fontSize={12}
                                   textAnchor="middle"
                                   dominantBaseline="central"
-                                  className={styles["data-label"]}>
+                                  className={styles["data-label"]}
+                                >
                                   {value}%
                                 </text>
                               </g>
