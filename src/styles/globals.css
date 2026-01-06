@@ -30,6 +30,7 @@
 .main-container::-webkit-scrollbar-thumb {
   background-color: #d9d9d9;
   border-radius: 10rem;
+  opacity: 1;
 }
 .main-container-full {
   grid-column: 4/10;
@@ -219,6 +220,34 @@ a.with-icon.add-alternative:hover:after {
   left: 1.8rem;
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+}
+.main-container--enter {
+  animation: fadeInUp 0.3s ease-in-out forwards;
+}
+
+.main-container--exit {
+  animation: fadeOutDown 0.3s ease-in-out forwards;
+}
+
 h1,
 p {
   margin: 0;
@@ -263,16 +292,19 @@ ul {
   font-size: 1.9rem;
   font-weight: 700;
   line-height: 189.474%;
+  text-align: right;
 }
 .nav-side-text__sub-chapter {
   font-size: 1.8rem;
   font-weight: 700;
   line-height: 200%;
+  text-align: right;
 }
 .nav-side-text__sub-chapter-choice {
   font-size: 1.8rem;
   font-weight: 400;
   line-height: 160%;
+  text-align: right;
 }
 
 .bold {

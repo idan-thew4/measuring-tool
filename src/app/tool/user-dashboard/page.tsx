@@ -19,8 +19,10 @@ export default function userDashboard() {
     getUserDashboardData,
     loader,
     isPageChanged,
+    dashBoardVisible,
+
+    activeSideMenu,
   } = useStore();
-  const router = useRouter();
 
   useEffect(() => {
     isPageChanged("user-dashboard");
@@ -35,7 +37,14 @@ export default function userDashboard() {
   }
 
   return (
-    <div className="main-container main-container-full">
+    <div
+      className={clsx(
+        "main-container main-container-full",
+        styles["main-container"],
+        !loader && "main-container--enter",
+        !dashBoardVisible && "main-container--exit"
+      )}
+    >
       <h1 className={clsx("headline_medium-big bold", styles["head-title"])}>
         {structure["user-dashboard"]["top-section"].title}
       </h1>
@@ -59,7 +68,8 @@ export default function userDashboard() {
                     } else {
                       setDeletePopup({ type: "delete-user" });
                     }
-                  }}>
+                  }}
+                >
                   {button}
                 </button>
               )
@@ -74,7 +84,8 @@ export default function userDashboard() {
           </h2>
           <button
             className="basic-button outline with-icon add"
-            onClick={() => setRegistrationPopup("new-project")}>
+            onClick={() => setRegistrationPopup("new-project")}
+          >
             {
               structure["user-dashboard"]["bottom-section"]["projects"][
                 "buttons-copy"

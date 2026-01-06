@@ -12,7 +12,13 @@ export function Project({
   alternatives: alternativeType[];
   project_id: number;
 }) {
-  const { structure, setDeletePopup, setAddRenamePopup } = useStore();
+  const {
+    structure,
+    setDeletePopup,
+    setAddRenamePopup,
+    getAlternativeSpreadsheet,
+    setDashBoardVisible,
+  } = useStore();
 
   return (
     <ul className={styles["project-table"]}>
@@ -66,16 +72,22 @@ export function Project({
         >
           <div className={styles["alternative-name"]}>
             <div>
-              <Link
-                href={`/tool/${project_id}/${alternative.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`}
+              <button
+                type="button"
                 className={clsx("paragraph_20", styles["alternative-link"])}
+                onClick={() => {
+                  setDashBoardVisible(false);
+                  setTimeout(() => {
+                    window.location.href = `/tool/${project_id}/${alternative.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`;
+                  }, 100);
+                }}
               >
                 {alternative.alternative_name},
                 <span className={clsx(styles["date"], "paragraph_15")}>
                   &nbsp;
                   {formatDate(alternative.alternative_created_date_timestamp)}
                 </span>
-              </Link>
+              </button>
               <button
                 className={clsx(
                   "paragraph_15 link black with-icon edit",
@@ -112,9 +124,8 @@ export function Project({
                       ? styles["multiple-alternative"]
                       : styles["single-alternative"],
                     index === 1 && "add-alternative",
-                    index === 2 && "download",
-                    index === 2 && styles["download-button"],
-                    index === 3 && "delete",
+                    (index === 2 || index === 2 || index === 3) && "download",
+                    index === 4 && "delete",
                     styles["project-button"]
                   )}
                   onClick={() => {
@@ -127,7 +138,22 @@ export function Project({
                         });
                         break;
 
+                      case 2:
+                        getAlternativeSpreadsheet(
+                          String(alternative.alternative_id),
+                          "csv"
+                        );
+
+                        break;
+
                       case 3:
+                        getAlternativeSpreadsheet(
+                          String(alternative.alternative_id),
+                          "excel"
+                        );
+                        break;
+
+                      case 4:
                         setDeletePopup({
                           type: "delete-alternative",
                           alternative_id: alternative.alternative_id,

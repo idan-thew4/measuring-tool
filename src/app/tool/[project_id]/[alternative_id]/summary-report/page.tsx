@@ -285,12 +285,18 @@ export default function SummaryReport() {
     }
   };
 
-  if (!structure) {
+  if (!structure || loader) {
     return <Loader />;
   }
 
   return (
-    <div className={clsx(styles["main-container"], "main-container")}>
+    <div
+      className={clsx(
+        styles["main-container"],
+        "main-container",
+        !loader && "main-container--enter"
+      )}
+    >
       {structure && (
         <>
           <SummaryHeader

@@ -61,11 +61,13 @@
 .project-table .row .project-button.single-alternative {
   grid-column: 6/7;
 }
-.project-table .row .project-button.single-alternative.download-button {
-  grid-column: 5/6;
-  grid-row: 1/1;
+.project-table .row .project-button.single-alternative:nth-child(2) {
+  grid-column: 4/5;
 }
-.project-table .row .project-button.single-alternative.last-of-type {
+.project-table .row .project-button.single-alternative:nth-child(3) {
+  grid-column: 5/6;
+}
+.project-table .row .project-button.single-alternative:nth-child(4) {
   grid-column: 6/7;
 }
 .project-table .row:last-child {

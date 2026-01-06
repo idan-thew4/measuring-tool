@@ -53,5 +53,6 @@ $font-main: "SimplerPro", sans-serif;
   &::-webkit-scrollbar-thumb {
     background-color: $light-grey;
     border-radius: 10rem;
+    opacity: 1;
   }
 }

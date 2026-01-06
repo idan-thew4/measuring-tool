@@ -241,3 +241,35 @@ a.with-icon {
     }
   }
 }
+
+// Animation//
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+}
+
+.main-container--enter {
+  animation: fadeInUp 0.3s ease-in-out forwards;
+}
+
+.main-container--exit {
+  animation: fadeOutDown 0.3s ease-in-out forwards;
+}

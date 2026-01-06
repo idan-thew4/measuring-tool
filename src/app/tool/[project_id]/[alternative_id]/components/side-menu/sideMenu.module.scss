@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow-y: auto;
+  overflow-y: scroll;
   height: 100%;
   position: relative;
   background-color: white;
@@ -19,7 +19,7 @@
     transform: translate(0, 0);
   }
 
-  a {
+  button {
     color: $basic-grey;
     transition: 0.3s all;
   }
@@ -144,6 +144,19 @@
 
     ul.bottom-links {
       padding-top: 3rem;
+
+      button {
+        color: $basic-grey;
+        transition: 0.3s all;
+
+        &.active {
+          color: $blue !important;
+        }
+
+        &:hover {
+          color: $blue;
+        }
+      }
     }
 
     &.self-assessment {

@@ -523,6 +523,8 @@ type ApiContextType = {
     alternative_id: string,
     type: string
   ) => Promise<void>;
+  dashBoardVisible: boolean;
+  setDashBoardVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type ScoreData = {
@@ -654,6 +656,7 @@ function Store({ children }: PropsWithChildren<{}>) {
     keyValue: string | null;
     login: string | null;
   }>({ keyValue: null, login: null });
+  const [dashBoardVisible, setDashBoardVisible] = useState(true);
 
   async function getContent() {
     try {
@@ -1089,6 +1092,25 @@ function Store({ children }: PropsWithChildren<{}>) {
   ) => {
     setLoader(true);
 
+    // const myHeaders = new Headers();
+    // myHeaders.append("Content-Type", "application/json");
+
+    // fetch(
+    //   `https://wordpress-1080689-5737105.cloudwaysapps.com/wp-json/slil-api/create-alternative-${type}`,
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     credentials: "include",
+    //     body: JSON.stringify({ alternative_id }),
+    //   }
+    // )
+    //   .then((response) => response.text())
+    //   .then((result) => console.log(result))
+    //   .catch((error) => console.error(error));
+    // setLoader(false);
+
     try {
       const response = await fetch(`${url}/create-alternative-${type}`, {
         method: "POST",
@@ -1106,7 +1128,9 @@ function Store({ children }: PropsWithChildren<{}>) {
       const blob = await response.blob();
       saveAs(
         blob,
-        `${current?.project.project_name}, ${current?.alternative.alternative_name}.csv`
+        `${current?.project.project_name}, ${
+          current?.alternative.alternative_name
+        }.${type === "csv" ? "csv" : "xlsx"}`
       );
     } catch (error) {
       console.error("Error downloading CSV:", error);
@@ -1126,12 +1150,17 @@ function Store({ children }: PropsWithChildren<{}>) {
   useEffect(() => {
     if (pathname.includes("self-assessment")) {
       setSideMenu("self-assessment");
-    } else if (pathname.includes(params.chapters?.[0] || "")) {
+    } else if (pathname.includes(params.chapters?.[0])) {
       setSideMenu("questionnaire");
     } else if (pathname.includes("user-dashboard")) {
       setSideMenu("");
+      console.log("dashboard");
     }
   }, [pathname]);
+
+  useEffect(() => {
+    console.log("activeSideMenu changed to:", activeSideMenu);
+  }, [activeSideMenu]);
 
   const [prevSideMenu, setPrevSideMenu] = useState(sideMenu);
 
@@ -1284,6 +1313,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         setParamsValue,
         paramsValue,
         getAlternativeSpreadsheet,
+        dashBoardVisible,
+        setDashBoardVisible,
       }}
     >
       {children}

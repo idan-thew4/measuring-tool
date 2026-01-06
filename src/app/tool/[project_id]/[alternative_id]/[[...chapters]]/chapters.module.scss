@@ -24,6 +24,12 @@
     transform: translateX(0);
     padding: 3rem 3.2rem 1rem 3.2rem;
     border-radius: 4rem;
+    opacity: 1;
+    transition: 0.3s all;
+
+    &--hidden {
+      opacity: 0 !important;
+    }
     // transform: translateX(0);
 
     @keyframes chapter-box-slide {
@@ -37,7 +43,6 @@
       }
       31% {
         transform: translateX(-100vw);
-        opacity: 0;
       }
       70% {
         transform: translateX(0);

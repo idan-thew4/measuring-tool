@@ -17,7 +17,7 @@ export function SideMenu({
   alternative_id: number;
   type?: string;
 }) {
-  const { activeSideMenu } = useStore();
+  const { activeSideMenu, loader } = useStore();
 
   type;
   return (

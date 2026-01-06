@@ -33,6 +33,7 @@ import {
 import { useParams } from "next/navigation";
 import { saveAs } from "file-saver";
 import { PDFheader, PDFstyles } from "../components/summary-header/pdfHeader";
+import { Loader } from "@/components/loader/loader";
 
 //CSV//
 
@@ -564,6 +565,8 @@ export default function Summary() {
     setLoader,
     url,
     getAlternativeSpreadsheet,
+    loader,
+    mainContainerOut,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -690,41 +693,47 @@ export default function Summary() {
     }
   };
 
+  if (!structure || loader) {
+    return <Loader />;
+  }
+
   return (
-    <div className={clsx(styles["summary"], "main-container")}>
-      {structure && current && (
-        <SummaryHeader
-          title={structure?.summary.header.title}
-          structure={structure}
-          scoreObject={scoreObject}
-        >
-          <button
-            className={clsx("download", "basic-button with-icon outline")}
-            onClick={() =>
-              getAlternativeSpreadsheet(
-                params.alternative_id as string,
-                "excel"
-              )
-            }
-          >
-            {structure?.summary.header["buttons-copy"][1]}
-          </button>
-          <button
-            className={clsx("download", "basic-button with-icon outline")}
-            onClick={() =>
-              getAlternativeSpreadsheet(params.alternative_id as string, "csv")
-            }
-          >
-            {structure?.summary.header["buttons-copy"][2]}
-          </button>
-          <button
-            onClick={handleDownload}
-            className="basic-button print with-icon outline"
-          >
-            {structure?.summary.header["buttons-copy"][0]}
-          </button>
-        </SummaryHeader>
+    <div
+      className={clsx(
+        styles["summary"],
+        "main-container",
+        !loader && "main-container--enter",
+        mainContainerOut && "main-container--exit"
       )}
+    >
+      <SummaryHeader
+        title={structure?.summary.header.title || ""}
+        structure={structure as structureProps}
+        scoreObject={scoreObject}
+      >
+        <button
+          className={clsx("download", "basic-button with-icon outline")}
+          onClick={() =>
+            getAlternativeSpreadsheet(params.alternative_id as string, "excel")
+          }
+        >
+          {structure?.summary.header["buttons-copy"][1]}
+        </button>
+        <button
+          className={clsx("download", "basic-button with-icon outline")}
+          onClick={() =>
+            getAlternativeSpreadsheet(params.alternative_id as string, "csv")
+          }
+        >
+          {structure?.summary.header["buttons-copy"][2]}
+        </button>
+        <button
+          onClick={handleDownload}
+          className="basic-button print with-icon outline"
+        >
+          {structure?.summary.header["buttons-copy"][0]}
+        </button>
+      </SummaryHeader>
 
       <div className={styles["tables-container"]}>
         <div
