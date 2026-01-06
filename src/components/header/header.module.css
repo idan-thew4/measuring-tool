@@ -200,4 +200,5 @@ form .input:nth-last-child(-n+4) .dropdown__menu {
   top: 10rem;
   position: absolute;
   z-index: 10;
+  height: 60vh;
 }/*# sourceMappingURL=header.module.css.map */

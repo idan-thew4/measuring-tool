@@ -29,7 +29,8 @@ export function Project({
                 project_id: project_id,
                 project_name: project_name,
               });
-            }}>
+            }}
+          >
             {structure
               ? structure["user-dashboard"]["bottom-section"]["projects"][
                   "buttons-copy-project"
@@ -45,7 +46,8 @@ export function Project({
           )}
           onClick={() =>
             setDeletePopup({ type: "delete-project", project_id: project_id })
-          }>
+          }
+        >
           {structure
             ? structure["user-dashboard"]["bottom-section"]["projects"][
                 "buttons-copy-project"
@@ -60,33 +62,41 @@ export function Project({
             styles["row"],
             styles["row-alternative"]
             // key === 0 && styles["no-border"]
-          )}>
+          )}
+        >
           <div className={styles["alternative-name"]}>
-            <Link
-              href={`/tool/${project_id}/${alternative.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`}
-              className={clsx("paragraph_20", styles["alternative-link"])}>
-              {alternative.alternative_name},
-              <span className={clsx(styles["date"], "paragraph_15")}>
-                &nbsp;
-                {formatDate(alternative.alternative_created_date_timestamp)}
-              </span>
-            </Link>
-            <button
-              className="paragraph_15 link black with-icon edit"
-              onClick={() => {
-                setAddRenamePopup({
-                  type: "rename-alternative",
-                  project_id: project_id,
-                  alternative_id: alternative.alternative_id,
-                  alternative_name: alternative.alternative_name,
-                });
-              }}>
-              {
-                structure?.["user-dashboard"]["bottom-section"]["projects"][
-                  "buttons-copy-alternative"
-                ][0]
-              }
-            </button>
+            <div>
+              <Link
+                href={`/tool/${project_id}/${alternative.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`}
+                className={clsx("paragraph_20", styles["alternative-link"])}
+              >
+                {alternative.alternative_name},
+                <span className={clsx(styles["date"], "paragraph_15")}>
+                  &nbsp;
+                  {formatDate(alternative.alternative_created_date_timestamp)}
+                </span>
+              </Link>
+              <button
+                className={clsx(
+                  "paragraph_15 link black with-icon edit",
+                  styles["edit-alternative-button"]
+                )}
+                onClick={() => {
+                  setAddRenamePopup({
+                    type: "rename-alternative",
+                    project_id: project_id,
+                    alternative_id: alternative.alternative_id,
+                    alternative_name: alternative.alternative_name,
+                  });
+                }}
+              >
+                {
+                  structure?.["user-dashboard"]["bottom-section"]["projects"][
+                    "buttons-copy-alternative"
+                  ][0]
+                }
+              </button>
+            </div>
           </div>
           {structure?.["user-dashboard"]["bottom-section"]["projects"][
             "buttons-copy-alternative"
@@ -123,7 +133,8 @@ export function Project({
                           alternative_id: alternative.alternative_id,
                         });
                     }
-                  }}>
+                  }}
+                >
                   {button}
                 </button>
               )

@@ -181,9 +181,7 @@ export default function SummaryReport() {
                 assessment: assessment,
               }
             : {}),
-          ...(Number.isNaN(averageScore) || averageScore === 0
-            ? {}
-            : { averageScore }),
+          ...(Number.isNaN(averageScore) ? {} : { averageScore }),
         };
       }
     );

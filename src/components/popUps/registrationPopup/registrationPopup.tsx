@@ -89,7 +89,7 @@ export function RegistrationPopup() {
         stepsArray = structure?.registration.steps;
         break;
       case "new-project":
-        stepsArray = structure?.registration.steps.slice(1);
+        stepsArray = structure?.registration.steps.slice(2);
         break;
       default:
     }
@@ -366,6 +366,9 @@ export function RegistrationPopup() {
   const onSubmit = async (stepData: Inputs, index: number) => {
     const updatedProjectDetails = { ...scoreObject["project-details"] };
 
+    console.log("registrationPopup", registrationPopup);
+    console.log("index", index);
+
     // Update only keys that exist in project-details
     Object.keys(stepData).forEach((key) => {
       if (key in updatedProjectDetails) {
@@ -377,7 +380,11 @@ export function RegistrationPopup() {
       "project-details": updatedProjectDetails,
     }));
 
-    if (completedSteps && index !== completedSteps.length - 1) {
+    if (
+      completedSteps &&
+      index !== completedSteps.length - 1 &&
+      registrationPopup === "register"
+    ) {
       if (index === 1 && registrationPopup === "register") {
         const userCreated = await createNewUser(
           stepData["fullName"] as string,
@@ -424,6 +431,9 @@ export function RegistrationPopup() {
           return;
         }
       }
+    } else if (index === 0 && registrationPopup === "new-project") {
+      console.log("conditn met");
+      setCurrentStep(index + 1);
     } else {
       if (structure) {
         createProject(updatedProjectDetails, structure);
@@ -490,7 +500,8 @@ export function RegistrationPopup() {
             return newSteps;
           });
         }
-      }}>
+      }}
+    >
       {completedSteps && (
         <ProgressBar completed={completedSteps} indicator={true} />
       )}
@@ -500,12 +511,14 @@ export function RegistrationPopup() {
             className={clsx(
               "headline_medium-small bold",
               formStyles["headline"]
-            )}>
+            )}
+          >
             {steps.single.title}
           </h3>
           {steps.single["input-fields"][0].type === "otp" && (
             <h4
-              className={clsx("headline_medium-small", formStyles["subtitle"])}>
+              className={clsx("headline_medium-small", formStyles["subtitle"])}
+            >
               {"subtitle" in steps.single ? steps.single.subtitle : ""}
             </h4>
           )}
@@ -522,7 +535,8 @@ export function RegistrationPopup() {
         </div>
         <form
           style={{ pointerEvents: loading ? "none" : "auto" }}
-          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}>
+          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}
+        >
           {steps.single["input-fields"].map((field, index) => (
             <div
               className={clsx(
@@ -534,7 +548,8 @@ export function RegistrationPopup() {
                   : formStyles["checkbox"],
                 `input`
               )}
-              key={index}>
+              key={index}
+            >
               {field["dropdown-options"] ? (
                 <Controller
                   name={field.name}
@@ -610,7 +625,8 @@ export function RegistrationPopup() {
                           className={clsx(
                             "paragraph_18",
                             formStyles["otp-label"]
-                          )}>
+                          )}
+                        >
                           {steps.single?.["input-fields"][0].label}
                           {steps.single?.["input-fields"][0].mandatory
                             ? " *"
@@ -722,7 +738,8 @@ export function RegistrationPopup() {
               loading && "loading"
             )}
             type="submit"
-            disabled={Object.keys(errors).length > 0 || generalError !== ""}>
+            disabled={Object.keys(errors).length > 0 || generalError !== ""}
+          >
             {structure.registration["nav-buttons"][currentStep]}
           </button>
           {steps.single["input-fields"][0].type === "otp" && (
@@ -744,7 +761,8 @@ export function RegistrationPopup() {
                         setResentAttempts((prev) => prev + 1);
                         setGeneralError("");
                         reset({ verificationCode: "" });
-                      }}>
+                      }}
+                    >
                       {steps.single?.["secondery-cta-copy"]?.button}
                     </button>
                   </>
@@ -761,7 +779,8 @@ export function RegistrationPopup() {
               className={clsx(
                 formStyles["error-message"],
                 formStyles["general-error"]
-              )}>
+              )}
+            >
               {generalError}
             </div>
           )}

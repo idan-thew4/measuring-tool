@@ -11,6 +11,7 @@ import React, {
   useRef,
 } from "react";
 5;
+import { saveAs } from "file-saver";
 
 const ApiContext = createContext<ApiContextType | undefined>(undefined);
 
@@ -518,6 +519,10 @@ type ApiContextType = {
   setParamsValue: React.Dispatch<
     React.SetStateAction<{ keyValue: string | null; login: string | null }>
   >;
+  getAlternativeSpreadsheet: (
+    alternative_id: string,
+    type: string
+  ) => Promise<void>;
 };
 
 export type ScoreData = {
@@ -1019,9 +1024,7 @@ function Store({ children }: PropsWithChildren<{}>) {
               assessment: assessment,
             }
           : {}),
-        ...(Number.isNaN(averageScore) || averageScore === 0
-          ? {}
-          : { averageScore }),
+        ...(Number.isNaN(averageScore) ? {} : { averageScore }),
       };
     });
   }
@@ -1079,6 +1082,38 @@ function Store({ children }: PropsWithChildren<{}>) {
       });
     }
   }
+
+  const getAlternativeSpreadsheet = async (
+    alternative_id: string,
+    type: string
+  ) => {
+    setLoader(true);
+
+    try {
+      const response = await fetch(`${url}/create-alternative-${type}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ alternative_id }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const blob = await response.blob();
+      saveAs(
+        blob,
+        `${current?.project.project_name}, ${current?.alternative.alternative_name}.csv`
+      );
+    } catch (error) {
+      console.error("Error downloading CSV:", error);
+    } finally {
+      setLoader(false);
+    }
+  };
 
   useEffect(() => {
     setPreviousChapter([chapter, subChapter, principle]);
@@ -1248,6 +1283,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         addConfirmPasswordToSteps,
         setParamsValue,
         paramsValue,
+        getAlternativeSpreadsheet,
       }}
     >
       {children}

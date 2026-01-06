@@ -65,20 +65,43 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
 
       if (parameters.length > 0) {
         parameters.forEach((parameter) => {
-          Object.keys(parameter).forEach((key) => {
-            if (key !== "subject" && !tempDataKeys.includes(key)) {
-              tempDataKeys.push(key);
-            }
-          });
+          // Check if all relevant keys are zero
+          const assessmentVal = Number(parameter.assessment) || 0;
+          const averageScoreVal = Number(parameter.averageScore) || 0;
+          const allZero = assessmentVal === 0 && averageScoreVal === 0;
+          if (!allZero) {
+            Object.keys(parameter).forEach((key) => {
+              if (key !== "subject" && !tempDataKeys.includes(key)) {
+                tempDataKeys.push(key);
+              }
+            });
+          }
         });
       }
 
-      if (tempDataKeys.includes("averageScore")) {
+      console.log(headline, "tempDataKeys:", tempDataKeys);
+
+      if (
+        tempDataKeys.includes("averageScore") &&
+        tempDataKeys.includes("assessment")
+      ) {
+        console.log("set all three");
         setDataKeys(["averageScore", "assessment", "questionnaire"]);
-      } else if (tempDataKeys.includes("assessment")) {
+      } else if (
+        tempDataKeys.includes("assessment") &&
+        !tempDataKeys.includes("averageScore")
+      ) {
         setDataKeys(["assessment", "questionnaire"]);
+        console.log("set assessment and questionnaire");
+      } else if (
+        tempDataKeys.includes("averageScore") &&
+        !tempDataKeys.includes("assessment")
+      ) {
+        setDataKeys(["averageScore", "questionnaire"]);
+        console.log("set averageScore and questionnaire 2");
       } else {
         setDataKeys(["questionnaire"]);
+        console.log("set only questionnaire");
       }
     }, [parameters]);
 
@@ -170,8 +193,16 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
                               colors[
                                 dataKeys.length === 3
                                   ? index
-                                  : dataKeys.length === 2
-                                  ? index + 1
+                                  : dataKeys.length === 2 &&
+                                    !dataKeys.includes("assessment")
+                                  ? filter === "averageScore"
+                                    ? 0
+                                    : 2
+                                  : dataKeys.length === 2 &&
+                                    dataKeys.includes("assessment")
+                                  ? filter === "averageScore"
+                                    ? 0
+                                    : 2
                                   : index + 2
                               ],
                           }
@@ -191,8 +222,16 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
                     filters[
                       dataKeys.length === 3
                         ? filters.length - 1 - index
-                        : dataKeys.length === 2
-                        ? filters.length - 2 - index
+                        : dataKeys.length === 2 &&
+                          !dataKeys.includes("assessment")
+                        ? filter === "averageScore"
+                          ? 2
+                          : 0
+                        : dataKeys.length === 2 &&
+                          dataKeys.includes("assessment")
+                        ? filter === "averageScore"
+                          ? 2
+                          : 1
                         : filters.length - 3 - index
                     ]
                   }
