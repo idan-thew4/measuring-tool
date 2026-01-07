@@ -20,5 +20,5 @@ export default function Custom404() {
     router.replace("/tool/user-dashboard");
   }, [router, keyValue, loginValue]);
 
-  return null;
+  return <Suspense>{/* Your component code using useSearchParams */}</Suspense>;
 }
