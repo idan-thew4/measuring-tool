@@ -271,8 +271,6 @@ export default function ChapterPage() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "https://measuring-tool.vercel.app",
-            "Access-Control-Allow-Credentials": "true",
           },
           credentials: "include",
           body: JSON.stringify({

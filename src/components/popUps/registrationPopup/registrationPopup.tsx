@@ -168,8 +168,6 @@ export function RegistrationPopup() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "https://measuring-tool.vercel.app",
-          "Access-Control-Allow-Credentials": "true",
         },
         credentials: "include",
         body: JSON.stringify({
@@ -234,8 +232,6 @@ export function RegistrationPopup() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "https://measuring-tool.vercel.app",
-          "Access-Control-Allow-Credentials": "true",
         },
         credentials: "include",
         body: JSON.stringify(ProjectDetailsForSend),
