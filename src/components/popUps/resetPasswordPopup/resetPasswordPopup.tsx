@@ -89,6 +89,8 @@ export function ResetPasswordPopup() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "https://measuring-tool.vercel.app",
+          "Access-Control-Allow-Credentials": "true",
         },
         credentials: "include",
         body: JSON.stringify({
@@ -139,12 +141,14 @@ export function ResetPasswordPopup() {
         setGeneralError("");
         reset();
         setParamsValue({ keyValue: null, login: null });
-      }}>
+      }}
+    >
       {!confirmationMessage ? (
         <div className={formStyles["form-container"]}>
           <form
             style={{ pointerEvents: loading ? "none" : "auto" }}
-            onSubmit={handleSubmit((data) => onSubmit(data))}>
+            onSubmit={handleSubmit((data) => onSubmit(data))}
+          >
             {steps.single?.["input-fields"].map((field, index) => {
               return (
                 <div
@@ -154,7 +158,8 @@ export function ResetPasswordPopup() {
                     formStyles[`row-${field.row}`],
                     formStyles["input"]
                   )}
-                  key={index}>
+                  key={index}
+                >
                   <input
                     type={field.type}
                     placeholder={`${field.label}${field.mandatory ? " *" : ""}`}
@@ -201,7 +206,8 @@ export function ResetPasswordPopup() {
                 loading && "loading"
               )}
               type="submit"
-              disabled={Object.keys(errors).length > 0 || generalError !== ""}>
+              disabled={Object.keys(errors).length > 0 || generalError !== ""}
+            >
               {steps.single?.["call-to-action"]}
             </button>
             {generalError && (
@@ -209,7 +215,8 @@ export function ResetPasswordPopup() {
                 className={clsx(
                   formStyles["error-message"],
                   formStyles["general-error"]
-                )}>
+                )}
+              >
                 {generalError}
               </div>
             )}

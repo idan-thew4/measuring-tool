@@ -38,6 +38,8 @@ export function DeletePopup() {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "https://measuring-tool.vercel.app",
+          "Access-Control-Allow-Credentials": "true",
         },
         credentials: "include",
         body: JSON.stringify({
@@ -92,12 +94,14 @@ export function DeletePopup() {
   return (
     <PopUpContainer
       headline={structure["user-dashboard"]["pop-ups"][deletePopup.type].title}
-      closeButton={() => setDeletePopup({ type: "" })}>
+      closeButton={() => setDeletePopup({ type: "" })}
+    >
       <p
         className={clsx(
           popUpContainerStyles["description-text"],
           "paragraph_20"
-        )}>
+        )}
+      >
         {structure["user-dashboard"]["pop-ups"][deletePopup.type].description}
       </p>
       <div className={popUpContainerStyles["buttons"]}>
@@ -118,7 +122,8 @@ export function DeletePopup() {
                   loading && "loading"
                 )}
                 type="button"
-                onClick={() => onSubmit(structure)}>
+                onClick={() => onSubmit(structure)}
+              >
                 {button}
               </button>
             );
@@ -129,7 +134,8 @@ export function DeletePopup() {
                 key={button}
                 className="basic-button outline warning"
                 type="button"
-                onClick={() => setDeletePopup({ type: "" })}>
+                onClick={() => setDeletePopup({ type: "" })}
+              >
                 {button}
               </button>
             );
@@ -141,7 +147,8 @@ export function DeletePopup() {
           className={clsx(
             formStyles["error-message"],
             formStyles["general-error"]
-          )}>
+          )}
+        >
           {generalError}
         </div>
       )}

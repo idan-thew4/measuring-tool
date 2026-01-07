@@ -820,6 +820,8 @@ function Store({ children }: PropsWithChildren<{}>) {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "https://measuring-tool.vercel.app",
+            "Access-Control-Allow-Credentials": "true",
           },
           credentials: "include",
         }
@@ -957,6 +959,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "https://measuring-tool.vercel.app",
+          "Access-Control-Allow-Credentials": "true",
         },
         credentials: "include",
       });
@@ -1117,6 +1121,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "https://measuring-tool.vercel.app",
+          "Access-Control-Allow-Credentials": "true",
         },
         credentials: "include",
         body: JSON.stringify({ alternative_id }),
