@@ -383,7 +383,7 @@ export function RegistrationPopup() {
       index !== completedSteps.length - 1 &&
       registrationPopup === "register"
     ) {
-      if (index === 1 && registrationPopup === "register") {
+      if (index === 2 && registrationPopup === "register") {
         const userCreated = await createNewUser(
           stepData["fullName"] as string,
           stepData["email"] as string,
@@ -420,7 +420,6 @@ export function RegistrationPopup() {
           const newSteps = [...prev];
           newSteps[index + 1] = {
             ...newSteps[index + 1],
-            completed: 1,
           };
           return newSteps;
         });
@@ -430,7 +429,6 @@ export function RegistrationPopup() {
         }
       }
     } else if (index === 0 && registrationPopup === "new-project") {
-      console.log("conditn met");
       setCurrentStep(index + 1);
     } else {
       if (structure) {
