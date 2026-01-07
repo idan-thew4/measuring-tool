@@ -19,6 +19,8 @@ export function SideMenu({
 }) {
   const { activeSideMenu, loader } = useStore();
 
+  console.log("activeSideMenu:", activeSideMenu);
+
   type;
   return (
     <aside

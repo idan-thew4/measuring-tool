@@ -148,7 +148,8 @@
             "type": "checkbox",
             "mandatory": false,
             "validation-error": "יש לבחור את תיבת הסימון",
-            "name": "privacy-policy-terms-of-use-agreement"
+            "name": "privacy-policy-terms-of-use-agreement",
+            "link": "https://wordpress-1080689-5737105.cloudwaysapps.com/%d7%9b%d7%aa%d7%91-%d7%95%d7%99%d7%aa%d7%95%d7%a8/"
           }
         ]
       },

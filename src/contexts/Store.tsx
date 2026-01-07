@@ -1154,13 +1154,8 @@ function Store({ children }: PropsWithChildren<{}>) {
       setSideMenu("questionnaire");
     } else if (pathname.includes("user-dashboard")) {
       setSideMenu("");
-      console.log("dashboard");
     }
   }, [pathname]);
-
-  useEffect(() => {
-    console.log("activeSideMenu changed to:", activeSideMenu);
-  }, [activeSideMenu]);
 
   const [prevSideMenu, setPrevSideMenu] = useState(sideMenu);
 

@@ -723,7 +723,7 @@ export function RegistrationPopup() {
                   )}
                 />
               )}
-
+              ??
               {typeof errors[field.name]?.message === "string" ? (
                 <span className={formStyles["error-message"]}>
                   {errors[field.name]?.message as string}

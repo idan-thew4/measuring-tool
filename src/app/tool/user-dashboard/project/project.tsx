@@ -2,6 +2,7 @@ import { useStore, alternativeType, formatDate } from "@/contexts/Store";
 import styles from "./project.module.scss";
 import clsx from "clsx";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function Project({
   project_name,
@@ -19,6 +20,7 @@ export function Project({
     getAlternativeSpreadsheet,
     setDashBoardVisible,
   } = useStore();
+  const router = useRouter();
 
   return (
     <ul className={styles["project-table"]}>
@@ -78,8 +80,10 @@ export function Project({
                 onClick={() => {
                   setDashBoardVisible(false);
                   setTimeout(() => {
-                    window.location.href = `/tool/${project_id}/${alternative.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`;
-                  }, 100);
+                    router.push(
+                      `/tool/${project_id}/${alternative.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
+                    );
+                  }, 500);
                 }}
               >
                 {alternative.alternative_name},
