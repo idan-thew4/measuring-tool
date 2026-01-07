@@ -19,5 +19,6 @@ export default function NotFoundInner() {
     router.replace("/tool/user-dashboard");
   }, [router, keyValue, loginValue]);
 
-  return null;
+  // Render a minimal element for hydration
+  return <div style={{ display: "none" }} />;
 }
