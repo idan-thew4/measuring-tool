@@ -335,6 +335,7 @@ type RegistrationInputField = {
   "dropdown-options"?: string[];
   type?: string;
   row?: number;
+  link?: string;
 };
 
 type questionnaire = {

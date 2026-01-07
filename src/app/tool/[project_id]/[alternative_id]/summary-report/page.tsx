@@ -51,6 +51,8 @@ export default function SummaryReport() {
     getGraphsImages,
     setPNGexports,
     loader,
+    activeSideMenu,
+    setActiveSideMenu,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -284,6 +286,14 @@ export default function SummaryReport() {
     } finally {
     }
   };
+
+  useEffect(() => {
+    if (!activeSideMenu) {
+      setTimeout(() => {
+        setActiveSideMenu(true);
+      }, 1200);
+    }
+  }, [activeSideMenu]);
 
   if (!structure || loader) {
     return <Loader />;

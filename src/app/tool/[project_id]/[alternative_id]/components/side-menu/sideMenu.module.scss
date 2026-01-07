@@ -13,6 +13,11 @@
   transform: translate(100%, 0);
   transition: transform 0.3s ease;
 
+  .nav-side-menu {
+    display: flex;
+    flex-direction: column;
+  }
+
   //stays active until bug fixed//
 
   &.side-menu--active {
@@ -87,8 +92,11 @@
 
       .chapter {
         border-bottom: 0.1rem solid $basic-grey;
-        height: 6.1rem;
-        // overflow: hidden;
+        max-height: 6.1rem;
+        overflow: hidden;
+        transition: max-height 0.5s ease-out;
+        display: flex;
+        flex-direction: column;
 
         &-progress {
           display: flex;
@@ -113,11 +121,19 @@
           opacity: 0;
           visibility: hidden;
           padding-right: 3rem;
+          display: flex;
+          flex-direction: column;
 
-          > li.opened {
-            padding-bottom: 1rem;
+          > li {
+            max-height: 5rem;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+
+            &.opened {
+              padding-bottom: 1rem;
+              max-height: 100%;
+            }
           }
-
           &:has(.opened) {
             padding-bottom: 1rem;
             opacity: 1;
@@ -138,6 +154,7 @@
 
         &.opened {
           height: auto;
+          max-height: 100%;
         }
       }
     }

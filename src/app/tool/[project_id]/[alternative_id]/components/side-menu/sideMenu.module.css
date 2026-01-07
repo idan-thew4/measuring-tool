@@ -29,6 +29,10 @@
   transform: translate(100%, 0);
   transition: transform 0.3s ease;
 }
+.side-menu .nav-side-menu {
+  display: flex;
+  flex-direction: column;
+}
 .side-menu.side-menu--active {
   transform: translate(0, 0);
 }
@@ -72,7 +76,11 @@
 }
 .side-menu .menu ul.nav-side-menu .chapter {
   border-bottom: 0.1rem solid #979797;
-  height: 6.1rem;
+  max-height: 6.1rem;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
+  display: flex;
+  flex-direction: column;
 }
 .side-menu .menu ul.nav-side-menu .chapter-progress {
   display: flex;
@@ -94,9 +102,17 @@
   opacity: 0;
   visibility: hidden;
   padding-right: 3rem;
+  display: flex;
+  flex-direction: column;
+}
+.side-menu .menu ul.nav-side-menu .chapter .chapter-content > li {
+  max-height: 5rem;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
 }
 .side-menu .menu ul.nav-side-menu .chapter .chapter-content > li.opened {
   padding-bottom: 1rem;
+  max-height: 100%;
 }
 .side-menu .menu ul.nav-side-menu .chapter .chapter-content:has(.opened) {
   padding-bottom: 1rem;
@@ -113,6 +129,7 @@
 }
 .side-menu .menu ul.nav-side-menu .chapter.opened {
   height: auto;
+  max-height: 100%;
 }
 .side-menu .menu ul.bottom-links {
   padding-top: 3rem;

@@ -258,20 +258,27 @@ export function Header() {
               )}
             </button>
 
+            <div
+              className={clsx(
+                styles["dropdown"],
+                graphIsOpen ? styles["dropdown-enter"] : styles["dropdown-exit"]
+              )}
+            >
+              {structure && (
+                <RadarGraph
+                  headline={structure["summary-report"]["graphs"][1].title}
+                  structure={structure}
+                  parameters={chapterScores}
+                  imageGridURL={`/pages/graphs/radar_grid_chapters_negative.svg`}
+                  negative={true}
+                  maxScore={maxValue}
+                />
+              )}
+            </div>
+            {/* 
             {graphIsOpen && (
-              <div className={styles["dropdown"]}>
-                {structure && (
-                  <RadarGraph
-                    headline={structure["summary-report"]["graphs"][1].title}
-                    structure={structure}
-                    parameters={chapterScores}
-                    imageGridURL={`/pages/graphs/radar_grid_chapters_negative.svg`}
-                    negative={true}
-                    maxScore={maxValue}
-                  />
-                )}
-              </div>
-            )}
+
+            )} */}
           </div>
         )}
     </header>

@@ -16,6 +16,259 @@
   font-weight: 800;
   font-style: normal;
 }
+.main-container {
+  grid-column: 4/13;
+  display: grid;
+  grid-template-columns: subgrid;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 7.6rem 0;
+}
+.main-container::-webkit-scrollbar {
+  width: 0.8rem;
+}
+.main-container::-webkit-scrollbar-thumb {
+  background-color: #d9d9d9;
+  border-radius: 10rem;
+  opacity: 1;
+}
+.main-container-full {
+  grid-column: 4/10;
+  grid-template-columns: auto;
+  grid-template-rows: min-content;
+}
+
+.basic-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.6rem;
+  border-radius: 0.6rem;
+  line-height: 0.5rem;
+  cursor: pointer;
+  transition: 0.3s all;
+  box-sizing: border-box;
+  height: 4.2rem;
+  padding: 1rem 2rem;
+  text-align: center;
+  white-space: nowrap;
+}
+.basic-button.outline {
+  background-color: transparent;
+  border: 0.1rem solid #00a6ce;
+  color: #00a6ce;
+}
+.basic-button.outline:hover {
+  background-color: #00a6ce;
+  color: white;
+}
+.basic-button.solid {
+  background-color: #00a6ce;
+  color: white;
+  position: relative;
+}
+.basic-button.solid:hover {
+  background-color: rgb(0, 124.9029126214, 155);
+  color: white;
+}
+.basic-button.solid:disabled {
+  background-color: #d9d9d9;
+  cursor: not-allowed;
+}
+.basic-button.solid.loading {
+  color: transparent;
+  pointer-events: none;
+}
+.basic-button.solid.loading:before {
+  content: "";
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  margin: auto;
+  inset: 0;
+  background: url("../../public/icons/spinner_white.svg") no-repeat center;
+  background-size: 2rem !important;
+}
+.basic-button.solid.warning {
+  background-color: #ff001d;
+}
+.basic-button.solid.warning:hover {
+  background-color: rgb(204, 0, 23.2);
+  color: white;
+}
+.basic-button.with-icon {
+  gap: 1.2rem;
+}
+
+.link-button {
+  text-decoration: underline;
+  padding-right: 1rem;
+}
+.link-button.blue {
+  color: #00a6ce;
+}
+
+.text-link {
+  color: black;
+  text-decoration: underline;
+}
+
+.link {
+  color: #00a6ce;
+  padding-right: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.link:after {
+  content: "";
+  background-size: 1.6rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: block;
+}
+.link.white {
+  color: white;
+}
+.link.white:after {
+  background: url("../../public/icons/edit_icon_white.svg") no-repeat center;
+}
+.link.black {
+  color: black;
+}
+.link.black:after {
+  background: url("../../public/icons/edit_icon_black.svg") no-repeat center;
+}
+
+button.with-icon:after,
+a.with-icon:after {
+  content: "";
+  width: 1.5rem;
+  height: 1.5rem;
+  background-size: 1.5rem !important;
+}
+button.with-icon.download:after,
+a.with-icon.download:after {
+  background: url("../../public/icons/download_icon.svg") no-repeat center;
+}
+button.with-icon.download:hover:after,
+a.with-icon.download:hover:after {
+  background: url("../../public/icons/download_icon_white.svg") no-repeat center;
+}
+button.with-icon.print:after,
+a.with-icon.print:after {
+  background: url("../../public/icons/print_icon.svg") no-repeat center;
+}
+button.with-icon.print:hover:after,
+a.with-icon.print:hover:after {
+  background: url("../../public/icons/print_icon_white.svg") no-repeat center;
+}
+button.with-icon.delete:after,
+a.with-icon.delete:after {
+  background: url("../../public/icons/trash.svg") no-repeat center;
+}
+button.with-icon.delete:hover:after,
+a.with-icon.delete:hover:after {
+  background: url("../../public/icons/trash_white.svg") no-repeat center;
+}
+button.with-icon.add:after,
+a.with-icon.add:after {
+  background: url("../../public/icons/add_icon.svg") no-repeat center;
+}
+button.with-icon.add:hover:after,
+a.with-icon.add:hover:after {
+  background: url("../../public/icons/add_icon_white.svg") no-repeat center;
+}
+button.with-icon.add-alternative:after,
+a.with-icon.add-alternative:after {
+  background: url("../../public/icons/add_alternative_icon.svg") no-repeat center;
+}
+button.with-icon.add-alternative:hover:after,
+a.with-icon.add-alternative:hover:after {
+  background: url("../../public/icons/add_alternative_icon_white.svg") no-repeat center;
+}
+
+.toggle-container {
+  color: #979797;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+}
+.toggle-container .toggle {
+  width: 3.6rem;
+  height: 2rem;
+  background-color: #d9d9d9;
+  border-radius: 1.2rem;
+  position: relative;
+  transition: all 0.3s;
+}
+.toggle-container .toggle:after {
+  position: absolute;
+  background-color: white;
+  filter: drop-shadow(0 1px 2px rgba(16, 24, 40, 0.06)) drop-shadow(0 1px 3px rgba(16, 24, 40, 0.1));
+  width: 1.5rem;
+  height: 1.5rem;
+  content: "";
+  display: block;
+  border-radius: 100%;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  left: 0.3rem;
+  transition: all 0.3s ease-in-out;
+}
+.toggle-container .toggle.active {
+  background-color: #4d4d4d;
+}
+.toggle-container .toggle.active:after {
+  left: 1.8rem;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+}
+.main-container--enter {
+  animation: fadeInUp 0.3s ease-in-out forwards;
+}
+
+.main-container--exit {
+  animation: fadeOutDown 0.3s ease-in-out forwards;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes exit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
 .pop-up {
   width: 54vh;
   height: auto;
@@ -42,6 +295,10 @@
   align-items: center;
   z-index: 9;
   backdrop-filter: blur(10px);
+  animation: enter 0.3s ease-in-out forwards;
+}
+.pop-up-container.exit-animation {
+  animation: exit 0.3s ease-in-out forwards !important;
 }
 .pop-up-container .close-button {
   width: 4rem;

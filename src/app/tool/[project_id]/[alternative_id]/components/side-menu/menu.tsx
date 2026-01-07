@@ -9,6 +9,7 @@ import {
 } from "../../../../../../contexts/Store";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { set } from "react-hook-form";
 
 export type structureAndChaptersProps = {
   structure: structureProps | undefined;
@@ -172,6 +173,9 @@ export function Menu({
   const [activePrinciples, setActivePrinciples] = useState<string[]>([]);
   const router = useRouter();
   const pathname = usePathname();
+  const [chapterToggleStates, setChapterToggleStates] = useState<{
+    [key: number]: boolean;
+  }>({});
 
   useEffect(() => {
     // Chapter: use the slug as the unique key
@@ -371,6 +375,12 @@ export function Menu({
       <ul className={styles["nav-side-menu"]}>
         {structure?.questionnaire.content.map((chapter, chapterIndex) => (
           <li
+            onClick={() => {
+              setChapterToggleStates((prev) => ({
+                ...prev,
+                [chapterIndex]: !prev[chapterIndex],
+              }));
+            }}
             className={clsx(
               chapterIndex === 1 &&
                 type === "self-assessment" &&
@@ -473,7 +483,6 @@ export function Menu({
                 </div>
               )}
             </div>
-
             {(type !== "self-assessment" ||
               (type === "self-assessment" && chapterIndex === 1)) && (
               <ul className={styles["chapter-content"]}>

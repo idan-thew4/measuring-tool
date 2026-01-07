@@ -97,6 +97,11 @@
   }
 }
 
+.text-link {
+  color: black;
+  text-decoration: underline;
+}
+
 .link {
   color: $blue;
   padding-right: 0.5rem;
@@ -272,4 +277,22 @@ a.with-icon {
 
 .main-container--exit {
   animation: fadeOutDown 0.3s ease-in-out forwards;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes exit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

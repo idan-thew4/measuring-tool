@@ -470,6 +470,25 @@ export function RegistrationPopup() {
     }
   }, [watch("verificationCode")]);
 
+  function getLabelWithLink(label: string, link: string) {
+    const parts = label.split(" ");
+    const text = parts.slice(0, 5);
+    const linkText = parts.slice(5, 8);
+    return (
+      <>
+        {text.join(" ")}{" "}
+        <a
+          className="text-link"
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {linkText.join(" ")}
+        </a>
+      </>
+    );
+  }
+
   const password = watch("password");
 
   if (!registrationPopup) return null;
@@ -715,15 +734,17 @@ export function RegistrationPopup() {
                           controllerField.onChange(e.target.checked)
                         }
                       />
-                      <span className="paragraph_14">
-                        {field.label}
+                      <span className="paragraph14">
+                        {field.link
+                          ? getLabelWithLink(field.label, field.link)
+                          : field.label}
                         {field.mandatory ? " *" : ""}
                       </span>
                     </label>
                   )}
                 />
               )}
-              ??
+
               {typeof errors[field.name]?.message === "string" ? (
                 <span className={formStyles["error-message"]}>
                   {errors[field.name]?.message as string}

@@ -115,5 +115,15 @@
     position: absolute;
     z-index: 10;
     height: 60vh;
+    transform: translateX(-60vh);
+    transition: 0.3s all ease-in-out;
+
+    &-enter {
+      transform: translateX(-0);
+    }
+
+    &-exit {
+      transform: translateX(-60vh);
+    }
   }
 }
