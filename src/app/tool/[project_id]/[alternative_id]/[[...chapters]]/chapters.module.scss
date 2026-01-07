@@ -37,17 +37,24 @@
         transform: translateX(0);
         opacity: 1;
       }
-      30% {
+
+      15% {
         opacity: 0;
+        transform: translateX(50vw);
+      }
+      30% {
         transform: translateX(100vw);
       }
       31% {
         transform: translateX(-100vw);
       }
+
+      45% {
+        transform: translateX(50);
+        opacity: 1;
+      }
       70% {
         transform: translateX(0);
-
-        opacity: 1;
       }
       100% {
         opacity: 1;

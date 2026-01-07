@@ -29,9 +29,18 @@
   transform: translate(100%, 0);
   transition: transform 0.3s ease;
 }
+.side-menu::-webkit-scrollbar {
+  width: 0.8rem;
+}
+.side-menu::-webkit-scrollbar-thumb {
+  background-color: #d9d9d9;
+  border-radius: 10rem;
+  opacity: 1;
+}
 .side-menu .nav-side-menu {
   display: flex;
   flex-direction: column;
+  padding-bottom: 5rem;
 }
 .side-menu.side-menu--active {
   transform: translate(0, 0);
@@ -132,7 +141,7 @@
   max-height: 100%;
 }
 .side-menu .menu ul.bottom-links {
-  padding-top: 3rem;
+  padding: 3rem 0 6rem 0;
 }
 .side-menu .menu ul.bottom-links button {
   color: #979797;
@@ -152,8 +161,24 @@
 .side-menu .menu.self-assessment .self-assessment-header .title {
   margin-bottom: 1rem;
 }
+.side-menu .menu.self-assessment ul.nav-side-menu li:hover {
+  color: #979797 !important;
+}
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter {
   height: auto;
+  overflow: visible;
+}
+.side-menu .menu.self-assessment ul.nav-side-menu .chapter button,
+.side-menu .menu.self-assessment ul.nav-side-menu .chapter .chapter-text {
+  pointer-events: none;
+  color: #979797 !important;
+}
+.side-menu .menu.self-assessment ul.nav-side-menu .chapter button:hover,
+.side-menu .menu.self-assessment ul.nav-side-menu .chapter .chapter-text:hover {
+  color: #979797 !important;
+}
+.side-menu .menu.self-assessment ul.nav-side-menu .chapter:not(.opened) {
+  max-height: 12.1rem;
 }
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter-content .active {
   margin-bottom: 2rem;

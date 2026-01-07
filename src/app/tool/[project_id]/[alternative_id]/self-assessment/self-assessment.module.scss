@@ -2,6 +2,14 @@
 .main-container {
   grid-template-rows: repeat(2, min-content);
   row-gap: 4rem;
+  opacity: 0;
+  transform: translateY(2rem);
+  transition: all 0.3s ease-in-out;
+
+  &--active {
+    opacity: 1;
+    transform: translateY(0);
+  }
   .graphs {
     grid-column: 3 / 8;
     display: flex;

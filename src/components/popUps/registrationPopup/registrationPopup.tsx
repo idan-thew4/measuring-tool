@@ -1,5 +1,6 @@
 "use client";
 import formStyles from "../popUpContainer/form.module.scss";
+import PopUpContainerStyles from "../popUpContainer/pop-up-container.module.scss";
 import {
   useStore,
   totalCompleted,
@@ -366,9 +367,6 @@ export function RegistrationPopup() {
   const onSubmit = async (stepData: Inputs, index: number) => {
     const updatedProjectDetails = { ...scoreObject["project-details"] };
 
-    console.log("registrationPopup", registrationPopup);
-    console.log("index", index);
-
     // Update only keys that exist in project-details
     Object.keys(stepData).forEach((key) => {
       if (key in updatedProjectDetails) {
@@ -394,7 +392,7 @@ export function RegistrationPopup() {
           stepData["contactPhone"] as string,
           stepData["commercial-agreement"] as boolean,
           stepData["research-agreement"] as boolean,
-          stepData["otp"] as boolean
+          stepData["verificationCode"] as boolean
         );
 
         if (!userCreated) {
@@ -524,7 +522,12 @@ export function RegistrationPopup() {
       {completedSteps && (
         <ProgressBar completed={completedSteps} indicator={true} />
       )}
-      <div className={formStyles["form-container"]}>
+      <div
+        className={clsx(
+          formStyles["form-container"],
+          PopUpContainerStyles[`step-${currentStep + 1}`]
+        )}
+      >
         <div>
           <h3
             className={clsx(

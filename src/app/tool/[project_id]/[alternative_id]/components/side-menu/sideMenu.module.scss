@@ -12,10 +12,12 @@
   background-color: white;
   transform: translate(100%, 0);
   transition: transform 0.3s ease;
+  @include scroll-bar;
 
   .nav-side-menu {
     display: flex;
     flex-direction: column;
+    padding-bottom: 5rem;
   }
 
   //stays active until bug fixed//
@@ -160,7 +162,7 @@
     }
 
     ul.bottom-links {
-      padding-top: 3rem;
+      padding: 3rem 0 6rem 0;
 
       button {
         color: $basic-grey;
@@ -186,9 +188,30 @@
           margin-bottom: 1rem;
         }
       }
+
       ul.nav-side-menu {
+        li {
+          &:hover {
+            color: $basic-grey !important;
+          }
+        }
         .chapter {
           height: auto;
+          overflow: visible;
+
+          button,
+          .chapter-text {
+            pointer-events: none;
+            color: $basic-grey !important;
+
+            &:hover {
+              color: $basic-grey !important;
+            }
+          }
+
+          &:not(.opened) {
+            max-height: 12.1rem;
+          }
 
           &-content {
             .active {

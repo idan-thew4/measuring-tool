@@ -272,15 +272,21 @@ export function Header() {
                   imageGridURL={`/pages/graphs/radar_grid_chapters_negative.svg`}
                   negative={true}
                   maxScore={maxValue}
+                  type="header"
                 />
               )}
             </div>
-            {/* 
-            {graphIsOpen && (
-
-            )} */}
           </div>
         )}
+      {!loggedInChecked && (
+        <button
+          onClick={() => {
+            setLoginPopup(true);
+          }}
+        >
+          התחברות
+        </button>
+      )}
     </header>
   );
 }

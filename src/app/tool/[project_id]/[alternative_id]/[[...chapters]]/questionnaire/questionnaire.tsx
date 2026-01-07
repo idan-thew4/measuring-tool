@@ -106,89 +106,80 @@ export function Questionnaire({
           activeSideMenu ? styles["questionnaire-header--active"] : ""
         )}
       >
-        <button
+        <div
           className={clsx(
-            styles["chapter-title"],
+            styles["chapter-title-container"],
             dropdownState.find(
               (item) => item.dropdown === "description-chapter-title"
             )?.state
               ? styles["open"]
               : ""
           )}
-          onClick={() =>
-            setDropdownState((prev) =>
-              prev.map((item) =>
-                item.dropdown === "description-chapter-title"
-                  ? { ...item, state: !item.state }
-                  : item
+        >
+          <button
+            className={clsx(
+              styles["chapter-title"],
+              dropdownState.find(
+                (item) => item.dropdown === "description-chapter-title"
+              )?.state
+                ? styles["open"]
+                : ""
+            )}
+            onClick={() =>
+              setDropdownState((prev) =>
+                prev.map((item) =>
+                  item.dropdown === "description-chapter-title"
+                    ? { ...item, state: !item.state }
+                    : item
+                )
               )
-            )
-          }
-        >
-          <p className="paragraph_20">{currentChapterHeaders?.title}</p>
-        </button>
-        <p
-          className={clsx(styles["description"], "paragraph_19")}
-          style={{
-            height: dropdownState.find(
-              (item) => item.dropdown === "description-chapter-title"
-            )?.state
-              ? "auto"
-              : "0",
-          }}
-        >
-          {currentChapterHeaders?.titleDescription}
-        </p>
-
-        <button
+            }
+          >
+            <p className="paragraph_20">{currentChapterHeaders?.title}</p>
+          </button>
+          <p className={clsx(styles["description"], "paragraph_19")}>
+            {currentChapterHeaders?.titleDescription}
+          </p>
+        </div>
+        <div
           className={clsx(
-            styles["chapter-subtitle"],
+            styles["description-chapter-subtitle-container"],
             dropdownState.find(
               (item) => item.dropdown === "description-chapter-subtitle"
             )?.state
               ? styles["open"]
               : ""
           )}
-          onClick={() =>
-            setDropdownState((prev) =>
-              prev.map((item) =>
-                item.dropdown === "description-chapter-subtitle"
-                  ? { ...item, state: !item.state }
-                  : item
+        >
+          <button
+            className={clsx(styles["chapter-subtitle"])}
+            onClick={() =>
+              setDropdownState((prev) =>
+                prev.map((item) =>
+                  item.dropdown === "description-chapter-subtitle"
+                    ? { ...item, state: !item.state }
+                    : item
+                )
               )
-            )
-          }
-        >
-          <h1 className="headline_small bold">
-            <span
-              className={clsx("number headline_small bold", styles["number"])}
-            >
-              {currentChapterHeaders?.subtitleNumber}
-            </span>
-            {`${
-              getCurrentChapter(currentChapter[0])?.["chapter-content"][
-                Number(currentChapter[1]) - 1
-              ]["sub-chapter-title"]
-            } `}
-          </h1>
-        </button>
-        <p
-          className={clsx(styles["description"], "paragraph_19")}
-          style={{
-            maxHeight: dropdownState.find(
-              (item) => item.dropdown === "description-chapter-subtitle"
-            )?.state
-              ? "500rem"
-              : "0",
-            marginBottom: dropdownState.find(
-              (item) => item.dropdown === "description-chapter-subtitle"
-            )?.state
-              ? "4rem"
-              : "0",
-          }}
-        >
-          {currentChapterHeaders?.subtitleDescription}
-        </p>
+            }
+          >
+            <h1 className="headline_small bold">
+              <span
+                className={clsx("number headline_small bold", styles["number"])}
+              >
+                {currentChapterHeaders?.subtitleNumber}
+              </span>
+              {`${
+                getCurrentChapter(currentChapter[0])?.["chapter-content"][
+                  Number(currentChapter[1]) - 1
+                ]["sub-chapter-title"]
+              } `}
+            </h1>
+          </button>
+          <p className={clsx(styles["description"], "paragraph_19")}>
+            {currentChapterHeaders?.subtitleDescription}????????
+          </p>
+        </div>
 
         {chapterProgress && <ProgressBar completed={chapterProgress} />}
       </div>

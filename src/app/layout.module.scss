@@ -6,6 +6,7 @@
   grid-template-rows: 10rem 1fr;
   height: 100vh;
   background-color: $light-blue;
+  overflow: hidden;
 
   .main {
     display: grid;

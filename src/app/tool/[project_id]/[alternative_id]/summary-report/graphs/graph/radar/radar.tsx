@@ -11,7 +11,7 @@ import styles from "./radar.module.scss";
 import graphStyles from "../graph.module.scss";
 import { ScoreData } from "../../../page";
 import { structureProps } from "@/contexts/Store";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import Image from "next/image";
 import clsx from "clsx";
@@ -32,6 +32,7 @@ type RadarGraphProps = {
   negative?: boolean;
   maxScore?: number;
   imageKey?: string;
+  type?: string;
 };
 
 type RadarGraphHandle = { capture: () => void };
@@ -49,8 +50,16 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
       legend = true,
       negative = false,
       maxScore,
+      type,
     } = props;
-    const colors = ["transparent", "#979797", "#79C5D8"];
+
+    const colors =
+      type === "self-assessment"
+        ? ["#79C5D8"]
+        : type === "header"
+        ? ["transparent", "#79C5D8"]
+        : ["transparent", "#979797", "#79C5D8"];
+
     const [dataKeys, setDataKeys] = useState<string[]>();
     const [filtersStatus, setFiltersStatus] = useState<{
       [key: string]: boolean;

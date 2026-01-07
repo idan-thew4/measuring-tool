@@ -207,7 +207,13 @@ export default function SelfAssessment() {
   }
 
   return (
-    <div className={clsx(styles["main-container"], "main-container")}>
+    <div
+      className={clsx(
+        styles["main-container"],
+        "main-container",
+        activeSideMenu && styles["main-container--active"]
+      )}
+    >
       {structure && (
         <>
           <SummaryHeader
@@ -248,6 +254,7 @@ export default function SelfAssessment() {
                       structure={structure}
                       imageGridURL={`/pages/graphs/radar_grid_${graph.data}.svg`}
                       maxScore={maxValue}
+                      type="self-assessment"
                     />
                   );
                   break;

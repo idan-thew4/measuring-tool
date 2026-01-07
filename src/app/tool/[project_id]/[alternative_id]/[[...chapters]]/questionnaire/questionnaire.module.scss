@@ -21,10 +21,34 @@
       transform: translateY(0);
     }
 
-    .chapter-title {
-      border-bottom: 0.1rem solid black;
-      padding-bottom: 1rem;
-      margin-bottom: 1rem;
+    .chapter-title-container {
+      display: flex;
+      flex-direction: column;
+      max-height: 3.5rem;
+      overflow: hidden;
+      transition: max-height 0.5s ease-out;
+
+      &.open {
+        max-height: 100%;
+      }
+
+      .chapter-title {
+        border-bottom: 0.1rem solid black;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+      }
+    }
+
+    .description-chapter-subtitle-container {
+      display: flex;
+      flex-direction: column;
+      max-height: 7.5rem;
+      overflow: hidden;
+      transition: max-height 0.5s ease-out;
+
+      &.open {
+        max-height: 100%;
+      }
     }
 
     .chapter-subtitle {
@@ -70,11 +94,10 @@
       }
     }
 
-    .description {
-      overflow: hidden;
-      transition: 0.3s all;
-      // position: sticky;
-      // top: 10rem;
-    }
+    // .description {
+    //   max-height: 0;
+    //   overflow: hidden;
+    //   transition: max-height 0.5s ease-out;
+    // }
   }
 }

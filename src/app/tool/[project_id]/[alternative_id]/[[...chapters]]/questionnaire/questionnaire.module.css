@@ -36,10 +36,30 @@
   opacity: 1;
   transform: translateY(0);
 }
-.questionnaire-container .questionnaire-header .chapter-title {
+.questionnaire-container .questionnaire-header .chapter-title-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 3.5rem;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
+}
+.questionnaire-container .questionnaire-header .chapter-title-container.open {
+  max-height: 100%;
+}
+.questionnaire-container .questionnaire-header .chapter-title-container .chapter-title {
   border-bottom: 0.1rem solid black;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
+}
+.questionnaire-container .questionnaire-header .description-chapter-subtitle-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 7.5rem;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
+}
+.questionnaire-container .questionnaire-header .description-chapter-subtitle-container.open {
+  max-height: 100%;
 }
 .questionnaire-container .questionnaire-header .chapter-subtitle {
   margin: 4rem 0 2rem 0;
@@ -72,8 +92,4 @@
 .questionnaire-container .questionnaire-header .chapter-subtitle.open:after,
 .questionnaire-container .questionnaire-header .chapter-title.open:after {
   rotate: 180deg;
-}
-.questionnaire-container .questionnaire-header .description {
-  overflow: hidden;
-  transition: 0.3s all;
 }/*# sourceMappingURL=questionnaire.module.css.map */

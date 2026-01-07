@@ -15,6 +15,18 @@
   max-height: 90vh;
   transition: all 0.3s ease-in-out;
 
+  // &:has(.step-1) {
+  //   height: 57.2rem;
+  // }
+
+  // &:has(.step-2) {
+  //   height: 41.7rem;
+  // }
+
+  // &:has(.step-3) {
+  //   height: 56rem;
+  // }
+
   &-container {
     position: fixed;
     top: 0;
