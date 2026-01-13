@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Project } from "./project/project";
 import { Loader } from "@/components/loader/loader";
+import { set } from "react-hook-form";
 
 export default function userDashboard() {
   const {
@@ -20,8 +21,7 @@ export default function userDashboard() {
     loader,
     isPageChanged,
     dashBoardVisible,
-
-    activeSideMenu,
+    setDashBoardVisible,
   } = useStore();
 
   useEffect(() => {
@@ -31,6 +31,14 @@ export default function userDashboard() {
       getUserDashboardData(structure);
     }
   }, [structure]);
+
+  useEffect(() => {
+    if (!dashBoardVisible) {
+      setDashBoardVisible(true);
+    }
+  }, []);
+
+  console.log(dashBoardVisible, "dashBoardVisible");
 
   if (!structure || loader) {
     return <Loader />;
