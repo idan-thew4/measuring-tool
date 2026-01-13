@@ -53,12 +53,7 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
       type,
     } = props;
 
-    const colors =
-      type === "self-assessment"
-        ? ["#79C5D8"]
-        : type === "header"
-        ? ["transparent", "#79C5D8"]
-        : ["transparent", "#979797", "#79C5D8"];
+    const colors = ["transparent", "#979797", "#79C5D8"];
 
     const [dataKeys, setDataKeys] = useState<string[]>();
     const [filtersStatus, setFiltersStatus] = useState<{
@@ -288,7 +283,11 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
                           name={dataKeys[index]}
                           dataKey={dataKeys[index]}
                           stroke={
-                            dataKey === "averageScore"
+                            type === "self-assessment"
+                              ? colors[2]
+                              : type === "header"
+                              ? colors[2]
+                              : dataKey === "averageScore"
                               ? colors[0]
                               : dataKey === "questionnaire"
                               ? colors[2]
@@ -299,7 +298,11 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
                           }
                           strokeWidth={2}
                           fill={
-                            dataKey === "averageScore"
+                            type === "self-assessment"
+                              ? colors[2]
+                              : type === "header"
+                              ? colors[2]
+                              : dataKey === "averageScore"
                               ? colors[0]
                               : dataKey === "questionnaire"
                               ? colors[2]
