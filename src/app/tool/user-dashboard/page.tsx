@@ -26,7 +26,6 @@ export default function userDashboard() {
 
   useEffect(() => {
     isPageChanged("user-dashboard");
-    // console.log("is page changed?", isPageChanged("user-dashboard"));
     if (structure) {
       getUserDashboardData(structure);
     }
@@ -37,8 +36,6 @@ export default function userDashboard() {
       setDashBoardVisible(true);
     }
   }, []);
-
-  console.log(dashBoardVisible, "dashBoardVisible");
 
   if (!structure || loader) {
     return <Loader />;

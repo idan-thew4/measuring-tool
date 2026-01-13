@@ -76,6 +76,9 @@ function isChapterCompleted(
   completedChapters: number,
   skippedChapters: number
 ) {
+  console.log("totalChapters", totalChapters);
+  console.log("completedChapters", completedChapters);
+  console.log("skippedChapters", skippedChapters);
   if (completedChapters === totalChapters) {
     return "completed";
   }
@@ -156,6 +159,7 @@ export function Menu({
     loggedInChecked,
     setLoader,
   } = useStore();
+
   const [maxScore, setMaxScore] = useState<number>();
   const [sliderValue, setSliderValue] = useState<{
     chapter: number[];
@@ -454,7 +458,7 @@ export function Menu({
                           completedChapters[chapterIndex]?.completedChapters ??
                             0,
                           completedChapters[chapterIndex]?.skippedChapters ?? 0
-                        ) === "completed" || toggleList[chapterIndex]?.state
+                        ) === "skipped" || toggleList[chapterIndex]?.state
                           ? "active"
                           : ""
                       )}

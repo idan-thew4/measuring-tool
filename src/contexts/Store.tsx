@@ -107,8 +107,6 @@ export function getScoreValue(
   indexOrGetScoreLabel?: number,
   type?: "subChapter" | "chapter"
 ): string | number {
-  // console.log("scores", scores);
-
   if (type) {
     switch (type) {
       case "subChapter":
@@ -880,6 +878,7 @@ function Store({ children }: PropsWithChildren<{}>) {
           "max-score": 0,
           "average-score": 0,
           type: type,
+          "principles-count": 0,
         });
       }
 
@@ -912,33 +911,44 @@ function Store({ children }: PropsWithChildren<{}>) {
           } else if (graph === "subchapters") {
             subChapterObj["average-score"] +=
               structurePrinciple?.["average-score"] ?? 0;
-            subChapterObj["principles-count"]! += 1;
           }
 
-          if (typeof principle.choice === "number" && principle.choice >= 0) {
+          if (
+            (typeof principle.choice === "number" && principle.choice >= 0) ||
+            typeof principle.choice === "undefined"
+          ) {
             const generalScore =
+              principle.choice &&
               structurePrinciple?.choices?.[principle.choice - 1];
             const netZeroImpactScore = structurePrinciple?.choices?.[3];
             const maxScore = structurePrinciple?.choices?.[4];
 
-            if (generalScore && typeof generalScore.score === "number") {
-              if (graph === "chapters") {
+            // if (generalScore && typeof generalScore.score === "number") {
+            if (graph === "chapters") {
+              if (generalScore && typeof generalScore.score === "number") {
                 calcParameters[index]["general-score"] += generalScore.score;
-                calcParameters[index]["net-zero-impact"] +=
-                  netZeroImpactScore?.score ?? 0;
-                calcParameters[index]["max-score"] += maxScore?.score ?? 0;
-              } else if (
-                graph === "subchapters" &&
-                subChapterObj &&
-                typeof subChapterObj["max-score"] === "number"
-              ) {
-                subChapterObj["general-score"] += generalScore.score;
-                subChapterObj["net-zero-impact"] +=
-                  netZeroImpactScore?.score ?? 0;
-                subChapterObj["max-score"] += maxScore?.score ?? 0;
               }
+              calcParameters[index]["net-zero-impact"] +=
+                netZeroImpactScore?.score ?? 0;
+              calcParameters[index]["max-score"] += maxScore?.score ?? 0;
+              calcParameters[index]["principles-count"]! += 1;
+            } else if (
+              graph === "subchapters" &&
+              subChapterObj &&
+              typeof subChapterObj["max-score"] === "number"
+            ) {
+              if (generalScore && typeof generalScore.score === "number") {
+                subChapterObj["general-score"] += generalScore.score;
+              }
+              subChapterObj["net-zero-impact"] +=
+                netZeroImpactScore?.score ?? 0;
+              subChapterObj["max-score"] += maxScore?.score ?? 0;
+              subChapterObj["principles-count"]! += 1;
             }
           }
+          // }
+
+          // debugger;
         });
         if (graph === "subchapters") {
           calcParameters.push(subChapterObj);

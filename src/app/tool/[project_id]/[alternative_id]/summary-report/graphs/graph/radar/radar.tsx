@@ -93,16 +93,13 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
         !tempDataKeys.includes("averageScore")
       ) {
         setDataKeys(["assessment", "questionnaire"]);
-        console.log("set assessment and questionnaire");
       } else if (
         tempDataKeys.includes("averageScore") &&
         !tempDataKeys.includes("assessment")
       ) {
         setDataKeys(["averageScore", "questionnaire"]);
-        console.log("set averageScore and questionnaire 2");
       } else {
         setDataKeys(["questionnaire"]);
-        console.log("set only questionnaire");
       }
     }, [parameters]);
 

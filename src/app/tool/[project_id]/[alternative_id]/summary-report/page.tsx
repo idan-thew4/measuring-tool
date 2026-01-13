@@ -173,8 +173,6 @@ export default function SummaryReport() {
               )
             : 0;
 
-        console.log("sub-averageScore", averageScore);
-
         return {
           subject,
           questionnaire,
@@ -333,9 +331,6 @@ export default function SummaryReport() {
             <button
               type="button"
               onClick={() => {
-                // console.log("hi");
-                // setLoader(true);
-                // setGetGraphsImages("getting-images");
                 handleClick();
               }}
               className="basic-button print with-icon outline"

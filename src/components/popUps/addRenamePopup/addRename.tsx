@@ -109,7 +109,6 @@ export function AddRenamePopup() {
   }
 
   const onSubmit = async (stepData: Inputs) => {
-    console.log("stepData", stepData);
     const alternativeName =
       (stepData.alternativeName as string) ||
       (stepData.addAlternative as string);
