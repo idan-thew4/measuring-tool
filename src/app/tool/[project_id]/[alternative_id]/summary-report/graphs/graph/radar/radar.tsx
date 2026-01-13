@@ -88,13 +88,10 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
         });
       }
 
-      console.log(headline, "tempDataKeys:", tempDataKeys);
-
       if (
         tempDataKeys.includes("averageScore") &&
         tempDataKeys.includes("assessment")
       ) {
-        console.log("set all three");
         setDataKeys(["averageScore", "assessment", "questionnaire"]);
       } else if (
         tempDataKeys.includes("assessment") &&
@@ -291,13 +288,23 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
                           name={dataKeys[index]}
                           dataKey={dataKeys[index]}
                           stroke={
-                            dataKey === "averageScore" ? "black" : colors[index]
+                            dataKey === "averageScore"
+                              ? colors[0]
+                              : dataKey === "questionnaire"
+                              ? colors[2]
+                              : colors[1]
                           }
                           strokeDasharray={
                             dataKey === "averageScore" ? "6 6" : "none"
                           }
                           strokeWidth={2}
-                          fill={colors[index]}
+                          fill={
+                            dataKey === "averageScore"
+                              ? colors[0]
+                              : dataKey === "questionnaire"
+                              ? colors[2]
+                              : colors[1]
+                          }
                           fillOpacity={0.6}
                           {...(labels && {
                             label: ({

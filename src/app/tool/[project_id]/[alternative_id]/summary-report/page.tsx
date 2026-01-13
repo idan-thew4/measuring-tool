@@ -246,24 +246,40 @@ export default function SummaryReport() {
   }) => {
     return (
       <Document>
-        {graphs.map((graph, index) => (
-          <Page size="A4" style={PDFstyles.page} key={index}>
-            <PDFheader
-              structure={structure}
-              current={current}
-              PDFstyles={PDFstyles}
-            />
-            <View style={PDFstyles.section}>
-              <Image
-                src={graph.path}
-                style={{
-                  width: 550,
-                  height: graph.name === "graph-2" ? 409 : 696,
-                }}
+        {graphs.map((graph, index) => {
+          const a4Width = 560;
+          const aspectRatio = (graph.name === "graph-2" ? 300 : 450) / 395;
+          const imageHeight = a4Width * aspectRatio;
+
+          return (
+            <Page size="A4" style={PDFstyles.page} key={index}>
+              <PDFheader
+                structure={structure}
+                current={current}
+                PDFstyles={PDFstyles}
               />
-            </View>
-          </Page>
-        ))}
+              <View
+                style={{
+                  ...PDFstyles.section,
+                  width: "87%",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                }}
+              >
+                <Image
+                  src={graph.path}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </View>
+            </Page>
+          );
+        })}
       </Document>
     );
   };
