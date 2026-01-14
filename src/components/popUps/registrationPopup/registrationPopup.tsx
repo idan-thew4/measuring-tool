@@ -63,6 +63,10 @@ export function RegistrationPopup() {
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [resentAttempts, setResentAttempts] = useState<number>(0);
 
+  useEffect(() => {
+    console.log("completedSteps changed:", completedSteps);
+  }, [completedSteps]);
+
   const {
     register,
     handleSubmit,
@@ -383,7 +387,7 @@ export function RegistrationPopup() {
       index !== completedSteps.length - 1 &&
       registrationPopup === "register"
     ) {
-      if (index === 2 && registrationPopup === "register") {
+      if (index === 1 && registrationPopup === "register") {
         const userCreated = await createNewUser(
           stepData["fullName"] as string,
           stepData["email"] as string,
@@ -420,6 +424,7 @@ export function RegistrationPopup() {
           const newSteps = [...prev];
           newSteps[index + 1] = {
             ...newSteps[index + 1],
+            completed: 1,
           };
           return newSteps;
         });
