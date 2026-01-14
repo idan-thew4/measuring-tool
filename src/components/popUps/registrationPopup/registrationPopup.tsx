@@ -122,7 +122,7 @@ export function RegistrationPopup() {
     }
   }, [structure, registrationPopup, currentStep]);
 
-  async function otpRequest(phone: string) {
+  async function otpRequest(phone: string, recaptchaToken: string) {
     setLoading(true);
     try {
       const response = await fetch(
@@ -135,6 +135,7 @@ export function RegistrationPopup() {
           credentials: "include",
           body: JSON.stringify({
             phone,
+            recaptchaToken,
           }),
         }
       );
@@ -165,8 +166,7 @@ export function RegistrationPopup() {
     phone: string,
     sendCommercialMaterial: boolean,
     getInTouch: boolean,
-    otpCode: boolean,
-    recaptchaToken: string | null
+    otpCode: boolean
   ) {
     setLoading(true);
     try {
@@ -187,7 +187,6 @@ export function RegistrationPopup() {
             : false,
           getInTouch: getInTouch ? getInTouch : false,
           otpCode,
-          recaptchaToken,
         }),
       });
 
@@ -403,8 +402,7 @@ export function RegistrationPopup() {
           stepData["contactPhone"] as string,
           stepData["commercial-agreement"] as boolean,
           stepData["research-agreement"] as boolean,
-          stepData["verificationCode"] as boolean,
-          recaptchaValue
+          stepData["verificationCode"] as boolean
         );
 
         if (!userCreated) {
@@ -435,9 +433,10 @@ export function RegistrationPopup() {
           }
           setRecaptchaValue(token);
 
-          console.log("reCaptcha was  completed");
-
-          const otpSent = await otpRequest(stepData["contactPhone"] as string);
+          const otpSent = await otpRequest(
+            stepData["contactPhone"] as string,
+            token
+          );
 
           setCurrentStep(index + 1);
           setGeneralError("");
