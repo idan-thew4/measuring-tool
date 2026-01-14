@@ -77,6 +77,7 @@ export function LoginPopup() {
 
   const onSubmit = async (stepData: Inputs) => {
     setLoading(true);
+
     if (recaptchaRef.current) {
       const token = await recaptchaRef.current.executeAsync();
       recaptchaRef.current.reset();

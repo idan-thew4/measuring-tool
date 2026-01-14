@@ -166,7 +166,7 @@ export function RegistrationPopup() {
     sendCommercialMaterial: boolean,
     getInTouch: boolean,
     otpCode: boolean,
-    recaptchaToken: string
+    recaptchaToken: string | null
   ) {
     setLoading(true);
     try {
@@ -376,6 +376,8 @@ export function RegistrationPopup() {
   const onSubmit = async (stepData: Inputs, index: number) => {
     const updatedProjectDetails = { ...scoreObject["project-details"] };
 
+    console.log("reCAPTCHA value changed:", recaptchaValue);
+
     // Update only keys that exist in project-details
     Object.keys(stepData).forEach((key) => {
       if (key in updatedProjectDetails) {
@@ -392,7 +394,35 @@ export function RegistrationPopup() {
       index !== completedSteps.length - 1 &&
       registrationPopup === "register"
     ) {
-      if (index === 2 && registrationPopup === "register") {
+      if (index === 1 && registrationPopup === "register") {
+        const userCreated = await createNewUser(
+          stepData["fullName"] as string,
+          stepData["email"] as string,
+          stepData["password"] as string,
+          stepData["planningOffice"] as string,
+          stepData["contactPhone"] as string,
+          stepData["commercial-agreement"] as boolean,
+          stepData["research-agreement"] as boolean,
+          stepData["verificationCode"] as boolean,
+          recaptchaValue
+        );
+
+        if (!userCreated) {
+          return;
+        }
+
+        setCurrentStep(index + 1);
+        setGeneralError("");
+        setCompletedSteps((prev) => {
+          if (!prev) return prev;
+          const newSteps = [...prev];
+          newSteps[index + 1] = {
+            ...newSteps[index + 1],
+            completed: 1,
+          };
+          return newSteps;
+        });
+      } else if (index === 0 && registrationPopup === "register") {
         setLoading(true);
 
         if (recaptchaRef.current) {
@@ -403,22 +433,11 @@ export function RegistrationPopup() {
             setLoading(false);
             return;
           }
+          setRecaptchaValue(token);
 
-          const userCreated = await createNewUser(
-            stepData["fullName"] as string,
-            stepData["email"] as string,
-            stepData["password"] as string,
-            stepData["planningOffice"] as string,
-            stepData["contactPhone"] as string,
-            stepData["commercial-agreement"] as boolean,
-            stepData["research-agreement"] as boolean,
-            stepData["verificationCode"] as boolean,
-            token
-          );
+          console.log("reCaptcha was  completed");
 
-          if (!userCreated) {
-            return;
-          }
+          const otpSent = await otpRequest(stepData["contactPhone"] as string);
 
           setCurrentStep(index + 1);
           setGeneralError("");
@@ -427,27 +446,13 @@ export function RegistrationPopup() {
             const newSteps = [...prev];
             newSteps[index + 1] = {
               ...newSteps[index + 1],
-              completed: 1,
             };
             return newSteps;
           });
-        }
-      } else if (index === 0 && registrationPopup === "register") {
-        const otpSent = await otpRequest(stepData["contactPhone"] as string);
 
-        setCurrentStep(index + 1);
-        setGeneralError("");
-        setCompletedSteps((prev) => {
-          if (!prev) return prev;
-          const newSteps = [...prev];
-          newSteps[index + 1] = {
-            ...newSteps[index + 1],
-          };
-          return newSteps;
-        });
-
-        if (!otpSent) {
-          return;
+          if (!otpSent) {
+            return;
+          }
         }
       }
     } else if (index === 0 && registrationPopup === "new-project") {
