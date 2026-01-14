@@ -446,6 +446,7 @@ export function RegistrationPopup() {
             const newSteps = [...prev];
             newSteps[index + 1] = {
               ...newSteps[index + 1],
+              completed: 1,
             };
             return newSteps;
           });
