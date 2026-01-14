@@ -165,7 +165,8 @@ export function RegistrationPopup() {
     phone: string,
     sendCommercialMaterial: boolean,
     getInTouch: boolean,
-    otpCode: boolean
+    otpCode: boolean,
+    recaptchaToken: string
   ) {
     setLoading(true);
     try {
@@ -186,6 +187,7 @@ export function RegistrationPopup() {
             : false,
           getInTouch: getInTouch ? getInTouch : false,
           otpCode,
+          recaptchaToken,
         }),
       });
 
@@ -391,33 +393,6 @@ export function RegistrationPopup() {
       registrationPopup === "register"
     ) {
       if (index === 2 && registrationPopup === "register") {
-        const userCreated = await createNewUser(
-          stepData["fullName"] as string,
-          stepData["email"] as string,
-          stepData["password"] as string,
-          stepData["planningOffice"] as string,
-          stepData["contactPhone"] as string,
-          stepData["commercial-agreement"] as boolean,
-          stepData["research-agreement"] as boolean,
-          stepData["verificationCode"] as boolean
-        );
-
-        if (!userCreated) {
-          return;
-        }
-
-        setCurrentStep(index + 1);
-        setGeneralError("");
-        setCompletedSteps((prev) => {
-          if (!prev) return prev;
-          const newSteps = [...prev];
-          newSteps[index + 1] = {
-            ...newSteps[index + 1],
-            completed: 1,
-          };
-          return newSteps;
-        });
-      } else if (index === 0 && registrationPopup === "register") {
         setLoading(true);
 
         if (recaptchaRef.current) {
@@ -428,7 +403,22 @@ export function RegistrationPopup() {
             setLoading(false);
             return;
           }
-          const otpSent = await otpRequest(stepData["contactPhone"] as string);
+
+          const userCreated = await createNewUser(
+            stepData["fullName"] as string,
+            stepData["email"] as string,
+            stepData["password"] as string,
+            stepData["planningOffice"] as string,
+            stepData["contactPhone"] as string,
+            stepData["commercial-agreement"] as boolean,
+            stepData["research-agreement"] as boolean,
+            stepData["verificationCode"] as boolean,
+            token
+          );
+
+          if (!userCreated) {
+            return;
+          }
 
           setCurrentStep(index + 1);
           setGeneralError("");
@@ -437,13 +427,27 @@ export function RegistrationPopup() {
             const newSteps = [...prev];
             newSteps[index + 1] = {
               ...newSteps[index + 1],
+              completed: 1,
             };
             return newSteps;
           });
+        }
+      } else if (index === 0 && registrationPopup === "register") {
+        const otpSent = await otpRequest(stepData["contactPhone"] as string);
 
-          if (!otpSent) {
-            return;
-          }
+        setCurrentStep(index + 1);
+        setGeneralError("");
+        setCompletedSteps((prev) => {
+          if (!prev) return prev;
+          const newSteps = [...prev];
+          newSteps[index + 1] = {
+            ...newSteps[index + 1],
+          };
+          return newSteps;
+        });
+
+        if (!otpSent) {
+          return;
         }
       }
     } else if (index === 0 && registrationPopup === "new-project") {
