@@ -1,11 +1,12 @@
 "use client";
 import { useStore } from "../../../contexts/Store";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import clsx from "clsx";
 import { useForm, Controller, set } from "react-hook-form";
 import { PopUpContainer } from "../popUpContainer/popUpContainer";
 import formStyles from "../popUpContainer/form.module.scss";
 import { useRouter } from "next/navigation";
+import ReCAPTCHA from "react-google-recaptcha";
 
 type Inputs = {
   [key: string]: string | { value: string; label: string } | boolean | number;
@@ -30,9 +31,19 @@ export function LoginPopup() {
   const [loading, setLoading] = useState<boolean>(false);
   const [generalError, setGeneralError] = useState<string>("");
   const router = useRouter();
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
 
-  async function login(username: string, password: string) {
-    setLoading(true);
+  useEffect(() => {
+    console.log("reCAPTCHA value changed:", recaptchaValue);
+  }, [recaptchaValue]);
+
+  async function login(
+    username: string,
+    password: string,
+    recaptchaToken: string
+  ) {
+    // setLoading(true);
     try {
       const response = await fetch(`${url}/slil-login`, {
         method: "POST",
@@ -40,7 +51,7 @@ export function LoginPopup() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, recaptchaToken }),
       });
 
       const data = await response.json();
@@ -65,10 +76,21 @@ export function LoginPopup() {
   }
 
   const onSubmit = async (stepData: Inputs) => {
-    const username = stepData.email as string;
-    const password = stepData.password as string;
+    setLoading(true);
 
-    login(username, password);
+    if (recaptchaRef.current) {
+      const token = await recaptchaRef.current.executeAsync();
+      recaptchaRef.current.reset();
+      if (!token) {
+        setGeneralError("reCAPTCHA verification failed. Please try again.");
+        setLoading(false);
+        return;
+      }
+      // Now proceed with your login logic
+      const username = stepData.email as string;
+      const password = stepData.password as string;
+      login(username, password, token);
+    }
   };
 
   if (!loginPopup) return null;
@@ -151,6 +173,16 @@ export function LoginPopup() {
           >
             שכחת את הסיסמא?
           </button>
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey="6LfFIEosAAAAAC1LbrFds9gFA6AgQLiGwqk0WAAc"
+            size="invisible"
+            badge="bottomright" // or "inline", "bottomleft"
+            onChange={(token) => {
+              setRecaptchaValue(token);
+              setLoading(false);
+            }}
+          />
           <button
             className={clsx(
               formStyles["submit-button"],

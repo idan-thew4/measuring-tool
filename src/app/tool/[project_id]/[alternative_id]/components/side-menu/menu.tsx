@@ -76,9 +76,6 @@ function isChapterCompleted(
   completedChapters: number,
   skippedChapters: number
 ) {
-  console.log("totalChapters", totalChapters);
-  console.log("completedChapters", completedChapters);
-  console.log("skippedChapters", skippedChapters);
   if (completedChapters === totalChapters) {
     return "completed";
   }

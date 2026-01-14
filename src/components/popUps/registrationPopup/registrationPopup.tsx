@@ -9,7 +9,7 @@ import {
   structureProps,
   ResetPasswordStep,
 } from "../../../contexts/Store";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ProgressBar } from "@/app/tool/[project_id]/[alternative_id]/components/progress-bar/progress-bar";
 import clsx from "clsx";
 import { useForm, Controller } from "react-hook-form";
@@ -18,6 +18,7 @@ import { PopUpContainer } from "../popUpContainer/popUpContainer";
 import { useRouter, useParams } from "next/navigation";
 import "../../../components/popUps/popUpContainer/dropdown.scss";
 import { MuiOtpInput } from "mui-one-time-password-input";
+import ReCAPTCHA from "react-google-recaptcha";
 
 type Inputs = {
   [key: string]: string | { value: string; label: string } | boolean | number;
@@ -62,10 +63,8 @@ export function RegistrationPopup() {
   }>({ start: [], end: [] });
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [resentAttempts, setResentAttempts] = useState<number>(0);
-
-  useEffect(() => {
-    console.log("completedSteps changed:", completedSteps);
-  }, [completedSteps]);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
 
   const {
     register,
@@ -86,6 +85,10 @@ export function RegistrationPopup() {
     array: [],
     single: undefined,
   });
+
+  useEffect(() => {
+    console.log("reCAPTCHA value changed:", recaptchaValue);
+  }, [recaptchaValue]);
 
   useEffect(() => {
     let stepsArray: RegistrationStep[] | ResetPasswordStep[] | undefined = [];
@@ -119,7 +122,7 @@ export function RegistrationPopup() {
     }
   }, [structure, registrationPopup, currentStep]);
 
-  async function otpRequest(phone: string) {
+  async function otpRequest(phone: string, recaptchaToken: string) {
     setLoading(true);
     try {
       const response = await fetch(
@@ -132,6 +135,7 @@ export function RegistrationPopup() {
           credentials: "include",
           body: JSON.stringify({
             phone,
+            recaptchaToken,
           }),
         }
       );
@@ -371,6 +375,8 @@ export function RegistrationPopup() {
   const onSubmit = async (stepData: Inputs, index: number) => {
     const updatedProjectDetails = { ...scoreObject["project-details"] };
 
+    console.log("reCAPTCHA value changed:", recaptchaValue);
+
     // Update only keys that exist in project-details
     Object.keys(stepData).forEach((key) => {
       if (key in updatedProjectDetails) {
@@ -415,22 +421,38 @@ export function RegistrationPopup() {
           return newSteps;
         });
       } else if (index === 0 && registrationPopup === "register") {
-        const otpSent = await otpRequest(stepData["contactPhone"] as string);
+        setLoading(true);
 
-        setCurrentStep(index + 1);
-        setGeneralError("");
-        setCompletedSteps((prev) => {
-          if (!prev) return prev;
-          const newSteps = [...prev];
-          newSteps[index + 1] = {
-            ...newSteps[index + 1],
-            completed: 1,
-          };
-          return newSteps;
-        });
+        if (recaptchaRef.current) {
+          const token = await recaptchaRef.current.executeAsync();
+          recaptchaRef.current.reset();
+          if (!token) {
+            setGeneralError("reCAPTCHA verification failed. Please try again.");
+            setLoading(false);
+            return;
+          }
+          setRecaptchaValue(token);
 
-        if (!otpSent) {
-          return;
+          const otpSent = await otpRequest(
+            stepData["contactPhone"] as string,
+            token
+          );
+
+          setCurrentStep(index + 1);
+          setGeneralError("");
+          setCompletedSteps((prev) => {
+            if (!prev) return prev;
+            const newSteps = [...prev];
+            newSteps[index + 1] = {
+              ...newSteps[index + 1],
+              completed: 1,
+            };
+            return newSteps;
+          });
+
+          if (!otpSent) {
+            return;
+          }
         }
       }
     } else if (index === 0 && registrationPopup === "new-project") {
@@ -758,6 +780,16 @@ export function RegistrationPopup() {
               ) : null}
             </div>
           ))}
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey="6LfFIEosAAAAAC1LbrFds9gFA6AgQLiGwqk0WAAc"
+            size="invisible"
+            badge="bottomright" // or "inline", "bottomleft"
+            onChange={(token) => {
+              setRecaptchaValue(token);
+              setLoading(false);
+            }}
+          />
           <button
             className={clsx(
               formStyles["submit-button"],
