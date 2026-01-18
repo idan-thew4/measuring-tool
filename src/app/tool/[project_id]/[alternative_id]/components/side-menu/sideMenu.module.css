@@ -79,7 +79,7 @@
 .side-menu .menu ul.nav-side-menu > li .completed p {
   color: #0e0d23;
 }
-.side-menu .menu ul.nav-side-menu > li .skipped a,
+.side-menu .menu ul.nav-side-menu > li .skipped button,
 .side-menu .menu ul.nav-side-menu > li .skipped p {
   text-decoration: line-through;
 }

@@ -223,6 +223,7 @@ export type structureProps = {
   header: {
     user: string[];
     options: string[];
+    "website-url": string;
   };
 };
 
@@ -273,6 +274,7 @@ export type ResetPasswordStep = {
 type SelfAssessment = {
   "pop-up": {
     title: string;
+    description: string;
     "buttons-copy": string[];
   };
   headline: string;
@@ -1244,8 +1246,8 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   useEffect(() => {
     const chapterNumber =
-      getCurrentChapter(chapter)?.["chapter-number"] ?? 1
-        ? getCurrentChapter(chapter)?.["chapter-number"] ?? 1
+      (getCurrentChapter(chapter)?.["chapter-number"] ?? 1)
+        ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1)
         : 0;
     const subChapterNumber = Number(subChapter) || 0;
     const principleNumber = Number(principle) || 0;
@@ -1321,8 +1323,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         getAlternativeSpreadsheet,
         dashBoardVisible,
         setDashBoardVisible,
-      }}
-    >
+      }}>
       {children}
     </ApiContext.Provider>
   );
