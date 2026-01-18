@@ -56,7 +56,7 @@ export function formatDate(timestamp: number) {
 
 export function getScoreLabel(
   structure: structureProps | undefined,
-  value: number
+  value: number,
 ) {
   const scoreLabels = structure?.questionnaire.options ?? [];
 
@@ -77,8 +77,8 @@ export function getPercentageLabel(
   structure: structureProps | undefined,
   getScoreLabel?: (
     structure: structureProps | undefined,
-    value: number
-  ) => string
+    value: number,
+  ) => string,
 ): string {
   if (Array.isArray(scores)) {
     const index = indexOrGetScoreLabel as number;
@@ -87,15 +87,15 @@ export function getPercentageLabel(
         getScoreLabel?.(
           structure,
           Number(
-            scores[index].percentage != null ? scores[index].percentage : 0
-          )
+            scores[index].percentage != null ? scores[index].percentage : 0,
+          ),
         ) ?? ""
       );
     }
   } else if (scores && Number(scores.percentage) > 0) {
     const labelFunction = indexOrGetScoreLabel as (value: number) => string;
     return labelFunction(
-      Number(scores.percentage != null ? scores.percentage : 0)
+      Number(scores.percentage != null ? scores.percentage : 0),
     );
   }
   return "";
@@ -105,7 +105,7 @@ export function getScoreValue(
   scores: ScoreData[] | ScoreData,
   key: "generalScore" | "percentage",
   indexOrGetScoreLabel?: number,
-  type?: "subChapter" | "chapter"
+  type?: "subChapter" | "chapter",
 ): string | number {
   if (type) {
     switch (type) {
@@ -284,6 +284,7 @@ type SelfAssessment = {
 };
 
 type SummaryReport = {
+  header: SummaryHeader;
   graphs: Graph[];
 };
 
@@ -294,12 +295,14 @@ type Graph = {
   filters?: string[];
 };
 
+type SummaryHeader = {
+  title: string;
+  "summary-details": string[];
+  "buttons-copy": string[];
+};
+
 type Summary = {
-  header: {
-    title: string;
-    "summary-details": string[];
-    "buttons-copy": string[];
-  };
+  header: SummaryHeader;
   table: {
     columns: { title: string; dataIndex: string; key: string }[];
     "buttons-copy": string[];
@@ -424,7 +427,7 @@ type ApiContextType = {
     data: ChapterPoints[],
     graph: string,
     type: string,
-    maxScoresOnly?: boolean
+    maxScoresOnly?: boolean,
   ) => CalcParameters[];
   url: string;
   loginPopup: boolean;
@@ -443,7 +446,7 @@ type ApiContextType = {
   isMounted: React.MutableRefObject<boolean>;
   getAlternativeQuestionnaireData: (
     project_id: string,
-    alternative_id: string
+    alternative_id: string,
   ) => Promise<void>;
   loader: boolean;
   setLoader: React.Dispatch<React.SetStateAction<boolean>>;
@@ -478,14 +481,14 @@ type ApiContextType = {
   userEmail: string | null;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
   getUserDashboardData: (
-    structure: structureProps
+    structure: structureProps,
   ) => Promise<getUserDashboardDataResponse | void>;
   isPageChanged: (currentPage: string) => void;
   getChaptersScores: (
     questionnaireParams: CalcParameters[],
     structure: structureProps,
     hasAssessment: boolean,
-    scoreObject: ScoreType
+    scoreObject: ScoreType,
   ) => { subject: string; questionnaire: number }[];
   pages: { previousPage: string; currentPage: string };
   legendColors: string[];
@@ -514,7 +517,7 @@ type ApiContextType = {
   resetPasswordPopup: boolean;
   setResetPasswordPopup: React.Dispatch<React.SetStateAction<boolean>>;
   addConfirmPasswordToSteps: (
-    stepsArray: ResetPasswordStep[] | RegistrationStep[] | undefined
+    stepsArray: ResetPasswordStep[] | RegistrationStep[] | undefined,
   ) => ResetPasswordStep[] | RegistrationStep[] | undefined;
   paramsValue: { keyValue: string | null; login: string | null };
   setParamsValue: React.Dispatch<
@@ -522,7 +525,7 @@ type ApiContextType = {
   >;
   getAlternativeSpreadsheet: (
     alternative_id: string,
-    type: string
+    type: string,
   ) => Promise<void>;
   dashBoardVisible: boolean;
   setDashBoardVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -569,7 +572,7 @@ function Store({ children }: PropsWithChildren<{}>) {
     },
   });
   const [completedChapters, setCompletedChapters] = useState<totalCompleted>(
-    []
+    [],
   );
   const params = useParams();
   const [chapter, subChapter, principle] = params?.chapters || [];
@@ -721,9 +724,9 @@ function Store({ children }: PropsWithChildren<{}>) {
                     id: subIndex + 1,
                     choice: undefined,
                   })),
-                })
+                }),
               ),
-            })
+            }),
           ),
           assessment: structureObject.questionnaire.content.map(
             (chapter, index) => {
@@ -736,12 +739,12 @@ function Store({ children }: PropsWithChildren<{}>) {
                   (subChapter, subIndex) => ({
                     "sub-chapter-number": subIndex + 1,
                     "sub-chapter-score": 0,
-                  })
+                  }),
                 );
                 chapterTemp["sub-chapters"] = subchaptersTemp;
               }
               return chapterTemp;
-            }
+            },
           ),
         },
       };
@@ -764,10 +767,10 @@ function Store({ children }: PropsWithChildren<{}>) {
         let skipped = 0;
         chapterData["chapter-data"].forEach((subChapter) => {
           const allFilled = subChapter["principles"].every(
-            (choiceObj) => choiceObj.choice !== undefined
+            (choiceObj) => choiceObj.choice !== undefined,
           );
           const allSkipped = subChapter["principles"].every(
-            (choiceObj) => choiceObj.choice === -1
+            (choiceObj) => choiceObj.choice === -1,
           );
 
           subChapter["principles"].forEach((subChapterChoice) => {
@@ -810,7 +813,7 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   async function getAlternativeQuestionnaireData(
     project_id: string,
-    alternative_id: string
+    alternative_id: string,
   ) {
     setLoader(true);
     try {
@@ -822,7 +825,7 @@ function Store({ children }: PropsWithChildren<{}>) {
             "Content-Type": "application/json",
           },
           credentials: "include",
-        }
+        },
       );
 
       const data = await response.json();
@@ -855,7 +858,7 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   const getCurrentChapter = (chapterSlug: string) => {
     return structure?.questionnaire.content.find(
-      (structureChapter) => structureChapter["chapter-slug"] === chapterSlug
+      (structureChapter) => structureChapter["chapter-slug"] === chapterSlug,
     );
   };
 
@@ -863,7 +866,7 @@ function Store({ children }: PropsWithChildren<{}>) {
     data: ChapterPoints[],
     graph: string,
     type: string,
-    maxScoresOnly = false
+    maxScoresOnly = false,
   ) {
     let index = 0;
     let calcParameters: CalcParameters[] = [];
@@ -962,7 +965,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   }
 
   async function getUserDashboardData(
-    structure: structureProps
+    structure: structureProps,
   ): Promise<getUserDashboardDataResponse | void> {
     try {
       const response = await fetch(`${url}/get-user-data-dashboard`, {
@@ -982,12 +985,12 @@ function Store({ children }: PropsWithChildren<{}>) {
         setLoggedInChecked(true);
       } else {
         router.push(
-          `/tool/0/0/${structure?.questionnaire.content[1]["chapter-slug"]}/1/1`
+          `/tool/0/0/${structure?.questionnaire.content[1]["chapter-slug"]}/1/1`,
         );
       }
     } catch (error) {
       router.push(
-        `/tool/0/0/${structure?.questionnaire.content[1]["chapter-slug"]}/1/1`
+        `/tool/0/0/${structure?.questionnaire.content[1]["chapter-slug"]}/1/1`,
       );
       //   console.error("Failed to validate token:", error);
     }
@@ -1009,7 +1012,7 @@ function Store({ children }: PropsWithChildren<{}>) {
     questionnaireParams: CalcParameters[],
     structure: structureProps,
     hasAssessment: boolean,
-    scoreObject: ScoreType
+    scoreObject: ScoreType,
   ) {
     return questionnaireParams.map((chapter, index) => {
       const totalPrinciples = structure?.questionnaire.content?.[index][
@@ -1020,7 +1023,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         structure?.questionnaire.content?.[index]?.["chapter-title"] ?? "";
 
       const questionnaireRaw = Math.round(
-        (chapter["general-score"] / chapter["net-zero-impact"]) * 100
+        (chapter["general-score"] / chapter["net-zero-impact"]) * 100,
       );
       const questionnaire = Number.isNaN(questionnaireRaw)
         ? 0
@@ -1046,7 +1049,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   }
 
   function addConfirmPasswordToSteps(
-    stepsArray: RegistrationStep[] | ResetPasswordStep[] | undefined
+    stepsArray: RegistrationStep[] | ResetPasswordStep[] | undefined,
   ): RegistrationStep[] | ResetPasswordStep[] | undefined {
     if (!stepsArray) return stepsArray;
     if (
@@ -1056,10 +1059,10 @@ function Store({ children }: PropsWithChildren<{}>) {
       // RegistrationStep[]
       return (stepsArray as RegistrationStep[]).map((step) => {
         const passwordIndex = step["input-fields"].findIndex(
-          (field) => field.name === "password"
+          (field) => field.name === "password",
         );
         const hasConfirm = step["input-fields"].some(
-          (field) => field.name === "confirmPassword"
+          (field) => field.name === "confirmPassword",
         );
         if (passwordIndex !== -1 && !hasConfirm) {
           const newFields = [...step["input-fields"]];
@@ -1078,10 +1081,10 @@ function Store({ children }: PropsWithChildren<{}>) {
       // ResetPasswordStep[]
       return (stepsArray as ResetPasswordStep[]).map((step) => {
         const passwordIndex = step["input-fields"].findIndex(
-          (field) => field.name === "password"
+          (field) => field.name === "password",
         );
         const hasConfirm = step["input-fields"].some(
-          (field) => field.name === "confirmPassword"
+          (field) => field.name === "confirmPassword",
         );
         if (passwordIndex !== -1 && !hasConfirm) {
           const newFields = [...step["input-fields"]];
@@ -1101,7 +1104,7 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   const getAlternativeSpreadsheet = async (
     alternative_id: string,
-    type: string
+    type: string,
   ) => {
     setLoader(true);
 
@@ -1143,7 +1146,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         blob,
         `${current?.project.project_name}, ${
           current?.alternative.alternative_name
-        }.${type === "csv" ? "csv" : "xlsx"}`
+        }.${type === "csv" ? "csv" : "xlsx"}`,
       );
     } catch (error) {
       console.error("Error downloading CSV:", error);
@@ -1210,7 +1213,7 @@ function Store({ children }: PropsWithChildren<{}>) {
       setCookie(
         `${scoreObject["project-details"].contactEmail}`,
         jsonCookie,
-        0.15
+        0.15,
       );
     }
   }, [scoreObject]);
@@ -1323,7 +1326,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         getAlternativeSpreadsheet,
         dashBoardVisible,
         setDashBoardVisible,
-      }}>
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );

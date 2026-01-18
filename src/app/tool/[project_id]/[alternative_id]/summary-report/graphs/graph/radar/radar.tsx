@@ -133,7 +133,9 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
     useImperativeHandle(ref, () => ({
       async capture() {
         if (graphContainer.current) {
-          const dataUrl = await toPng(graphContainer.current);
+          const dataUrl = await toPng(graphContainer.current, {
+            pixelRatio: 2,
+          });
           return dataUrl;
         }
         return null;

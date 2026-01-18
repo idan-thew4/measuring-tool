@@ -246,7 +246,7 @@ const PdfTable = ({
           chapterScore,
           (value: number) => getScoreLabel(structure, value),
           structure,
-          getScoreLabel
+          getScoreLabel,
         )}
       </Text>
       <View style={{ flex: 1, padding: 4, textAlign: "right" }}>
@@ -344,7 +344,7 @@ const PdfTable = ({
                   subChaptersScores,
                   subChapterIdx,
                   structure,
-                  getScoreLabel
+                  getScoreLabel,
                 )}
               </Text>
               <View style={{ flex: 1, padding: 4, textAlign: "right" }}>
@@ -567,6 +567,9 @@ export default function Summary() {
     getAlternativeSpreadsheet,
     loader,
     mainContainerOut,
+    setActiveSideMenu,
+    activeSideMenu,
+    getChaptersScores,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -583,7 +586,7 @@ export default function Summary() {
     isPageChanged("summary");
     getAlternativeQuestionnaireData(
       params.project_id as string,
-      params.alternative_id as string
+      params.alternative_id as string,
     );
   }, []);
 
@@ -597,24 +600,29 @@ export default function Summary() {
     questionnaireParams = calculateScores(
       scoreObject.data.questionnaire ?? [],
       "chapters",
-      "questionnaire"
+      "questionnaire",
     );
 
-    const chaptersScoresTemp: ScoreData[] = questionnaireParams.map(
-      (chapter, index) => {
-        const generalScore = chapter["general-score"];
-        const percentage = Math.round(
-          (generalScore / chapter["max-score"]) * 100
-        );
+    // const chaptersScoresTemp: ScoreData[] = questionnaireParams.map(
+    //   (chapter, index) => {
+    //     console.log("Chapter score data:", chapter); // Debugging line
+    //     const generalScore = chapter["general-score"];
+    //     const percentage = Math.round(
+    //       (generalScore / chapter["max-score"]) * 100,
+    //     );
 
-        console.log("average-score", chapter["average-score"]);
+    //     return {
+    //       generalScore,
+    //       percentage,
+    //     };
+    //   },
+    // );
 
-        return {
-          generalScore,
-          percentage,
-        };
-      }
-    );
+    const chaptersScoresTemp: ScoreData[] = structure
+      ? getChaptersScores(questionnaireParams, structure, false, scoreObject)
+      : [];
+
+    console.log("Chapters Scores Temp:", chaptersScoresTemp); // Debugging line
 
     // Sub chapters //
 
@@ -623,7 +631,7 @@ export default function Summary() {
     questionnaireParams = calculateScores(
       scoreObject.data.questionnaire ?? [],
       "subchapters",
-      "questionnaire"
+      "questionnaire",
     );
 
     const subChaptersTemp: ScoreData[] = questionnaireParams.map(
@@ -640,7 +648,7 @@ export default function Summary() {
         const zeroImpactScore = subChapter["net-zero-impact"];
 
         const percentage = Math.round(
-          (subChapter["general-score"] / subChapter["net-zero-impact"]) * 100
+          (subChapter["general-score"] / subChapter["net-zero-impact"]) * 100,
         );
 
         return {
@@ -649,7 +657,7 @@ export default function Summary() {
           percentage,
           zeroImpactScore,
         };
-      }
+      },
     );
 
     const groupedSubChapters = subChaptersTemp.reduce<
@@ -680,11 +688,11 @@ export default function Summary() {
           scoreObject={scoreObject}
           current={current}
           scores={scores}
-        />
+        />,
       ).toBlob();
       saveAs(
         blob,
-        `${current?.project.project_name}, ${current?.alternative.alternative_name}.pdf`
+        `${current?.project.project_name}, ${current?.alternative.alternative_name}.pdf`,
       );
     } catch (error) {
       console.error("Error generating or downloading the PDF:", error);
@@ -692,6 +700,14 @@ export default function Summary() {
       setLoader(false); // Ensure the loader is reset
     }
   };
+
+  useEffect(() => {
+    if (!activeSideMenu) {
+      setTimeout(() => {
+        setActiveSideMenu(true);
+      }, 1200);
+    }
+  }, [activeSideMenu]);
 
   if (!structure || loader) {
     return <Loader />;
@@ -703,7 +719,6 @@ export default function Summary() {
         styles["summary"],
         "main-container",
         !loader && "main-container--enter",
-        mainContainerOut && "main-container--exit"
       )}
     >
       <SummaryHeader
@@ -741,7 +756,7 @@ export default function Summary() {
             tableStyles["row"],
             "paragraph_15 bold",
             tableStyles["row-titles"],
-            tableStyles["row-titles-sticky"]
+            tableStyles["row-titles-sticky"],
           )}
         >
           {structure?.summary?.table?.columns.map(
@@ -752,13 +767,13 @@ export default function Summary() {
                 key: string;
                 "sub-title"?: string;
               },
-              index: number
+              index: number,
             ) => (
               <p
                 key={index}
                 className={clsx(
                   column["sub-title"] && tableStyles["score-points"],
-                  "paragraph_15 bold"
+                  "paragraph_15 bold",
                 )}
               >
                 {column.title}
@@ -768,7 +783,7 @@ export default function Summary() {
                   </span>
                 )}
               </p>
-            )
+            ),
           )}
         </div>
         {structure?.questionnaire.content.map((chapter, index) => {

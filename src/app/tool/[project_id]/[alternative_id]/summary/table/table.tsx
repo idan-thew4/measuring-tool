@@ -38,7 +38,7 @@ export function Table({
     if (tableContainerRef.current) {
       const height = tableContainerRef.current.getBoundingClientRect().height;
       const rootFontSize = parseFloat(
-        getComputedStyle(document.documentElement).fontSize
+        getComputedStyle(document.documentElement).fontSize,
       );
 
       setTableDropdownHeights((prev) => ({
@@ -63,7 +63,8 @@ export function Table({
             </p>
             <button
               className={styles["comment-button"]}
-              onClick={() => setExpandedKey(isExpanded ? null : String(key))}>
+              onClick={() => setExpandedKey(isExpanded ? null : String(key))}
+            >
               {isExpanded
                 ? structure?.summary.table["buttons-copy"][1]
                 : structure?.summary.table["buttons-copy"][0]}
@@ -72,8 +73,9 @@ export function Table({
           <span
             className={clsx(
               isExpanded ? styles["expanded"] : "",
-              styles["comment-read-more"]
-            )}>
+              styles["comment-read-more"],
+            )}
+          >
             {comment}
           </span>
         </div>
@@ -150,45 +152,45 @@ export function Table({
     <div
       className={clsx(
         styles["table-container"],
-        tableDropdown && styles["collapsed"]
+        tableDropdown && styles["collapsed"],
       )}
       ref={tableContainerRef}
       style={{
         height: tableDropdown
           ? `${tableDropdownHeights.opened}rem`
           : `${tableDropdownHeights.closed}rem`,
-      }}>
+      }}
+    >
       <div
         className={clsx(styles["row"], styles["row-headline"])}
-        onClick={() => setTableDropdown(!tableDropdown)}>
+        onClick={() => setTableDropdown(!tableDropdown)}
+      >
         <h2
-          className={clsx(
-            styles["table-title"],
-            "headline_small bold"
-          )}>{`${chapterNumber}. ${title}`}</h2>
+          className={clsx(styles["table-title"], "headline_small bold")}
+        >{`${chapterNumber}. ${title}`}</h2>
         <p className={clsx("paragraph_18", styles["preview"])}>
           {getPercentageLabel(
             chapterScore,
             (value: number) => getScoreLabel(structure, value),
             structure,
-            getScoreLabel
+            getScoreLabel,
           )}
         </p>
         <p className={clsx(styles["score-points"], "paragraph_18")}>
           {chapterScore &&
-            typeof chapterScore.generalScore === "number" &&
-            chapterScore.generalScore > 0 && (
+            typeof chapterScore.questionnaire === "number" &&
+            chapterScore.questionnaire > 0 && (
               <>
-                <strong>{chapterScore.generalScore}</strong>
+                <strong>{chapterScore.questionnaire}</strong>
                 {structure?.summary.table.columns[2]?.title}
               </>
             )}
 
           {chapterScore &&
-            typeof chapterScore.percentage === "number" &&
-            chapterScore.percentage > 0 && (
+            typeof chapterScore.questionnaire === "number" &&
+            chapterScore.questionnaire > 0 && (
               <span className={styles["percentage-bubble"]}>
-                {chapterScore.percentage}%
+                {chapterScore.questionnaire}%
               </span>
             )}
         </p>
@@ -198,13 +200,15 @@ export function Table({
       <div key={chapterNumber} className={styles["table"]}>
         {content.map((subChapter: SubChapter, subChapterIndex) => (
           <React.Fragment
-            key={subChapter["sub-chapter-title"] ?? subChapterIndex}>
+            key={subChapter["sub-chapter-title"] ?? subChapterIndex}
+          >
             <div
               className={clsx(
                 styles["row"],
                 styles["row-title"],
-                "paragraph_18 "
-              )}>
+                "paragraph_18 ",
+              )}
+            >
               <p>{`${chapterNumber}.${subChapterIndex + 1}.`}</p>
               <h3 className="paragraph_18 bold">{`${subChapter["sub-chapter-title"]}`}</h3>
               <p className={styles["preview"]}>
@@ -212,7 +216,7 @@ export function Table({
                   subChaptersScores,
                   subChapterIndex,
                   structure,
-                  getScoreLabel
+                  getScoreLabel,
                 )}
               </p>
 
@@ -263,20 +267,20 @@ export function Table({
                   className={clsx(
                     styles["row"],
                     inputNumber === -1 && styles["skipped"],
-                    inputNumber === undefined && styles["not-answered"]
-                  )}>
+                    inputNumber === undefined && styles["not-answered"],
+                  )}
+                >
                   <p
                     className={clsx(
                       styles["paragraph_18"],
-                      styles["principle-number"]
-                    )}>{`${chapterNumber}.${subChapterIndex + 1}.${
+                      styles["principle-number"],
+                    )}
+                  >{`${chapterNumber}.${subChapterIndex + 1}.${
                     principleIndex + 1
                   }.`}</p>
                   <h4
-                    className={clsx(
-                      styles["principle-title"],
-                      "paragraph_18"
-                    )}>{`${principle["title"]}`}</h4>
+                    className={clsx(styles["principle-title"], "paragraph_18")}
+                  >{`${principle["title"]}`}</h4>
                   <p className={clsx("paragraph_18", styles["preview"])}>
                     {inputNumber !== undefined
                       ? structure?.questionnaire?.options?.[inputNumber - 1]
@@ -288,7 +292,7 @@ export function Table({
                       "chapter-data"
                     ]?.[subChapterIndex]?.["principles"]?.[principleIndex]
                       ?.comment ?? "",
-                    principleIndex
+                    principleIndex,
                   )}
                   {/* {inputNumber === -1 && (
                     <p className={styles["principle-comment"]}>

@@ -3,7 +3,6 @@ import Link from "next/link";
 import clsx from "clsx";
 import { useStore } from "@/contexts/Store";
 import { useEffect, useState } from "react";
-import contentPlaceHolder from "../../../../../../../public/data/content-placeholder.json";
 
 export function NavButtons({
   currentChapter,
@@ -27,7 +26,7 @@ export function NavButtons({
     if (!structure) return;
 
     const chapterIdx = structure.questionnaire.content.findIndex(
-      (s) => s["chapter-slug"] === currentChapter[0]
+      (s) => s["chapter-slug"] === currentChapter[0],
     );
 
     const principleIdx = Number(currentChapter[1]) - 1;
@@ -95,22 +94,29 @@ export function NavButtons({
           className={clsx(
             styles["nav-button"],
             styles["previous"],
-            "basic-button outline with-icon"
+            "basic-button outline with-icon",
           )}
         >
           {structure?.questionnaire.buttons?.[1]}
         </Link>
       )}
-      {navButton.next && (
+      {navButton.next ? (
         <Link
           href={navButton.next}
           className={clsx(
             styles["nav-button"],
             styles["next"],
-            "basic-button outline with-icon"
+            "basic-button outline with-icon",
           )}
         >
           {structure?.questionnaire.buttons?.[2]}
+        </Link>
+      ) : (
+        <Link
+          href={`/tool/${project_id}/${alternative_id}/summary`}
+          className={clsx(styles["nav-button"], "basic-button outline")}
+        >
+          סיכום
         </Link>
       )}
     </div>

@@ -96,7 +96,7 @@ export default function SummaryReport() {
     isPageChanged("summary");
     getAlternativeQuestionnaireData(
       params.project_id as string,
-      params.alternative_id as string
+      params.alternative_id as string,
     );
   }, []);
 
@@ -104,7 +104,7 @@ export default function SummaryReport() {
     const hasAssessment =
       Array.isArray(scoreObject.data.assessment) &&
       !scoreObject.data.assessment.every(
-        (chapter) => chapter["chapter-score"] === 0
+        (chapter) => chapter["chapter-score"] === 0,
       );
 
     // chapters //
@@ -114,7 +114,7 @@ export default function SummaryReport() {
     questionnaireParams = calculateScores(
       scoreObject.data.questionnaire ?? [],
       "chapters",
-      "questionnaire"
+      "questionnaire",
     );
 
     const chaptersScoresTemp: ScoreData[] = structure
@@ -122,7 +122,7 @@ export default function SummaryReport() {
           questionnaireParams,
           structure,
           hasAssessment,
-          scoreObject
+          scoreObject,
         )
       : [];
 
@@ -133,11 +133,11 @@ export default function SummaryReport() {
     questionnaireParams = calculateScores(
       scoreObject.data.questionnaire ?? [],
       "subchapters",
-      "questionnaire"
+      "questionnaire",
     );
 
     const filteredQuestionnaireParams = questionnaireParams.filter(
-      (chapter) => chapter["chapter"] === 1
+      (chapter) => chapter["chapter"] === 1,
     );
 
     const secondChapterTemp: ScoreData[] = filteredQuestionnaireParams.map(
@@ -152,7 +152,7 @@ export default function SummaryReport() {
           ]?.[subChapterIndex]?.["sub-chapter-title"] ?? "";
 
         const questionnaireValue = Math.round(
-          (subChapter["general-score"] / subChapter["net-zero-impact"]) * 100
+          (subChapter["general-score"] / subChapter["net-zero-impact"]) * 100,
         );
         const questionnaire = Number.isNaN(questionnaireValue)
           ? 0
@@ -169,7 +169,7 @@ export default function SummaryReport() {
           subChapter["principles-count"] !== undefined &&
           subChapter["principles-count"] !== 0
             ? Math.round(
-                subChapter["average-score"] / subChapter["principles-count"]
+                subChapter["average-score"] / subChapter["principles-count"],
               )
             : 0;
 
@@ -183,7 +183,7 @@ export default function SummaryReport() {
             : {}),
           ...(Number.isNaN(averageScore) ? {} : { averageScore }),
         };
-      }
+      },
     );
 
     // sub-chapters //
@@ -207,7 +207,7 @@ export default function SummaryReport() {
           generalScore,
           possibleScore,
         };
-      }
+      },
     );
 
     setScores({
@@ -289,11 +289,11 @@ export default function SummaryReport() {
           structure={structure as structureProps}
           current={current}
           graphs={PNGexports}
-        />
+        />,
       ).toBlob();
       saveAs(
         blob,
-        `${current?.project.project_name}, ${current?.alternative.alternative_name}.pdf`
+        `${current?.project.project_name}, ${current?.alternative.alternative_name}.pdf`,
       );
     } catch (error) {
       console.error("Error generating or downloading the PDF:", error);
@@ -318,7 +318,7 @@ export default function SummaryReport() {
       className={clsx(
         styles["main-container"],
         "main-container",
-        !loader && "main-container--enter"
+        !loader && "main-container--enter",
       )}
     >
       {structure && (
