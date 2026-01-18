@@ -80,7 +80,7 @@ export function PDFheader({
     <View style={PDFstyles.section} fixed>
       <View style={PDFstyles.header}>
         <Image
-          src="/logo.png"
+          src="/logo_black.png"
           style={{
             width: 196.43,
             height: 50,
@@ -102,7 +102,8 @@ export function PDFheader({
           style={{
             flexDirection: "row-reverse",
             alignItems: "center",
-          }}>
+          }}
+        >
           <Text
             style={{
               fontSize: 16,
@@ -110,7 +111,8 @@ export function PDFheader({
               textAlign: "right",
               direction: "rtl",
               paddingLeft: 50,
-            }}>
+            }}
+          >
             סיכום
           </Text>
           <View
@@ -118,9 +120,11 @@ export function PDFheader({
               fontSize: 12,
               flexDirection: "row-reverse",
               gap: 1,
-            }}>
+            }}
+          >
             <Text
-              style={{ fontFamily: "Noto Sane Hebrew Bold", paddingLeft: 2 }}>
+              style={{ fontFamily: "Noto Sane Hebrew Bold", paddingLeft: 2 }}
+            >
               ,שם המיזם
             </Text>
             <Text style={{ fontFamily: "Noto Sane Hebrew Regular" }}>

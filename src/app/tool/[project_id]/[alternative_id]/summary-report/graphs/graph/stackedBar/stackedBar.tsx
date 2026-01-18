@@ -50,7 +50,8 @@ const CustomYAxisTick = (props: CustomYAxisTickProps) => {
                 ? "30"
                 : "20"
             }
-            height={10}></rect>
+            height={10}
+          ></rect>
           <text
             x={0}
             y={4}
@@ -58,7 +59,8 @@ const CustomYAxisTick = (props: CustomYAxisTickProps) => {
             textAnchor="middle"
             fill="#CFD3D1"
             fontWeight="bold"
-            fontSize={10}>
+            fontSize={10}
+          >
             {payload.value}
           </text>
         </g>
@@ -133,8 +135,8 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
       const maxValue = Math.max(
         ...parameters.map(
           (item) =>
-            Number(item.generalScore ?? 0) + Number(item.possibleScore ?? 0)
-        )
+            Number(item.generalScore ?? 0) + Number(item.possibleScore ?? 0),
+        ),
       );
 
       setMaxValue(maxValue);
@@ -162,13 +164,13 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
                 sums[idx] += choice.score;
                 counts[idx]++;
               }
-            })
+            }),
           );
-        })
+        }),
       );
 
       const avgs = sums.map((sum, idx) =>
-        counts[idx] ? sum / counts[idx] : 0
+        counts[idx] ? sum / counts[idx] : 0,
       );
 
       let start = 1;
@@ -196,7 +198,7 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
     }
 
     const graphContainer = useRef<HTMLDivElement>(
-      null
+      null,
     ) as React.RefObject<HTMLDivElement>;
 
     // Expose a method to parent
@@ -204,7 +206,9 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
     useImperativeHandle(ref, () => ({
       async capture() {
         if (graphContainer.current) {
-          const dataUrl = await toPng(graphContainer.current);
+          const dataUrl = await toPng(graphContainer.current, {
+            pixelRatio: 2,
+          });
           return dataUrl;
         }
         return null;
@@ -217,11 +221,13 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
         structure={structure}
         legend={structure.questionnaire.options.slice(1)}
         literalLegend={true}
-        radarRef={graphContainer}>
+        radarRef={graphContainer}
+      >
         <ul className={graphStyles["filters"]}>
           <li key={0} className={graphStyles["filter-item"]}>
             <label
-              className={clsx("paragraph_14", graphStyles["filter-label"])}>
+              className={clsx("paragraph_14", graphStyles["filter-label"])}
+            >
               <input
                 type="checkbox"
                 checked={filtersStatus || false}
@@ -236,7 +242,8 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
         <ResponsiveContainer
           width="100%"
           height={200}
-          className={styles["responsive-container"]}>
+          className={styles["responsive-container"]}
+        >
           <BarChart
             className={styles["bar-chart"]}
             data={parameters}
@@ -245,7 +252,8 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
               right: 0,
               left: -60,
               bottom: 0,
-            }}>
+            }}
+          >
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="subChapterNumber"
@@ -286,17 +294,19 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
                     <circle cx={cx} cy={cy + 12} r={r - 8} fill="black" />
                     <text
                       x={cx}
-                      y={cy + 12} // visually center text
+                      y={cy + 13} // visually center text
                       textAnchor="middle"
                       fill="#fff"
                       fontWeight="bold"
-                      fontSize="1rem"
-                      dominantBaseline="middle">
+                      fontSize="10px"
+                      dominantBaseline="middle"
+                    >
                       {value}
                     </text>
                   </g>
                 );
-              }}>
+              }}
+            >
               {parameters.map((entry, index) => {
                 return (
                   <Cell
@@ -305,8 +315,8 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
                       Math.round(
                         (Number(entry.generalScore) /
                           Number(entry.possibleScore)) *
-                          100
-                      )
+                          100,
+                      ),
                     )}
                   />
                 );
@@ -329,12 +339,14 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
             style={{
               display: "grid",
               gridTemplateColumns: `repeat(${parameters.length}, 1fr)`,
-            }}>
+            }}
+          >
             {barData.map((bar, idx) => (
               <li
                 className={clsx("paragraph_11", styles["data-bar-item"])}
                 key={bar.chapter}
-                style={gridColumns?.[idx] ?? {}}>
+                style={gridColumns?.[idx] ?? {}}
+              >
                 {bar.chapter}
               </li>
             ))}
@@ -342,7 +354,7 @@ const StackedBar = forwardRef<RadarGraphHandle, RadarGraphProps>(
         )}
       </Graph>
     );
-  }
+  },
 );
 
 export { StackedBar };

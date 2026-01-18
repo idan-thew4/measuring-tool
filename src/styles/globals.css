@@ -59,7 +59,7 @@
   color: #00a6ce;
 }
 .basic-button.outline:hover {
-  background-color: #00a6ce;
+  background-color: #00a6ce !important;
   color: white;
 }
 .basic-button.solid {

@@ -35,6 +35,7 @@ export default function SelfAssessment() {
     maxValue,
     setActiveSideMenu,
     activeSideMenu,
+    loggedInChecked,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -192,6 +193,14 @@ export default function SelfAssessment() {
     }
   }, [params.project_id]);
 
+  useEffect(() => {
+    if (!loggedInChecked) {
+      router.push(
+        `/tool/0/0/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
+      );
+    }
+  }, [loggedInChecked]);
+
   // useEffect(() => {
   //   setActiveSideMenu(true);
   // }, []);
@@ -212,15 +221,13 @@ export default function SelfAssessment() {
         styles["main-container"],
         "main-container",
         activeSideMenu && styles["main-container--active"]
-      )}
-    >
+      )}>
       {structure && (
         <>
           <SummaryHeader
             title={structure?.["self-assessment"]["summary-title"]}
             structure={structure}
-            scoreObject={scoreObject}
-          >
+            scoreObject={scoreObject}>
             {/* TO DO: update button copy from structure */}
             <button
               className="basic-button outline"
@@ -229,8 +236,7 @@ export default function SelfAssessment() {
                   params.project_id as string,
                   scoreObject.data.assessment
                 );
-              }}
-            >
+              }}>
               המשך לשאלון
             </button>
           </SummaryHeader>

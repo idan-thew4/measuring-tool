@@ -16,6 +16,10 @@ export function ProgressBar({
   structure,
   indicator,
 }: ProgressBarProps) {
+  console.log("completed", completed);
+  console.log("structure", structure);
+  console.log("indicator", indicator);
+
   return (
     <div
       className={clsx(
@@ -48,7 +52,10 @@ export function ProgressBar({
             <div
               className={clsx(
                 styles["progress-bar-item-indicator"],
-                !structure && chapter.skipped && styles["skipped"]
+                !structure && chapter.skipped && styles["skipped"],
+                structure &&
+                  chapter.skipped === chapter.total &&
+                  styles["skipped"]
               )}
               style={{
                 width: `${(chapter.completed / chapter.total) * 100}%`,

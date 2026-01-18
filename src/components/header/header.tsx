@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import { RadarGraph } from "@/app/tool/[project_id]/[alternative_id]/summary-report/graphs/graph/radar/radar";
 import "../../components/popUps/popUpContainer/dropdown.scss";
+import { log } from "console";
 
 type logOutResponse = {
   success: boolean;
@@ -145,6 +146,8 @@ export function Header() {
     }
   }
 
+  console.log("loggedInChecked", loggedInChecked);
+
   return (
     <header className={styles["header-container"]}>
       <div className={clsx(styles["right-side"], styles["flex-h-align"])}>
@@ -164,8 +167,7 @@ export function Header() {
                 onClick={(e) => {
                   // e.preventDefault();
                   setSideMenu("");
-                }}
-              >
+                }}>
                 {structure?.header.user[1]}
               </Link>
               <button onClick={() => structure && logOut(structure)}>
@@ -189,14 +191,12 @@ export function Header() {
                 className={clsx(
                   styles["flex-h-align"],
                   styles["project-options"]
-                )}
-              >
+                )}>
                 <div
                   className={clsx(
                     styles["flex-h-align"],
                     styles["project-select"]
-                  )}
-                >
+                  )}>
                   <p className="bold">{current?.project.project_name}, </p>
                   <Select
                     className="dropdown paragraph_18"
@@ -235,16 +235,14 @@ export function Header() {
                       project_id: current?.project.project_id,
                       alternative_id: current?.alternative.alternative_id,
                     });
-                  }}
-                >
+                  }}>
                   {structure?.header.options[1]}
                 </button>
               </div>
             )}
             <button
               onClick={() => setGraphIsOpen(!graphIsOpen)}
-              className={clsx(styles["flex-h-align"], styles["summary"])}
-            >
+              className={clsx(styles["flex-h-align"], styles["summary"])}>
               <p>{structure?.header.options[2]}</p>
               {structure && (
                 <RadarGraph
@@ -262,8 +260,7 @@ export function Header() {
               className={clsx(
                 styles["dropdown"],
                 graphIsOpen ? styles["dropdown-enter"] : styles["dropdown-exit"]
-              )}
-            >
+              )}>
               {structure && (
                 <RadarGraph
                   headline={structure["summary-report"]["graphs"][1].title}
@@ -282,8 +279,7 @@ export function Header() {
         <button
           onClick={() => {
             setLoginPopup(true);
-          }}
-        >
+          }}>
           התחברות
         </button>
       )}

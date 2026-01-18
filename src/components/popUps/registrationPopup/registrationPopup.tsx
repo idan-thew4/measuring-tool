@@ -87,10 +87,6 @@ export function RegistrationPopup() {
   });
 
   useEffect(() => {
-    console.log("reCAPTCHA value changed:", recaptchaValue);
-  }, [recaptchaValue]);
-
-  useEffect(() => {
     let stepsArray: RegistrationStep[] | ResetPasswordStep[] | undefined = [];
     switch (registrationPopup) {
       case "register":
@@ -375,9 +371,6 @@ export function RegistrationPopup() {
   const onSubmit = async (stepData: Inputs, index: number) => {
     const updatedProjectDetails = { ...scoreObject["project-details"] };
 
-    console.log("index:", index);
-    console.log("registrationPopup:", registrationPopup);
-
     // Update only keys that exist in project-details
     Object.keys(stepData).forEach((key) => {
       if (key in updatedProjectDetails) {
@@ -462,11 +455,17 @@ export function RegistrationPopup() {
       (index === 0 && registrationPopup === "new-project") ||
       (registrationPopup === "register" && index === 2)
     ) {
-      console.log("Moving to next step");
-
       setCurrentStep(index + 1);
+      setCompletedSteps((prev) => {
+        if (!prev) return prev;
+        const newSteps = [...prev];
+        newSteps[index + 1] = {
+          ...newSteps[index + 1],
+          completed: 1,
+        };
+        return newSteps;
+      });
     } else {
-      console.log("Creating project");
       if (structure) {
         createProject(updatedProjectDetails, structure);
         setRegistrationPopup("");
