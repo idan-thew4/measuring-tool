@@ -125,7 +125,7 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
     }
 
     const graphContainer = useRef<HTMLDivElement>(
-      null
+      null,
     ) as React.RefObject<HTMLDivElement>;
 
     // Expose a method to parent
@@ -192,16 +192,16 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
                                 dataKeys.length === 3
                                   ? index
                                   : dataKeys.length === 2 &&
-                                    !dataKeys.includes("assessment")
-                                  ? filter === "averageScore"
-                                    ? 0
-                                    : 2
-                                  : dataKeys.length === 2 &&
-                                    dataKeys.includes("assessment")
-                                  ? filter === "averageScore"
-                                    ? 0
-                                    : 2
-                                  : index + 2
+                                      !dataKeys.includes("assessment")
+                                    ? filter === "averageScore"
+                                      ? 0
+                                      : 2
+                                    : dataKeys.length === 2 &&
+                                        dataKeys.includes("assessment")
+                                      ? filter === "averageScore"
+                                        ? 0
+                                        : 2
+                                      : index + 2
                               ],
                           }
                     }
@@ -221,16 +221,16 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
                       dataKeys.length === 3
                         ? filters.length - 1 - index
                         : dataKeys.length === 2 &&
-                          !dataKeys.includes("assessment")
-                        ? filter === "averageScore"
-                          ? 2
-                          : 0
-                        : dataKeys.length === 2 &&
-                          dataKeys.includes("assessment")
-                        ? filter === "averageScore"
-                          ? 2
-                          : 1
-                        : filters.length - 3 - index
+                            !dataKeys.includes("assessment")
+                          ? filter === "averageScore"
+                            ? 2
+                            : 0
+                          : dataKeys.length === 2 &&
+                              dataKeys.includes("assessment")
+                            ? filter === "averageScore"
+                              ? 2
+                              : 1
+                            : filters.length - 3 - index
                     ]
                   }
                   {/* {filters[filters.length - 1 - index]} */}
@@ -269,7 +269,7 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
               {dataKeys &&
                 [...dataKeys]
                   .sort((a, b) =>
-                    a === "questionnaire" ? 1 : b === "questionnaire" ? -1 : 0
+                    a === "questionnaire" ? 1 : b === "questionnaire" ? -1 : 0,
                   )
                   .map((dataKey, index) => {
                     if (filtersStatus[dataKey]) {
@@ -283,12 +283,12 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
                             type === "self-assessment"
                               ? colors[2]
                               : type === "header"
-                              ? colors[2]
-                              : dataKey === "averageScore"
-                              ? colors[0]
-                              : dataKey === "questionnaire"
-                              ? colors[2]
-                              : colors[1]
+                                ? colors[2]
+                                : dataKey === "averageScore"
+                                  ? "black"
+                                  : dataKey === "questionnaire"
+                                    ? colors[2]
+                                    : colors[1]
                           }
                           strokeDasharray={
                             dataKey === "averageScore" ? "6 6" : "none"
@@ -298,12 +298,12 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
                             type === "self-assessment"
                               ? colors[2]
                               : type === "header"
-                              ? colors[2]
-                              : dataKey === "averageScore"
-                              ? colors[0]
-                              : dataKey === "questionnaire"
-                              ? colors[2]
-                              : colors[1]
+                                ? colors[2]
+                                : dataKey === "averageScore"
+                                  ? colors[0]
+                                  : dataKey === "questionnaire"
+                                    ? colors[2]
+                                    : colors[1]
                           }
                           fillOpacity={0.6}
                           {...(labels && {
@@ -335,7 +335,7 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
                                   height="17"
                                   fill={getDataLabelColor(
                                     value,
-                                    dataKeys[index]
+                                    dataKeys[index],
                                   )}
                                   rx="8"
                                   stroke={
@@ -374,7 +374,7 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
         </div>
       </Graph>
     );
-  }
+  },
 );
 
 export { RadarGraph };
