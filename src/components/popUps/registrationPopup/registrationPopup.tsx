@@ -115,7 +115,7 @@ export function RegistrationPopup() {
         (step, index) => ({
           completed: index === 0 ? 1 : 0,
           total: 1,
-        })
+        }),
       );
 
       setCompletedSteps(completedStepsArray);
@@ -137,7 +137,7 @@ export function RegistrationPopup() {
             phone,
             recaptchaToken,
           }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -166,7 +166,7 @@ export function RegistrationPopup() {
     phone: string,
     sendCommercialMaterial: boolean,
     getInTouch: boolean,
-    otpCode: boolean
+    otpCode: boolean,
   ) {
     setLoading(true);
     try {
@@ -210,7 +210,7 @@ export function RegistrationPopup() {
 
   async function createProject(
     ProjectDetails: ProjectDetails,
-    structure: structureProps
+    structure: structureProps,
   ) {
     setLoading(true);
 
@@ -230,7 +230,7 @@ export function RegistrationPopup() {
         }
         return acc;
       },
-      {} as Record<string, string | number | { value: string; label: string }>
+      {} as Record<string, string | number | { value: string; label: string }>,
     );
 
     try {
@@ -253,7 +253,7 @@ export function RegistrationPopup() {
         getUserDashboardData(structure);
 
         router.push(
-          `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
+          `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`,
         );
       } else {
         if (data.message) {
@@ -307,7 +307,7 @@ export function RegistrationPopup() {
   }
 
   function setEndYears(
-    startYearOption: { value: string; label: string } | null
+    startYearOption: { value: string; label: string } | null,
   ) {
     if (startYearOption) {
       const startYear = parseInt(startYearOption.value);
@@ -365,7 +365,7 @@ export function RegistrationPopup() {
         ) {
           setValue(
             field.name,
-            (scoreObject["project-details"] as Inputs)[field.name]
+            (scoreObject["project-details"] as Inputs)[field.name],
           );
         }
       });
@@ -375,7 +375,8 @@ export function RegistrationPopup() {
   const onSubmit = async (stepData: Inputs, index: number) => {
     const updatedProjectDetails = { ...scoreObject["project-details"] };
 
-    console.log("reCAPTCHA value changed:", recaptchaValue);
+    console.log("index:", index);
+    console.log("registrationPopup:", registrationPopup);
 
     // Update only keys that exist in project-details
     Object.keys(stepData).forEach((key) => {
@@ -391,8 +392,10 @@ export function RegistrationPopup() {
     if (
       completedSteps &&
       index !== completedSteps.length - 1 &&
+      index !== 2 &&
       registrationPopup === "register"
     ) {
+      console.log("Handling registration steps");
       if (index === 1 && registrationPopup === "register") {
         const userCreated = await createNewUser(
           stepData["fullName"] as string,
@@ -402,7 +405,7 @@ export function RegistrationPopup() {
           stepData["contactPhone"] as string,
           stepData["commercial-agreement"] as boolean,
           stepData["research-agreement"] as boolean,
-          stepData["verificationCode"] as boolean
+          stepData["verificationCode"] as boolean,
         );
 
         if (!userCreated) {
@@ -435,7 +438,7 @@ export function RegistrationPopup() {
 
           const otpSent = await otpRequest(
             stepData["contactPhone"] as string,
-            token
+            token,
           );
 
           setCurrentStep(index + 1);
@@ -455,9 +458,15 @@ export function RegistrationPopup() {
           }
         }
       }
-    } else if (index === 0 && registrationPopup === "new-project") {
+    } else if (
+      (index === 0 && registrationPopup === "new-project") ||
+      (registrationPopup === "register" && index === 2)
+    ) {
+      console.log("Moving to next step");
+
       setCurrentStep(index + 1);
     } else {
+      console.log("Creating project");
       if (structure) {
         createProject(updatedProjectDetails, structure);
         setRegistrationPopup("");
@@ -550,14 +559,14 @@ export function RegistrationPopup() {
       <div
         className={clsx(
           formStyles["form-container"],
-          PopUpContainerStyles[`step-${currentStep + 1}`]
+          PopUpContainerStyles[`step-${currentStep + 1}`],
         )}
       >
         <div>
           <h3
             className={clsx(
               "headline_medium-small bold",
-              formStyles["headline"]
+              formStyles["headline"],
             )}
           >
             {steps.single.title}
@@ -593,7 +602,7 @@ export function RegistrationPopup() {
                 field.type !== "checkbox"
                   ? formStyles["input"]
                   : formStyles["checkbox"],
-                `input`
+                `input`,
               )}
               key={index}
             >
@@ -633,8 +642,8 @@ export function RegistrationPopup() {
                         field.name === "projectStartYear"
                           ? yearsList.start
                           : field.name === "projectEndYear"
-                          ? yearsList.end
-                          : field["dropdown-options"]
+                            ? yearsList.end
+                            : field["dropdown-options"]
                       }
                       onChange={(option) => {
                         controllerField.onChange(option ? option : null);
@@ -647,7 +656,7 @@ export function RegistrationPopup() {
                               "label" in option))
                         ) {
                           setEndYears(
-                            option as { value: string; label: string } | null
+                            option as { value: string; label: string } | null,
                           );
                         }
                       }}
@@ -671,7 +680,7 @@ export function RegistrationPopup() {
                         <p
                           className={clsx(
                             "paragraph_18",
-                            formStyles["otp-label"]
+                            formStyles["otp-label"],
                           )}
                         >
                           {steps.single?.["input-fields"][0].label}
@@ -685,9 +694,9 @@ export function RegistrationPopup() {
                             typeof field.value === "string"
                               ? field.value
                               : field.value !== undefined &&
-                                field.value !== null
-                              ? String(field.value)
-                              : ""
+                                  field.value !== null
+                                ? String(field.value)
+                                : ""
                           }
                           onChange={field.onChange}
                           sx={{
@@ -722,17 +731,17 @@ export function RegistrationPopup() {
                               message: field["format-error"],
                             }
                           : field.type === "tel"
-                          ? {
-                              value: /^0\d{1,2}-?\d{7}$/,
-                              message: field["format-error"],
-                            }
-                          : field.type === "password"
-                          ? {
-                              value:
-                                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
-                              message: field["format-error"],
-                            }
-                          : undefined,
+                            ? {
+                                value: /^0\d{1,2}-?\d{7}$/,
+                                message: field["format-error"],
+                              }
+                            : field.type === "password"
+                              ? {
+                                  value:
+                                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
+                                  message: field["format-error"],
+                                }
+                              : undefined,
                       validate:
                         field.name === "confirmPassword"
                           ? (value) =>
@@ -794,7 +803,7 @@ export function RegistrationPopup() {
             className={clsx(
               formStyles["submit-button"],
               "basic-button solid",
-              loading && "loading"
+              loading && "loading",
             )}
             type="submit"
             disabled={Object.keys(errors).length > 0 || generalError !== ""}
@@ -813,7 +822,7 @@ export function RegistrationPopup() {
                       className="link-button"
                       onClick={() => {
                         otpRequest(
-                          scoreObject["project-details"].contactPhone as string
+                          scoreObject["project-details"].contactPhone as string,
                         );
                         setTimeLeft(2);
                         timer();
@@ -828,7 +837,7 @@ export function RegistrationPopup() {
                 ) : (
                   <p className="paragraph_18">{`00:${String(timeLeft).padStart(
                     2,
-                    "0"
+                    "0",
                   )}`}</p>
                 ))}
             </div>
@@ -837,7 +846,7 @@ export function RegistrationPopup() {
             <div
               className={clsx(
                 formStyles["error-message"],
-                formStyles["general-error"]
+                formStyles["general-error"],
               )}
             >
               {generalError}
