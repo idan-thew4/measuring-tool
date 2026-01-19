@@ -51,29 +51,20 @@
     transform: translateX(0);
     opacity: 1;
   }
-  15% {
+  50% {
     opacity: 0;
-    transform: translateX(50vw);
+    transform: translateX(10rem);
   }
-  30% {
-    transform: translateX(100vw);
-  }
-  31% {
-    transform: translateX(-100vw);
-  }
-  45% {
-    transform: translateX(50);
-    opacity: 1;
-  }
-  70% {
-    transform: translateX(0);
+  51% {
+    transform: translateX(-10rem);
   }
   100% {
+    transform: translateX(0);
     opacity: 1;
   }
 }
 .chapters-slider-container .chapter-box--right {
-  animation: chapter-box-slide 1.5s forwards;
+  animation: chapter-box-slide 0.5s forwards;
 }
 .chapters-slider-container .chapter-box--left {
   animation: chapter-box-slide 1s reverse forwards;

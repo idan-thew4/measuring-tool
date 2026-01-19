@@ -65,6 +65,8 @@ export function RegistrationPopup() {
   const [resentAttempts, setResentAttempts] = useState<number>(0);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
+  const params = useParams();
+  const [chapter, subChapter, principle] = params?.chapters || [];
 
   const {
     register,
@@ -248,9 +250,15 @@ export function RegistrationPopup() {
         setLoggedInChecked(true);
         getUserDashboardData(structure);
 
-        router.push(
-          `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`,
-        );
+        if (params.chapters) {
+          router.push(
+            `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`,
+          );
+        } else {
+          window.open(
+            `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`,
+          );
+        }
       } else {
         if (data.message) {
           setGeneralError(data.message);

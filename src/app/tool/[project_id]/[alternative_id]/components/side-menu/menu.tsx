@@ -24,7 +24,7 @@ function isSubChapterCompleted(
   scoreObject: ScoreType,
   chapterIdx: number,
   subChapterIdx: number,
-  numChoices: number
+  numChoices: number,
 ) {
   let allCompleted = true;
   let allSkipped = true;
@@ -49,7 +49,7 @@ function isChoiceCompleted(
   scoreObject: ScoreType,
   chapterIdx: number,
   subChapterIdx: number,
-  choiceIdx: number
+  choiceIdx: number,
 ) {
   if (
     scoreObject?.data?.questionnaire?.[chapterIdx]?.["chapter-data"]?.[
@@ -74,7 +74,7 @@ function isChoiceCompleted(
 function isChapterCompleted(
   totalChapters: number,
   completedChapters: number,
-  skippedChapters: number
+  skippedChapters: number,
 ) {
   if (completedChapters === totalChapters) {
     return "completed";
@@ -129,8 +129,8 @@ function RangeSlider({
             percent > 95 && percent > 0
               ? "89%"
               : percent < 6
-              ? "2%"
-              : `calc(${percent}% - ${percent > 99 ? "4.5" : "1.5"}rem)`
+                ? "2%"
+                : `calc(${percent}% - ${percent > 99 ? "4.5" : "1.5"}rem)`
           }`,
         }}
       >
@@ -200,7 +200,7 @@ export function Menu({
       currentChapter[1] &&
       currentChapter[2] &&
       !activePrinciples.includes(
-        `${currentChapter[0]}-${currentChapter[1]}-${currentChapter[2]}`
+        `${currentChapter[0]}-${currentChapter[1]}-${currentChapter[2]}`,
       )
     ) {
       setActivePrinciples((prev) => [
@@ -215,7 +215,7 @@ export function Menu({
 
     scoreObject.data.questionnaire.forEach((chapter) => {
       const allSkipped = chapter["chapter-data"].every((subChapter) =>
-        subChapter.principles.every((choiceObj) => choiceObj.choice === -1)
+        subChapter.principles.every((choiceObj) => choiceObj.choice === -1),
       );
       tempToggleList.push({
         chapterIdx: chapter["chapter-number"] - 1,
@@ -231,12 +231,12 @@ export function Menu({
       //Slider value;
 
       const TempChapterScoreValue = scoreObject.data.assessment.map(
-        (chapter) => chapter["chapter-score"] || 0
+        (chapter) => chapter["chapter-score"] || 0,
       );
 
       const TempSubChapterScoreValue =
         scoreObject.data.assessment[1]?.["sub-chapters"]?.map(
-          (subChapter) => subChapter["sub-chapter-score"] || 0
+          (subChapter) => subChapter["sub-chapter-score"] || 0,
         ) || [];
 
       setSliderValue({
@@ -275,7 +275,7 @@ export function Menu({
     value: string,
     chapterIndex: number,
     type: string,
-    subChapterIndex?: number
+    subChapterIndex?: number,
   ) => {
     switch (type) {
       case "chapters":
@@ -303,8 +303,8 @@ export function Menu({
             updatedAssessment[chapterIndex]["chapter-score"] = Math.round(
               updatedAssessment[chapterIndex]["sub-chapters"].reduce(
                 (sum, sub) => sum + (sub["sub-chapter-score"] || 0),
-                0
-              ) / updatedAssessment[chapterIndex]["sub-chapters"].length
+                0,
+              ) / updatedAssessment[chapterIndex]["sub-chapters"].length,
             );
           }
 
@@ -321,7 +321,7 @@ export function Menu({
     scoreObject: ScoreType,
     chapterIdx: number,
     setScoreObject: (update: (prev: ScoreType) => ScoreType) => void,
-    active: boolean
+    active: boolean,
   ) {
     const choiceSelection = active === false ? -1 : undefined;
     setScoreObject((prev) => {
@@ -340,7 +340,7 @@ export function Menu({
             };
           }
           return chapter;
-        }
+        },
       );
 
       isMounted.current = true;
@@ -358,7 +358,7 @@ export function Menu({
     <div
       className={clsx(
         styles["menu"],
-        type === "self-assessment" && styles["self-assessment"]
+        type === "self-assessment" && styles["self-assessment"],
       )}
     >
       {type !== "self-assessment" ? (
@@ -396,9 +396,9 @@ export function Menu({
                   isChapterCompleted(
                     completedChapters[chapterIndex]?.totalChapters ?? 0,
                     completedChapters[chapterIndex]?.completedChapters ?? 0,
-                    completedChapters[chapterIndex]?.skippedChapters ?? 0
+                    completedChapters[chapterIndex]?.skippedChapters ?? 0,
                   ) || ""
-                ]
+                ],
             )}
             key={chapterIndex}
           >
@@ -409,7 +409,7 @@ export function Menu({
                 onClick={() => {
                   setTimeout(() => {
                     router.push(
-                      `/tool/${project_id}/${alternative_id}/${chapter["chapter-slug"]}/1/1`
+                      `/tool/${project_id}/${alternative_id}/${chapter["chapter-slug"]}/1/1`,
                     );
                   }, 500);
                 }}
@@ -426,7 +426,7 @@ export function Menu({
                     setSliderValue((prev) => {
                       const updatedChapter = prev.chapter.slice();
                       updatedChapter[chapterIndex] = Number(
-                        (e.target as HTMLInputElement).value
+                        (e.target as HTMLInputElement).value,
                       );
                       return {
                         ...prev,
@@ -438,7 +438,7 @@ export function Menu({
                     handleRangeChange(
                       (e.target as HTMLInputElement).value,
                       chapterIndex,
-                      "chapters"
+                      "chapters",
                     )
                   }
                 />
@@ -454,24 +454,24 @@ export function Menu({
                           completedChapters[chapterIndex]?.totalChapters ?? 0,
                           completedChapters[chapterIndex]?.completedChapters ??
                             0,
-                          completedChapters[chapterIndex]?.skippedChapters ?? 0
+                          completedChapters[chapterIndex]?.skippedChapters ?? 0,
                         ) === "skipped" || toggleList[chapterIndex]?.state
                           ? "active"
-                          : ""
+                          : "",
                       )}
                       onClick={() => {
                         skipAllChapter(
                           scoreObject,
                           chapterIndex,
                           setScoreObject,
-                          toggleList[chapterIndex]?.state
+                          toggleList[chapterIndex]?.state,
                         );
                         setToggleSetToggleList((prev) =>
                           prev.map((item) =>
                             item.chapterIdx === chapterIndex
                               ? { ...item, state: !item.state }
-                              : item
-                          )
+                              : item,
+                          ),
                         );
                       }}
                     ></button>
@@ -502,7 +502,7 @@ export function Menu({
                     scoreObject,
                     chapterIndex,
                     subIndex,
-                    subChapter["principles"].length
+                    subChapter["principles"].length,
                   );
                   return (
                     <li
@@ -514,7 +514,7 @@ export function Menu({
                         isPersistentlyActiveSubChapter && styles["opened"],
                         isActiveSubChapter && styles["active"],
                         type !== "self-assessment" &&
-                          styles[subChapterCompleted || ""]
+                          styles[subChapterCompleted || ""],
                       )}
                     >
                       <button
@@ -524,7 +524,7 @@ export function Menu({
                             router.push(
                               `/tool/${project_id}/${alternative_id}/${
                                 chapter["chapter-slug"]
-                              }/${subIndex + 1}/1`
+                              }/${subIndex + 1}/1`,
                             );
                           }, 500);
                         }}
@@ -553,7 +553,7 @@ export function Menu({
                             setSliderValue((prev) => {
                               const updatedSubChapter = prev.subChapter.slice();
                               updatedSubChapter[subIndex] = Number(
-                                (e.target as HTMLInputElement).value
+                                (e.target as HTMLInputElement).value,
                               );
                               return {
                                 ...prev,
@@ -566,7 +566,7 @@ export function Menu({
                               (e.target as HTMLInputElement).value,
                               chapterIndex,
                               "subchapters",
-                              subIndex
+                              subIndex,
                             );
                           }}
                         />
@@ -589,7 +589,7 @@ export function Menu({
                                 scoreObject,
                                 chapterIndex,
                                 subIndex,
-                                subChoicesIndex
+                                subChoicesIndex,
                               );
                               return (
                                 <li
@@ -598,7 +598,7 @@ export function Menu({
                                     isPersistentlyActiveChoice &&
                                       styles["opened"],
                                     isActiveChoice && styles["active"],
-                                    styles[choiceCompleted || ""]
+                                    styles[choiceCompleted || ""],
                                   )}
                                 >
                                   <button
@@ -610,7 +610,7 @@ export function Menu({
                                             chapter["chapter-slug"]
                                           }/${subIndex + 1}/${
                                             subChoicesIndex + 1
-                                          }`
+                                          }`,
                                         );
                                       }, 500);
                                     }}
@@ -621,7 +621,7 @@ export function Menu({
                                   </button>
                                 </li>
                               );
-                            }
+                            },
                           )}
                         </ul>
                       )}
@@ -633,7 +633,6 @@ export function Menu({
           </li>
         ))}
       </ul>
-
       {type !== "self-assessment" && loggedInChecked && (
         <ul className={styles["bottom-links"]}>
           {structure?.sidebar["bottom-options"].map((option, index) => {
@@ -653,11 +652,11 @@ export function Menu({
                           ? styles["active"]
                           : ""
                         : index === 0
-                        ? pathname.includes("summary") &&
-                          !pathname.includes("summary-report")
-                          ? styles["active"]
-                          : ""
-                        : ""
+                          ? pathname.includes("summary") &&
+                            !pathname.includes("summary-report")
+                            ? styles["active"]
+                            : ""
+                          : "",
                     )}
                     onClick={() => {
                       setTimeout(() => {
@@ -665,7 +664,7 @@ export function Menu({
                       }, 100);
                       setTimeout(() => {
                         router.push(
-                          `/tool/${project_id}/${alternative_id}/${links[index]}`
+                          `/tool/${project_id}/${alternative_id}/${links[index]}`,
                         );
                       }, 400);
                     }}
@@ -678,6 +677,16 @@ export function Menu({
           })}
         </ul>
       )}
+      <div className={clsx(styles["credits"], "paragraph_14")}>
+        עיצוב:{" "}
+        <a href="https://h-mstudio.com/" target="_blank">
+          סטודיו הראל ומעין
+        </a>
+        , פיתוח:{" "}
+        <a href="https://www.thew4.co/" target="_blank">
+          TheW4
+        </a>
+      </div>
     </div>
   );
 }

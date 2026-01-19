@@ -18,7 +18,9 @@
     background-color: white;
     height: fit-content;
     grid-column: 3 / 8;
-    transition: transform 0.5s, opacity 0.5s;
+    transition:
+      transform 0.5s,
+      opacity 0.5s;
     will-change: transform, opacity;
     opacity: 1;
     transform: translateX(0);
@@ -38,31 +40,37 @@
         opacity: 1;
       }
 
-      15% {
+      // 15% {
+      //   opacity: 0;
+      //   transform: translateX(50vw);
+      // }
+      50% {
         opacity: 0;
-        transform: translateX(50vw);
+        transform: translateX(10rem);
       }
-      30% {
-        transform: translateX(100vw);
-      }
-      31% {
-        transform: translateX(-100vw);
+      51% {
+        transform: translateX(-10rem);
       }
 
-      45% {
-        transform: translateX(50);
-        opacity: 1;
-      }
-      70% {
-        transform: translateX(0);
-      }
       100% {
+        transform: translateX(0);
         opacity: 1;
       }
+
+      // 45% {
+      //   transform: translateX(50);
+      //   opacity: 1;
+      // }
+      // 70% {
+      //   transform: translateX(0);
+      // }
+      // 100% {
+      //   opacity: 1;
+      // }
     }
 
     &--right {
-      animation: chapter-box-slide 1.5s forwards;
+      animation: chapter-box-slide 0.5s forwards;
     }
 
     &--left {
