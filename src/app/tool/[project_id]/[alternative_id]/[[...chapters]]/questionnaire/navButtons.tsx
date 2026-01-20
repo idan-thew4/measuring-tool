@@ -1,5 +1,6 @@
 import styles from "./nav-buttons.module.scss";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { useStore } from "@/contexts/Store";
 import { useEffect, useState } from "react";
@@ -13,7 +14,12 @@ export function NavButtons({
   project_id: number;
   alternative_id: number;
 }) {
-  const { structure, getCurrentChapter } = useStore();
+  const {
+    structure,
+    getCurrentChapter,
+    sliderIsAnimating,
+    setSliderIsAnimating,
+  } = useStore();
   const [navButton, setNavButton] = useState<{
     previous: string;
     next: string;
@@ -21,6 +27,7 @@ export function NavButtons({
     previous: "",
     next: "",
   });
+  const router = useRouter();
 
   useEffect(() => {
     if (!structure) return;
@@ -86,31 +93,48 @@ export function NavButtons({
 
   if (!navButton) return null;
 
+  // Slide-out, then navigate, then slide-in (handled on new page)
+  const handleClick = (direction: string) => {
+    setSliderIsAnimating(direction); // triggers slide-out animation
+    setTimeout(() => {
+      // After animation, navigate to the next/previous page
+      if (direction === "previous") {
+        router.push(navButton.previous);
+      } else if (direction === "next") {
+        router.push(navButton.next);
+      }
+    }, 1000); // Match this to your slide-out animation duration (ms)
+  };
+
   return (
     <div className={styles["nav-buttons"]}>
       {navButton.previous && (
-        <Link
-          href={navButton.previous}
+        <button
+          type="button"
+          onClick={() => handleClick("previous")}
           className={clsx(
             styles["nav-button"],
             styles["previous"],
             "basic-button outline with-icon",
+            sliderIsAnimating && styles["animating"],
           )}
         >
           {structure?.questionnaire.buttons?.[1]}
-        </Link>
+        </button>
       )}
       {navButton.next ? (
-        <Link
-          href={navButton.next}
+        <button
+          type="button"
+          onClick={() => handleClick("next")}
           className={clsx(
             styles["nav-button"],
             styles["next"],
             "basic-button outline with-icon",
+            sliderIsAnimating && styles["animating"],
           )}
         >
           {structure?.questionnaire.buttons?.[2]}
-        </Link>
+        </button>
       ) : (
         <Link
           href={`/tool/${project_id}/${alternative_id}/summary`}

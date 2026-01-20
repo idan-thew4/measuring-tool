@@ -529,6 +529,8 @@ type ApiContextType = {
   ) => Promise<void>;
   dashBoardVisible: boolean;
   setDashBoardVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  sliderIsAnimating: string | null;
+  setSliderIsAnimating: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 export type ScoreData = {
@@ -661,6 +663,7 @@ function Store({ children }: PropsWithChildren<{}>) {
     login: string | null;
   }>({ keyValue: null, login: null });
   const [dashBoardVisible, setDashBoardVisible] = useState(true);
+  const [sliderIsAnimating, setSliderIsAnimating] = useState<string | null>();
 
   async function getContent() {
     try {
@@ -1326,6 +1329,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         getAlternativeSpreadsheet,
         dashBoardVisible,
         setDashBoardVisible,
+        sliderIsAnimating,
+        setSliderIsAnimating,
       }}
     >
       {children}

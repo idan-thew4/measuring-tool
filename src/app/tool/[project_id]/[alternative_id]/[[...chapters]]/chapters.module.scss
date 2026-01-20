@@ -14,60 +14,99 @@
     transition-delay: 0.1s;
   }
 
+  @keyframes slide-in-animation {
+    0% {
+      opacity: 0;
+      transform: translateX(-10rem);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(-0);
+    }
+    // 100% {
+    //   transform: translateX(-10rem);
+    // }
+  }
+
   .chapter-box {
     background-color: white;
     height: fit-content;
     grid-column: 3 / 8;
-    transition: transform 0.5s, opacity 0.5s;
-    will-change: transform, opacity;
-    opacity: 1;
-    transform: translateX(0);
+    animation-delay: 0.5s;
+    // opacity: 1;
+    // transform: translateX(0);
     padding: 3rem 3.2rem 1rem 3.2rem;
     border-radius: 4rem;
-    opacity: 1;
+    // opacity: 1;
     transition: 0.3s all;
+    // transform: translateX(0);
+    // transition:
+    //   transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    //   opacity 0.6s;
+    // will-change: transform, opacity;
 
     &--hidden {
       opacity: 0 !important;
     }
+
+    &--previous {
+      transform: translateX(-10rem);
+      opacity: 0;
+    }
+
+    &--next {
+      opacity: 0;
+      transform: translateX(10rem);
+    }
+
+    &--next-enter {
+      opacity: 0;
+      transform: translateX(-10rem);
+      animation: slide-in-animation 0.5s forwards;
+      animation-delay: 1s;
+    }
+
+    &-next-enter {
+      opacity: 0;
+      transform: translateX(-10rem);
+    }
+
+    // &--in {
+    //   transform: translateX(0);
+    //   opacity: 1;
+    // }
     // transform: translateX(0);
 
-    @keyframes chapter-box-slide {
-      0% {
-        transform: translateX(0);
-        opacity: 1;
-      }
+    // @keyframes chapter-box-slide-right {
+    //   0% {
+    //     transform: translateX(0);
+    //     opacity: 1;
+    //   }
+    //   30% {
+    //     opacity: 0;
+    //     transform: translateX(10rem);
+    //   }
+    // }
 
-      15% {
-        opacity: 0;
-        transform: translateX(50vw);
-      }
-      30% {
-        transform: translateX(100vw);
-      }
-      31% {
-        transform: translateX(-100vw);
-      }
-
-      45% {
-        transform: translateX(50);
-        opacity: 1;
-      }
-      70% {
-        transform: translateX(0);
-      }
-      100% {
-        opacity: 1;
-      }
-    }
+    // @keyframes chapter-box-slide-right-next {
+    //   0% {
+    //     transform: translateX(-10);
+    //     opacity: 0;
+    //   }
+    //   100% {
+    //     opacity: 1;
+    //     transform: translateX(0);
+    //   }
+    // }
 
     &--right {
-      animation: chapter-box-slide 1.5s forwards;
+      animation: chapter-box-slide-right 0.5s forwards;
+      opacity: 0;
     }
 
-    &--left {
-      animation: chapter-box-slide 1s reverse forwards;
-    }
+    // &--left {
+    //   animation: chapter-box-slide 0.3s reverse forwards;
+    // }
 
     .chapter-headline-container {
       color: $darker-blue;

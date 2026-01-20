@@ -12,6 +12,8 @@ import styles from "./chapters.module.scss";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { set } from "react-hook-form";
+import { time } from "console";
 
 type currentChapterType = {
   score: number;
@@ -48,7 +50,8 @@ export default function ChapterPage() {
     setLoader,
     activeSideMenu,
     prevPrinciple,
-    hideSlideshow,
+    sliderIsAnimating,
+    setSliderIsAnimating,
   } = useStore();
   const [currentChapter, setCurrentChapter] =
     useState<currentChapterType | null>(null);
@@ -87,7 +90,7 @@ export default function ChapterPage() {
     sub: number;
     principle: number;
   } | null>(null);
-  const hasMounted = useRef(false);
+  const [enterAnimation, setEnterAnimation] = useState("");
 
   useEffect(() => {
     const pageChanged = Boolean(isPageChanged("questionnaire"));
@@ -105,7 +108,7 @@ export default function ChapterPage() {
       ) {
         getAlternativeQuestionnaireData(
           params.project_id as string,
-          params.alternative_id as string
+          params.alternative_id as string,
         );
       }
     }
@@ -152,7 +155,7 @@ export default function ChapterPage() {
       setCurrentChapter({
         score:
           scoreObject.data?.questionnaire?.[
-            getCurrentChapter(chapter)?.["chapter-number"] ?? 1
+            (getCurrentChapter(chapter)?.["chapter-number"] ?? 1)
               ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1) - 1
               : 0
           ]?.["chapter-data"]?.[Number(subChapter) - 1]?.["principles"]?.[
@@ -175,12 +178,12 @@ export default function ChapterPage() {
 
     setComment(
       scoreObject.data?.questionnaire?.[
-        getCurrentChapter(chapter)?.["chapter-number"] ?? 1
+        (getCurrentChapter(chapter)?.["chapter-number"] ?? 1)
           ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1) - 1
           : 0
       ]?.["chapter-data"]?.[Number(subChapter) - 1]?.["principles"]?.[
         Number(principle) - 1
-      ]?.comment ?? ""
+      ]?.comment ?? "",
     );
   }, [subChapter, principle, scoreObject]);
 
@@ -191,7 +194,7 @@ export default function ChapterPage() {
         String(Date.now()),
         params.project_id as string,
         params.alternative_id as string,
-        scoreObject.data.questionnaire
+        scoreObject.data.questionnaire,
       );
 
       isMounted.current = false;
@@ -205,10 +208,10 @@ export default function ChapterPage() {
     principle: string,
     getCurrentChapter: (chapter: string) => Chapter | undefined,
     newScore?: number | null,
-    comment?: string
+    comment?: string,
   ) {
     const chapterIdx =
-      getCurrentChapter(chapter)?.["chapter-number"] ?? 1
+      (getCurrentChapter(chapter)?.["chapter-number"] ?? 1)
         ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1) - 1
         : 0;
     const subChapterIdx = Number(subChapter) - 1;
@@ -236,13 +239,13 @@ export default function ChapterPage() {
                                   ...choiceObj,
                                   comment: comment,
                                 }
-                            : choiceObj
+                            : choiceObj,
                       ),
                     }
-                  : subChapterData
+                  : subChapterData,
             ),
           }
-        : chapterData
+        : chapterData,
     );
 
     isMounted.current = true;
@@ -260,7 +263,7 @@ export default function ChapterPage() {
     timestamp: string,
     project_id: string,
     alternative_id: string,
-    questionnaire_data: ChapterPoints[]
+    questionnaire_data: ChapterPoints[],
   ): Promise<storeAlternativeQuestionnaireDataResponse | void> {
     try {
       const response = await fetch(
@@ -277,7 +280,7 @@ export default function ChapterPage() {
             alternative_id,
             questionnaire_data,
           }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -286,32 +289,52 @@ export default function ChapterPage() {
     }
   }
 
+  useEffect(() => {
+    if (sliderIsAnimating === "previous") {
+      setSliderIsAnimating(null);
+      setEnterAnimation("previous");
+
+      setTimeout(() => {}, 1000);
+    }
+
+    if (sliderIsAnimating === "next") {
+      setSliderIsAnimating(null);
+      setEnterAnimation("next");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (sliderIsAnimating === "next") {
+      setTimeout(() => {
+        setEnterAnimation("");
+      }, 1000);
+    }
+  }, [enterAnimation]);
+
   return (
     <div
       className={clsx(
         styles["chapters-slider-container"],
-        activeSideMenu ? styles["chapters-slider-container--active"] : ""
+        activeSideMenu ? styles["chapters-slider-container--active"] : "",
       )}
     >
       <div
         className={clsx(
           styles["chapter-box"],
           currentChapter?.score === -1 && styles["skip"],
-          hideSlideshow && styles["chapter-box--hidden"],
-          (prevPrinciple.previous ?? 0) < (prevPrinciple.current ?? 0)
-            ? styles["chapter-box--right"]
-            : "",
-          (prevPrinciple.previous ?? 0) > (prevPrinciple.current ?? 0)
-            ? styles["chapter-box--left"]
-            : ""
+          sliderIsAnimating === "previous" && styles["chapter-box--previous"],
+          sliderIsAnimating === "next" && styles["chapter-box--next"],
+          enterAnimation === "previous" &&
+            styles["chapter-box--previous-enter"],
+          enterAnimation === "next" && styles["chapter-box--next-enter"],
         )}
       >
         <div className={styles["chapter-headline-container"]}>
           <div className={styles["headline"]}>
             <h2 className={clsx("headline_medium bold", styles["title"])}>
               {`${
-                getCurrentChapter(chapter)?.["chapter-number"] ?? 1
-                  ? getCurrentChapter(chapter)?.["chapter-number"] ?? 1
+                (getCurrentChapter(chapter)?.["chapter-number"] ?? 1)
+                  ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1)
                   : 0
               }.${subChapter}.${principle}. `}
               {currentChapter?.title}
@@ -323,7 +346,7 @@ export default function ChapterPage() {
               <button
                 className={clsx(
                   "toggle",
-                  currentChapter?.score === -1 || toggle ? "active" : ""
+                  currentChapter?.score === -1 || toggle ? "active" : "",
                 )}
                 onClick={() => {
                   setToggle(!toggle);
@@ -334,8 +357,8 @@ export default function ChapterPage() {
                       subChapter,
                       principle,
                       getCurrentChapter,
-                      toggle ? undefined : -1
-                    )
+                      toggle ? undefined : -1,
+                    ),
                   );
                 }}
               ></button>
@@ -348,7 +371,7 @@ export default function ChapterPage() {
         <ul className={styles["chapter-options"]}>
           {structure?.questionnaire.options.map((option, index) => {
             const chapterIdx =
-              getCurrentChapter(chapter)?.["chapter-number"] ?? 1
+              (getCurrentChapter(chapter)?.["chapter-number"] ?? 1)
                 ? (getCurrentChapter(chapter)?.["chapter-number"] ?? 1) - 1
                 : 0;
             const subChapterIdx = Number(subChapter) - 1;
@@ -365,7 +388,7 @@ export default function ChapterPage() {
                 key={option}
                 className={clsx(
                   styles["option"],
-                  currentChapter?.score === index + 1 ? styles["selected"] : ""
+                  currentChapter?.score === index + 1 ? styles["selected"] : "",
                 )}
               >
                 <div
@@ -385,8 +408,8 @@ export default function ChapterPage() {
                             subChapter,
                             principle,
                             getCurrentChapter,
-                            index + 1
-                          )
+                            index + 1,
+                          ),
                         );
                       } else {
                         setLoginPopup(true);
@@ -404,19 +427,19 @@ export default function ChapterPage() {
                     <button
                       className={clsx(
                         dropdownState.find(
-                          (item) => item.dropdown === index + 1
+                          (item) => item.dropdown === index + 1,
                         )?.state
                           ? styles["open"]
                           : "",
-                        "paragraph_19"
+                        "paragraph_19",
                       )}
                       onClick={() =>
                         setDropdownState((prev) =>
                           prev.map((item) =>
                             item.dropdown === index + 1
                               ? { ...item, state: !item.state }
-                              : item
-                          )
+                              : item,
+                          ),
                         )
                       }
                     >
@@ -430,12 +453,12 @@ export default function ChapterPage() {
                     className={clsx("paragraph_19", styles["choice-text"])}
                     style={{
                       height: dropdownState.find(
-                        (item) => item.dropdown === index + 1
+                        (item) => item.dropdown === index + 1,
                       )?.state
                         ? "auto"
                         : "0",
                       paddingTop: dropdownState.find(
-                        (item) => item.dropdown === index + 1
+                        (item) => item.dropdown === index + 1,
                       )?.state
                         ? "1.5rem"
                         : "0",
@@ -466,8 +489,8 @@ export default function ChapterPage() {
                 principle,
                 getCurrentChapter,
                 null,
-                e.target.value
-              )
+                e.target.value,
+              ),
             );
           }}
         />
