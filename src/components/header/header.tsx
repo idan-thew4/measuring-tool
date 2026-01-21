@@ -53,6 +53,7 @@ export function Header() {
     initialScoreObject,
     setScoreObject,
     setSideMenu,
+    loader,
   } = useStore();
   const router = useRouter();
   const params = useParams();
@@ -71,10 +72,10 @@ export function Header() {
     if (projects) {
       if (params.project_id) {
         const project = projects.find(
-          (p) => p.project_id === Number(params.project_id)
+          (p) => p.project_id === Number(params.project_id),
         );
         const alternative = project?.alternatives.find(
-          (a) => a.alternative_id === Number(params.alternative_id)
+          (a) => a.alternative_id === Number(params.alternative_id),
         );
 
         if (project && alternative) {
@@ -101,7 +102,7 @@ export function Header() {
     questionnaireParams = calculateScores(
       scoreObject.data.questionnaire ?? [],
       "chapters",
-      "questionnaire"
+      "questionnaire",
     );
 
     let chapterScoreTemp: ChapterScoreType[] = [];
@@ -111,7 +112,7 @@ export function Header() {
         questionnaireParams,
         structure,
         false,
-        scoreObject
+        scoreObject,
       );
 
       setChapterScores(chapterScoreTemp);
@@ -119,7 +120,7 @@ export function Header() {
   }, [scoreObject, structure]);
 
   async function logOut(
-    structure: structureProps
+    structure: structureProps,
   ): Promise<logOutResponse | void> {
     setLoader(true);
     try {
@@ -138,7 +139,7 @@ export function Header() {
         setLoggedInChecked(false);
         setScoreObject(initialScoreObject);
         router.push(
-          `/tool/0/0/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`
+          `/tool/0/0/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`,
         );
       }
     } catch (error) {
@@ -167,7 +168,8 @@ export function Header() {
                 onClick={(e) => {
                   // e.preventDefault();
                   setSideMenu("");
-                }}>
+                }}
+              >
                 {structure?.header.user[1]}
               </Link>
               <button onClick={() => structure && logOut(structure)}>
@@ -190,13 +192,15 @@ export function Header() {
               <div
                 className={clsx(
                   styles["flex-h-align"],
-                  styles["project-options"]
-                )}>
+                  styles["project-options"],
+                )}
+              >
                 <div
                   className={clsx(
                     styles["flex-h-align"],
-                    styles["project-select"]
-                  )}>
+                    styles["project-select"],
+                  )}
+                >
                   <p className="bold">{current?.project.project_name}, </p>
                   <Select
                     className="dropdown paragraph_18"
@@ -204,7 +208,7 @@ export function Header() {
                     // isClearable={true}
                     isSearchable={true}
                     value={alternatives?.find(
-                      (a) => a.value === Number(params.alternative_id)
+                      (a) => a.value === Number(params.alternative_id),
                     )}
                     isDisabled={alternatives.length <= 1}
                     // menuIsOpen={true}
@@ -213,7 +217,7 @@ export function Header() {
                       if (structure) {
                         getAlternativeQuestionnaireData(
                           String(current?.project.project_id),
-                          String(option?.value)
+                          String(option?.value),
                         );
                         router.push(
                           `/tool/${current?.project.project_id}/${
@@ -222,7 +226,7 @@ export function Header() {
                             pages.currentPage === "questionnaire"
                               ? `${chapter}/${subChapter}/${principle}`
                               : pages.currentPage
-                          }`
+                          }`,
                         );
                       }
                     }}
@@ -235,14 +239,16 @@ export function Header() {
                       project_id: current?.project.project_id,
                       alternative_id: current?.alternative.alternative_id,
                     });
-                  }}>
+                  }}
+                >
                   {structure?.header.options[1]}
                 </button>
               </div>
             )}
             <button
               onClick={() => setGraphIsOpen(!graphIsOpen)}
-              className={clsx(styles["flex-h-align"], styles["summary"])}>
+              className={clsx(styles["flex-h-align"], styles["summary"])}
+            >
               <p>{structure?.header.options[2]}</p>
               {structure && (
                 <RadarGraph
@@ -259,8 +265,11 @@ export function Header() {
             <div
               className={clsx(
                 styles["dropdown"],
-                graphIsOpen ? styles["dropdown-enter"] : styles["dropdown-exit"]
-              )}>
+                graphIsOpen
+                  ? styles["dropdown-enter"]
+                  : styles["dropdown-exit"],
+              )}
+            >
               {structure && (
                 <RadarGraph
                   headline={structure["summary-report"]["graphs"][1].title}
@@ -279,7 +288,8 @@ export function Header() {
         <button
           onClick={() => {
             setLoginPopup(true);
-          }}>
+          }}
+        >
           התחברות
         </button>
       )}

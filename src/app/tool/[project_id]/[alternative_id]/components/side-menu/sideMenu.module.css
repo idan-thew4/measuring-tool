@@ -271,4 +271,12 @@
 }
 .side-menu .more li:last-child:after {
   content: "";
+}
+.side-menu .credits {
+  text-align: center;
+  color: #979797;
+  padding: 2rem 0;
+}
+.side-menu .credits a {
+  color: #979797;
 }/*# sourceMappingURL=sideMenu.module.css.map */

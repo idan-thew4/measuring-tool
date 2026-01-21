@@ -60,7 +60,7 @@ export function AddRenamePopup() {
     project_id?: number,
     project_name?: string,
     alternative_id?: number,
-    alternative_name?: string
+    alternative_name?: string,
   ): Promise<renameAddPopupResponse | void> {
     setLoading(true);
     try {
@@ -90,11 +90,11 @@ export function AddRenamePopup() {
 
           if (params.chapters) {
             window.open(
-              `/tool/${data.data.project_id}/${data.data.alternative_id}/${chapter}/${subChapter}/${principle}`
+              `/tool/${data.data.project_id}/${data.data.alternative_id}/${chapter}/${subChapter}/${principle}`,
             );
           } else {
             router.push(
-              `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`
+              `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`,
             );
           }
         } else {
@@ -121,7 +121,7 @@ export function AddRenamePopup() {
         addRenamePopup.alternative_id
           ? addRenamePopup.alternative_id
           : undefined,
-        alternativeName ? alternativeName : undefined
+        alternativeName ? alternativeName : undefined,
       );
     }
   };
@@ -149,7 +149,7 @@ export function AddRenamePopup() {
                   formStyles["field"],
                   formStyles["row"],
                   formStyles[`row-${field.row}`],
-                  formStyles["input"]
+                  formStyles["input"],
                 )}
                 key={index}
               >
@@ -190,7 +190,7 @@ export function AddRenamePopup() {
                       popUpContainerStyles["submit-button"],
                       "solid",
                       "basic-button",
-                      loading && "loading"
+                      loading && "loading",
                     )}
                     type="submit"
                     disabled={Object.keys(errors).length > 0}
@@ -220,7 +220,7 @@ export function AddRenamePopup() {
         <div
           className={clsx(
             formStyles["error-message"],
-            formStyles["general-error"]
+            formStyles["general-error"],
           )}
         >
           {generalError}
