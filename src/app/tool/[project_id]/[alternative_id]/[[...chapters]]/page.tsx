@@ -305,7 +305,7 @@ export default function ChapterPage() {
     if (sliderIsAnimating === "next" || sliderIsAnimating === "previous") {
       setTimeout(() => {
         setEnterAnimation("");
-      }, 1000);
+      }, 500);
     }
   }, [enterAnimation]);
 

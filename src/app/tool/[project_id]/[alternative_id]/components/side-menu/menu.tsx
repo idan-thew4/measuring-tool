@@ -666,7 +666,7 @@ export function Menu({
                         router.push(
                           `/tool/${project_id}/${alternative_id}/${links[index]}`,
                         );
-                      }, 400);
+                      }, 100);
                     }}
                   >
                     {option}

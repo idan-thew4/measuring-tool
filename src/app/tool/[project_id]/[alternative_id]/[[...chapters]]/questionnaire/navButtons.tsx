@@ -96,14 +96,14 @@ export function NavButtons({
   // Slide-out, then navigate, then slide-in (handled on new page)
   const handleClick = (direction: string) => {
     setSliderIsAnimating(direction); // triggers slide-out animation
-    setTimeout(() => {
-      // After animation, navigate to the next/previous page
-      if (direction === "previous") {
-        router.push(navButton.previous);
-      } else if (direction === "next") {
-        router.push(navButton.next);
-      }
-    }, 500); // Match this to your slide-out animation duration (ms)
+    // setTimeout(() => {
+    // After animation, navigate to the next/previous page
+    if (direction === "previous") {
+      router.push(navButton.previous);
+    } else if (direction === "next") {
+      router.push(navButton.next);
+    }
+    // }, 100); // Match this to your slide-out animation duration (ms)
   };
 
   return (
