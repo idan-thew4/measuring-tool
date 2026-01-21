@@ -663,7 +663,9 @@ function Store({ children }: PropsWithChildren<{}>) {
     login: string | null;
   }>({ keyValue: null, login: null });
   const [dashBoardVisible, setDashBoardVisible] = useState(true);
-  const [sliderIsAnimating, setSliderIsAnimating] = useState<string | null>();
+  const [sliderIsAnimating, setSliderIsAnimating] = useState<string | null>(
+    null,
+  );
 
   async function getContent() {
     try {

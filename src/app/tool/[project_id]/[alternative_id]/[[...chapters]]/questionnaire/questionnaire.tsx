@@ -29,7 +29,8 @@ export function Questionnaire({
   project_id: number;
   alternative_id: number;
 }) {
-  const { scoreObject, getCurrentChapter, activeSideMenu } = useStore();
+  const { scoreObject, getCurrentChapter, activeSideMenu, sliderIsAnimating } =
+    useStore();
   const [chapterProgress, setChapterProgress] = useState<totalCompleted>();
   const [dropdownState, setDropdownState] = useState<
     {
@@ -52,7 +53,7 @@ export function Questionnaire({
   function getChoicesProgress(
     scoreObject: ScoreType,
     currentChapter: Chapter,
-    currentSelection: string[]
+    currentSelection: string[],
   ) {
     let chapterProgressTemp: totalCompleted = [];
 
@@ -103,35 +104,35 @@ export function Questionnaire({
       <div
         className={clsx(
           styles["questionnaire-header"],
-          activeSideMenu ? styles["questionnaire-header--active"] : ""
+          activeSideMenu ? styles["questionnaire-header--active"] : "",
         )}
       >
         <div
           className={clsx(
             styles["chapter-title-container"],
             dropdownState.find(
-              (item) => item.dropdown === "description-chapter-title"
+              (item) => item.dropdown === "description-chapter-title",
             )?.state
               ? styles["open"]
-              : ""
+              : "",
           )}
         >
           <button
             className={clsx(
               styles["chapter-title"],
               dropdownState.find(
-                (item) => item.dropdown === "description-chapter-title"
+                (item) => item.dropdown === "description-chapter-title",
               )?.state
                 ? styles["open"]
-                : ""
+                : "",
             )}
             onClick={() =>
               setDropdownState((prev) =>
                 prev.map((item) =>
                   item.dropdown === "description-chapter-title"
                     ? { ...item, state: !item.state }
-                    : item
-                )
+                    : item,
+                ),
               )
             }
           >
@@ -145,10 +146,10 @@ export function Questionnaire({
           className={clsx(
             styles["description-chapter-subtitle-container"],
             dropdownState.find(
-              (item) => item.dropdown === "description-chapter-subtitle"
+              (item) => item.dropdown === "description-chapter-subtitle",
             )?.state
               ? styles["open"]
-              : ""
+              : "",
           )}
         >
           <button
@@ -158,8 +159,8 @@ export function Questionnaire({
                 prev.map((item) =>
                   item.dropdown === "description-chapter-subtitle"
                     ? { ...item, state: !item.state }
-                    : item
-                )
+                    : item,
+                ),
               )
             }
           >

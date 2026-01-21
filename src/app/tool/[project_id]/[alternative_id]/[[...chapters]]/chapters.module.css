@@ -70,7 +70,6 @@
   opacity: 0;
   transform: translateX(10rem);
   animation: slide-out-animation 0.5s forwards;
-  animation-delay: 1s;
 }
 .chapters-slider-container .chapter-box--next {
   opacity: 0;
@@ -80,7 +79,6 @@
   opacity: 0;
   transform: translateX(-10rem);
   animation: slide-in-animation 0.5s forwards;
-  animation-delay: 1s;
 }
 .chapters-slider-container .chapter-box .chapter-headline-container {
   color: #0e0d23;

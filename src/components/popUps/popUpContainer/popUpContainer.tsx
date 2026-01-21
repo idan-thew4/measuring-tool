@@ -7,12 +7,14 @@ export function PopUpContainer({
   closeButton,
   children,
   headline,
+  description,
   navArrows,
   goToPrevSlide,
 }: {
   closeButton: () => void;
   children: React.ReactNode;
   headline: string;
+  description?: string;
   navArrows?: number;
   goToPrevSlide?: () => void;
 }) {
@@ -21,7 +23,7 @@ export function PopUpContainer({
     <div
       className={clsx(
         styles["pop-up-container"],
-        exitAnimation && styles["exit-animation"]
+        exitAnimation && styles["exit-animation"],
       )}
       onClick={() => {
         setExitAnimation(true);

@@ -34,14 +34,10 @@ export function LoginPopup() {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
 
-  useEffect(() => {
-    console.log("reCAPTCHA value changed:", recaptchaValue);
-  }, [recaptchaValue]);
-
   async function login(
     username: string,
     password: string,
-    recaptchaToken: string
+    recaptchaToken: string,
   ) {
     // setLoading(true);
     try {
@@ -127,7 +123,7 @@ export function LoginPopup() {
                 formStyles[`row-${field.row}`],
                 field.type !== "checkbox"
                   ? formStyles["input"]
-                  : formStyles["checkbox"]
+                  : formStyles["checkbox"],
               )}
               key={index}
             >
@@ -145,12 +141,12 @@ export function LoginPopup() {
                           message: field["format-error"],
                         }
                       : field.type === "password"
-                      ? {
-                          value:
-                            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
-                          message: field["format-error"],
-                        }
-                      : undefined,
+                        ? {
+                            value:
+                              /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
+                            message: field["format-error"],
+                          }
+                        : undefined,
                 })}
                 onFocus={(e) => {
                   setGeneralError("");
@@ -187,7 +183,7 @@ export function LoginPopup() {
             className={clsx(
               formStyles["submit-button"],
               "basic-button solid",
-              loading && "loading"
+              loading && "loading",
             )}
             type="submit"
             disabled={Object.keys(errors).length > 0}
@@ -198,7 +194,7 @@ export function LoginPopup() {
             <div
               className={clsx(
                 formStyles["error-message"],
-                formStyles["general-error"]
+                formStyles["general-error"],
               )}
             >
               {generalError}

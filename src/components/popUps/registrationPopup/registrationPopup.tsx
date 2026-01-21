@@ -396,7 +396,6 @@ export function RegistrationPopup() {
       index !== 2 &&
       registrationPopup === "register"
     ) {
-      console.log("Handling registration steps");
       if (index === 1 && registrationPopup === "register") {
         const userCreated = await createNewUser(
           stepData["fullName"] as string,

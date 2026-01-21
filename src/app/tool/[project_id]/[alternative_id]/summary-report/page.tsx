@@ -324,7 +324,7 @@ export default function SummaryReport() {
       {structure && (
         <>
           <SummaryHeader
-            title={structure?.summary.header.title}
+            title={structure?.["summary-report"].header.title}
             structure={structure}
             scoreObject={scoreObject}
           >
@@ -335,7 +335,7 @@ export default function SummaryReport() {
               }}
               className="basic-button print with-icon outline"
             >
-              {structure?.summary.header["buttons-copy"][0]}
+              {structure?.["summary-report"].header["buttons-copy"][0]}
             </button>
           </SummaryHeader>
 

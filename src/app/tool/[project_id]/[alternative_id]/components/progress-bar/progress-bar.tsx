@@ -16,16 +16,13 @@ export function ProgressBar({
   structure,
   indicator,
 }: ProgressBarProps) {
-  console.log("completed", completed);
-  console.log("structure", structure);
-  console.log("indicator", indicator);
-
   return (
     <div
       className={clsx(
         styles["progress-bar-container"],
-        structure ? styles["side-menu"] : styles["questionnaire"]
-      )}>
+        structure ? styles["side-menu"] : styles["questionnaire"],
+      )}
+    >
       {structure ? (
         <p className={clsx(styles["progress-headline"], "paragraph_18")}>
           {structure?.sidebar?.["progress-bar-headline"]}
@@ -55,11 +52,12 @@ export function ProgressBar({
                 !structure && chapter.skipped && styles["skipped"],
                 structure &&
                   chapter.skipped === chapter.total &&
-                  styles["skipped"]
+                  styles["skipped"],
               )}
               style={{
                 width: `${(chapter.completed / chapter.total) * 100}%`,
-              }}></div>
+              }}
+            ></div>
           </li>
         ))}
       </ul>

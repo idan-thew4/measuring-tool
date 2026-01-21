@@ -63,8 +63,9 @@
   .headline-container {
     display: flex;
     gap: 1rem;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 2rem;
+    flex-direction: column;
 
     .nav-arrow {
       background: url("../../../../public/icons/arrow-down.svg") no-repeat

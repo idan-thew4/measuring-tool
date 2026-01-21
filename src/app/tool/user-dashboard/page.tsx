@@ -47,7 +47,7 @@ export default function userDashboard() {
         "main-container main-container-full",
         styles["main-container"],
         !loader && "main-container--enter",
-        !dashBoardVisible && "main-container--exit"
+        !dashBoardVisible && "main-container--exit",
       )}
     >
       <h1 className={clsx("headline_medium-big bold", styles["head-title"])}>
@@ -65,7 +65,7 @@ export default function userDashboard() {
                   key={button}
                   className={clsx(
                     "basic-button outline",
-                    index === 1 && "delete with-icon"
+                    index === 1 && "delete with-icon",
                   )}
                   onClick={() => {
                     if (index === 0) {
@@ -77,7 +77,7 @@ export default function userDashboard() {
                 >
                   {button}
                 </button>
-              )
+              ),
             )}
           </div>
         </div>

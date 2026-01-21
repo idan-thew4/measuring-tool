@@ -3,7 +3,7 @@ import { useStore } from "../../../contexts/Store";
 import { PopUpContainer } from "../popUpContainer/popUpContainer";
 import popUpContainerStyles from "../popUpContainer/pop-up-container.module.scss";
 import { useParams, useRouter } from "next/navigation";
-import { use, useEffect } from "react";
+import clsx from "clsx";
 
 export function SelfAssessmentPopup() {
   const { structure, setSelfAssessmentPopup, selfAssessmentPopup } = useStore();
@@ -21,6 +21,14 @@ export function SelfAssessmentPopup() {
       closeButton={() => setSelfAssessmentPopup(false)}
     >
       <div className={popUpContainerStyles["buttons"]}>
+        <p
+          className={clsx(
+            popUpContainerStyles["description-text"],
+            "paragraph_20",
+          )}
+        >
+          {structure["self-assessment"]["pop-up"].description}
+        </p>
         {structure["self-assessment"]["pop-up"]["buttons-copy"].map(
           (button, index) => (
             <button
@@ -31,18 +39,18 @@ export function SelfAssessmentPopup() {
 
                 if (index === 0) {
                   router.push(
-                    `/tool/${params.project_id}/${params.alternative_id}/self-assessment`
+                    `/tool/${params.project_id}/${params.alternative_id}/self-assessment`,
                   );
                 } else {
                   router.push(
-                    `/tool/${params.project_id}/${params.alternative_id}/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`
+                    `/tool/${params.project_id}/${params.alternative_id}/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`,
                   );
                 }
               }}
             >
               {button}
             </button>
-          )
+          ),
         )}
       </div>
     </PopUpContainer>

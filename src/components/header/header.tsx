@@ -147,18 +147,20 @@ export function Header() {
     }
   }
 
-  console.log("loggedInChecked", loggedInChecked);
+  console.log("header");
 
   return (
     <header className={styles["header-container"]}>
       <div className={clsx(styles["right-side"], styles["flex-h-align"])}>
-        <Image
-          alt="Slil logo"
-          src="/logo.svg"
-          width={219}
-          height={60}
-          className={styles["logo"]}
-        />
+        <Link href={structure?.header["website-url"] || "/"} target="_blank">
+          <Image
+            alt="Slil logo"
+            src="/logo.svg"
+            width={219}
+            height={60}
+            className={styles["logo"]}
+          />
+        </Link>
 
         {loggedInChecked ? (
           loggedInChecked ? (

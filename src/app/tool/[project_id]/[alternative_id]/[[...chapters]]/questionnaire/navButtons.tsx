@@ -103,7 +103,7 @@ export function NavButtons({
       } else if (direction === "next") {
         router.push(navButton.next);
       }
-    }, 1000); // Match this to your slide-out animation duration (ms)
+    }, 500); // Match this to your slide-out animation duration (ms)
   };
 
   return (

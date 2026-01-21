@@ -65,7 +65,7 @@
         opacity: 0;
         transform: translateX(10rem);
         animation: slide-out-animation 0.5s forwards;
-        animation-delay: 1s;
+        // animation-delay: 0.5s;
       }
     }
 
@@ -77,7 +77,7 @@
         opacity: 0;
         transform: translateX(-10rem);
         animation: slide-in-animation 0.5s forwards;
-        animation-delay: 1s;
+        // animation-delay: 0.5s;
       }
     }
 

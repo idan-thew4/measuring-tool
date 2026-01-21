@@ -11,8 +11,6 @@ import {
 import styles from "./chapters.module.scss";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { set } from "react-hook-form";
-import { time } from "console";
 
 type currentChapterType = {
   score: number;

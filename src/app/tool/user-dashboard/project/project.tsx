@@ -23,7 +23,12 @@ export function Project({
   const router = useRouter();
 
   return (
-    <ul className={styles["project-table"]}>
+    <ul
+      className={clsx(
+        styles["project-table"],
+        alternatives.length === 1 && styles["single-alternative-row"],
+      )}
+    >
       <li className={clsx(styles["row"], styles["row-head"])} key={0}>
         <div className={styles["project-name"]}>
           <h3 className={clsx("headline_small bold", styles["project-name"])}>
@@ -50,7 +55,7 @@ export function Project({
         <button
           className={clsx(
             "basic-button outline with-icon delete",
-            styles["delete-button"]
+            styles["delete-button"],
           )}
           onClick={() =>
             setDeletePopup({ type: "delete-project", project_id: project_id })
@@ -68,7 +73,8 @@ export function Project({
           key={key + 1}
           className={clsx(
             styles["row"],
-            styles["row-alternative"]
+            styles["row-alternative"],
+
             // key === 0 && styles["no-border"]
           )}
         >
@@ -81,7 +87,7 @@ export function Project({
                   setDashBoardVisible(false);
                   setTimeout(() => {
                     router.push(
-                      `/tool/${project_id}/${alternative.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
+                      `/tool/${project_id}/${alternative.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`,
                     );
                   }, 500);
                 }}
@@ -95,7 +101,7 @@ export function Project({
               <button
                 className={clsx(
                   "paragraph_15 link black with-icon edit",
-                  styles["edit-alternative-button"]
+                  styles["edit-alternative-button"],
                 )}
                 onClick={() => {
                   setAddRenamePopup({
@@ -119,7 +125,7 @@ export function Project({
           ].map(
             (button, index) =>
               index !== 0 &&
-              (index !== 3 || alternatives.length > 1) && (
+              (index !== 4 || alternatives.length > 1) && (
                 <button
                   key={index}
                   className={clsx(
@@ -130,7 +136,7 @@ export function Project({
                     index === 1 && "add-alternative",
                     (index === 2 || index === 2 || index === 3) && "download",
                     index === 4 && "delete",
-                    styles["project-button"]
+                    styles["project-button"],
                   )}
                   onClick={() => {
                     switch (index) {
@@ -145,7 +151,7 @@ export function Project({
                       case 2:
                         getAlternativeSpreadsheet(
                           String(alternative.alternative_id),
-                          "csv"
+                          "csv",
                         );
 
                         break;
@@ -153,7 +159,7 @@ export function Project({
                       case 3:
                         getAlternativeSpreadsheet(
                           String(alternative.alternative_id),
-                          "excel"
+                          "excel",
                         );
                         break;
 
@@ -167,7 +173,7 @@ export function Project({
                 >
                   {button}
                 </button>
-              )
+              ),
           )}
         </li>
       ))}
