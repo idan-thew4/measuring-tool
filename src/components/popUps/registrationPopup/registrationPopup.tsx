@@ -256,7 +256,7 @@ export function RegistrationPopup() {
           );
         } else {
           window.open(
-            `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`,
+            `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1?showSelfAssessment=1`,
           );
         }
       } else {

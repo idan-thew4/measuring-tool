@@ -9,9 +9,8 @@ import {
   ChapterPoints,
 } from "../../../../../contexts/Store";
 import styles from "./chapters.module.scss";
-import { useParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { set } from "react-hook-form";
 import { time } from "console";
 
@@ -31,6 +30,8 @@ type storeAlternativeQuestionnaireDataResponse = {
 
 export default function ChapterPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
+  const showSelfAssessment = searchParams.get("showSelfAssessment");
   const [chapter, subChapter, principle] = params?.chapters || [];
   const {
     structure,
@@ -49,9 +50,9 @@ export default function ChapterPage() {
     isPageChanged,
     setLoader,
     activeSideMenu,
-    prevPrinciple,
     sliderIsAnimating,
     setSliderIsAnimating,
+    setSelfAssessmentPopup,
   } = useStore();
   const [currentChapter, setCurrentChapter] =
     useState<currentChapterType | null>(null);
@@ -85,12 +86,13 @@ export default function ChapterPage() {
   ]);
   const [comment, setComment] = useState("");
   const router = useRouter();
-  const prevIndices = useRef<{
-    chapter: number;
-    sub: number;
-    principle: number;
-  } | null>(null);
   const [enterAnimation, setEnterAnimation] = useState("");
+
+  useEffect(() => {
+    if (showSelfAssessment === "1") {
+      setSelfAssessmentPopup(true);
+    }
+  }, []);
 
   useEffect(() => {
     const pageChanged = Boolean(isPageChanged("questionnaire"));
@@ -293,8 +295,6 @@ export default function ChapterPage() {
     if (sliderIsAnimating === "previous") {
       setSliderIsAnimating(null);
       setEnterAnimation("previous");
-
-      setTimeout(() => {}, 1000);
     }
 
     if (sliderIsAnimating === "next") {
@@ -304,7 +304,7 @@ export default function ChapterPage() {
   }, []);
 
   useEffect(() => {
-    if (sliderIsAnimating === "next") {
+    if (sliderIsAnimating === "next" || sliderIsAnimating === "previous") {
       setTimeout(() => {
         setEnterAnimation("");
       }, 1000);
@@ -385,7 +385,7 @@ export default function ChapterPage() {
 
             return (
               <li
-                key={option}
+                key={`${option}-${index}`}
                 className={clsx(
                   styles["option"],
                   currentChapter?.score === index + 1 ? styles["selected"] : "",

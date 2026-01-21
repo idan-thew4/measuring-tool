@@ -21,11 +21,19 @@
     }
     100% {
       opacity: 1;
-      transform: translateX(-0);
+      transform: translateX(0);
     }
-    // 100% {
-    //   transform: translateX(-10rem);
-    // }
+  }
+
+  @keyframes slide-out-animation {
+    0% {
+      opacity: 0;
+      transform: translateX(10rem);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 
   .chapter-box {
@@ -52,61 +60,26 @@
     &--previous {
       transform: translateX(-10rem);
       opacity: 0;
+
+      &-enter {
+        opacity: 0;
+        transform: translateX(10rem);
+        animation: slide-out-animation 0.5s forwards;
+        animation-delay: 1s;
+      }
     }
 
     &--next {
       opacity: 0;
       transform: translateX(10rem);
+
+      &-enter {
+        opacity: 0;
+        transform: translateX(-10rem);
+        animation: slide-in-animation 0.5s forwards;
+        animation-delay: 1s;
+      }
     }
-
-    &--next-enter {
-      opacity: 0;
-      transform: translateX(-10rem);
-      animation: slide-in-animation 0.5s forwards;
-      animation-delay: 1s;
-    }
-
-    &-next-enter {
-      opacity: 0;
-      transform: translateX(-10rem);
-    }
-
-    // &--in {
-    //   transform: translateX(0);
-    //   opacity: 1;
-    // }
-    // transform: translateX(0);
-
-    // @keyframes chapter-box-slide-right {
-    //   0% {
-    //     transform: translateX(0);
-    //     opacity: 1;
-    //   }
-    //   30% {
-    //     opacity: 0;
-    //     transform: translateX(10rem);
-    //   }
-    // }
-
-    // @keyframes chapter-box-slide-right-next {
-    //   0% {
-    //     transform: translateX(-10);
-    //     opacity: 0;
-    //   }
-    //   100% {
-    //     opacity: 1;
-    //     transform: translateX(0);
-    //   }
-    // }
-
-    &--right {
-      animation: chapter-box-slide-right 0.5s forwards;
-      opacity: 0;
-    }
-
-    // &--left {
-    //   animation: chapter-box-slide 0.3s reverse forwards;
-    // }
 
     .chapter-headline-container {
       color: $darker-blue;
