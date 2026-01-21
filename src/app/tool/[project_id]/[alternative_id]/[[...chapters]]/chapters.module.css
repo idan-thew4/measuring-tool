@@ -30,44 +30,49 @@
   transform: translateY(0);
   transition-delay: 0.1s;
 }
+@keyframes slide-in-animation {
+  0% {
+    opacity: 0;
+    transform: translateX(-10rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 .chapters-slider-container .chapter-box {
   background-color: white;
   height: fit-content;
   grid-column: 3/8;
-  transition: transform 0.5s, opacity 0.5s;
-  will-change: transform, opacity;
-  opacity: 1;
-  transform: translateX(0);
+  animation-delay: 0.5s;
   padding: 3rem 3.2rem 1rem 3.2rem;
   border-radius: 4rem;
-  opacity: 1;
   transition: 0.3s all;
 }
 .chapters-slider-container .chapter-box--hidden {
   opacity: 0 !important;
 }
-@keyframes chapter-box-slide {
-  0% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-    transform: translateX(10rem);
-  }
-  51% {
-    transform: translateX(-10rem);
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
+.chapters-slider-container .chapter-box--previous {
+  transform: translateX(-10rem);
+  opacity: 0;
+}
+.chapters-slider-container .chapter-box--next {
+  opacity: 0;
+  transform: translateX(10rem);
+}
+.chapters-slider-container .chapter-box--next-enter {
+  opacity: 0;
+  transform: translateX(-10rem);
+  animation: slide-in-animation 0.5s forwards;
+  animation-delay: 1s;
+}
+.chapters-slider-container .chapter-box-next-enter {
+  opacity: 0;
+  transform: translateX(-10rem);
 }
 .chapters-slider-container .chapter-box--right {
-  animation: chapter-box-slide 0.5s forwards;
-}
-.chapters-slider-container .chapter-box--left {
-  animation: chapter-box-slide 1s reverse forwards;
+  animation: chapter-box-slide-right 0.5s forwards;
+  opacity: 0;
 }
 .chapters-slider-container .chapter-box .chapter-headline-container {
   color: #0e0d23;
