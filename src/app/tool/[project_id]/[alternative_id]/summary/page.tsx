@@ -34,6 +34,7 @@ import { useParams } from "next/navigation";
 import { saveAs } from "file-saver";
 import { PDFheader, PDFstyles } from "../components/summary-header/pdfHeader";
 import { Loader } from "@/components/loader/loader";
+import Link from "next/link";
 
 //CSV//
 
@@ -566,7 +567,6 @@ export default function Summary() {
     url,
     getAlternativeSpreadsheet,
     loader,
-    mainContainerOut,
     setActiveSideMenu,
     activeSideMenu,
     getChaptersScores,
@@ -579,8 +579,6 @@ export default function Summary() {
     subChapters: {},
   });
   const params = useParams();
-
-  const [generatePDF, setGeneratePDF] = useState(false); // State to track PDF generation
 
   useEffect(() => {
     isPageChanged("summary");
@@ -621,8 +619,6 @@ export default function Summary() {
     const chaptersScoresTemp: ScoreData[] = structure
       ? getChaptersScores(questionnaireParams, structure, false, scoreObject)
       : [];
-
-    console.log("Chapters Scores Temp:", chaptersScoresTemp); // Debugging line
 
     // Sub chapters //
 
@@ -798,6 +794,14 @@ export default function Summary() {
             />
           );
         })}
+      </div>
+      <div className={styles["summary-buttons"]}>
+        <Link
+          href={`/tool/${params.project_id}/${params.alternative_id}/summary-report`}
+          className={clsx(styles["summary-button"], "basic-button outline")}
+        >
+          לתרשימים גרפים
+        </Link>
       </div>
     </div>
   );

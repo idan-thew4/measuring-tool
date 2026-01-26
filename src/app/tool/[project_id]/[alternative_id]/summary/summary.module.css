@@ -21,4 +21,11 @@
 }
 .summary .tables-container {
   grid-column: 3/8;
+}
+.summary .summary-buttons {
+  grid-column: 3/8;
+}
+.summary .summary-buttons .summary-button {
+  width: fit-content;
+  margin: 5rem auto auto auto;
 }/*# sourceMappingURL=summary.module.css.map */
