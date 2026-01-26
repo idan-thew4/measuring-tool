@@ -16,6 +16,10 @@
   font-weight: 800;
   font-style: normal;
 }
+body {
+  overflow: hidden;
+}
+
 .main-container {
   grid-column: 4/13;
   display: grid;

@@ -1,6 +1,10 @@
 @use "./variables" as *;
 @use "sass:color";
 
+body {
+  overflow: hidden;
+}
+
 .main-container {
   grid-column: 4/13;
   display: grid;
