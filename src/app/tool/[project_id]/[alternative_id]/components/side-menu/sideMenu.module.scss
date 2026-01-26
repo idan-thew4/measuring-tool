@@ -37,6 +37,21 @@
     // gap: 3rem;
     ul.nav-side-menu {
       > li {
+        &.completed {
+          button,
+          p {
+            color: $dark-blue;
+          }
+        }
+
+        &.skipped {
+          button {
+            text-decoration: line-through;
+          }
+        }
+      }
+
+      > li {
         &.active,
         &:hover {
           .chapter-text {
@@ -50,6 +65,7 @@
         .sub-chapter {
           &.completed {
             > a,
+            button,
             p {
               color: $blue;
             }
@@ -79,8 +95,9 @@
 
         .completed {
           a,
+          button,
           p {
-            color: $darker-blue;
+            color: $dark-blue;
           }
         }
 

@@ -53,12 +53,20 @@
   display: flex;
   flex-direction: column;
 }
+.side-menu .menu ul.nav-side-menu > li.completed button,
+.side-menu .menu ul.nav-side-menu > li.completed p {
+  color: #5b6771;
+}
+.side-menu .menu ul.nav-side-menu > li.skipped button {
+  text-decoration: line-through;
+}
 .side-menu .menu ul.nav-side-menu > li.active .chapter-text > button,
 .side-menu .menu ul.nav-side-menu > li.active .chapter-text p, .side-menu .menu ul.nav-side-menu > li:hover .chapter-text > button,
 .side-menu .menu ul.nav-side-menu > li:hover .chapter-text p {
   color: #00a6ce;
 }
 .side-menu .menu ul.nav-side-menu > li .sub-chapter.completed > a,
+.side-menu .menu ul.nav-side-menu > li .sub-chapter.completed button,
 .side-menu .menu ul.nav-side-menu > li .sub-chapter.completed p {
   color: #00a6ce;
 }
@@ -76,8 +84,9 @@
   color: #00a6ce !important;
 }
 .side-menu .menu ul.nav-side-menu > li .completed a,
+.side-menu .menu ul.nav-side-menu > li .completed button,
 .side-menu .menu ul.nav-side-menu > li .completed p {
-  color: #0e0d23;
+  color: #5b6771;
 }
 .side-menu .menu ul.nav-side-menu > li .skipped button,
 .side-menu .menu ul.nav-side-menu > li .skipped p {
