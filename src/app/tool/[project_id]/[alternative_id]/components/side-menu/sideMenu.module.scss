@@ -109,6 +109,11 @@
         }
       }
 
+      .skip-text {
+        color: $basic-grey !important;
+        text-decoration: none !important;
+      }
+
       .chapter {
         border-bottom: 0.1rem solid $basic-grey;
         max-height: 6.1rem;

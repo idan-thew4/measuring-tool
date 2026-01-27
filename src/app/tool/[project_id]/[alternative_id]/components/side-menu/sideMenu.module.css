@@ -92,6 +92,10 @@
 .side-menu .menu ul.nav-side-menu > li .skipped p {
   text-decoration: line-through;
 }
+.side-menu .menu ul.nav-side-menu .skip-text {
+  color: #979797 !important;
+  text-decoration: none !important;
+}
 .side-menu .menu ul.nav-side-menu .chapter {
   border-bottom: 0.1rem solid #979797;
   max-height: 6.1rem;
