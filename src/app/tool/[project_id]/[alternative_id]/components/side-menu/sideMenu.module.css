@@ -16,6 +16,10 @@
   font-weight: 800;
   font-style: normal;
 }
+.menu {
+  height: 100%;
+}
+
 .side-menu {
   grid-column: 1/4;
   padding: 0 5rem 5rem 5rem;
@@ -285,11 +289,28 @@
 .side-menu .more li:last-child:after {
   content: "";
 }
-.side-menu .credits {
+.side-menu .bottom {
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.side-menu .bottom .credits,
+.side-menu .bottom .more {
   text-align: center;
   color: #979797;
-  padding: 2rem 0;
 }
-.side-menu .credits a {
+.side-menu .bottom .credits > span a,
+.side-menu .bottom .more > span a {
   color: #979797;
+}
+.side-menu .bottom .credits > span:last-child {
+  padding-right: 0.1rem;
+}
+.side-menu .bottom .more {
+  margin-bottom: 3rem;
+}
+.side-menu .bottom .more > span:last-child {
+  padding-right: 1rem;
 }/*# sourceMappingURL=sideMenu.module.css.map */

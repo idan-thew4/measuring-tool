@@ -1,0 +1,61 @@
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Regular.woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Bold.woff");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SimplerPro";
+  src: url("../../public/fonts/SimplerPro-Black.woff");
+  font-weight: 800;
+  font-style: normal;
+}
+@media only screen and (max-width: 1023px) {
+  .mobile-screen-warning-container {
+    height: 100vh;
+    display: flex !important;
+    flex-direction: column;
+    background-color: #f3f9ed;
+  }
+  .mobile-screen-warning-container .head {
+    background-color: #0e0d23;
+    height: 17rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .mobile-screen-warning-container .content {
+    flex-direction: column;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+  .mobile-screen-warning-container .content img {
+    width: 100%;
+    height: auto;
+  }
+  .mobile-screen-warning-container .content .title {
+    line-height: 120%;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 4rem;
+  }
+  .mobile-screen-warning-container .content .big-button {
+    margin: 2rem;
+    box-sizing: border-box;
+    width: -webkit-fill-available;
+  }
+}
+.mobile-screen-warning-container {
+  display: none;
+}/*# sourceMappingURL=mobileScreenWarning.module.css.map */

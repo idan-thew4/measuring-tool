@@ -19,6 +19,11 @@
 body {
   overflow: hidden;
 }
+@media only screen and (max-width: 1023px) {
+  body {
+    font-size: 2.3rem;
+  }
+}
 
 .main-container {
   grid-column: 4/13;
@@ -102,6 +107,26 @@ body {
 }
 .basic-button.with-icon {
   gap: 1.2rem;
+}
+
+.big-button {
+  border-radius: 0.6rem;
+  background: #00a6ce;
+  color: white;
+  font-size: 4rem;
+  font-style: normal;
+  font-weight: 400;
+  height: 10rem;
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 0 3rem;
+  margin-top: 4rem;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  letter-spacing: 0.056rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .link-button {

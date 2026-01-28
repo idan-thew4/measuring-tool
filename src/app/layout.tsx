@@ -10,6 +10,7 @@ import { ChangePasswordPopup } from "@/components/popUps/changePasswordPopup/cha
 import { DeletePopup } from "@/components/popUps/deletePopup/deletePopup";
 import { AddRenamePopup } from "@/components/popUps/addRenamePopup/addRename";
 import { ResetPasswordPopup } from "@/components/popUps/resetPasswordPopup/resetPasswordPopup";
+import { MobileScreenWarning } from "@/components/mobileScreenWarning/mobileScreenWarning";
 
 export const metadata: Metadata = {
   title: "Slil",
@@ -24,6 +25,9 @@ export default function RootLayout({
   return (
     <html lang="heb" dir="rtl">
       <body>
+        <Store>
+          <MobileScreenWarning />
+        </Store>
         <div className={styles.layoutContainer}>
           <Store>
             <Header />

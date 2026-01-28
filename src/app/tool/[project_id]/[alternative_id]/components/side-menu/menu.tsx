@@ -120,8 +120,7 @@ function RangeSlider({
       />
       <div
         className={styles["range-slider-progress"]}
-        style={{ width: `${percent}%` }}
-      ></div>
+        style={{ width: `${percent}%` }}></div>
       <div
         className={styles["range-slider-value"]}
         style={{
@@ -132,8 +131,7 @@ function RangeSlider({
                 ? "2%"
                 : `calc(${percent}% - ${percent > 99 ? "4.5" : "1.5"}rem)`
           }`,
-        }}
-      >
+        }}>
         {value}%
       </div>
     </div>
@@ -371,13 +369,14 @@ export function Menu({
     setSliderIsAnimating(direction); // triggers slide-out animation
   };
 
+  const currentLocation = `${String(chapterIdx).padStart(1, "0")}${String(params.chapters?.[1] ?? "").padStart(1, "0")}${String(params.chapters?.[2] ?? "").padStart(1, "0")}`;
+
   return (
     <div
       className={clsx(
         styles["menu"],
         type === "self-assessment" && styles["self-assessment"],
-      )}
-    >
+      )}>
       {type !== "self-assessment" ? (
         <ProgressBar completed={completedChapters} structure={structure} />
       ) : (
@@ -417,11 +416,12 @@ export function Menu({
                   ) || ""
                 ],
             )}
-            key={chapterIndex}
-          >
+            key={chapterIndex}>
             <div
-              className={clsx("nav-side-text__chapter", styles["chapter-text"])}
-            >
+              className={clsx(
+                "nav-side-text__chapter",
+                styles["chapter-text"],
+              )}>
               <button
                 onClick={() => {
                   const nextChapterIdx =
@@ -429,14 +429,12 @@ export function Menu({
                       (s) => s["chapter-slug"] === chapter["chapter-slug"],
                     );
                   handleClick(Number(chapterIdx), Number(nextChapterIdx));
-                  console.log(Number(chapterIdx), Number(nextChapterIdx));
                   setTimeout(() => {
                     router.push(
                       `/tool/${project_id}/${alternative_id}/${chapter["chapter-slug"]}/1/1`,
                     );
                   }, 500);
-                }}
-              >
+                }}>
                 {`${chapterIndex + 1}. ${chapter["chapter-title"]}`}
               </button>
               {type === "self-assessment" && chapterIndex !== 1 && (
@@ -496,8 +494,7 @@ export function Menu({
                               : item,
                           ),
                         );
-                      }}
-                    ></button>
+                      }}></button>
                   </div>
                   <p>
                     {`${
@@ -538,20 +535,31 @@ export function Menu({
                         isActiveSubChapter && styles["active"],
                         type !== "self-assessment" &&
                           styles[subChapterCompleted || ""],
-                      )}
-                    >
+                      )}>
                       <button
                         className="nav-side-text__sub-chapter"
                         onClick={() => {
                           setTimeout(() => {
+                            const nextChapterIdx =
+                              structure?.questionnaire.content.findIndex(
+                                (s) =>
+                                  s["chapter-slug"] === chapter["chapter-slug"],
+                              );
+
+                            const nextLocation = `${String(nextChapterIdx).padStart(1, "0")}${String(subIndex + 1).padStart(1, "0")}${String("1").padStart(1, "0")}`;
+
+                            handleClick(
+                              Number(currentLocation),
+                              Number(nextLocation),
+                            );
+
                             router.push(
                               `/tool/${project_id}/${alternative_id}/${
                                 chapter["chapter-slug"]
                               }/${subIndex + 1}/1`,
                             );
                           }, 500);
-                        }}
-                      >
+                        }}>
                         {`${chapterIndex + 1}.${subIndex + 1} ${
                           subChapter["sub-chapter-title"]
                         }`}{" "}
@@ -622,12 +630,29 @@ export function Menu({
                                       styles["opened"],
                                     isActiveChoice && styles["active"],
                                     styles[choiceCompleted || ""],
-                                  )}
-                                >
+                                  )}>
                                   <button
                                     className="nav-side-text__sub-chapter-choice"
                                     onClick={() => {
                                       setTimeout(() => {
+                                        const nextChapterIdx =
+                                          structure?.questionnaire.content.findIndex(
+                                            (s) =>
+                                              s["chapter-slug"] ===
+                                              chapter["chapter-slug"],
+                                          );
+
+                                        const nextLocation = `${String(nextChapterIdx).padStart(1, "0")}${String(subIndex + 1).padStart(1, "0")}${String(subChoicesIndex + 1).padStart(1, "0")}`;
+
+                                        console.log({
+                                          currentLocation,
+                                          nextLocation,
+                                        });
+
+                                        handleClick(
+                                          Number(currentLocation),
+                                          Number(nextLocation),
+                                        );
                                         router.push(
                                           `/tool/${project_id}/${alternative_id}/${
                                             chapter["chapter-slug"]
@@ -636,8 +661,7 @@ export function Menu({
                                           }`,
                                         );
                                       }, 500);
-                                    }}
-                                  >
+                                    }}>
                                     {`${subChoicesIndex + 1}. ${
                                       subChoices.title
                                     }`}
@@ -690,8 +714,7 @@ export function Menu({
                           `/tool/${project_id}/${alternative_id}/${links[index]}`,
                         );
                       }, 100);
-                    }}
-                  >
+                    }}>
                     {option}
                   </button>
                 </li>
@@ -700,15 +723,31 @@ export function Menu({
           })}
         </ul>
       )}
-      <div className={clsx(styles["credits"], "paragraph_14")}>
-        עיצוב:{" "}
-        <a href="https://h-mstudio.com/" target="_blank">
-          סטודיו הראל ומעין
-        </a>
-        , פיתוח:{" "}
-        <a href="https://www.thew4.co/" target="_blank">
-          TheW4
-        </a>
+      <div className={styles["bottom"]}>
+        <div className={clsx(styles["more"], "paragraph_18 bold")}>
+          {structure?.sidebar["more"].map((credit, index) => {
+            if (index < 2) {
+              return (
+                <span key={credit.link || index}>
+                  <a href={credit.link} target="_blank">
+                    {credit.name}
+                  </a>
+                </span>
+              );
+            }
+          })}
+        </div>
+        <div className={clsx(styles["credits"], "paragraph_14")}>
+          {structure?.sidebar["credits"].map((credit, index) => (
+            <span key={credit.link || index}>
+              <span>{index === 0 ? "עיצוב: " : "פיתוח: "}</span>
+              <a href={credit.link} target="_blank">
+                {credit.name}
+              </a>
+              {index === 0 && " | "}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );

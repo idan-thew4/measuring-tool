@@ -1,5 +1,9 @@
 @use "../../../../../../styles/variables" as *;
 
+.menu {
+  height: 100%;
+}
+
 .side-menu {
   grid-column: 1/4;
   padding: 0 5rem 5rem 5rem;
@@ -353,13 +357,40 @@
     }
   }
 
-  .credits {
-    text-align: center;
-    color: $basic-grey;
-    padding: 2rem 0;
+  .bottom {
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    display: flex;
 
-    a {
+    .credits,
+    .more {
+      text-align: center;
       color: $basic-grey;
+
+      > span {
+        a {
+          color: $basic-grey;
+        }
+      }
+    }
+
+    .credits {
+      > span {
+        &:last-child {
+          padding-right: 0.1rem;
+        }
+      }
+    }
+
+    .more {
+      margin-bottom: 3rem;
+      > span {
+        &:last-child {
+          padding-right: 1rem;
+        }
+      }
     }
   }
 }

@@ -225,6 +225,15 @@ export type structureProps = {
     options: string[];
     "website-url": string;
   };
+  "mobile-notification": MobileNotification;
+};
+
+type MobileNotification = {
+  title: string;
+  cta: {
+    copy: string;
+    mail: string;
+  };
 };
 
 type UserDashboard = {
@@ -351,7 +360,8 @@ type questionnaire = {
 type sideBar = {
   "progress-bar-headline": string;
   "bottom-options": string[];
-  more: string[];
+  more: { name: string; link: string }[];
+  credits: { name: string; link: string }[];
 };
 
 export type Chapter = {
@@ -1333,8 +1343,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         setDashBoardVisible,
         sliderIsAnimating,
         setSliderIsAnimating,
-      }}
-    >
+      }}>
       {children}
     </ApiContext.Provider>
   );

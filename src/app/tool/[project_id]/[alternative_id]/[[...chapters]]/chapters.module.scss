@@ -182,18 +182,17 @@
           &::before {
             content: "●";
             text-align: center;
-            font-size: 2.5rem;
-            line-height: 2.3rem;
-            color: white;
-            display: inline-block;
-            width: 2rem;
-            height: 2rem;
+            color: #fff;
+            vertical-align: middle;
+            text-indent: 0.1rem;
             border: 0.1rem solid $basic-grey;
             border-radius: 50%;
-            vertical-align: middle;
+            width: 2rem;
+            height: 2rem;
+            font-size: 2.5rem;
+            line-height: 2.3rem;
             transition: all 0.3s;
-            text-indent: -0.1rem;
-            line-height: 2.1rem;
+            display: inline-block;
           }
         }
 
