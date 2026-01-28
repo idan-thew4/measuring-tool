@@ -22,7 +22,7 @@
 
 .side-menu {
   grid-column: 1/4;
-  padding: 0 5rem 5rem 5rem;
+  padding: 0 5rem 0 5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -69,6 +69,9 @@
 .side-menu .menu ul.nav-side-menu > li:hover .chapter-text p {
   color: #00a6ce;
 }
+.side-menu .menu ul.nav-side-menu > li.active .chapter-text > button:first-of-type {
+  pointer-events: none;
+}
 .side-menu .menu ul.nav-side-menu > li .sub-chapter.completed > a,
 .side-menu .menu ul.nav-side-menu > li .sub-chapter.completed button,
 .side-menu .menu ul.nav-side-menu > li .sub-chapter.completed p {
@@ -80,12 +83,14 @@
 }
 .side-menu .menu ul.nav-side-menu > li *:not(.active) {
   color: #979797;
+  pointer-events: all;
 }
 .side-menu .menu ul.nav-side-menu > li *:not(.active):hover {
   color: #00a6ce;
 }
 .side-menu .menu ul.nav-side-menu > li .active > * {
   color: #00a6ce !important;
+  pointer-events: none;
 }
 .side-menu .menu ul.nav-side-menu > li .completed a,
 .side-menu .menu ul.nav-side-menu > li .completed button,
@@ -187,7 +192,6 @@
 }
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter button,
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter .chapter-text {
-  pointer-events: none;
   color: #979797 !important;
 }
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter button:hover,
@@ -202,7 +206,6 @@
 }
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter a,
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter .active {
-  pointer-events: none;
   color: black !important;
 }
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter-text {
@@ -304,6 +307,9 @@
 .side-menu .bottom .credits > span a,
 .side-menu .bottom .more > span a {
   color: #979797;
+}
+.side-menu .bottom .credits {
+  padding-bottom: 5rem;
 }
 .side-menu .bottom .credits > span:last-child {
   padding-right: 0.1rem;

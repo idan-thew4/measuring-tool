@@ -429,11 +429,9 @@ export function Menu({
                       (s) => s["chapter-slug"] === chapter["chapter-slug"],
                     );
                   handleClick(Number(chapterIdx), Number(nextChapterIdx));
-                  setTimeout(() => {
-                    router.push(
-                      `/tool/${project_id}/${alternative_id}/${chapter["chapter-slug"]}/1/1`,
-                    );
-                  }, 500);
+                  router.push(
+                    `/tool/${project_id}/${alternative_id}/${chapter["chapter-slug"]}/1/1`,
+                  );
                 }}>
                 {`${chapterIndex + 1}. ${chapter["chapter-title"]}`}
               </button>
@@ -539,26 +537,24 @@ export function Menu({
                       <button
                         className="nav-side-text__sub-chapter"
                         onClick={() => {
-                          setTimeout(() => {
-                            const nextChapterIdx =
-                              structure?.questionnaire.content.findIndex(
-                                (s) =>
-                                  s["chapter-slug"] === chapter["chapter-slug"],
-                              );
-
-                            const nextLocation = `${String(nextChapterIdx).padStart(1, "0")}${String(subIndex + 1).padStart(1, "0")}${String("1").padStart(1, "0")}`;
-
-                            handleClick(
-                              Number(currentLocation),
-                              Number(nextLocation),
+                          const nextChapterIdx =
+                            structure?.questionnaire.content.findIndex(
+                              (s) =>
+                                s["chapter-slug"] === chapter["chapter-slug"],
                             );
 
-                            router.push(
-                              `/tool/${project_id}/${alternative_id}/${
-                                chapter["chapter-slug"]
-                              }/${subIndex + 1}/1`,
-                            );
-                          }, 500);
+                          const nextLocation = `${String(nextChapterIdx).padStart(1, "0")}${String(subIndex + 1).padStart(1, "0")}${String("1").padStart(1, "0")}`;
+
+                          handleClick(
+                            Number(currentLocation),
+                            Number(nextLocation),
+                          );
+
+                          router.push(
+                            `/tool/${project_id}/${alternative_id}/${
+                              chapter["chapter-slug"]
+                            }/${subIndex + 1}/1`,
+                          );
                         }}>
                         {`${chapterIndex + 1}.${subIndex + 1} ${
                           subChapter["sub-chapter-title"]
@@ -634,33 +630,31 @@ export function Menu({
                                   <button
                                     className="nav-side-text__sub-chapter-choice"
                                     onClick={() => {
-                                      setTimeout(() => {
-                                        const nextChapterIdx =
-                                          structure?.questionnaire.content.findIndex(
-                                            (s) =>
-                                              s["chapter-slug"] ===
-                                              chapter["chapter-slug"],
-                                          );
-
-                                        const nextLocation = `${String(nextChapterIdx).padStart(1, "0")}${String(subIndex + 1).padStart(1, "0")}${String(subChoicesIndex + 1).padStart(1, "0")}`;
-
-                                        console.log({
-                                          currentLocation,
-                                          nextLocation,
-                                        });
-
-                                        handleClick(
-                                          Number(currentLocation),
-                                          Number(nextLocation),
+                                      const nextChapterIdx =
+                                        structure?.questionnaire.content.findIndex(
+                                          (s) =>
+                                            s["chapter-slug"] ===
+                                            chapter["chapter-slug"],
                                         );
-                                        router.push(
-                                          `/tool/${project_id}/${alternative_id}/${
-                                            chapter["chapter-slug"]
-                                          }/${subIndex + 1}/${
-                                            subChoicesIndex + 1
-                                          }`,
-                                        );
-                                      }, 500);
+
+                                      const nextLocation = `${String(nextChapterIdx).padStart(1, "0")}${String(subIndex + 1).padStart(1, "0")}${String(subChoicesIndex + 1).padStart(1, "0")}`;
+
+                                      console.log({
+                                        currentLocation,
+                                        nextLocation,
+                                      });
+
+                                      handleClick(
+                                        Number(currentLocation),
+                                        Number(nextLocation),
+                                      );
+                                      router.push(
+                                        `/tool/${project_id}/${alternative_id}/${
+                                          chapter["chapter-slug"]
+                                        }/${subIndex + 1}/${
+                                          subChoicesIndex + 1
+                                        }`,
+                                      );
                                     }}>
                                     {`${subChoicesIndex + 1}. ${
                                       subChoices.title
