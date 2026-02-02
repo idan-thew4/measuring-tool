@@ -105,8 +105,7 @@ export function Questionnaire({
         className={clsx(
           styles["questionnaire-header"],
           activeSideMenu ? styles["questionnaire-header--active"] : "",
-        )}
-      >
+        )}>
         <div
           className={clsx(
             styles["chapter-title-container"],
@@ -115,8 +114,7 @@ export function Questionnaire({
             )?.state
               ? styles["open"]
               : "",
-          )}
-        >
+          )}>
           <button
             className={clsx(
               styles["chapter-title"],
@@ -134,8 +132,7 @@ export function Questionnaire({
                     : item,
                 ),
               )
-            }
-          >
+            }>
             <p className="paragraph_20">{currentChapterHeaders?.title}</p>
           </button>
           <p className={clsx(styles["description"], "paragraph_19")}>
@@ -150,8 +147,7 @@ export function Questionnaire({
             )?.state
               ? styles["open"]
               : "",
-          )}
-        >
+          )}>
           <button
             className={clsx(styles["chapter-subtitle"])}
             onClick={() =>
@@ -162,12 +158,13 @@ export function Questionnaire({
                     : item,
                 ),
               )
-            }
-          >
+            }>
             <h1 className="headline_small bold">
               <span
-                className={clsx("number headline_small bold", styles["number"])}
-              >
+                className={clsx(
+                  "number headline_small bold",
+                  styles["number"],
+                )}>
                 {currentChapterHeaders?.subtitleNumber}
               </span>
               {`${
@@ -178,7 +175,7 @@ export function Questionnaire({
             </h1>
           </button>
           <p className={clsx(styles["description"], "paragraph_19")}>
-            {currentChapterHeaders?.subtitleDescription}????????
+            {currentChapterHeaders?.subtitleDescription}
           </p>
         </div>
 

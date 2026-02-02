@@ -21,6 +21,7 @@ export function LoginPopup() {
     setRegistrationPopup,
     setLoggedInChecked,
     setResetPasswordPopup,
+    appReady,
   } = useStore();
 
   const {
@@ -95,8 +96,7 @@ export function LoginPopup() {
   return (
     <PopUpContainer
       headline={structure.login.title}
-      closeButton={() => setLoginPopup(false)}
-    >
+      closeButton={() => setLoginPopup(false)}>
       <div className={formStyles["form-container"]}>
         <p className="paragraph_18">
           {structure.login["text"][0]}
@@ -106,15 +106,13 @@ export function LoginPopup() {
             onClick={() => {
               setLoginPopup(false);
               setRegistrationPopup("register");
-            }}
-          >
+            }}>
             {structure.login["text"][1]}
           </button>
         </p>
         <form
           style={{ pointerEvents: loading ? "none" : "auto" }}
-          onSubmit={handleSubmit((data) => onSubmit(data))}
-        >
+          onSubmit={handleSubmit((data) => onSubmit(data))}>
           {structure.login["input-fields"].map((field, index) => (
             <div
               className={clsx(
@@ -125,8 +123,7 @@ export function LoginPopup() {
                   ? formStyles["input"]
                   : formStyles["checkbox"],
               )}
-              key={index}
-            >
+              key={index}>
               <input
                 type={field.type ? field.type : "text"}
                 placeholder={`${field.label}${field.mandatory ? " *" : ""}`}
@@ -165,8 +162,7 @@ export function LoginPopup() {
             onClick={() => {
               setLoginPopup(false);
               setResetPasswordPopup(true);
-            }}
-          >
+            }}>
             שכחת את הסיסמא?
           </button>
           <ReCAPTCHA
@@ -186,8 +182,7 @@ export function LoginPopup() {
               loading && "loading",
             )}
             type="submit"
-            disabled={Object.keys(errors).length > 0}
-          >
+            disabled={Object.keys(errors).length > 0}>
             {structure.login["button-copy"]}
           </button>
           {generalError && (
@@ -195,8 +190,7 @@ export function LoginPopup() {
               className={clsx(
                 formStyles["error-message"],
                 formStyles["general-error"],
-              )}
-            >
+              )}>
               {generalError}
             </div>
           )}

@@ -36,6 +36,7 @@ export default function SelfAssessment() {
     setActiveSideMenu,
     activeSideMenu,
     loggedInChecked,
+    loader,
   } = useStore();
   const [scores, setScores] = useState<{
     chapters: ScoreData[];
@@ -46,9 +47,10 @@ export default function SelfAssessment() {
   });
   const params = useParams();
   const router = useRouter();
+  const [shouldRedirect, setShouldRedirect] = useState(true);
 
   async function getSelfAssessmentData(
-    project_id: string
+    project_id: string,
   ): Promise<getSelfAssessmentResponse | void> {
     setLoader(true);
 
@@ -66,14 +68,16 @@ export default function SelfAssessment() {
       setLoader(false);
 
       if (data.success) {
-        if (data.data === 0) {
-          // router.push(
-          //   `/tool/${params.project_id}/${params.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
-          // );
+        if (data.data) {
+          router.push(
+            `/tool/${params.project_id}/${params.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1?redirected=true`,
+          );
+        } else {
+          setShouldRedirect(false);
         }
       } else {
         router.push(
-          `/tool/0/0/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
+          `/tool/0/0/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`,
         );
       }
     } catch (error) {
@@ -83,7 +87,7 @@ export default function SelfAssessment() {
 
   async function storeSelfAssessment(
     project_id: string,
-    assessment_data: AssessmentProps[]
+    assessment_data: AssessmentProps[],
   ): Promise<storeSelfAssessmentResponse | void> {
     setLoader(true);
     try {
@@ -105,7 +109,7 @@ export default function SelfAssessment() {
         setLoader(false);
 
         router.push(
-          `/tool/${params.project_id}/${params.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
+          `/tool/${params.project_id}/${params.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`,
         );
       }
     } catch (error) {
@@ -123,7 +127,7 @@ export default function SelfAssessment() {
       questionnaireParams = calculateScores(
         scoreObject.data.questionnaire ?? [],
         "subchapters",
-        "questionnaire"
+        "questionnaire",
       );
 
       //Chapters //
@@ -142,8 +146,8 @@ export default function SelfAssessment() {
                 ? Math.round(
                     subChapter.reduce(
                       (sum, sc) => sum + sc["sub-chapter-score"],
-                      0
-                    ) / subChapter.length
+                      0,
+                    ) / subChapter.length,
                   )
                 : 0;
 
@@ -153,7 +157,7 @@ export default function SelfAssessment() {
             subject,
             questionnaire: questionnaire,
           };
-        }
+        },
       );
 
       //Second Chapters //
@@ -175,7 +179,7 @@ export default function SelfAssessment() {
               subject,
               questionnaire,
             };
-          }
+          },
         ) ?? [];
 
       setScores({
@@ -194,11 +198,7 @@ export default function SelfAssessment() {
   }, [params.project_id]);
 
   useEffect(() => {
-    if (!loggedInChecked) {
-      router.push(
-        `/tool/0/0/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`
-      );
-    }
+    console.log("loggedInChecked in self-assessment:", loggedInChecked);
   }, [loggedInChecked]);
 
   // useEffect(() => {
@@ -211,6 +211,10 @@ export default function SelfAssessment() {
   //   }
   // }, [activeSideMenu]);
 
+  if (shouldRedirect) {
+    return <Loader />;
+  }
+
   if (!structure) {
     return <Loader />;
   }
@@ -220,7 +224,7 @@ export default function SelfAssessment() {
       className={clsx(
         styles["main-container"],
         "main-container",
-        activeSideMenu && styles["main-container--active"]
+        activeSideMenu && styles["main-container--active"],
       )}>
       {structure && (
         <>
@@ -234,7 +238,7 @@ export default function SelfAssessment() {
               onClick={() => {
                 storeSelfAssessment(
                   params.project_id as string,
-                  scoreObject.data.assessment
+                  scoreObject.data.assessment,
                 );
               }}>
               המשך לשאלון

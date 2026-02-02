@@ -1,6 +1,11 @@
 "use client";
 
-import { useParams, usePathname, useRouter } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import path from "path";
 import React, {
   createContext,
@@ -12,6 +17,7 @@ import React, {
 } from "react";
 5;
 import { saveAs } from "file-saver";
+import { p } from "framer-motion/client";
 
 const ApiContext = createContext<ApiContextType | undefined>(undefined);
 
@@ -595,7 +601,7 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   // Pop ups //
   const [registrationPopup, setRegistrationPopup] = useState<string>("");
-  const [loginPopup, setLoginPopup] = useState<boolean>(false);
+  const [loginPopup, setLoginPopup] = useState<boolean>(true);
   const [changePasswordPopup, setChangePasswordPopup] =
     useState<boolean>(false);
   const [selfAssessmentPopup, setSelfAssessmentPopup] =
@@ -696,6 +702,10 @@ function Store({ children }: PropsWithChildren<{}>) {
       console.error("Failed to fetch content:", error);
     }
   }
+
+  useEffect(() => {
+    console.log("loginPopup", loginPopup);
+  }, [loginPopup]);
 
   function createScoreObject(structureObject: structureProps) {
     let scoreObjectTemp: ScoreType;
@@ -1190,15 +1200,23 @@ function Store({ children }: PropsWithChildren<{}>) {
   }, [pathname]);
 
   const [prevSideMenu, setPrevSideMenu] = useState(sideMenu);
+  const searchParams = useSearchParams();
+  const redirected = searchParams.get("redirected");
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
+
+    console.log("redirected", redirected);
 
     // If switching between self-assessment and questionnaire, pop out then in
     if (
       (prevSideMenu === "self-assessment" && sideMenu === "questionnaire") ||
       (prevSideMenu === "questionnaire" && sideMenu === "self-assessment")
     ) {
+      if (redirected === "true") {
+        setActiveSideMenu(true);
+        return;
+      }
       setActiveSideMenu(false);
       timeout = setTimeout(() => {
         setActiveSideMenu(true);

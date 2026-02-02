@@ -12,7 +12,7 @@ import {
 } from "../../contexts/Store";
 import Link from "next/link";
 import clsx from "clsx";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import { RadarGraph } from "@/app/tool/[project_id]/[alternative_id]/summary-report/graphs/graph/radar/radar";
@@ -56,6 +56,8 @@ export function Header() {
   } = useStore();
   const router = useRouter();
   const params = useParams();
+  const pathname = usePathname();
+
   const [chapter, subChapter, principle] = params?.chapters || [];
   const [chapterScores, setChapterScores] = useState<ChapterScoreType[]>([]);
   const [alternatives, setAlternatives] = useState<AlternativeOption[]>([]);
@@ -279,7 +281,7 @@ export function Header() {
             </div>
           </div>
         )}
-      {!loggedInChecked && (
+      {!loggedInChecked && !pathname.includes("self-assessment") && (
         <button
           onClick={() => {
             setLoginPopup(true);

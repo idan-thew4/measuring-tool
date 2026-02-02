@@ -153,6 +153,7 @@ export function RegistrationPopup() {
       }
     } catch (error) {
       console.error("Error creating new user:", error);
+      setGeneralError("משהו השתבש. אנא נסה שוב מאוחר יותר.");
     }
   }
 
@@ -498,12 +499,13 @@ export function RegistrationPopup() {
 
   useEffect(() => {
     if (resentAttempts >= 3) {
-      setGeneralError("יותר מדי נסיונות. אנה נסזה שוב מאוחר יותר");
+      setGeneralError("יותר מדי נסיונות. אנה נסה שוב מאוחר יותר");
     }
   }, [timeLeft, resentAttempts]);
 
   useEffect(() => {
-    if (watch("verificationCode") === "" && generalError !== "") {
+    console.log(watch("verificationCode"));
+    if (watch("verificationCode") && generalError !== "") {
       setGeneralError("");
     }
   }, [watch("verificationCode")]);
@@ -736,7 +738,7 @@ export function RegistrationPopup() {
                             : field.type === "password"
                               ? {
                                   value:
-                                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
+                                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])[ -~]{8,}$/,
                                   message: field["format-error"],
                                 }
                               : undefined,
@@ -809,7 +811,8 @@ export function RegistrationPopup() {
           </button>
           {steps.single["input-fields"][0].type === "otp" && (
             <div className={formStyles["secondery-cta-wrapper"]}>
-              {resentAttempts < 3 &&
+              {!generalError &&
+                resentAttempts < 3 &&
                 (timeLeft === 0 ? (
                   <>
                     <span className="paragraph_18">
@@ -817,24 +820,33 @@ export function RegistrationPopup() {
                     </span>
                     <button
                       className="link-button"
-                      onClick={() => {
-                        otpRequest(
-                          scoreObject["project-details"].contactPhone as string,
-                        );
-                        setTimeLeft(2);
-                        timer();
-                        setResentAttempts((prev) => prev + 1);
-                        setGeneralError("");
-                        reset({ verificationCode: "" });
+                      type="button"
+                      onClick={async () => {
+                        if (recaptchaRef.current) {
+                          const newToken =
+                            await recaptchaRef.current.executeAsync();
+                          recaptchaRef.current.reset();
+                          otpRequest(
+                            scoreObject["project-details"]
+                              .contactPhone as string,
+                            newToken || "",
+                          );
+                          setTimeLeft(60);
+                          timer();
+                          setResentAttempts((prev) => prev + 1);
+                          setGeneralError("");
+                          reset({ verificationCode: "" });
+                        }
                       }}>
                       {steps.single?.["secondery-cta-copy"]?.button}
                     </button>
                   </>
                 ) : (
-                  <p className="paragraph_18">{`00:${String(timeLeft).padStart(
-                    2,
-                    "0",
-                  )}`}</p>
+                  !generalError && (
+                    <p className="paragraph_18">{`00:${String(
+                      timeLeft,
+                    ).padStart(2, "0")}`}</p>
+                  )
                 ))}
             </div>
           )}
