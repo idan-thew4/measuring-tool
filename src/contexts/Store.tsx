@@ -1200,8 +1200,8 @@ function Store({ children }: PropsWithChildren<{}>) {
   }, [pathname]);
 
   const [prevSideMenu, setPrevSideMenu] = useState(sideMenu);
-  const searchParams = useSearchParams();
-  const redirected = searchParams.get("redirected");
+  // const searchParams = useSearchParams();
+  // const redirected = searchParams.get("redirected");
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -1213,10 +1213,10 @@ function Store({ children }: PropsWithChildren<{}>) {
       (prevSideMenu === "self-assessment" && sideMenu === "questionnaire") ||
       (prevSideMenu === "questionnaire" && sideMenu === "self-assessment")
     ) {
-      if (redirected === "true") {
-        setActiveSideMenu(true);
-        return;
-      }
+      // if (redirected === "true") {
+      //   setActiveSideMenu(true);
+      //   return;
+      // }
       setActiveSideMenu(false);
       timeout = setTimeout(() => {
         setActiveSideMenu(true);
@@ -1362,7 +1362,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         setDashBoardVisible,
         sliderIsAnimating,
         setSliderIsAnimating,
-      }}>
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );
