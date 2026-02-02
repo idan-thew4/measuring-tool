@@ -1206,8 +1206,6 @@ function Store({ children }: PropsWithChildren<{}>) {
   useEffect(() => {
     let timeout: NodeJS.Timeout;
 
-    console.log("redirected", redirected);
-
     // If switching between self-assessment and questionnaire, pop out then in
     if (
       (prevSideMenu === "self-assessment" && sideMenu === "questionnaire") ||
