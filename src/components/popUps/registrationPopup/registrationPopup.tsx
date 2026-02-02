@@ -123,17 +123,20 @@ export function RegistrationPopup() {
   async function otpRequest(phone: string, recaptchaToken: string) {
     setLoading(true);
     try {
-      const response = await fetch(`${url}/wp-json/otp/v1/request`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "https://cms.slil.org.il/wp-json/otp/v1/request",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            phone,
+            recaptchaToken,
+          }),
         },
-        credentials: "include",
-        body: JSON.stringify({
-          phone,
-          recaptchaToken,
-        }),
-      });
+      );
 
       const data = await response.json();
 
