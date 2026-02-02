@@ -601,7 +601,7 @@ function Store({ children }: PropsWithChildren<{}>) {
 
   // Pop ups //
   const [registrationPopup, setRegistrationPopup] = useState<string>("");
-  const [loginPopup, setLoginPopup] = useState<boolean>(true);
+  const [loginPopup, setLoginPopup] = useState<boolean>(false);
   const [changePasswordPopup, setChangePasswordPopup] =
     useState<boolean>(false);
   const [selfAssessmentPopup, setSelfAssessmentPopup] =
