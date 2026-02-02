@@ -397,11 +397,7 @@
 
     .more {
       margin-bottom: 3rem;
-      > span {
-        &:last-child {
-          padding-right: 1rem;
-        }
-      }
+      gap: 2rem;
     }
   }
 }

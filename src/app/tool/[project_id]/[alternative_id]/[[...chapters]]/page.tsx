@@ -51,7 +51,6 @@ export default function ChapterPage() {
     sliderIsAnimating,
     setSliderIsAnimating,
     setSelfAssessmentPopup,
-    appReady,
   } = useStore();
   const [currentChapter, setCurrentChapter] =
     useState<currentChapterType | null>(null);

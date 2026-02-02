@@ -720,7 +720,7 @@ export function Menu({
       <div className={styles["bottom"]}>
         <div className={clsx(styles["more"], "paragraph_18 bold")}>
           {structure?.sidebar["more"].map((credit, index) => {
-            if (index < 2) {
+            if (index !== 2) {
               return (
                 <span key={credit.link || index}>
                   <a href={credit.link} target="_blank">
