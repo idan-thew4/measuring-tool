@@ -6,7 +6,8 @@ import { useParams, useRouter } from "next/navigation";
 import clsx from "clsx";
 
 export function SelfAssessmentPopup() {
-  const { structure, setSelfAssessmentPopup, selfAssessmentPopup } = useStore();
+  const { structure, setSelfAssessmentPopup, selfAssessmentPopup, setLoader } =
+    useStore();
   const params = useParams();
   const [chapter, subChapter, principle] = params?.chapters || [];
 
@@ -36,6 +37,7 @@ export function SelfAssessmentPopup() {
               key={index}
               onClick={() => {
                 setSelfAssessmentPopup(false);
+                setLoader(true);
 
                 if (index === 0) {
                   router.push(

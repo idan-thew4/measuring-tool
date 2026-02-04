@@ -691,6 +691,8 @@ function Store({ children }: PropsWithChildren<{}>) {
       // const response = await fetch(`${url}/api/temp`);
 
       if (!response.ok) {
+        console.log("Failed to fetch content:", response.status);
+
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
@@ -702,10 +704,6 @@ function Store({ children }: PropsWithChildren<{}>) {
       console.error("Failed to fetch content:", error);
     }
   }
-
-  useEffect(() => {
-    console.log("loginPopup", loginPopup);
-  }, [loginPopup]);
 
   function createScoreObject(structureObject: structureProps) {
     let scoreObjectTemp: ScoreType;
@@ -1211,14 +1209,10 @@ function Store({ children }: PropsWithChildren<{}>) {
       (prevSideMenu === "self-assessment" && sideMenu === "questionnaire") ||
       (prevSideMenu === "questionnaire" && sideMenu === "self-assessment")
     ) {
-      // if (redirected === "true") {
+      // setActiveSideMenu(false);
+      // timeout = setTimeout(() => {
       //   setActiveSideMenu(true);
-      //   return;
-      // }
-      setActiveSideMenu(false);
-      timeout = setTimeout(() => {
-        setActiveSideMenu(true);
-      }, 300);
+      // }, 300);
     } else if (
       (prevSideMenu === "" && sideMenu === "questionnaire") ||
       sideMenu === "self-assessment"
