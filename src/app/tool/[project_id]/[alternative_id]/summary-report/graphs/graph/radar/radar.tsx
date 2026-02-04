@@ -175,7 +175,13 @@ const RadarGraph = forwardRef<RadarGraphHandle, RadarGraphProps>(
         {filters && (
           <ul className={graphStyles["filters"]}>
             {dataKeys?.map((filter, index) => (
-              <li key={index} className={graphStyles["filter-item"]}>
+              <li
+                key={index}
+                className={clsx(
+                  graphStyles["filter-item"],
+                  graphStyles[filter],
+                )}
+              >
                 <label
                   className={clsx("paragraph_14", graphStyles["filter-label"])}
                 >

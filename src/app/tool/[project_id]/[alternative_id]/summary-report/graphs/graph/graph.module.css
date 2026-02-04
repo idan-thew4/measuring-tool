@@ -44,6 +44,9 @@ ul.filters {
   margin-bottom: 5rem;
   flex-direction: column-reverse;
 }
+ul.filters .averageScore {
+  display: none;
+}
 ul.filters .filter-item:has(input:checked) .filter-label:before {
   background: url("../../../../../../../../public/icons/check.svg") no-repeat center;
   background-size: 1.1rem;

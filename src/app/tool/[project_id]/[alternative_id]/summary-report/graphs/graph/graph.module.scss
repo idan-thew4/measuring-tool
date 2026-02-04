@@ -47,6 +47,10 @@ ul.filters {
   margin-bottom: 5rem;
   flex-direction: column-reverse;
 
+  .averageScore {
+    display: none;
+  }
+
   .filter {
     &-item {
       &:has(input:checked) {
@@ -59,6 +63,7 @@ ul.filters {
         }
       }
     }
+
     &-label {
       display: flex;
       align-items: center;
