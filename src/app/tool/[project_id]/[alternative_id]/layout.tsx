@@ -12,13 +12,15 @@ export default function ToolLayout({
 }) {
   const params = useParams();
   const [chapter, subChapter, principle] = params?.chapters || [];
-  const { structure, sideMenu } = useStore();
+  const { structure, sideMenu, setLoader } = useStore();
   const router = useRouter();
 
   useEffect(() => {
     if (!params.chapters || params.chapters.length !== 3) {
       router.push("/tool/user-dashboard");
     }
+
+    setLoader(false);
   }, [params.chapters, router]);
 
   if (!structure) {
