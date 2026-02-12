@@ -21,7 +21,6 @@ export function LoginPopup() {
     setRegistrationPopup,
     setLoggedInChecked,
     setResetPasswordPopup,
-    appReady,
   } = useStore();
 
   const {
@@ -159,6 +158,7 @@ export function LoginPopup() {
           ))}
           <button
             className={clsx("link-button blue", formStyles["link-button"])}
+            type="button"
             onClick={() => {
               setLoginPopup(false);
               setResetPasswordPopup(true);

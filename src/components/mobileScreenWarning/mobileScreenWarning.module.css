@@ -18,7 +18,7 @@
 }
 @media only screen and (max-width: 1023px) {
   .mobile-screen-warning-container {
-    height: 100vh;
+    height: 100dvh;
     display: flex !important;
     flex-direction: column;
     background-color: #f3f9ed;

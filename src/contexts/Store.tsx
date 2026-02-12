@@ -18,6 +18,7 @@ import React, {
 5;
 import { saveAs } from "file-saver";
 import { p } from "framer-motion/client";
+import { set } from "react-hook-form";
 
 const ApiContext = createContext<ApiContextType | undefined>(undefined);
 
@@ -698,6 +699,7 @@ function Store({ children }: PropsWithChildren<{}>) {
       const data = await response.json();
       setStructure(data);
       createScoreObject(data);
+      setLoader(false);
 
       return data;
     } catch (error) {
@@ -1354,8 +1356,7 @@ function Store({ children }: PropsWithChildren<{}>) {
         setDashBoardVisible,
         sliderIsAnimating,
         setSliderIsAnimating,
-      }}
-    >
+      }}>
       {children}
     </ApiContext.Provider>
   );

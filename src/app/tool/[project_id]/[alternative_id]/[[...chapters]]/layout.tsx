@@ -11,9 +11,9 @@ export default function ChapterLayout({
 }) {
   const params = useParams();
   const [chapter, subChapter, principle] = params?.chapters || [];
-  const { structure } = useStore();
+  const { structure, loader } = useStore();
 
-  if (!structure) {
+  if (!structure || loader) {
     return <Loader />;
   }
 

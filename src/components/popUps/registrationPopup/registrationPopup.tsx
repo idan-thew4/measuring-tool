@@ -51,6 +51,7 @@ export function RegistrationPopup() {
     getUserDashboardData,
     initialScoreObject,
     addConfirmPasswordToSteps,
+    setLoader,
   } = useStore();
   const [completedSteps, setCompletedSteps] = useState<totalCompleted>();
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -67,6 +68,7 @@ export function RegistrationPopup() {
   const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
   const params = useParams();
   const [chapter, subChapter, principle] = params?.chapters || [];
+  const [stepDataSetter, setStepDataSetter] = useState<Inputs>({});
 
   const {
     register,
@@ -75,6 +77,7 @@ export function RegistrationPopup() {
     control,
     watch,
     reset,
+    setError,
 
     formState: { errors },
   } = useForm<Inputs>();
@@ -87,6 +90,8 @@ export function RegistrationPopup() {
     array: [],
     single: undefined,
   });
+
+  const passwordField = "";
 
   useEffect(() => {
     let stepsArray: RegistrationStep[] | ResetPasswordStep[] | undefined = [];
@@ -118,6 +123,13 @@ export function RegistrationPopup() {
 
       setCompletedSteps(completedStepsArray);
     }
+
+    const passwordField =
+      steps.single && steps.single["input-fields"]
+        ? steps.single["input-fields"].find(
+            (field) => field.type === "password",
+          )
+        : undefined;
   }, [structure, registrationPopup, currentStep]);
 
   async function otpRequest(phone: string, recaptchaToken: string) {
@@ -143,8 +155,8 @@ export function RegistrationPopup() {
       if (data) {
         setLoading(false);
 
-        if (data.success) {
-          return data.otp;
+        if (data.ok) {
+          return data.ok;
         } else {
           if (data.message) {
             setGeneralError(data.message);
@@ -378,6 +390,8 @@ export function RegistrationPopup() {
   }, [scoreObject, steps]);
 
   const onSubmit = async (stepData: Inputs, index: number) => {
+    setStepDataSetter((prev) => ({ ...prev, ...stepData }));
+
     const updatedProjectDetails = { ...scoreObject["project-details"] };
 
     // Update only keys that exist in project-details
@@ -399,13 +413,27 @@ export function RegistrationPopup() {
     ) {
       if (index === 1 && registrationPopup === "register") {
         const userCreated = await createNewUser(
-          stepData["fullName"] as string,
-          stepData["email"] as string,
-          stepData["password"] as string,
-          stepData["planningOffice"] as string,
-          stepData["contactPhone"] as string,
-          stepData["commercial-agreement"] as boolean,
-          stepData["research-agreement"] as boolean,
+          stepDataSetter["fullName"]
+            ? (stepDataSetter["fullName"] as string)
+            : (stepData["fullName"] as string),
+          stepDataSetter["email"]
+            ? (stepDataSetter["email"] as string)
+            : (stepData["email"] as string),
+          stepDataSetter["password"]
+            ? (stepDataSetter["password"] as string)
+            : (stepData["password"] as string),
+          stepDataSetter["planningOffice"]
+            ? (stepDataSetter["planningOffice"] as string)
+            : (stepData["planningOffice"] as string),
+          stepDataSetter["contactPhone"]
+            ? (stepDataSetter["contactPhone"] as string)
+            : (stepData["contactPhone"] as string),
+          stepDataSetter["commercial-agreement"]
+            ? (stepDataSetter["commercial-agreement"] as boolean)
+            : (stepData["commercial-agreement"] as boolean),
+          stepDataSetter["research-agreement"]
+            ? (stepDataSetter["research-agreement"] as boolean)
+            : (stepData["research-agreement"] as boolean),
           stepData["verificationCode"] as boolean,
         );
 
@@ -442,20 +470,22 @@ export function RegistrationPopup() {
             token,
           );
 
-          setCurrentStep(index + 1);
-          setGeneralError("");
-          setCompletedSteps((prev) => {
-            if (!prev) return prev;
-            const newSteps = [...prev];
-            newSteps[index + 1] = {
-              ...newSteps[index + 1],
-              completed: 1,
-            };
-            return newSteps;
-          });
+          console.log("OTP Sent:", otpSent);
 
           if (!otpSent) {
             return;
+          } else {
+            setCurrentStep(index + 1);
+            setGeneralError("");
+            setCompletedSteps((prev) => {
+              if (!prev) return prev;
+              const newSteps = [...prev];
+              newSteps[index + 1] = {
+                ...newSteps[index + 1],
+                completed: 1,
+              };
+              return newSteps;
+            });
           }
         }
       }
@@ -481,6 +511,7 @@ export function RegistrationPopup() {
         setCurrentStep(0);
         reset();
         setScoreObject(initialScoreObject);
+        setLoader(true);
       }
     }
   };
@@ -738,7 +769,7 @@ export function RegistrationPopup() {
                             : field.type === "password"
                               ? {
                                   value:
-                                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])[ -~]{8,}$/,
+                                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])[A-Za-z\d!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]{8,}$/,
                                   message: field["format-error"],
                                 }
                               : undefined,
@@ -787,6 +818,9 @@ export function RegistrationPopup() {
                   {errors[field.name]?.message as string}
                 </span>
               ) : null}
+              {field.name === "password" && !errors[field.name] && (
+                <div>{field["format-error"]}</div>
+              )}
             </div>
           ))}
           <ReCAPTCHA
