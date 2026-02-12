@@ -1,8 +1,9 @@
 "use client";
 import { SideMenu } from "./components/side-menu/side-menu";
 import { useStore } from "../../../../contexts/Store";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Loader } from "../../../../components/loader/loader";
+import { useEffect } from "react";
 
 export default function ToolLayout({
   children,
@@ -11,8 +12,14 @@ export default function ToolLayout({
 }) {
   const params = useParams();
   const [chapter, subChapter, principle] = params?.chapters || [];
-
   const { structure, sideMenu } = useStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!params.chapters || params.chapters.length !== 3) {
+      router.push("/tool/user-dashboard");
+    }
+  }, [params.chapters, router]);
 
   if (!structure) {
     return <Loader />;
