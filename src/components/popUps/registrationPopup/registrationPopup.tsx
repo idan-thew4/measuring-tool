@@ -576,6 +576,7 @@ export function RegistrationPopup() {
         setResentAttempts(0);
       }}
       navArrows={currentStep}
+      type={registrationPopup}
       goToPrevSlide={() => {
         if (currentStep > 0) {
           setCurrentStep((prev) => prev - 1);

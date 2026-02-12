@@ -344,9 +344,8 @@ a.with-icon.add-alternative:hover:after {
 .pop-up .headline-container {
   display: flex;
   gap: 1rem;
-  align-items: flex-start;
   margin-bottom: 2rem;
-  flex-direction: column;
+  align-items: center;
 }
 .pop-up .headline-container .nav-arrow {
   background: url("../../../../public/icons/arrow-down.svg") no-repeat center;
