@@ -2,18 +2,25 @@
 import { useStore } from "../../../contexts/Store";
 import { PopUpContainer } from "../popUpContainer/popUpContainer";
 import popUpContainerStyles from "../popUpContainer/pop-up-container.module.scss";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, usePathname } from "next/navigation";
 import clsx from "clsx";
 
 export function SelfAssessmentPopup() {
-  const { structure, setSelfAssessmentPopup, selfAssessmentPopup, setLoader } =
-    useStore();
+  const {
+    structure,
+    setSelfAssessmentPopup,
+    selfAssessmentPopup,
+    setLoader,
+    isPageChanged,
+  } = useStore();
   const params = useParams();
   const [chapter, subChapter, principle] = params?.chapters || [];
+  const pathname = usePathname();
 
   const router = useRouter();
 
   if (!selfAssessmentPopup) return null;
+  if (pathname.includes("user-dashboard")) return null;
   if (!structure) return <div>Loading...</div>;
 
   return (

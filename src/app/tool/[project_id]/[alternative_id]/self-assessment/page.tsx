@@ -68,6 +68,7 @@ export default function SelfAssessment() {
       setLoader(false);
 
       if (data.success) {
+        console.log("Self-assessment data:", data);
         if (data.data) {
           router.push(
             `/tool/${params.project_id}/${params.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1?redirected=true`,
@@ -197,10 +198,6 @@ export default function SelfAssessment() {
     }
   }, [params.project_id]);
 
-  useEffect(() => {
-    console.log("loggedInChecked in self-assessment:", loggedInChecked);
-  }, [loggedInChecked]);
-
   // useEffect(() => {
   //   setActiveSideMenu(true);
   // }, []);
@@ -225,13 +222,15 @@ export default function SelfAssessment() {
         styles["main-container"],
         "main-container",
         activeSideMenu && styles["main-container--active"],
-      )}>
+      )}
+    >
       {structure && (
         <>
           <SummaryHeader
             title={structure?.["self-assessment"]["summary-title"]}
             structure={structure}
-            scoreObject={scoreObject}>
+            scoreObject={scoreObject}
+          >
             {/* TO DO: update button copy from structure */}
             <button
               className="basic-button outline"
@@ -240,7 +239,8 @@ export default function SelfAssessment() {
                   params.project_id as string,
                   scoreObject.data.assessment,
                 );
-              }}>
+              }}
+            >
               המשך לשאלון
             </button>
           </SummaryHeader>

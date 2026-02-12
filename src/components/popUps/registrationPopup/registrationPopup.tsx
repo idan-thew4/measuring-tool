@@ -259,7 +259,6 @@ export function RegistrationPopup() {
       if (data.success) {
         setLoading(false);
         setRegistrationPopup("");
-        setSelfAssessmentPopup(true);
         setLoggedInChecked(true);
         getUserDashboardData(structure);
 
@@ -267,10 +266,12 @@ export function RegistrationPopup() {
           router.push(
             `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`,
           );
+          setSelfAssessmentPopup(true);
         } else {
           window.open(
             `/tool/${data.data.project_id}/${data.data.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1?showSelfAssessment=1`,
           );
+          setSelfAssessmentPopup(true);
         }
       } else {
         if (data.message) {
@@ -552,7 +553,8 @@ export function RegistrationPopup() {
           className="text-link"
           href={link}
           target="_blank"
-          rel="noopener noreferrer">
+          rel="noopener noreferrer"
+        >
           {linkText.join(" ")}
         </a>
       </>
@@ -590,7 +592,8 @@ export function RegistrationPopup() {
             return newSteps;
           });
         }
-      }}>
+      }}
+    >
       {completedSteps && (
         <ProgressBar completed={completedSteps} indicator={true} />
       )}
@@ -598,18 +601,21 @@ export function RegistrationPopup() {
         className={clsx(
           formStyles["form-container"],
           PopUpContainerStyles[`step-${currentStep + 1}`],
-        )}>
+        )}
+      >
         <div>
           <h3
             className={clsx(
               "headline_medium-small bold",
               formStyles["headline"],
-            )}>
+            )}
+          >
             {steps.single.title}
           </h3>
           {steps.single["input-fields"][0].type === "otp" && (
             <h4
-              className={clsx("headline_medium-small", formStyles["subtitle"])}>
+              className={clsx("headline_medium-small", formStyles["subtitle"])}
+            >
               {"subtitle" in steps.single ? steps.single.subtitle : ""}
             </h4>
           )}
@@ -626,7 +632,8 @@ export function RegistrationPopup() {
         </div>
         <form
           style={{ pointerEvents: loading ? "none" : "auto" }}
-          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}>
+          onSubmit={handleSubmit((data) => onSubmit(data, currentStep))}
+        >
           {steps.single["input-fields"].map((field, index) => (
             <div
               className={clsx(
@@ -638,7 +645,8 @@ export function RegistrationPopup() {
                   : formStyles["checkbox"],
                 `input`,
               )}
-              key={index}>
+              key={index}
+            >
               {field["dropdown-options"] ? (
                 <Controller
                   name={field.name}
@@ -714,7 +722,8 @@ export function RegistrationPopup() {
                           className={clsx(
                             "paragraph_18",
                             formStyles["otp-label"],
-                          )}>
+                          )}
+                        >
                           {steps.single?.["input-fields"][0].label}
                           {steps.single?.["input-fields"][0].mandatory
                             ? " *"
@@ -841,7 +850,8 @@ export function RegistrationPopup() {
               loading && "loading",
             )}
             type="submit"
-            disabled={Object.keys(errors).length > 0 || generalError !== ""}>
+            disabled={Object.keys(errors).length > 0 || generalError !== ""}
+          >
             {structure.registration["nav-buttons"][currentStep]}
           </button>
           {steps.single["input-fields"][0].type === "otp" && (
@@ -872,7 +882,8 @@ export function RegistrationPopup() {
                           setGeneralError("");
                           reset({ verificationCode: "" });
                         }
-                      }}>
+                      }}
+                    >
                       {steps.single?.["secondery-cta-copy"]?.button}
                     </button>
                   </>
@@ -890,7 +901,8 @@ export function RegistrationPopup() {
               className={clsx(
                 formStyles["error-message"],
                 formStyles["general-error"],
-              )}>
+              )}
+            >
               {generalError}
             </div>
           )}
