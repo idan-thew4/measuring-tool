@@ -90,7 +90,6 @@ export default function ChapterPage() {
     if (showSelfAssessment === "1") {
       setSelfAssessmentPopup(true);
     }
-    setLoader(false);
   }, []);
 
   useEffect(() => {
