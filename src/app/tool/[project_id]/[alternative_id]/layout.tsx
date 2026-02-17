@@ -18,7 +18,7 @@ export default function ToolLayout({
 
   useEffect(() => {
     if (!params.chapters || params.chapters.length !== 3) {
-      if (!pathname.includes("self-assessment")) {
+      if (!pathname.includes("self-assessment")&&!pathname.includes("summary")&&!pathname.includes("summary-report")) {
         router.push("/tool/user-dashboard");
       }
     }
