@@ -94,6 +94,10 @@
   margin-bottom: 2rem;
   white-space: break-spaces;
 }
+.chapters-slider-container .chapter-box .chapter-headline-container .description a {
+  color: #00a6ce;
+  text-decoration: underline;
+}
 .chapters-slider-container .chapter-box .slide-out {
   opacity: 0;
   transform: translateX(-100%);

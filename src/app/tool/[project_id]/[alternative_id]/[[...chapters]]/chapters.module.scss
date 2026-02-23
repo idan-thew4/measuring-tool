@@ -95,6 +95,11 @@
       .description {
         margin-bottom: 2rem;
         white-space: break-spaces;
+
+        a {
+          color: $blue;
+          text-decoration: underline;
+        }
       }
     }
 
