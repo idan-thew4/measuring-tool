@@ -178,6 +178,7 @@ export function RegistrationPopup() {
     sendCommercialMaterial: boolean,
     getInTouch: boolean,
     otpCode: boolean,
+    projectArea: string,
   ) {
     setLoading(true);
     try {
@@ -436,6 +437,9 @@ export function RegistrationPopup() {
             ? (stepDataSetter["research-agreement"] as boolean)
             : (stepData["research-agreement"] as boolean),
           stepData["verificationCode"] as boolean,
+          stepDataSetter["projectArea"]
+            ? (stepDataSetter["projectArea"] as string)
+            : (stepData["projectArea"] as string),
         );
 
         if (!userCreated) {

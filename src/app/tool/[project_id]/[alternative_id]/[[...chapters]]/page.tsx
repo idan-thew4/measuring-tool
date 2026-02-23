@@ -362,7 +362,12 @@ export default function ChapterPage() {
             </div>
           </div>
           <p className={clsx("paragraph_19", styles["description"])}>
-            {currentChapter?.description}
+            {/* {currentChapter?.description} */}
+            <span
+              dangerouslySetInnerHTML={{
+                __html: currentChapter?.description || "",
+              }}
+            ></span>
           </p>
         </div>
         <ul className={styles["chapter-options"]}>
