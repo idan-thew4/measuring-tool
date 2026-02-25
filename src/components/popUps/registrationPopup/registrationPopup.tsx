@@ -199,6 +199,7 @@ export function RegistrationPopup() {
             : false,
           getInTouch: getInTouch ? getInTouch : false,
           otpCode,
+          projectArea,
         }),
       });
 
