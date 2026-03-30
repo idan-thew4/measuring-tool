@@ -27,6 +27,10 @@
   padding-top: 5rem;
 }
 
+.main-container {
+  grid-column: 3/11;
+}
+
 .top-section .user-row {
   display: flex;
   justify-content: space-between;

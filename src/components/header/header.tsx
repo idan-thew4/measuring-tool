@@ -54,6 +54,7 @@ export function Header() {
     setSideMenu,
     loader,
     setProjects,
+    isPageChanged,
   } = useStore();
   const router = useRouter();
   const params = useParams();
@@ -141,6 +142,7 @@ export function Header() {
         setLoggedInChecked(false);
         setScoreObject(initialScoreObject);
         setProjects(null);
+        isPageChanged("user-dashboard");
         router.push(
           `/tool/0/0/${structure.questionnaire.content[0]["chapter-slug"]}/1/1`,
         );

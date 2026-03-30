@@ -19,6 +19,7 @@ export function Project({
     setAddRenamePopup,
     getAlternativeSpreadsheet,
     setDashBoardVisible,
+    setLoader,
   } = useStore();
   const router = useRouter();
 
@@ -85,6 +86,7 @@ export function Project({
                 className={clsx("paragraph_20", styles["alternative-link"])}
                 onClick={() => {
                   setDashBoardVisible(false);
+                  setLoader(true);
                   setTimeout(() => {
                     router.push(
                       `/tool/${project_id}/${alternative.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1`,

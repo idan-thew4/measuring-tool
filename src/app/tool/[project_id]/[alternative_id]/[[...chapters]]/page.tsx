@@ -95,6 +95,8 @@ export default function ChapterPage() {
   useEffect(() => {
     const pageChanged = Boolean(isPageChanged("questionnaire"));
 
+    console.log("Page changed:", pageChanged);
+
     if (pageChanged) {
       if (
         (params.project_id === "0" || params.alternative_id === "0") &&
@@ -102,6 +104,7 @@ export default function ChapterPage() {
       ) {
         validateToken();
         setIsTokenChecked(true);
+        console.log("Token validated");
       } else if (
         (!loggedInChecked && params.project_id !== "0") ||
         params.alternative_id !== "0"
@@ -110,6 +113,7 @@ export default function ChapterPage() {
           params.project_id as string,
           params.alternative_id as string,
         );
+        console.log("Alternative questionnaire data fetched");
       }
     }
   }, [structure]);

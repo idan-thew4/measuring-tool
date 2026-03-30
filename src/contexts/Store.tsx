@@ -558,9 +558,8 @@ export type ScoreData = {
 };
 
 // const url = "http://localhost:3000/";
-// const url =
-//   "https://wordpress-1080689-5737105.cloudwaysapps.com/wp-json/slil-api";
-const url = "https://cms.slil.org.il/wp-json/slil-api";
+const url = "https://wordpress-1080689-6201083.cloudwaysapps.com/";
+// const url = "https://cms.slil.org.il/wp-json/slil-api";
 
 function Store({ children }: PropsWithChildren<{}>) {
   const [structure, setStructure] = useState<structureProps>();
@@ -1356,7 +1355,8 @@ function Store({ children }: PropsWithChildren<{}>) {
         setDashBoardVisible,
         sliderIsAnimating,
         setSliderIsAnimating,
-      }}>
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );
