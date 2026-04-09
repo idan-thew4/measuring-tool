@@ -68,7 +68,6 @@ export default function SelfAssessment() {
       setLoader(false);
 
       if (data.success) {
-        console.log("Self-assessment data:", data);
         if (data.data) {
           router.push(
             `/tool/${params.project_id}/${params.alternative_id}/${structure?.questionnaire.content[0]["chapter-slug"]}/1/1?redirected=true`,

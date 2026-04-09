@@ -33,6 +33,8 @@ export default function userDashboard() {
   }, [structure]);
 
   useEffect(() => {
+    isPageChanged("user-dashboard");
+
     if (!dashBoardVisible) {
       setDashBoardVisible(true);
     }

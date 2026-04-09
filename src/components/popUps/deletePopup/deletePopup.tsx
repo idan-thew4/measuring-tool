@@ -21,6 +21,7 @@ export function DeletePopup() {
     setDeletePopup,
     getUserDashboardData,
     setLoggedInChecked,
+    setLoader,
   } = useStore();
 
   const [generalError, setGeneralError] = useState<string>("");
@@ -30,9 +31,10 @@ export function DeletePopup() {
   async function deleteFunction(
     structure: structureProps,
     project_id?: number,
-    alternative_id?: number
+    alternative_id?: number,
   ): Promise<deletePopupResponse | void> {
     setLoading(true);
+    setLoader(true);
     try {
       const response = await fetch(`${url}/${deletePopup.type}`, {
         method: "DELETE",
@@ -56,11 +58,12 @@ export function DeletePopup() {
         if (data.success) {
           setDeletePopup({ type: "" });
           setGeneralError("");
+          setLoader(false);
 
           if (deletePopup.type === "delete-user") {
             setLoggedInChecked(false);
             router.push(
-              `/tool/0/0/${structure.questionnaire.content[1]["chapter-slug"]}/1/1`
+              `/tool/0/0/${structure.questionnaire.content[1]["chapter-slug"]}/1/1`,
             );
           } else {
             setLoggedInChecked(true);
@@ -82,7 +85,7 @@ export function DeletePopup() {
       deleteFunction(
         structure,
         deletePopup.project_id,
-        deletePopup.alternative_id
+        deletePopup.alternative_id,
       );
     }
   };
@@ -97,7 +100,7 @@ export function DeletePopup() {
       <p
         className={clsx(
           popUpContainerStyles["description-text"],
-          "paragraph_20"
+          "paragraph_20",
         )}
       >
         {structure["user-dashboard"]["pop-ups"][deletePopup.type].description}
@@ -117,7 +120,7 @@ export function DeletePopup() {
                   "solid",
                   "basic-button",
                   "warning",
-                  loading && "loading"
+                  loading && "loading",
                 )}
                 type="button"
                 onClick={() => onSubmit(structure)}
@@ -144,7 +147,7 @@ export function DeletePopup() {
         <div
           className={clsx(
             formStyles["error-message"],
-            formStyles["general-error"]
+            formStyles["general-error"],
           )}
         >
           {generalError}

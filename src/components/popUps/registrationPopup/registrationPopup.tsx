@@ -476,8 +476,6 @@ export function RegistrationPopup() {
             token,
           );
 
-          console.log("OTP Sent:", otpSent);
-
           if (!otpSent) {
             return;
           } else {
@@ -541,7 +539,6 @@ export function RegistrationPopup() {
   }, [timeLeft, resentAttempts]);
 
   useEffect(() => {
-    console.log(watch("verificationCode"));
     if (watch("verificationCode") && generalError !== "") {
       setGeneralError("");
     }

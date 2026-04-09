@@ -10,7 +10,7 @@ import {
 } from "../../../../../contexts/Store";
 import styles from "./chapters.module.scss";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 type currentChapterType = {
   score: number;
@@ -85,6 +85,7 @@ export default function ChapterPage() {
   const [comment, setComment] = useState("");
   const router = useRouter();
   const [enterAnimation, setEnterAnimation] = useState("");
+  const [checkPageChange, setCheckPageChange] = useState(false);
 
   useEffect(() => {
     if (showSelfAssessment === "1") {
@@ -92,19 +93,24 @@ export default function ChapterPage() {
     }
   }, []);
 
+  let pageChanged = "" as string | boolean;
+
   useEffect(() => {
-    const pageChanged = Boolean(isPageChanged("questionnaire"));
+    pageChanged = Boolean(isPageChanged("questionnaire"));
+  }, []);
 
-    console.log("Page changed:", pageChanged);
+  useEffect(() => {
+    setCheckPageChange(Boolean(isPageChanged("questionnaire")));
+  }, [pageChanged]);
 
-    if (pageChanged) {
+  useEffect(() => {
+    if (checkPageChange) {
       if (
         (params.project_id === "0" || params.alternative_id === "0") &&
         !isTokenChecked
       ) {
         validateToken();
         setIsTokenChecked(true);
-        console.log("Token validated");
       } else if (
         (!loggedInChecked && params.project_id !== "0") ||
         params.alternative_id !== "0"
@@ -116,7 +122,7 @@ export default function ChapterPage() {
         console.log("Alternative questionnaire data fetched");
       }
     }
-  }, [structure]);
+  }, [checkPageChange]);
 
   async function validateToken() {
     try {

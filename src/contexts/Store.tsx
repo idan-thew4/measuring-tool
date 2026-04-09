@@ -558,7 +558,8 @@ export type ScoreData = {
 };
 
 // const url = "http://localhost:3000/";
-const url = "https://wordpress-1080689-6201083.cloudwaysapps.com/";
+const url =
+  "https://wordpress-999199-6317044.cloudwaysapps.com/wp-json/slil-api";
 // const url = "https://cms.slil.org.il/wp-json/slil-api";
 
 function Store({ children }: PropsWithChildren<{}>) {
@@ -1022,7 +1023,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   }
 
   function isPageChanged(page: string): boolean {
-    if (pages.previousPage !== page) {
+    if (pages.currentPage !== page) {
       setPages((prev) => ({
         previousPage: prev.currentPage,
         currentPage: page,
@@ -1189,9 +1190,11 @@ function Store({ children }: PropsWithChildren<{}>) {
   }, []);
 
   useEffect(() => {
+    const currentChapterSlug = params.chapters?.[0];
+
     if (pathname.includes("self-assessment")) {
       setSideMenu("self-assessment");
-    } else if (pathname.includes(params.chapters?.[0])) {
+    } else if (currentChapterSlug && pathname.includes(currentChapterSlug)) {
       setSideMenu("questionnaire");
     } else if (pathname.includes("user-dashboard")) {
       setSideMenu("");
@@ -1203,7 +1206,7 @@ function Store({ children }: PropsWithChildren<{}>) {
   // const redirected = searchParams.get("redirected");
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+    let timeout: NodeJS.Timeout | undefined;
 
     // If switching between self-assessment and questionnaire, pop out then in
     if (
@@ -1225,7 +1228,11 @@ function Store({ children }: PropsWithChildren<{}>) {
 
     setPrevSideMenu(sideMenu);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
   }, [sideMenu]);
 
   useEffect(() => {

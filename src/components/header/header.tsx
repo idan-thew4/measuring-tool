@@ -152,8 +152,6 @@ export function Header() {
     }
   }
 
-  console.log("header");
-
   return (
     <header className={styles["header-container"]}>
       <div className={clsx(styles["right-side"], styles["flex-h-align"])}>

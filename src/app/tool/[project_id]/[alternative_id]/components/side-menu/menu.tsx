@@ -120,7 +120,8 @@ function RangeSlider({
       />
       <div
         className={styles["range-slider-progress"]}
-        style={{ width: `${percent}%` }}></div>
+        style={{ width: `${percent}%` }}
+      ></div>
       <div
         className={styles["range-slider-value"]}
         style={{
@@ -131,7 +132,8 @@ function RangeSlider({
                 ? "2%"
                 : `calc(${percent}% - ${percent > 99 ? "4.5" : "1.5"}rem)`
           }`,
-        }}>
+        }}
+      >
         {value}%
       </div>
     </div>
@@ -376,7 +378,8 @@ export function Menu({
       className={clsx(
         styles["menu"],
         type === "self-assessment" && styles["self-assessment"],
-      )}>
+      )}
+    >
       {type !== "self-assessment" ? (
         <ProgressBar completed={completedChapters} structure={structure} />
       ) : (
@@ -416,12 +419,11 @@ export function Menu({
                   ) || ""
                 ],
             )}
-            key={chapterIndex}>
+            key={chapterIndex}
+          >
             <div
-              className={clsx(
-                "nav-side-text__chapter",
-                styles["chapter-text"],
-              )}>
+              className={clsx("nav-side-text__chapter", styles["chapter-text"])}
+            >
               <button
                 onClick={() => {
                   const nextChapterIdx =
@@ -432,7 +434,8 @@ export function Menu({
                   router.push(
                     `/tool/${project_id}/${alternative_id}/${chapter["chapter-slug"]}/1/1`,
                   );
-                }}>
+                }}
+              >
                 {`${chapterIndex + 1}. ${chapter["chapter-title"]}`}
               </button>
               {type === "self-assessment" && chapterIndex !== 1 && (
@@ -492,7 +495,8 @@ export function Menu({
                               : item,
                           ),
                         );
-                      }}></button>
+                      }}
+                    ></button>
                   </div>
                   <p>
                     {`${
@@ -533,7 +537,8 @@ export function Menu({
                         isActiveSubChapter && styles["active"],
                         type !== "self-assessment" &&
                           styles[subChapterCompleted || ""],
-                      )}>
+                      )}
+                    >
                       <button
                         className="nav-side-text__sub-chapter"
                         onClick={() => {
@@ -555,7 +560,8 @@ export function Menu({
                               chapter["chapter-slug"]
                             }/${subIndex + 1}/1`,
                           );
-                        }}>
+                        }}
+                      >
                         {`${chapterIndex + 1}.${subIndex + 1} ${
                           subChapter["sub-chapter-title"]
                         }`}{" "}
@@ -626,7 +632,8 @@ export function Menu({
                                       styles["opened"],
                                     isActiveChoice && styles["active"],
                                     styles[choiceCompleted || ""],
-                                  )}>
+                                  )}
+                                >
                                   <button
                                     className="nav-side-text__sub-chapter-choice"
                                     onClick={() => {
@@ -639,11 +646,6 @@ export function Menu({
 
                                       const nextLocation = `${String(nextChapterIdx).padStart(1, "0")}${String(subIndex + 1).padStart(1, "0")}${String(subChoicesIndex + 1).padStart(1, "0")}`;
 
-                                      console.log({
-                                        currentLocation,
-                                        nextLocation,
-                                      });
-
                                       handleClick(
                                         Number(currentLocation),
                                         Number(nextLocation),
@@ -655,7 +657,8 @@ export function Menu({
                                           subChoicesIndex + 1
                                         }`,
                                       );
-                                    }}>
+                                    }}
+                                  >
                                     {`${subChoicesIndex + 1}. ${
                                       subChoices.title
                                     }`}
@@ -708,7 +711,8 @@ export function Menu({
                           `/tool/${project_id}/${alternative_id}/${links[index]}`,
                         );
                       }, 100);
-                    }}>
+                    }}
+                  >
                     {option}
                   </button>
                 </li>
