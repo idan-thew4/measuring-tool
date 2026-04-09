@@ -193,6 +193,7 @@
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter button,
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter .chapter-text {
   color: #979797 !important;
+  pointer-events: none;
 }
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter button:hover,
 .side-menu .menu.self-assessment ul.nav-side-menu .chapter .chapter-text:hover {

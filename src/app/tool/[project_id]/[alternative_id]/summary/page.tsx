@@ -294,9 +294,9 @@ const PdfTable = ({
         }}
       ></Text>
     </View>
-    {structure?.questionnaire.content.map((chapterItem, chapterIdx) => (
+    {chapter.map((subChapter, subChapterIdx) => (
       <View
-        key={chapterIdx}
+        key={`${chapterNumber}-${subChapterIdx}`}
         style={{
           border: "2px solid #D5D8D7",
           borderRadius: 15,
@@ -304,184 +304,182 @@ const PdfTable = ({
           marginBottom: 20,
         }}
       >
-        {chapterItem["chapter-content"].map((subChapter, subChapterIdx) => (
-          <View key={`${chapterIdx}-${subChapterIdx}`}>
+        <View>
+          <View
+            style={{
+              ...PDFstyles.columns,
+              backgroundColor: "#5B6771",
+              color: "white",
+              height: 42,
+              borderTopLeftRadius: subChapterIdx === 0 ? 13 : 0,
+              borderTopRightRadius: subChapterIdx === 0 ? 13 : 0,
+              paddingLeft: 20,
+              paddingRight: 20,
+              fontSize: 11,
+              alignItems: "center",
+            }}
+          >
             <View
               style={{
-                ...PDFstyles.columns,
-                backgroundColor: "#5B6771",
-                color: "white",
-                height: 42,
-                borderTopLeftRadius: subChapterIdx === 0 ? 13 : 0,
-                borderTopRightRadius: subChapterIdx === 0 ? 13 : 0,
-                paddingLeft: 20,
-                paddingRight: 20,
-                fontSize: 11,
-                alignItems: "center",
+                display: "flex",
+                flexDirection: "row-reverse",
+                gap: 3,
+                flex: 3,
               }}
             >
+              <Text style={{ fontFamily: "Noto Sane Hebrew Bold" }}>
+                .{`${chapterNumber}.${subChapterIdx + 1}`}
+              </Text>
+              <Text style={{ fontFamily: "Noto Sane Hebrew Bold" }}>
+                {subChapter["sub-chapter-title"]}
+              </Text>
+            </View>
+            <Text
+              style={{
+                color: "white",
+                flex: 1,
+              }}
+            >
+              {getPercentageLabel(
+                subChaptersScores,
+                subChapterIdx,
+                structure,
+                getScoreLabel,
+              )}
+            </Text>
+            <View style={{ flex: 1, padding: 4, textAlign: "right" }}>
               <View
                 style={{
                   display: "flex",
                   flexDirection: "row-reverse",
-                  gap: 3,
-                  flex: 3,
+                  textAlign: "right",
+                  gap: 0,
+                  margin: "auto",
+                  alignItems: "flex-start",
                 }}
               >
-                <Text style={{ fontFamily: "Noto Sane Hebrew Bold" }}>
-                  .{`${chapterIdx + 1}.${subChapterIdx + 1}`}
+                <Text style={{ flex: 1, fontSize: 11, textAlign: "left" }}>
+                  {subChaptersScores[subChapterIdx]?.generalScore}
                 </Text>
-                <Text style={{ fontFamily: "Noto Sane Hebrew Bold" }}>
-                  {subChapter["sub-chapter-title"]}
-                </Text>
+                <View>
+                  {subChaptersScores[subChapterIdx]?.generalScore !==
+                    undefined && (
+                    <Text
+                      style={{
+                        flex: 1,
+                        fontSize: 11,
+                        fontFamily: "Noto Sane Hebrew Regular",
+                        textAlign: "left",
+                        paddingRight: 2,
+                      }}
+                    >
+                      <Text>
+                        {structure?.summary?.table?.columns[2]?.title}
+                      </Text>
+                    </Text>
+                  )}
+                </View>
               </View>
-              <Text
+              {subChaptersScores[subChapterIdx]?.percentage && (
+                <Text
+                  style={{
+                    ...PDFstyles.pointsBubble,
+                    backgroundColor: "white",
+                    color: "#5B6771",
+                  }}
+                >
+                  {subChaptersScores[subChapterIdx]?.percentage}%
+                </Text>
+              )}
+            </View>
+            <View style={{ flex: 3 }}></View>
+          </View>
+          {subChapter.principles.map((principle, principleIndex) => {
+            const inputNumber =
+              scoreObject.data?.questionnaire?.[chapterNumber - 1]?.[
+                "chapter-data"
+              ]?.[subChapterIdx]?.["principles"]?.[principleIndex]?.choice;
+            let score: number | undefined;
+
+            if (inputNumber) {
+              score =
+                structure?.questionnaire.content[chapterNumber - 1][
+                  "chapter-content"
+                ][subChapterIdx]["principles"][principleIndex]["choices"][
+                  inputNumber - 1
+                ]?.score;
+            }
+            return (
+              <View
+                key={principleIndex}
                 style={{
-                  color: "white",
-                  flex: 1,
+                  ...PDFstyles.columns,
+                  color: "black",
+                  paddingTop: 10,
+                  paddingBottom: 8,
+                  marginLeft: 20,
+                  marginRight: 20,
+                  fontSize: 11,
+                  alignItems: "flex-start",
+                  borderBottom:
+                    principleIndex !== subChapter.principles.length - 1
+                      ? "1px solid #D5D8D7"
+                      : undefined,
                 }}
               >
-                {getPercentageLabel(
-                  subChaptersScores,
-                  subChapterIdx,
-                  structure,
-                  getScoreLabel,
-                )}
-              </Text>
-              <View style={{ flex: 1, padding: 4, textAlign: "right" }}>
                 <View
                   style={{
                     display: "flex",
                     flexDirection: "row-reverse",
-                    textAlign: "right",
-                    gap: 0,
-                    margin: "auto",
-                    alignItems: "flex-start",
+                    gap: 3,
+                    flex: 3,
                   }}
                 >
-                  <Text style={{ flex: 1, fontSize: 11, textAlign: "left" }}>
-                    {subChaptersScores[subChapterIdx]?.generalScore}
-                  </Text>
-                  <View>
-                    {subChaptersScores[subChapterIdx]?.generalScore &&
-                      subChapterIdx && (
-                        <Text
-                          style={{
-                            flex: 1,
-                            fontSize: 11,
-                            fontFamily: "Noto Sane Hebrew Regular",
-                            textAlign: "left",
-                            paddingRight: 2,
-                          }}
-                        >
-                          <Text>
-                            {structure?.summary?.table?.columns[2]?.title}
-                          </Text>
-                        </Text>
-                      )}
-                  </View>
-                </View>
-                {subChaptersScores[subChapterIdx]?.percentage && (
                   <Text
                     style={{
-                      ...PDFstyles.pointsBubble,
-                      backgroundColor: "white",
-                      color: "#5B6771",
+                      textDecoration:
+                        inputNumber === -1 ? "line-through" : "none",
+                      color: inputNumber === undefined ? "#A0A0A0" : "black",
                     }}
                   >
-                    {subChaptersScores[subChapterIdx]?.percentage}%
+                    .
+                    {`${chapterNumber}.${subChapterIdx + 1}.${
+                      principleIndex + 1
+                    }`}
                   </Text>
-                )}
-              </View>
-              <View style={{ flex: 3 }}></View>
-            </View>
-            {subChapter.principles.map((principle, principleIndex) => {
-              const inputNumber =
-                scoreObject.data?.questionnaire?.[chapterNumber - 1]?.[
-                  "chapter-data"
-                ]?.[subChapterIdx]?.["principles"]?.[principleIndex]?.choice;
-              let score: number | undefined;
-
-              if (inputNumber) {
-                score =
-                  structure?.questionnaire.content[chapterNumber - 1][
-                    "chapter-content"
-                  ][subChapterIdx]["principles"][principleIndex]["choices"][
-                    inputNumber - 1
-                  ]?.score;
-              }
-              return (
-                <View
-                  key={principleIndex}
+                  <Text
+                    style={{
+                      textDecoration:
+                        inputNumber === -1 ? "line-through" : "none",
+                      color: inputNumber === undefined ? "#A0A0A0" : "black",
+                      width: 148,
+                    }}
+                  >
+                    {principle["title"]}
+                  </Text>
+                </View>
+                <Text
                   style={{
-                    ...PDFstyles.columns,
-                    color: "black",
-                    paddingTop: 10,
-                    paddingBottom: 8,
-                    marginLeft: 20,
-                    marginRight: 20,
-                    fontSize: 11,
-                    alignItems: "flex-start",
-                    borderBottom:
-                      principleIndex !== subChapter.principles.length - 1
-                        ? "1px solid #D5D8D7"
-                        : undefined,
+                    flex: 1,
                   }}
                 >
-                  <View
-                    style={{
-                      display: "flex",
-                      flexDirection: "row-reverse",
-                      gap: 3,
-                      flex: 3,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        textDecoration:
-                          inputNumber === -1 ? "line-through" : "none",
-                        color: inputNumber === undefined ? "#A0A0A0" : "black",
-                      }}
-                    >
-                      .
-                      {`${chapterNumber}.${subChapterIdx + 1}.${
-                        principleIndex + 1
-                      }`}
-                    </Text>
-                    <Text
-                      style={{
-                        textDecoration:
-                          inputNumber === -1 ? "line-through" : "none",
-                        color: inputNumber === undefined ? "#A0A0A0" : "black",
-                        width: 148,
-                      }}
-                    >
-                      {principle["title"]}
-                    </Text>
-                  </View>
-                  <Text
-                    style={{
-                      flex: 1,
-                    }}
-                  >
-                    {inputNumber &&
-                      structure?.questionnaire?.options?.[inputNumber - 1]}
-                  </Text>
-                  <Text style={{ flex: 1, padding: 4, textAlign: "center" }}>
-                    {score}
-                  </Text>
-                  <Text style={{ flex: 3 }}>
-                    {scoreObject.data?.questionnaire?.[chapterNumber - 1]?.[
-                      "chapter-data"
-                    ]?.[subChapterIdx]?.["principles"]?.[principleIndex]
-                      ?.comment ?? ""}
-                    {/* {inputNumber === -1 ? "דילגת על עיקרון זה" : ""} */}
-                  </Text>
-                </View>
-              );
-            })}
-          </View>
-        ))}
+                  {inputNumber &&
+                    structure?.questionnaire?.options?.[inputNumber - 1]}
+                </Text>
+                <Text style={{ flex: 1, padding: 4, textAlign: "center" }}>
+                  {score}
+                </Text>
+                <Text style={{ flex: 3 }}>
+                  {scoreObject.data?.questionnaire?.[chapterNumber - 1]?.[
+                    "chapter-data"
+                  ]?.[subChapterIdx]?.["principles"]?.[principleIndex]
+                    ?.comment ?? ""}
+                  {/* {inputNumber === -1 ? "דילגת על עיקרון זה" : ""} */}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
       </View>
     ))}
   </View>
@@ -544,7 +542,7 @@ const MyDocument = ({
               title={chapter["chapter-title"]}
               chapter={chapter["chapter-content"]}
               chapterScore={scores.chapters[chapterIdx]}
-              subChaptersScores={scores.subChapters[chapterIdx + 1]}
+              subChaptersScores={scores.subChapters[chapterIdx + 1] ?? []}
               structure={structure}
               scoreObject={scoreObject}
             />

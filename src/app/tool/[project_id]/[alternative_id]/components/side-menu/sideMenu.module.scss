@@ -239,6 +239,7 @@
           .chapter-text {
             // pointer-events: none;
             color: $basic-grey !important;
+            pointer-events: none;
 
             &:hover {
               color: $basic-grey !important;
